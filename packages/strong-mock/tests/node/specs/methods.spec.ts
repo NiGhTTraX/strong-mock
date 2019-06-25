@@ -112,5 +112,22 @@ describe('Mock', () => {
 
       expect(mock.object.bar(undefined)).to.equal(4);
     });
+
+    it('reset', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f.bar(1)).returns(2);
+      mock.reset();
+
+      expect(() => mock.verifyAll()).to.not.throw();
+
+      mock.when(f => f.bar(3)).returns(4);
+
+      expect(mock.object.bar(3)).to.equal(4);
+      expect(() => mock.object.bar(1)).to.throw();
+    });
   });
 });
