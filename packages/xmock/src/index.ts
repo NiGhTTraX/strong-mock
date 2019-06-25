@@ -102,11 +102,14 @@ export default class XMock<T> {
         return (...args: any[]) => {
           // Find the first unmet expectation.
           const expectation = expectationsForProperty.find(
-            // TODO: is isDeepStrictEqual correct here?
+            // We check in both directions to
+            // 1) catch extra args that were not expected and
+            // 2) treat `undefined` and missing optional args as equal.
             e => e.args!.every((arg, i) => isDeepStrictEqual(args[i], arg))
+              && args.every((arg, i) => isDeepStrictEqual(e.args![i], arg))
           );
 
-          if (expectation && expectation.args!.length === args.length) {
+          if (expectation) {
             expectation.met = true;
 
             return expectation.r;

@@ -57,5 +57,60 @@ describe('XMock', () => {
 
       expect(mock.object.bar(1, 2, 3, 4)).to.equal(23);
     });
+
+    it('optional arg and passed', () => {
+      interface Foo {
+        bar(x?: number): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar(1)).returns(2);
+
+      expect(mock.object.bar(1)).to.equal(2);
+    });
+
+    it('optional arg and missing', () => {
+      interface Foo {
+        bar(x?: number): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar()).returns(3);
+
+      expect(mock.object.bar()).to.equal(3);
+    });
+
+    it('optional arg and passed undefined', () => {
+      interface Foo {
+        bar(x?: number): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar()).returns(4);
+
+      expect(mock.object.bar(undefined)).to.equal(4);
+    });
+
+    it('optional arg and expected undefined and missing', () => {
+      interface Foo {
+        bar(x?: number): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar(undefined)).returns(4);
+
+      expect(mock.object.bar()).to.equal(4);
+    });
+
+    it('optional arg and expected undefined and passed undefined', () => {
+      interface Foo {
+        bar(x?: number): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar(undefined)).returns(4);
+
+      expect(mock.object.bar(undefined)).to.equal(4);
+    });
   });
 });
