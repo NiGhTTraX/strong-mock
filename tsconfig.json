@@ -4,8 +4,8 @@
   "compilerOptions": {
     "baseUrl": "./packages",
     "paths": {
-      "xmock": ["xmock/src"],
-      "@xmock/*": ["*/src"]
+      "strong-mock": ["strong-mock/src"],
+      "@strong-mock/*": ["*/src"]
     }
   }
 }

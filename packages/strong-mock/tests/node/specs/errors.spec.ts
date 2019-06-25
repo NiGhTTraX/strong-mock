@@ -1,14 +1,14 @@
 import { describe, expect, it } from '../../../../../tests/node/suite';
-import XMock from '../../../src';
+import Mock from '../../../src';
 
-describe('XMock', () => {
+describe('Mock', () => {
   describe('errors', () => {
     it('method never called', () => {
       interface Foo {
         bar(): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
       expect(() => mock.verifyAll()).to.throw(/bar/);
@@ -19,7 +19,7 @@ describe('XMock', () => {
         bar(): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
 
       expect(() => mock.object.bar()).to.throw();
     });
@@ -30,7 +30,7 @@ describe('XMock', () => {
         bar(x: number): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
       expect(() => mock.object.bar(21)).to.throw(/21(.*)23/s);
@@ -41,7 +41,7 @@ describe('XMock', () => {
         bar(x: number, y: number): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
       expect(() => mock.object.bar(3, 4))
@@ -53,7 +53,7 @@ describe('XMock', () => {
         bar(...args: number[]): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
       expect(() => mock.object.bar(1, 2))
@@ -65,7 +65,7 @@ describe('XMock', () => {
         bar(...args: number[]): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
       expect(() => mock.object.bar(1, 2, 3))
@@ -77,7 +77,7 @@ describe('XMock', () => {
         bar(...args: number[]): void;
       }
 
-      const mock = new XMock<Foo>();
+      const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
       expect(() => mock.object.bar(3, 4))

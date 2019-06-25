@@ -5,13 +5,13 @@
 ## Usage
 
 ```typescript
-import XMock from 'xmock';
+import Mock from 'strong-mock';
 
 interface Foo {
   bar(x: number): string;
 }
 
-const mock = new XMock<Foo>();
+const mock = new Mock<Foo>();
 
 mock.when(f => f.bar(23)).returns('bar');
 

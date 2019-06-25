@@ -50,7 +50,7 @@ export class PropertyExpectation<T> implements Expectation<T> {
  * Mocks are strict by default - an unexpected call will throw an error
  * and so will a call with more params than expected.
  */
-export default class XMock<T> {
+export default class Mock<T> {
   private expectations: Map<string, Expectation<T>[]> = new Map();
 
   // TODO: implement It.isAny

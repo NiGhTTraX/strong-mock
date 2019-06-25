@@ -1,5 +1,5 @@
 {
-  "name": "xmock",
+  "name": "strong-mock",
   "publishConfig": {
     "access": "public"
   },
@@ -13,11 +13,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NiGhTTraX/xmock.git"
+    "url": "git+https://github.com/NiGhTTraX/strong-mock.git"
   },
   "author": "Andrei Picus",
   "license": "MIT",
-  "homepage": "https://github.com/NiGhTTraX/xmock/tree/master/packages/xmock",
+  "homepage": "https://github.com/NiGhTTraX/strong-mock/tree/master/packages/strong-mock",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
