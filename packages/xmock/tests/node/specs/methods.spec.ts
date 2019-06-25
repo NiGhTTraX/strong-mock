@@ -25,17 +25,6 @@ describe('XMock', () => {
       expect(mock.object.bar()).to.equal('bar');
     });
 
-    it('1 arg and no return', () => {
-      interface Foo {
-        bar(x: string): void;
-      }
-
-      const mock = new XMock<Foo>();
-      mock.when(f => f.bar('bar')).returns(undefined);
-
-      expect(mock.object.bar('bar')).to.be.undefined;
-    });
-
     it('1 arg and return', () => {
       interface Foo {
         bar(x: string): number;
@@ -47,17 +36,6 @@ describe('XMock', () => {
       expect(mock.object.bar('bar')).to.equal(23);
     });
 
-    it('2 args and no return', () => {
-      interface Foo {
-        bar(x: string, y: number): void;
-      }
-
-      const mock = new XMock<Foo>();
-      mock.when(f => f.bar('bar', 21)).returns(undefined);
-
-      expect(mock.object.bar('bar', 21)).to.be.undefined;
-    });
-
     it('2 args and return', () => {
       interface Foo {
         bar(x: string, y: boolean): number;
@@ -67,6 +45,17 @@ describe('XMock', () => {
       mock.when(f => f.bar('bar', true)).returns(23);
 
       expect(mock.object.bar('bar', true)).to.equal(23);
+    });
+
+    it('variadic args and return', () => {
+      interface Foo {
+        bar(...args: number[]): number;
+      }
+
+      const mock = new XMock<Foo>();
+      mock.when(f => f.bar(1, 2, 3, 4)).returns(23);
+
+      expect(mock.object.bar(1, 2, 3, 4)).to.equal(23);
     });
   });
 });
