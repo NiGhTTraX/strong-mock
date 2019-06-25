@@ -1,0 +1,38 @@
+{
+  "name": "xmock",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.0.0-rc.1",
+  "description": "Simple type safe mocking library",
+  "keywords": [
+    "tdd",
+    "mock",
+    "stub",
+    "testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NiGhTTraX/xmock.git"
+  },
+  "author": "Andrei Picus",
+  "license": "MIT",
+  "homepage": "https://github.com/NiGhTTraX/xmock/tree/master/packages/xmock",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@types/node": "~12.0.10"
+  },
+  "devDependencies": {
+    "typescript": "~3.5.0"
+  }
+}

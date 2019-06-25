@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "paths": {
+      "xmock": ["xmock/src"],
+      "@xmock/*": ["*/src"]
+    }
+  }
+}
