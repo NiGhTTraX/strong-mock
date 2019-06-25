@@ -24,7 +24,6 @@ describe('Mock', () => {
       expect(() => mock.object.bar()).to.throw();
     });
 
-
     it('method called with wrong arg', () => {
       interface Foo {
         bar(x: number): void;
@@ -82,6 +81,17 @@ describe('Mock', () => {
 
       expect(() => mock.object.bar(3, 4))
         .to.throw(/3(.*)4(.*)1(.*)2/s);
+    });
+
+    it('property never called', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.bar).returns(23);
+
+      expect(() => mock.verifyAll()).to.throw(/bar/s);
     });
   });
 });
