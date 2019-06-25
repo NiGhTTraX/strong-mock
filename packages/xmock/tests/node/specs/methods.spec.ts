@@ -1,5 +1,5 @@
 import { describe, expect, it } from '../../../../../tests/node/suite';
-import XMock from 'xmock';
+import XMock from '../../../src';
 
 describe('XMock', () => {
   describe('method expectations', () => {
