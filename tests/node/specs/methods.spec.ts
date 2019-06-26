@@ -129,5 +129,19 @@ describe('Mock', () => {
       expect(mock.object.bar(3)).to.equal(4);
       expect(() => mock.object.bar(1)).to.throw();
     });
+
+    it('should not set an expectation with no return value', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f.bar(1));
+      expect(() => mock.verifyAll()).to.not.throw();
+
+      mock.when(f => f.bar(2)).returns(3);
+      expect(mock.object.bar(2)).to.equal(3);
+      expect(() => mock.verifyAll()).to.not.throw();
+    });
   });
 });
