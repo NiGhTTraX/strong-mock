@@ -37,6 +37,45 @@ class PropertyExpectation {
   }
 }
 
+export class UnmetMethodExpectationError extends Error {
+  constructor(property: string, expectation: MethodExpectation) {
+    super(`Expected ${property} to be called with ${expectation}`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnmetMethodExpectationError.prototype);
+  }
+}
+
+export class UnmetPropertyExpectationError extends Error {
+  constructor(property: string, expectation: PropertyExpectation) {
+    super(`Expected ${property} to be called with ${expectation}`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnmetPropertyExpectationError.prototype);
+  }
+}
+
+export class UnexpectedMethodCallError extends Error {
+  constructor(property: string, args: any[], expectations: MethodExpectation[]) {
+    super(`${property} not expected to be called with ${inspect(args)}!
+
+Existing expectations:
+${expectations.join(' or ')}`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnexpectedMethodCallError.prototype);
+  }
+}
+
+export class UnexpectedAccessError extends Error {
+  constructor(property: string) {
+    super(`${property} not expected to be accessed`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnexpectedAccessError.prototype);
+  }
+}
+
 /**
  * Mock interfaces and set method and property expectations.
  *
@@ -103,7 +142,7 @@ export default class Mock<T> {
           // Since we don't have any property or method expectations we can't tell
           // if the requested property is a method or just a getter, therefore we
           // throw a generic message.
-          throw new Error(`${property} not expected to be called`);
+          throw new UnexpectedAccessError(property);
         }
 
         return (...args: any[]) => {
@@ -116,10 +155,7 @@ export default class Mock<T> {
             return expectation.r;
           }
 
-          throw new Error(`${property} not expected to be called with ${inspect(args)}!
-
-Existing expectations:
-${methodExpectations.join(' or ')}`);
+          throw new UnexpectedMethodCallError(property, args, methodExpectations);
         };
       }
     }) as T;
@@ -128,14 +164,14 @@ ${methodExpectations.join(' or ')}`);
   verifyAll() {
     this.propertyExpectations.forEach((expectation, p) => {
       if (!expectation.met) {
-        throw new Error(`Expected ${p} to be accessed ${expectation}`);
+        throw new UnmetPropertyExpectationError(p, expectation);
       }
     });
 
     this.methodExpectations.forEach((expectations, p) => {
       expectations.forEach(expectation => {
         if (!expectation.met) {
-          throw new Error(`Expected ${p} to be called with ${expectation}`);
+          throw new UnmetMethodExpectationError(p, expectation);
         }
       });
     });
