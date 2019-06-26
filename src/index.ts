@@ -108,13 +108,7 @@ export default class Mock<T> {
 
         return (...args: any[]) => {
           // Find the first unmet expectation.
-          const expectation = methodExpectations.find(
-            // We check in both directions to
-            // 1) catch extra args that were not expected and
-            // 2) treat `undefined` and missing optional args as equal.
-            e => e.args.every((arg, i) => isDeepStrictEqual(args[i], arg))
-              && args.every((arg, i) => isDeepStrictEqual(e.args[i], arg))
-          );
+          const expectation = methodExpectations.find(this.checkExpectedArgs(args));
 
           if (expectation) {
             expectation.met = true;
@@ -150,5 +144,19 @@ ${methodExpectations.join(' or ')}`);
   reset() {
     this.propertyExpectations.clear();
     this.methodExpectations.clear();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private checkExpectedArgs(args: any[]) {
+    // We check in both directions to
+    // 1) catch extra args that were not expected and
+    // 2) treat `undefined` and missing optional args as equal.
+    return (e: MethodExpectation) => e.args.every(this.compareArgs(args))
+      && args.every(this.compareArgs(e.args));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private compareArgs(args: any[]) {
+    return (arg: any, i: number) => isDeepStrictEqual(args[i], arg);
   }
 }
