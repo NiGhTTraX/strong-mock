@@ -10,7 +10,7 @@ export type Stub<T, R> = {
   returns(r: R): void;
 }
 
-export class CallExpectation<T> implements Expectation<T> {
+class CallExpectation<T> implements Expectation<T> {
   public args: any;
 
   public r: any;
@@ -28,7 +28,7 @@ export class CallExpectation<T> implements Expectation<T> {
   }
 }
 
-export class PropertyExpectation<T> implements Expectation<T> {
+class PropertyExpectation<T> implements Expectation<T> {
   public r: any;
 
   public met: boolean;
@@ -44,8 +44,7 @@ export class PropertyExpectation<T> implements Expectation<T> {
 }
 
 /**
- * Replacement mocking library for typemoq with better error messages
- * (includes function names and stringified arguments).
+ * Mock interfaces and set expectations.
  *
  * Mocks are strict by default - an unexpected call will throw an error
  * and so will a call with more params than expected.
@@ -54,11 +53,11 @@ export default class Mock<T> {
   private expectations: Map<string, Expectation<T>[]> = new Map();
 
   // TODO: implement It.isAny
-  when<R>(cb: (s: T) => R): Stub<T, R> {
+  when<R>(cb: (fake: T) => R): Stub<T, R> {
     let expectedArgs: any[] | undefined;
     let expectedProperty: string;
 
-    const p = new Proxy({}, {
+    const proxy = new Proxy({}, {
       get: (target, property: string) => {
         expectedProperty = property;
 
@@ -68,7 +67,7 @@ export default class Mock<T> {
       }
     });
 
-    cb(p as T);
+    cb(proxy as T);
 
     return {
       returns: (r: R) => {
@@ -125,13 +124,13 @@ ${expectationsForProperty.join(' or ')}`);
   }
 
   verifyAll() {
-    this.expectations.forEach((es, p) => {
-      es.forEach(e => {
-        if (!e.met) {
-          if (e.args) {
-            throw new Error(`Expected ${p} to be called with ${e}`);
+    this.expectations.forEach((expectationsForProperty, p) => {
+      expectationsForProperty.forEach(expectation => {
+        if (!expectation.met) {
+          if (expectation.args) {
+            throw new Error(`Expected ${p} to be called with ${expectation}`);
           } else {
-            throw new Error(`Expected ${p} to be accessed ${e}`);
+            throw new Error(`Expected ${p} to be accessed ${expectation}`);
           }
         }
       });
