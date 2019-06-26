@@ -11,7 +11,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns(23);
 
-      expect(mock.object.bar).to.equal(23);
+      expect(mock.stub.bar).to.equal(23);
     });
 
     it('undefined', () => {
@@ -22,7 +22,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns(undefined);
 
-      expect(mock.object.bar).to.be.undefined;
+      expect(mock.stub.bar).to.be.undefined;
     });
 
     it('array', () => {
@@ -33,7 +33,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns([1, 2]);
 
-      expect(mock.object.bar).to.deep.equal([1, 2]);
+      expect(mock.stub.bar).to.deep.equal([1, 2]);
     });
 
     it('reset', () => {
@@ -49,7 +49,7 @@ describe('Mock', () => {
 
       mock.when(f => f.bar).returns(4);
 
-      expect(mock.object.bar).to.equal(4);
+      expect(mock.stub.bar).to.equal(4);
     });
   });
 });

@@ -82,7 +82,7 @@ export default class Mock<T> {
     };
   }
 
-  get object(): T {
+  get stub(): T {
     return new Proxy({}, {
       get: (target, property: string) => {
         const expectationsForProperty = this.expectations.get(property);

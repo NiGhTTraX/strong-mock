@@ -21,7 +21,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
 
-      expect(() => mock.object.bar()).to.throw();
+      expect(() => mock.stub.bar()).to.throw();
     });
 
     it('method called with wrong arg', () => {
@@ -32,7 +32,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
-      expect(() => mock.object.bar(21)).to.throw(/21(.*)23/s);
+      expect(() => mock.stub.bar(21)).to.throw(/21(.*)23/s);
     });
 
     it('method called with wrong args', () => {
@@ -43,7 +43,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.object.bar(3, 4))
+      expect(() => mock.stub.bar(3, 4))
         .to.throw(/3(.*)4(.*)1(.*)2/s);
     });
 
@@ -55,7 +55,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
-      expect(() => mock.object.bar(1, 2))
+      expect(() => mock.stub.bar(1, 2))
         .to.throw(/1(.*)2(.*)1(.*)2(.*)3/s);
     });
 
@@ -67,7 +67,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.object.bar(1, 2, 3))
+      expect(() => mock.stub.bar(1, 2, 3))
         .to.throw(/1(.*)2(.*)3(.*)1(.*)2/s);
     });
 
@@ -79,7 +79,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.object.bar(3, 4))
+      expect(() => mock.stub.bar(3, 4))
         .to.throw(/3(.*)4(.*)1(.*)2/s);
     });
 

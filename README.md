@@ -63,13 +63,13 @@ mock.when(f => f.bar(23)).returns('bar'); // sets the expectation
 mock.when(f => f.bar(23)); // does nothing
 ```
 
-### `.object`
+### `.stub`
 
 Gets a stub that you can pass into code expecting the real thing.
 
 ```typescript
-console.log(mock.object.bar(23)); // 'bar'
-console.log(mock.object.bar(24)); // throws error
+console.log(mock.stub.bar(23)); // 'bar'
+console.log(mock.stub.bar(24)); // throws error
 ```
 
 #### `.verifyAll`
@@ -80,7 +80,7 @@ Verifies that all set expectations have been met. If not, it will throw an error
 mock.when(f => f.bar(1)).returns('bar');
 mock.when(f => f.bar(2)).returns('baz');
 
-mock.object.bar(1);
+mock.stub.bar(1);
 
 mock.verifyAll(); // will throw because `bar(2)` hasn't been called
 ```

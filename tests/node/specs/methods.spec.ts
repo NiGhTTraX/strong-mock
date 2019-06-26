@@ -11,7 +11,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
-      expect(mock.object.bar()).to.be.undefined;
+      expect(mock.stub.bar()).to.be.undefined;
     });
 
     it('no args and return', () => {
@@ -22,7 +22,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns('bar');
 
-      expect(mock.object.bar()).to.equal('bar');
+      expect(mock.stub.bar()).to.equal('bar');
     });
 
     it('1 arg and return', () => {
@@ -33,7 +33,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar('bar')).returns(23);
 
-      expect(mock.object.bar('bar')).to.equal(23);
+      expect(mock.stub.bar('bar')).to.equal(23);
     });
 
     it('2 args and return', () => {
@@ -44,7 +44,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar('bar', true)).returns(23);
 
-      expect(mock.object.bar('bar', true)).to.equal(23);
+      expect(mock.stub.bar('bar', true)).to.equal(23);
     });
 
     it('variadic args and return', () => {
@@ -55,7 +55,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3, 4)).returns(23);
 
-      expect(mock.object.bar(1, 2, 3, 4)).to.equal(23);
+      expect(mock.stub.bar(1, 2, 3, 4)).to.equal(23);
     });
 
     it('optional arg and passed', () => {
@@ -66,7 +66,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1)).returns(2);
 
-      expect(mock.object.bar(1)).to.equal(2);
+      expect(mock.stub.bar(1)).to.equal(2);
     });
 
     it('optional arg and missing', () => {
@@ -77,7 +77,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(3);
 
-      expect(mock.object.bar()).to.equal(3);
+      expect(mock.stub.bar()).to.equal(3);
     });
 
     it('optional arg and passed undefined', () => {
@@ -88,7 +88,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(4);
 
-      expect(mock.object.bar(undefined)).to.equal(4);
+      expect(mock.stub.bar(undefined)).to.equal(4);
     });
 
     it('optional arg and expected undefined and missing', () => {
@@ -99,7 +99,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(undefined)).returns(4);
 
-      expect(mock.object.bar()).to.equal(4);
+      expect(mock.stub.bar()).to.equal(4);
     });
 
     it('optional arg and expected undefined and passed undefined', () => {
@@ -110,7 +110,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(undefined)).returns(4);
 
-      expect(mock.object.bar(undefined)).to.equal(4);
+      expect(mock.stub.bar(undefined)).to.equal(4);
     });
 
     it('reset', () => {
@@ -126,8 +126,8 @@ describe('Mock', () => {
 
       mock.when(f => f.bar(3)).returns(4);
 
-      expect(mock.object.bar(3)).to.equal(4);
-      expect(() => mock.object.bar(1)).to.throw();
+      expect(mock.stub.bar(3)).to.equal(4);
+      expect(() => mock.stub.bar(1)).to.throw();
     });
 
     it('should not set an expectation with no return value', () => {
@@ -140,7 +140,7 @@ describe('Mock', () => {
       expect(() => mock.verifyAll()).to.not.throw();
 
       mock.when(f => f.bar(2)).returns(3);
-      expect(mock.object.bar(2)).to.equal(3);
+      expect(mock.stub.bar(2)).to.equal(3);
       expect(() => mock.verifyAll()).to.not.throw();
     });
   });

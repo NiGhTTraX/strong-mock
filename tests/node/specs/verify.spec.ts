@@ -10,7 +10,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
-      mock.object.bar();
+      mock.stub.bar();
 
       mock.verifyAll();
     });
@@ -22,7 +22,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns(23);
-      mock.object.bar;
+      mock.stub.bar;
 
       mock.verifyAll();
     });
@@ -58,9 +58,9 @@ describe('Mock', () => {
       mock.when(f => f.bar(1)).returns(undefined);
       mock.when(f => f.bar(2)).returns(undefined);
       mock.when(f => f.bar(3)).returns(undefined);
-      mock.object.bar(3);
-      mock.object.bar(2);
-      mock.object.bar(1);
+      mock.stub.bar(3);
+      mock.stub.bar(2);
+      mock.stub.bar(1);
 
       mock.verifyAll();
     });
@@ -74,7 +74,7 @@ describe('Mock', () => {
       mock.when(f => f.bar(1)).returns(undefined);
       mock.when(f => f.bar(2)).returns(undefined);
       mock.when(f => f.bar(3)).returns(undefined);
-      mock.object.bar(2);
+      mock.stub.bar(2);
 
       expect(() => mock.verifyAll()).to.throw();
     });
