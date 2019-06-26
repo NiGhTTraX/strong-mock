@@ -1,4 +1,4 @@
-import { describe, expect, it } from '../../../../../tests/node/suite';
+import { describe, expect, it } from '../suite';
 import Mock from '../../../src';
 
 describe('Mock', () => {
