@@ -1,5 +1,5 @@
 import { describe, expect, it } from '../suite';
-import Mock from '../../../src';
+import Mock from '../../../src/mock';
 
 describe('Mock', () => {
   describe('property expectations', () => {

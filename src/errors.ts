@@ -1,5 +1,5 @@
 import { inspect } from 'util';
-import { MethodExpectation, PropertyExpectation } from './index';
+import { MethodExpectation, PropertyExpectation } from './expectations';
 
 export class UnmetMethodExpectationError extends Error {
   constructor(property: string, expectation: MethodExpectation) {
