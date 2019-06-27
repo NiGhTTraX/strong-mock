@@ -5,15 +5,14 @@
 
 ## Features
 
-- Type safe.
-- Create mocks from class interfaces.
+- _Strongly_ typed mocks from interfaces.
 - Mocks are always strict.
 - Useful error messages.
 
 
 ## Limitations
 
-strong-mock mocks only class interfaces. If you need to mock concrete implementations with call forwarding, or you need to mock functions, then check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
+strong-mock mocks only **object interfaces** for now. If you need to mock concrete implementations with call forwarding, or you need to mock functions, then check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
 
 
 ## Requirements
