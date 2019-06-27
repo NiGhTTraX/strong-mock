@@ -113,23 +113,6 @@ describe('Mock', () => {
       expect(mock.stub.bar(undefined)).to.equal(4);
     });
 
-    it('reset', () => {
-      interface Foo {
-        bar(x: number): number;
-      }
-      const mock = new Mock<Foo>();
-
-      mock.when(f => f.bar(1)).returns(2);
-      mock.reset();
-
-      expect(() => mock.verifyAll()).to.not.throw();
-
-      mock.when(f => f.bar(3)).returns(4);
-
-      expect(mock.stub.bar(3)).to.equal(4);
-      expect(() => mock.stub.bar(1)).to.throw();
-    });
-
     it('should not set an expectation with no return value', () => {
       interface Foo {
         bar(x: number): number;
