@@ -1,5 +1,6 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
+import { UnmetMethodExpectationError, UnmetPropertyExpectationError } from '../../../src/errors';
 
 describe('Mock', () => {
   describe('verify', () => {
@@ -35,10 +36,10 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
-      expect(() => mock.verifyAll()).to.throw();
+      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
     });
 
-    it('single property expectation met', () => {
+    it('single property expectation unmet', () => {
       interface Foo {
         bar: number;
       }
@@ -46,7 +47,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns(23);
 
-      expect(() => mock.verifyAll()).to.throw();
+      expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
     });
 
     it('multiple method expectations met', () => {
@@ -76,7 +77,7 @@ describe('Mock', () => {
       mock.when(f => f.bar(3)).returns(undefined);
       mock.stub.bar(2);
 
-      expect(() => mock.verifyAll()).to.throw();
+      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
     });
   });
 });

@@ -1,97 +1,74 @@
 import { describe, expect, it } from '../suite';
-import Mock from '../../../src/mock';
+import { UnexpectedAccessError, UnexpectedMethodCallError } from '../../../src/errors';
+import { MethodExpectation } from '../../../src/expectations';
 
 describe('Mock', () => {
   describe('errors', () => {
-    it('method never called', () => {
-      interface Foo {
-        bar(): void;
-      }
+    describe('UnexpectedMethodCall', () => {
+      it('should contain the name of the method', () => {
+        const error = new UnexpectedMethodCallError('method', [], []);
 
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar()).returns(undefined);
+        expect(error.message).to.contain('method');
+      });
 
-      expect(() => mock.verifyAll()).to.throw(/bar/);
+      it('should contain the primitive arguments', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [1, 2, 3], []);
+
+        expect(error.message).to.contain('[ 1, 2, 3 ]');
+      });
+
+      it('should contain the array arguments', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [[1, 2, 3]], []);
+
+        expect(error.message).to.contain('[ [ 1, 2, 3 ] ]');
+      });
+
+      it('should contain the object arguments', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [{ foo: 'bar' }], []);
+
+        expect(error.message).to.contain('[ { foo: \'bar\' } ]');
+      });
+
+      it('should contain the expectation return value', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [], [new MethodExpectation([], 23)]);
+
+        expect(error.message).to.contain('=> 23');
+      });
+
+      it('should contain the expectation primitive args', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [], [new MethodExpectation([1, 2, 3], 23)]);
+
+        expect(error.message).to.contain('[ 1, 2, 3 ] => 23');
+      });
+
+      it('should contain the expectation array args', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [], [new MethodExpectation([[1, 2, 3]], 23)]);
+
+        expect(error.message).to.contain('[ [ 1, 2, 3 ] ] => 23');
+      });
+
+      it('should contain the expectation object args', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [], [new MethodExpectation([{ foo: 'bar' }], 23)]);
+
+        expect(error.message).to.contain('[ { foo: \'bar\' } ] => 23');
+      });
+
+      it('should contain all the expectations', () => {
+        const error = new UnexpectedMethodCallError(':irrelevant:', [], [
+          new MethodExpectation([1], 2),
+          new MethodExpectation([3], 4)
+        ]);
+
+        expect(error.message).to.contain('[ 1 ] => 2').and.to.contain('[ 3 ] => 4');
+      });
     });
 
-    it('method unexpected call', () => {
-      interface Foo {
-        bar(): void;
-      }
+    describe('UnexpectedAccessError', () => {
+      it('should contain the name of the property', () => {
+        const error = new UnexpectedAccessError('property');
 
-      const mock = new Mock<Foo>();
-
-      expect(() => mock.stub.bar()).to.throw();
-    });
-
-    it('method called with wrong arg', () => {
-      interface Foo {
-        bar(x: number): void;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar(23)).returns(undefined);
-
-      expect(() => mock.stub.bar(21)).to.throw(/21(.*)23/s);
-    });
-
-    it('method called with wrong args', () => {
-      interface Foo {
-        bar(x: number, y: number): void;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar(1, 2)).returns(undefined);
-
-      expect(() => mock.stub.bar(3, 4))
-        .to.throw(/3(.*)4(.*)1(.*)2/s);
-    });
-
-    it('method called with less variadic args', () => {
-      interface Foo {
-        bar(...args: number[]): void;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar(1, 2, 3)).returns(undefined);
-
-      expect(() => mock.stub.bar(1, 2))
-        .to.throw(/1(.*)2(.*)1(.*)2(.*)3/s);
-    });
-
-    it('method called with more variadic args', () => {
-      interface Foo {
-        bar(...args: number[]): void;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar(1, 2)).returns(undefined);
-
-      expect(() => mock.stub.bar(1, 2, 3))
-        .to.throw(/1(.*)2(.*)3(.*)1(.*)2/s);
-    });
-
-    it('method called with wrong variadic args', () => {
-      interface Foo {
-        bar(...args: number[]): void;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar(1, 2)).returns(undefined);
-
-      expect(() => mock.stub.bar(3, 4))
-        .to.throw(/3(.*)4(.*)1(.*)2/s);
-    });
-
-    it('property never called', () => {
-      interface Foo {
-        bar: number;
-      }
-
-      const mock = new Mock<Foo>();
-      mock.when(f => f.bar).returns(23);
-
-      expect(() => mock.verifyAll()).to.throw(/bar/s);
+        expect(error.message).to.contain('property');
+      });
     });
   });
 });
