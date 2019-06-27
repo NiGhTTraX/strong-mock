@@ -1,5 +1,6 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
+import { UnexpectedAccessError, UnexpectedMethodCallError } from '../../../src/errors';
 
 describe('Mock', () => {
   describe('method expectations', () => {
@@ -134,7 +135,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
 
-      expect(() => mock.stub.bar()).to.throw();
+      expect(() => mock.stub.bar()).to.throw(UnexpectedAccessError);
     });
 
     it('called with wrong arg', () => {
@@ -145,7 +146,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
-      expect(() => mock.stub.bar(21)).to.throw(/21(.*)23/s);
+      expect(() => mock.stub.bar(21)).to.throw(UnexpectedMethodCallError);
     });
 
     it('called with wrong args', () => {
@@ -156,8 +157,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4))
-        .to.throw(/3(.*)4(.*)1(.*)2/s);
+      expect(() => mock.stub.bar(3, 4)).to.throw(UnexpectedMethodCallError);
     });
 
     it('called with less variadic args', () => {
@@ -168,8 +168,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
-      expect(() => mock.stub.bar(1, 2))
-        .to.throw(/1(.*)2(.*)1(.*)2(.*)3/s);
+      expect(() => mock.stub.bar(1, 2)).to.throw(UnexpectedMethodCallError);
     });
 
     it('called with more variadic args', () => {
@@ -180,8 +179,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(1, 2, 3))
-        .to.throw(/1(.*)2(.*)3(.*)1(.*)2/s);
+      expect(() => mock.stub.bar(1, 2, 3)).to.throw(UnexpectedMethodCallError);
     });
 
     it('called with wrong variadic args', () => {
@@ -192,8 +190,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4))
-        .to.throw(/3(.*)4(.*)1(.*)2/s);
+      expect(() => mock.stub.bar(3, 4)).to.throw(UnexpectedMethodCallError);
     });
   });
 });
