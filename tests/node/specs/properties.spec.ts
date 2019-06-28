@@ -35,5 +35,18 @@ describe('Mock', () => {
 
       expect(mock.stub.bar).to.deep.equal([1, 2]);
     });
+
+    it('multiple expectations', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.bar).returns(1);
+      mock.when(f => f.bar).returns(2);
+
+      expect(mock.stub.bar).to.equal(1);
+      expect(mock.stub.bar).to.equal(2);
+    });
   });
 });

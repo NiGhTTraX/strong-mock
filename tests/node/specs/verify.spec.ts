@@ -32,6 +32,20 @@ describe('Mock', () => {
       mock.verifyAll();
     });
 
+    it('multiple property expectations met', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.bar).returns(23);
+      mock.when(f => f.bar).returns(24);
+      mock.stub.bar;
+      mock.stub.bar;
+
+      mock.verifyAll();
+    });
+
     it('single function expectation met', () => {
       type Foo = (x: number) => number;
 
@@ -62,6 +76,20 @@ describe('Mock', () => {
       mock.when(f => f.bar).returns(23);
 
       expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
+    });
+
+    it('multiple property expectations unmet', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.bar).returns(23);
+      mock.when(f => f.bar).returns(24);
+      mock.stub.bar;
+
+      expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
+      expect(() => mock.verifyAll()).to.throw(/24/s);
     });
 
     it('single function expectation unmet', () => {

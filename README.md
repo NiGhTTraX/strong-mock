@@ -14,7 +14,6 @@
 ## Limitations
 
 - No call forwarding support.
-- Getter mocks support a single expectation.
 - No setter mocking support.
 
 If you need any of the above check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).

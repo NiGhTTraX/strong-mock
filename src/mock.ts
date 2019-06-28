@@ -23,7 +23,7 @@ export type Stub<T, R> = {
 export default class Mock<T> {
   private methodExpectations: Map<string, MethodExpectation[]> = new Map();
 
-  private propertyExpectations: Map<string, PropertyExpectation> = new Map();
+  private propertyExpectations: Map<string, PropertyExpectation[]> = new Map();
 
   private applyExpectations: MethodExpectation[] = [];
 
@@ -63,10 +63,12 @@ export default class Mock<T> {
             this.applyExpectations.push(new MethodExpectation(expectedArgs, r));
           }
         } else {
-          // TODO: support multiple expectations
           this.propertyExpectations.set(
             expectedProperty,
-            new PropertyExpectation(r)
+            [
+              ...(this.propertyExpectations.get(expectedProperty) || []),
+              new PropertyExpectation(r)
+            ]
           );
         }
       }
@@ -76,12 +78,18 @@ export default class Mock<T> {
   get stub(): T {
     return new Proxy(() => {}, {
       get: (target, property: string) => {
-        const propertyExpectation = this.propertyExpectations.get(property);
+        const propertyExpectations = this.propertyExpectations.get(property);
 
-        if (propertyExpectation) {
-          propertyExpectation.met = true;
+        if (propertyExpectations) {
+          const expectation = propertyExpectations.find(e => !e.met);
 
-          return propertyExpectation.r;
+          if (!expectation) {
+            throw new UnexpectedAccessError(property);
+          }
+
+          expectation.met = true;
+
+          return expectation.r;
         }
 
         const methodExpectations = this.methodExpectations.get(property);
@@ -130,10 +138,12 @@ export default class Mock<T> {
   }
 
   verifyAll() {
-    this.propertyExpectations.forEach((expectation, p) => {
-      if (!expectation.met) {
-        throw new UnmetPropertyExpectationError(p, expectation);
-      }
+    this.propertyExpectations.forEach((expectations, p) => {
+      expectations.forEach(expectation => {
+        if (!expectation.met) {
+          throw new UnmetPropertyExpectationError(p, expectation);
+        }
+      });
     });
 
     this.methodExpectations.forEach((expectations, p) => {
