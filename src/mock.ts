@@ -1,9 +1,11 @@
 import { isDeepStrictEqual } from 'util';
 import {
   UnexpectedAccessError,
-  UnexpectedMethodCallError,
+  UnexpectedApplyError,
   UnmetMethodExpectationError,
-  UnmetPropertyExpectationError
+  UnmetPropertyExpectationError,
+  WrongApplyArgsError,
+  WrongMethodArgsError
 } from './errors';
 import { MethodExpectation, PropertyExpectation } from './expectations';
 
@@ -97,7 +99,7 @@ export default class Mock<T> {
           );
 
           if (!expectation) {
-            throw new UnexpectedMethodCallError(property, args, methodExpectations);
+            throw new WrongMethodArgsError(property, args, methodExpectations);
           }
 
           expectation.met = true;
@@ -107,13 +109,16 @@ export default class Mock<T> {
       },
 
       apply: (target: () => void, thisArg: any, argArray?: any) => {
+        if (!this.callExpectations.length) {
+          throw new UnexpectedApplyError();
+        }
+
         const expectation = this.callExpectations.find(
           this.isUnmetExpectationWithMatchingArgs(argArray)
         );
 
         if (!expectation) {
-          // TODO: introduce new type of exception
-          throw new UnexpectedMethodCallError('', argArray, this.callExpectations);
+          throw new WrongApplyArgsError(argArray, this.callExpectations);
         }
 
         expectation.met = true;

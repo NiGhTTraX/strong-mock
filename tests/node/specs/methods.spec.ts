@@ -1,6 +1,6 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
-import { UnexpectedAccessError, UnexpectedMethodCallError } from '../../../src/errors';
+import { UnexpectedAccessError, WrongMethodArgsError } from '../../../src/errors';
 
 describe('Mock', () => {
   describe('method expectations', () => {
@@ -159,7 +159,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
-      expect(() => mock.stub.bar(21)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub.bar(21)).to.throw(WrongMethodArgsError);
     });
 
     it('called with wrong args', () => {
@@ -170,7 +170,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub.bar(3, 4)).to.throw(WrongMethodArgsError);
     });
 
     it('called with less variadic args', () => {
@@ -181,7 +181,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
-      expect(() => mock.stub.bar(1, 2)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub.bar(1, 2)).to.throw(WrongMethodArgsError);
     });
 
     it('called with more variadic args', () => {
@@ -192,7 +192,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(1, 2, 3)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub.bar(1, 2, 3)).to.throw(WrongMethodArgsError);
     });
 
     it('called with wrong variadic args', () => {
@@ -203,7 +203,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub.bar(3, 4)).to.throw(WrongMethodArgsError);
     });
   });
 });

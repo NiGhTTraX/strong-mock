@@ -19,7 +19,7 @@ export class UnmetPropertyExpectationError extends Error {
   }
 }
 
-export class UnexpectedMethodCallError extends Error {
+export class WrongMethodArgsError extends Error {
   constructor(property: string, args: any[], expectations: MethodExpectation[]) {
     super(`${property} not expected to be called with ${inspect(args)}!
 
@@ -27,7 +27,28 @@ Existing expectations:
 ${expectations.join(' or ')}`);
 
     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnexpectedMethodCallError.prototype);
+    Object.setPrototypeOf(this, WrongMethodArgsError.prototype);
+  }
+}
+
+export class WrongApplyArgsError extends Error {
+  constructor(args: any[], expectations: MethodExpectation[]) {
+    super(`Function not expected to be called with ${inspect(args)}!
+
+Existing expectations:
+${expectations.join(' or ')}`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, WrongApplyArgsError.prototype);
+  }
+}
+
+export class UnexpectedApplyError extends Error {
+  constructor() {
+    super('Function not expected to be called!');
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnexpectedApplyError.prototype);
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
-import { UnexpectedMethodCallError } from '../../../src/errors';
+import { UnexpectedApplyError, WrongApplyArgsError } from '../../../src/errors';
 
 describe('Mock', () => {
   describe('function expectations', () => {
@@ -122,7 +122,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
 
-      expect(() => mock.stub()).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub()).to.throw(UnexpectedApplyError);
     });
 
     it('called with wrong arg', () => {
@@ -131,7 +131,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(23)).returns(undefined);
 
-      expect(() => mock.stub(21)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub(21)).to.throw(WrongApplyArgsError);
     });
 
     it('called with wrong args', () => {
@@ -140,7 +140,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(1, 2)).returns(undefined);
 
-      expect(() => mock.stub(3, 4)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub(3, 4)).to.throw(WrongApplyArgsError);
     });
 
     it('called with less variadic args', () => {
@@ -149,7 +149,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(1, 2, 3)).returns(undefined);
 
-      expect(() => mock.stub(1, 2)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub(1, 2)).to.throw(WrongApplyArgsError);
     });
 
     it('called with more variadic args', () => {
@@ -158,7 +158,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(1, 2)).returns(undefined);
 
-      expect(() => mock.stub(1, 2, 3)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub(1, 2, 3)).to.throw(WrongApplyArgsError);
     });
 
     it('called with wrong variadic args', () => {
@@ -167,7 +167,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(1, 2)).returns(undefined);
 
-      expect(() => mock.stub(3, 4)).to.throw(UnexpectedMethodCallError);
+      expect(() => mock.stub(3, 4)).to.throw(WrongApplyArgsError);
     });
   });
 });
