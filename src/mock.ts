@@ -22,33 +22,43 @@ export default class Mock<T> {
 
   private propertyExpectations: Map<string, PropertyExpectation> = new Map();
 
+  private callExpectations: MethodExpectation[] = [];
+
   // TODO: implement It.isAny
   when<R>(cb: (fake: T) => R): Stub<T, R> {
     let expectedArgs: any[] | undefined;
     let expectedProperty: string;
 
-    const proxy = new Proxy({}, {
+    const proxy = new Proxy(() => {}, {
       get: (target, property: string) => {
         expectedProperty = property;
 
         return (...args: any[]) => {
           expectedArgs = args;
         };
+      },
+
+      apply: (target: {}, thisArg: any, argArray?: any) => {
+        expectedArgs = argArray;
       }
     });
 
-    cb(proxy as T);
+    cb(proxy as unknown as T);
 
     return {
       returns: (r: R) => {
         if (expectedArgs) {
-          this.methodExpectations.set(
-            expectedProperty,
-            [
-              ...(this.methodExpectations.get(expectedProperty) || []),
-              new MethodExpectation(expectedArgs, r)
-            ]
-          );
+          if (expectedProperty) {
+            this.methodExpectations.set(
+              expectedProperty,
+              [
+                ...(this.methodExpectations.get(expectedProperty) || []),
+                new MethodExpectation(expectedArgs, r)
+              ]
+            );
+          } else {
+            this.callExpectations.push(new MethodExpectation(expectedArgs, r));
+          }
         } else {
           // TODO: support multiple expectations
           this.propertyExpectations.set(
@@ -61,7 +71,7 @@ export default class Mock<T> {
   }
 
   get stub(): T {
-    return new Proxy({}, {
+    return new Proxy(() => {}, {
       get: (target, property: string) => {
         const propertyExpectation = this.propertyExpectations.get(property);
 
@@ -84,16 +94,29 @@ export default class Mock<T> {
           // Find the first unmet expectation.
           const expectation = methodExpectations.find(this.checkExpectedArgs(args));
 
-          if (expectation) {
-            expectation.met = true;
-
-            return expectation.r;
+          if (!expectation) {
+            throw new UnexpectedMethodCallError(property, args, methodExpectations);
           }
 
-          throw new UnexpectedMethodCallError(property, args, methodExpectations);
+          expectation.met = true;
+
+          return expectation.r;
         };
+      },
+
+      apply: (target: () => void, thisArg: any, argArray?: any) => {
+        const expectation = this.callExpectations.find(this.checkExpectedArgs(argArray));
+
+        if (!expectation) {
+          // TODO: introduce new type of exception
+          throw new UnexpectedMethodCallError('', argArray, this.callExpectations);
+        }
+
+        expectation.met = true;
+
+        return expectation.r;
       }
-    }) as T;
+    }) as unknown as T;
   }
 
   verifyAll() {
@@ -115,6 +138,7 @@ export default class Mock<T> {
   reset() {
     this.propertyExpectations.clear();
     this.methodExpectations.clear();
+    this.callExpectations = [];
   }
 
   // eslint-disable-next-line class-methods-use-this
