@@ -101,6 +101,10 @@ describe('Mock', () => {
       mock.stub.bar(2);
 
       expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
+      // TODO: I'm accepting duplicating the error message test here
+      // because it's a simple way of checking that the right expectation
+      // is thrown
+      expect(() => mock.verifyAll()).to.throw(/\[ 1 ]/s);
     });
 
     it('multiple function expectations met', () => {
@@ -126,8 +130,11 @@ describe('Mock', () => {
       mock.when(f => f(3)).returns(undefined);
       mock.stub(2);
 
-      // TODO: test that the first expectation is thrown
       expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+      // TODO: I'm accepting duplicating the error message test here
+      // because it's a simple way of checking that the right expectation
+      // is thrown
+      expect(() => mock.verifyAll()).to.throw(/\[ 1 ]/s);
     });
   });
 });
