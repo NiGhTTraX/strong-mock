@@ -5,14 +5,19 @@
 
 ## Features
 
-- _Strongly_ typed mocks from interfaces.
+- _Strongly_ typed mocks from function types and class interfaces.
 - Mocks are always strict.
 - Useful error messages.
+- Simple and expressive API.
 
 
 ## Limitations
 
-strong-mock mocks only **object interfaces** for now. If you need to mock concrete implementations with call forwarding, or you need to mock functions, then check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
+- No call forwarding support.
+- Getter mocks support a single expectation.
+- No setter mocking support.
+
+If you need any of the above check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
 
 
 ## Requirements
@@ -52,6 +57,14 @@ When someone calls its method `bar` with arguments `23`
 Then the mock will return `bar`.
 ```
 
+You can also mock function types:
+
+```typescript
+const mock = new Mock<() => number>();
+mock.when(f => f()).returns(23);
+console.log(mock.stub()); // 23
+```
+
 #### `.returns`
 
 Set the return value for the chained expectation. MUST always be called after `.when` in order to set the expectation.
@@ -68,7 +81,7 @@ Gets a stub that you can pass into code expecting the real thing.
 
 ```typescript
 console.log(mock.stub.bar(23)); // 'bar'
-console.log(mock.stub.bar(24)); // throws error
+console.log(mock.stub.bar(24)); // throws error because 24 is not expected
 ```
 
 #### `.verifyAll`
@@ -83,3 +96,8 @@ mock.stub.bar(1);
 
 mock.verifyAll(); // will throw because `bar(2)` hasn't been called
 ```
+
+
+#### `.reset`
+
+Clears all expectations allowing you to start from the beginning. Useful in test setup/teardown hooks.
