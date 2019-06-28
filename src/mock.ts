@@ -2,6 +2,7 @@ import { isDeepStrictEqual } from 'util';
 import {
   UnexpectedAccessError,
   UnexpectedApplyError,
+  UnmetApplyExpectationError,
   UnmetMethodExpectationError,
   UnmetPropertyExpectationError,
   WrongApplyArgsError,
@@ -24,7 +25,7 @@ export default class Mock<T> {
 
   private propertyExpectations: Map<string, PropertyExpectation> = new Map();
 
-  private callExpectations: MethodExpectation[] = [];
+  private applyExpectations: MethodExpectation[] = [];
 
   // TODO: implement It.isAny
   when<R>(cb: (fake: T) => R): Stub<T, R> {
@@ -59,7 +60,7 @@ export default class Mock<T> {
               ]
             );
           } else {
-            this.callExpectations.push(new MethodExpectation(expectedArgs, r));
+            this.applyExpectations.push(new MethodExpectation(expectedArgs, r));
           }
         } else {
           // TODO: support multiple expectations
@@ -109,16 +110,16 @@ export default class Mock<T> {
       },
 
       apply: (target: () => void, thisArg: any, argArray?: any) => {
-        if (!this.callExpectations.length) {
+        if (!this.applyExpectations.length) {
           throw new UnexpectedApplyError();
         }
 
-        const expectation = this.callExpectations.find(
+        const expectation = this.applyExpectations.find(
           this.isUnmetExpectationWithMatchingArgs(argArray)
         );
 
         if (!expectation) {
-          throw new WrongApplyArgsError(argArray, this.callExpectations);
+          throw new WrongApplyArgsError(argArray, this.applyExpectations);
         }
 
         expectation.met = true;
@@ -142,12 +143,18 @@ export default class Mock<T> {
         }
       });
     });
+
+    this.applyExpectations.forEach(expectation => {
+      if (!expectation.met) {
+        throw new UnmetApplyExpectationError(expectation);
+      }
+    });
   }
 
   reset() {
     this.propertyExpectations.clear();
     this.methodExpectations.clear();
-    this.callExpectations = [];
+    this.applyExpectations = [];
   }
 
   // eslint-disable-next-line class-methods-use-this

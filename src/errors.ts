@@ -10,6 +10,15 @@ export class UnmetMethodExpectationError extends Error {
   }
 }
 
+export class UnmetApplyExpectationError extends Error {
+  constructor(expectation: MethodExpectation) {
+    super(`Expected function to be called with ${expectation}`);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, UnmetApplyExpectationError.prototype);
+  }
+}
+
 export class UnmetPropertyExpectationError extends Error {
   constructor(property: string, expectation: PropertyExpectation) {
     super(`Expected ${property} to be called with ${expectation}`);

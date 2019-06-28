@@ -1,6 +1,10 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
-import { UnmetMethodExpectationError, UnmetPropertyExpectationError } from '../../../src/errors';
+import {
+  UnmetApplyExpectationError,
+  UnmetMethodExpectationError,
+  UnmetPropertyExpectationError
+} from '../../../src/errors';
 
 describe('Mock', () => {
   describe('verify', () => {
@@ -28,6 +32,16 @@ describe('Mock', () => {
       mock.verifyAll();
     });
 
+    it('single function expectation met', () => {
+      type Foo = (x: number) => number;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(42)).returns(23);
+      mock.stub(42);
+
+      mock.verifyAll();
+    });
+
     it('single method expectation unmet', () => {
       interface Foo {
         bar(): void;
@@ -48,6 +62,15 @@ describe('Mock', () => {
       mock.when(f => f.bar).returns(23);
 
       expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
+    });
+
+    it('single function expectation unmet', () => {
+      type Foo = (x: number) => number;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(42)).returns(23);
+
+      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
     });
 
     it('multiple method expectations met', () => {
@@ -78,6 +101,33 @@ describe('Mock', () => {
       mock.stub.bar(2);
 
       expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
+    });
+
+    it('multiple function expectations met', () => {
+      type Foo = (x: number) => undefined;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(1)).returns(undefined);
+      mock.when(f => f(2)).returns(undefined);
+      mock.when(f => f(3)).returns(undefined);
+      mock.stub(3);
+      mock.stub(2);
+      mock.stub(1);
+
+      mock.verifyAll();
+    });
+
+    it('multiple function expectations unmet', () => {
+      type Foo = (x: number) => undefined;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(1)).returns(undefined);
+      mock.when(f => f(2)).returns(undefined);
+      mock.when(f => f(3)).returns(undefined);
+      mock.stub(2);
+
+      // TODO: test that the first expectation is thrown
+      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
     });
   });
 });
