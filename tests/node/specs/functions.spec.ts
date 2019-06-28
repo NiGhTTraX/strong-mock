@@ -105,6 +105,23 @@ describe('Mock', () => {
       expect(mock.stub(1)).to.equal(3);
     });
 
+    it('combined expectations', () => {
+      interface Foo {
+        (x: number): number;
+        bar(y: number): number;
+        baz: boolean;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(1)).returns(2);
+      mock.when(f => f.bar(3)).returns(4);
+      mock.when(f => f.baz).returns(true);
+
+      expect(mock.stub(1)).to.equal(2);
+      expect(mock.stub.bar(3)).to.equal(4);
+      expect(mock.stub.baz).to.be.true;
+    });
+
     it('should not set an expectation with no return value', () => {
       type Foo = (x: number) => number;
       const mock = new Mock<Foo>();
