@@ -1,7 +1,7 @@
 {
   "name": "strong-mock",
   "version": "1.0.0-rc.2",
-  "description": "Type safe interface mocking library",
+  "description": "Simple type safe mocking library",
   "keywords": [
     "tdd",
     "mock",
