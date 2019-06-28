@@ -114,6 +114,19 @@ describe('Mock', () => {
       expect(mock.stub.bar(undefined)).to.equal(4);
     });
 
+    it('multiple expectations with same args', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.bar(1)).returns(2);
+      mock.when(f => f.bar(1)).returns(3);
+
+      expect(mock.stub.bar(1)).to.equal(2);
+      expect(mock.stub.bar(1)).to.equal(3);
+    });
+
     it('should not set an expectation with no return value', () => {
       interface Foo {
         bar(x: number): number;

@@ -94,6 +94,17 @@ describe('Mock', () => {
       expect(mock.stub(undefined)).to.equal(4);
     });
 
+    it('multiple expectations with same args', () => {
+      type Foo = (x: number) => number;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f(1)).returns(2);
+      mock.when(f => f(1)).returns(3);
+
+      expect(mock.stub(1)).to.equal(2);
+      expect(mock.stub(1)).to.equal(3);
+    });
+
     it('should not set an expectation with no return value', () => {
       type Foo = (x: number) => number;
       const mock = new Mock<Foo>();
