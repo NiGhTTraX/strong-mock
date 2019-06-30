@@ -122,6 +122,15 @@ describe('Mock', () => {
       expect(mock.stub.baz).to.be.true;
     });
 
+    it('inherited properties', () => {
+      type Foo = (x: number) => number;
+
+      const mock = new Mock<Foo>();
+      mock.when(f => f.toString()).returns('foobar');
+
+      expect(mock.stub.toString()).to.equal('foobar');
+    });
+
     it('should not set an expectation with no return value', () => {
       type Foo = (x: number) => number;
       const mock = new Mock<Foo>();
