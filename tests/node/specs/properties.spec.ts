@@ -61,5 +61,33 @@ describe('Mock', () => {
 
       expect(() => mock.stub.bar).to.throw(UnexpectedAccessError);
     });
+
+    it('should shadow method expectations when set first', () => {
+      interface Foo {
+        bar(): string;
+      }
+
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f.bar).returns(() => 'bar');
+      mock.when(f => f.bar()).returns('baz');
+
+      expect(mock.stub.bar()).to.equal('bar');
+      expect(() => mock.stub.bar()).to.throw(UnexpectedAccessError);
+    });
+
+    it('should shadow method expectations when set last', () => {
+      interface Foo {
+        bar(): string;
+      }
+
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f.bar()).returns('baz');
+      mock.when(f => f.bar).returns(() => 'bar');
+
+      expect(mock.stub.bar()).to.equal('bar');
+      expect(() => mock.stub.bar()).to.throw(UnexpectedAccessError);
+    });
   });
 });
