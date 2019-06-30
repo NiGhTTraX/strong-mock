@@ -5,7 +5,7 @@
 
 ## Features
 
-- _Strongly_ typed mocks from function types and class interfaces.
+- _Strongly_ typed mocks from interfaces.
 - Mocks are always strict.
 - Useful error messages.
 - Simple and expressive API.
@@ -26,77 +26,140 @@ strong-mock requires an environment that supports the [ES6 Proxy object](https:/
 
 ## Usage
 
-### `Mock<T>()`
+### Setting expectations
 
-Creates a mock of type `<T>` that you can set expectations on using `when` and `returns`.
+Expectations are set by chaining a `.when()` call with a `.returns()` call. Omitting the `.returns()` call will **not** set an expectation, even if the return value should be `undefined`.
 
-#### `.when`
+You can set multiple expectations, even with the same arguments, and they will be fulfilled in the order they were set. Once all expectations are met further calls will throw.
 
-Sets an expectation on the mock. If no expectations are set then this means the mock object should never be called. If it is called, then it will throw an error.
+```typescript
+import Mock from 'strong-mock';
 
-`.when` receives a callback that is passed a mock stub. Calling any methods on the stub, or accessing properties on it will set an expectation when followed by a `returns` call.
+const mock = Mock<(x: number) => string>();
+
+mock.when(f => f(1)).returns('bar');
+mock.when(f => f(1)).returns('baz');
+
+console.log(mock.stub(1)); // 'bar'
+console.log(mock.stub(1)); // 'baz'
+console.log(mock.stub(1)); // throws
+```
+
+
+### Mocking interface methods
+
+Passing an object/class interface will create a stub that mimics the properties on the interface. Since reflection is not supported in TypeScript, meaning the type information can't be read, the stub is actually an ES6 Proxy that intercepts property accesses and returns appropriate things based on the expectations that were set.
 
 ```typescript
 import Mock from 'strong-mock';
 
 interface Foo {
   bar(x: number): string;
+  baz(): void;
 }
 
 const mock = new Mock<Foo>();
 
 mock.when(f => f.bar(23)).returns('bar');
-```
 
-The above sets the following expectation:
-
-```gherkin
-Given a mock of type `Foo`
-When someone calls its method `bar` with arguments `23`
-Then the mock will return `bar`.
-```
-
-You can also mock function types:
-
-```typescript
-const mock = new Mock<() => number>();
-mock.when(f => f()).returns(23);
-console.log(mock.stub()); // 23
-```
-
-#### `.returns`
-
-Set the return value for the chained expectation. MUST always be called after `.when` in order to set the expectation.
-
-```typescript
-mock.when(f => f.bar(23)).returns('bar'); // sets the expectation
-
-mock.when(f => f.bar(23)); // does nothing
-```
-
-### `.stub`
-
-Gets a stub that you can pass into code expecting the real thing.
-
-```typescript
 console.log(mock.stub.bar(23)); // 'bar'
-console.log(mock.stub.bar(24)); // throws error because 24 is not expected
+
+// The following will throw because `baz()` is not expected
+// to be called.
+console.log(mock.stub.baz());
 ```
 
-#### `.verifyAll`
+There's no difference in passing an interface vs passing a concrete class - the mock will use a Proxy in both cases and unexpected property access will still throw. Moreover, there is no support for forwarding class to the concrete class.
 
-Verifies that all set expectations have been met. If not, it will throw an error with details about the first unmet expectation.
+
+### Mocking getters
+
+You can mock properties/getters the same way as you would mock methods.
 
 ```typescript
-mock.when(f => f.bar(1)).returns('bar');
-mock.when(f => f.bar(2)).returns('baz');
+import Mock from 'strong-mock';
 
-mock.stub.bar(1);
+interface Foo {
+  bar: string;
+}
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f.bar).returns('bar');
+mock.when(f => f.bar).returns('baz');
+
+console.log(mock.stub.bar); // 'bar'
+console.log(mock.stub.bar); // 'baz'
+```
+
+Note that you can't mock both a property access and a call for the same property name. **Property expectations will always have priority**.
+
+```typescript
+import Mock from 'strong-mock';
+
+interface Foo {
+  bar(): string;
+}
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f.bar).returns(() => 'bar');
+mock.when(f => f.bar()).returns('baz');
+
+console.log(mock.stub.bar()); // 'bar'
+console.log(mock.stub.bar()); // throws
+```
+
+
+### Mocking functions
+
+Mocking functions is similar to mocking interfaces. You can even mock properties on the function, even inherited ones.
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = (x: number) => number;
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f()).returns(23);
+mock.when(f => f.toString()).returns('foobar');
+
+console.log(mock.stub()); // 23
+console.log(mock.stub); // 'foobar'
+```
+
+
+### Verifying expectations
+
+You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there are any.
+
+```typescript
+import Mock from 'strong-mock';
+
+const mock = Mock<(x: number) => string>();
+
+mock.when(f => f(1)).returns('bar');
+mock.when(f => f(2)).returns('baz');
+
+mock.stub(1);
 
 mock.verifyAll(); // will throw because `bar(2)` hasn't been called
 ```
 
 
-#### `.reset`
+#### Resetting expectations
 
-Clears all expectations allowing you to start from the beginning. Useful in test setup/teardown hooks.
+By calling `.reset()` on the mock you can clear all expectations and start from the beginning. This is useful for test setup/teardown hooks.
+
+```typescript
+import Mock from 'strong-mock';
+
+const mock = Mock<(x: number) => string>();
+
+mock.when(f => f(1)).returns('bar');
+mock.reset();
+mock.when(f => f(1)).returns('baz');
+
+console.log(mock.stub(1)); // baz
+```
