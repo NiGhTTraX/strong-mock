@@ -148,7 +148,7 @@ mock.verifyAll(); // will throw because `bar(2)` hasn't been called
 ```
 
 
-#### Resetting expectations
+### Resetting expectations
 
 By calling `.reset()` on the mock you can clear all expectations and start from the beginning. This is useful for test setup/teardown hooks.
 
