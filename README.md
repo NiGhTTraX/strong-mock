@@ -28,7 +28,51 @@ strong-mock requires an environment that supports the [ES6 Proxy object](https:/
 
 ### Setting expectations
 
-Expectations are set by chaining a `.when()` call with a `.returns()` call. Omitting the `.returns()` call will **not** set an expectation, even if the return value should be `undefined`.
+Expectations are set by chaining a `.when()` call with a `.returns()` call. The `.returns()` part is **mandatory** and omitting it will **not** set an expectation, even if the return value should be `undefined`. This is 
+1. to prevent runtime errors where the unit under test expects a return value from the mock stub and
+2. discourage side effects or at least make them explicit.
+
+```typescript
+import Mock from 'strong-mock';
+import { expect } from 'chai';
+
+type Foo = (x: number) => string;
+
+function bar(foo: Foo): boolean {
+  return foo(23) === 'foobar';
+}
+
+const foo = Mock<Foo>();
+foo.when(f => f(23)); // does nothing
+
+// Other libraries might cause this test to pass.
+// strong-mock will throw instead because the
+// `f(23)` expectation is not actually set.
+expect(bar(foo.stub)).to.be.false;
+```
+
+
+#### Type checking
+
+Since the callback in `.when()` receives a stub that is the same type you're mocking, this means that the compiler will make sure you're setting valid expectations.
+
+However, the required type for the value in `.returns()` is inferred from the callback passed to `.when()`.
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = (x: number) => string;
+
+const foo = Mock<Foo>();
+foo
+  .when(f => { f(23); })
+  .returns(/* undefined is inferred here */);
+```
+
+Unfortunately there is no way to infer the key being accessed in `.when()` (if you do know of a way, please open an issue or a PR). This means that you should always return the value of the call you're making when setting expectations.
+
+
+#### Multiple expectations
 
 You can set multiple expectations, even with the same arguments, and they will be fulfilled in the order they were set. Once all expectations are met further calls will throw.
 
@@ -69,7 +113,7 @@ console.log(mock.stub.bar(23)); // 'bar'
 console.log(mock.stub.baz());
 ```
 
-There's no difference in passing an interface vs passing a concrete class - the mock will use a Proxy in both cases and unexpected property access will still throw. Moreover, there is no support for forwarding class to the concrete class.
+There's no difference in passing an interface vs passing a concrete class - the mock will use a Proxy in both cases and unexpected property access will still throw. Moreover, there is no support for forwarding calls to the concrete class.
 
 
 ### Mocking getters
@@ -113,7 +157,7 @@ console.log(mock.stub.bar()); // throws
 
 ### Mocking functions
 
-Mocking functions is similar to mocking interfaces. You can even mock properties on the function, even inherited ones.
+Mocking functions is similar to mocking interfaces. You can also mock properties on the function, even inherited ones.
 
 ```typescript
 import Mock from 'strong-mock';
@@ -132,7 +176,7 @@ console.log(mock.stub); // 'foobar'
 
 ### Verifying expectations
 
-You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there are any.
+You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
 
 ```typescript
 import Mock from 'strong-mock';
