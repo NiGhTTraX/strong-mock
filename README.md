@@ -15,6 +15,7 @@
 
 - No call forwarding support.
 - No setter mocking support.
+- Can't ignore arguments in expectations e.g. `isAny()`.
 
 If you need any of the above check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
 
