@@ -50,7 +50,7 @@
     "@babel/preset-env": "~7.5.0",
     "@babel/preset-typescript": "~7.3.0",
     "@babel/register": "~7.5.0",
-    "@nighttrax/eslint-config-ts": "~2.0.0",
+    "@nighttrax/eslint-config-ts": "~3.0.0",
     "@types/chai": "~4.1.7",
     "@types/mocha": "~5.2.5",
     "@typescript-eslint/eslint-plugin": "~1.13.0",
