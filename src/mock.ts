@@ -9,6 +9,7 @@ import {
   WrongMethodArgsError
 } from './errors';
 import { MethodExpectation, PropertyExpectation } from './expectations';
+import { AllowAny, isMatcher } from './matcher';
 
 export type Stub<T, R> = {
   returns(r: R): void;
@@ -27,8 +28,7 @@ export default class Mock<T> {
 
   private applyExpectations: MethodExpectation[] = [];
 
-  // TODO: implement It.isAny
-  when<R>(cb: (fake: T) => R): Stub<T, R> {
+  when<R>(cb: (fake: AllowAny<T>) => R): Stub<T, R> {
     let expectedArgs: any[] | undefined;
     let expectedProperty: string;
 
@@ -46,7 +46,7 @@ export default class Mock<T> {
       }
     });
 
-    cb(proxy as unknown as T);
+    cb(proxy as unknown as AllowAny<T>);
 
     return {
       returns: (r: R) => {
@@ -179,6 +179,18 @@ export default class Mock<T> {
 
   // eslint-disable-next-line class-methods-use-this
   private compareArgs(args: any[]) {
-    return (arg: any, i: number) => isDeepStrictEqual(args[i], arg);
+    return (actual: any, i: number) => {
+      const expected = args[i];
+
+      if (expected && isMatcher(expected)) {
+        return expected(actual);
+      }
+
+      if (actual && isMatcher(actual)) {
+        return actual(expected);
+      }
+
+      return isDeepStrictEqual(expected, actual);
+    };
   }
 }
