@@ -39,6 +39,41 @@ describe('Mock', () => {
           expect(mock.stub.bar(1, 2, 3)).to.equal(99);
         });
       });
+
+      describe('anyString', () => {
+        it('single argument', () => {
+          interface Foo {
+            bar: (x: string) => number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar(It.isAnyString)).returns(42);
+
+          expect(mock.stub.bar('a')).to.equal(42);
+        });
+
+        it('multiple arguments', () => {
+          interface Foo {
+            bar: (x: string, y: string) => number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar(It.isAnyString, It.isAnyString)).returns(10);
+
+          expect(mock.stub.bar('b', 'c')).to.equal(10);
+        });
+
+        it('mixed arguments', () => {
+          interface Foo {
+            bar: (x: string, y: string, z: string) => number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar('a', It.isAnyString, 'c')).returns(99);
+
+          expect(mock.stub.bar('a', 'b', 'c')).to.equal(99);
+        });
+      });
     });
 
     describe('functions', () => {
