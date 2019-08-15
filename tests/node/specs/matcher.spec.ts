@@ -1,7 +1,7 @@
 import { describe, expect, it } from '../suite';
 import { It } from '../../../src/matcher';
 
-describe('Matcher', () => {
+describe('It', () => {
   describe('isAnyNumber', () => {
     it('should match 0', () => {
       expect(It.isAnyNumber.matches(0)).to.be.true;
@@ -109,6 +109,15 @@ describe('Matcher', () => {
 
     it('should match arrays', () => {
       expect(It.isAny.matches([1, 2, 3])).to.be.true;
+    });
+  });
+
+  describe('matches', () => {
+    it('should support custom predicates', () => {
+      expect(It.matches(() => true).matches(':irrelevant:')).to.be.true;
+      expect(It.matches(() => false).matches(':irrelevant:')).to.be.false;
+      expect(It.matches(arg => arg).matches(true)).to.be.true;
+      expect(It.matches(arg => arg).matches(false)).to.be.false;
     });
   });
 });
