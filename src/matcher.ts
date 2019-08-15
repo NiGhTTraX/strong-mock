@@ -33,7 +33,14 @@ const isAnyString: Matcher<string> = {
   __isMatcher: true
 };
 
+const isAny: Matcher<any> = {
+  // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
+  matches: (arg: any): arg is any => true,
+  __isMatcher: true
+};
+
 export const It = {
   isAnyNumber,
-  isAnyString
+  isAnyString,
+  isAny
 };
