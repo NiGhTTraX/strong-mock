@@ -28,8 +28,6 @@ const isAnyNumber: Matcher<number> = {
   __isMatcher: true
 };
 
-export const It: {
-  isAnyNumber: Matcher<number>
-} = {
+export const It = {
   isAnyNumber
 };
