@@ -51,4 +51,34 @@ describe('Matcher', () => {
       expect(It.isAnyNumber.matches([1, 2, 3])).to.be.false;
     });
   });
+
+  describe('isAnyString', () => {
+    it('should match the empty string', () => {
+      expect(It.isAnyString.matches('')).to.be.true;
+    });
+
+    it('should match a string', () => {
+      expect(It.isAnyString.matches('foobar')).to.be.true;
+    });
+
+    it('should match a string that looks like a number', () => {
+      expect(It.isAnyString.matches('4')).to.be.true;
+    });
+
+    it('should not match numbers', () => {
+      expect(It.isAnyString.matches(23)).to.be.false;
+    });
+
+    it('should not match booleans', () => {
+      expect(It.isAnyString.matches(true)).to.be.false;
+    });
+
+    it('should not match objects', () => {
+      expect(It.isAnyString.matches({ foo: 'bar' })).to.be.false;
+    });
+
+    it('should not match arrays', () => {
+      expect(It.isAnyString.matches([1, 2, 3])).to.be.false;
+    });
+  });
 });

@@ -28,6 +28,12 @@ const isAnyNumber: Matcher<number> = {
   __isMatcher: true
 };
 
+const isAnyString: Matcher<string> = {
+  matches: (arg: any): arg is string => typeof arg === 'string',
+  __isMatcher: true
+};
+
 export const It = {
-  isAnyNumber
+  isAnyNumber,
+  isAnyString
 };
