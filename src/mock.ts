@@ -183,11 +183,11 @@ export default class Mock<T> {
       const expected = args[i];
 
       if (expected && isMatcher(expected)) {
-        return expected(actual);
+        return expected.matches(actual);
       }
 
       if (actual && isMatcher(actual)) {
-        return actual(expected);
+        return actual.matches(expected);
       }
 
       return isDeepStrictEqual(expected, actual);

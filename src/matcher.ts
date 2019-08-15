@@ -1,9 +1,9 @@
 type Matcher<T> = {
-  (arg: any): arg is T;
+  matches: (arg: any) => arg is T;
   __isMatcher: boolean;
 }
 
-export function isMatcher(f: Function): f is Matcher<any> {
+export function isMatcher(f: any): f is Matcher<any> {
   return (<Matcher<any>>f).__isMatcher;
 }
 
@@ -23,9 +23,13 @@ export type AllowAny<T> = T extends (...args: infer A) => infer R
   ? ((...args: AllowAnyArgs<A>) => R) & AllowAnyForProperties<T>
   : AllowAnyForProperties<T>;
 
-const isAnyNumber = (arg: any): arg is number => typeof arg === 'number';
-isAnyNumber.__isMatcher = true;
+const isAnyNumber: Matcher<number> = {
+  matches: (arg: any): arg is number => typeof arg === 'number',
+  __isMatcher: true
+};
 
-export const It = {
+export const It: {
+  isAnyNumber: Matcher<number>
+} = {
   isAnyNumber
 };
