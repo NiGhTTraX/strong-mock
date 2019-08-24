@@ -163,17 +163,17 @@ export default class Mock<T> {
     };
   };
 
-  private apply = (target: any, thisArg: any, argArray?: any) => {
+  private apply = (target: any, thisArg: any, actualArgs?: any) => {
     if (!this.applyExpectations.length) {
       throw new UnexpectedApplyError();
     }
 
     const expectation = this.applyExpectations.find(
-      this.isUnmetExpectationWithMatchingArgs(argArray)
+      this.isUnmetExpectationWithMatchingArgs(actualArgs)
     );
 
     if (!expectation) {
-      throw new WrongApplyArgsError(argArray, this.applyExpectations);
+      throw new WrongApplyArgsError(actualArgs, this.applyExpectations);
     }
 
     expectation.met = true;
@@ -182,25 +182,21 @@ export default class Mock<T> {
   };
 
   // eslint-disable-next-line class-methods-use-this
-  private isUnmetExpectationWithMatchingArgs(args: any[]) {
+  private isUnmetExpectationWithMatchingArgs(actualArgs: any[]) {
     return (e: MethodExpectation) => !e.met
-      && e.args.every(this.compareArgs(args));
+      && e.args.every(this.compareArgs(actualArgs));
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private compareArgs(args: any[]) {
-    return (actual: any, i: number) => {
-      const expected = args[i];
+  private compareArgs(actualArgs: any[]) {
+    return (expected: any, i: number) => {
+      const actual = actualArgs[i];
 
       if (expected && isMatcher(expected)) {
         return expected.matches(actual);
       }
 
-      if (actual && isMatcher(actual)) {
-        return actual.matches(expected);
-      }
-
-      return isDeepStrictEqual(expected, actual);
+      return isDeepStrictEqual(actual, expected);
     };
   }
 }
