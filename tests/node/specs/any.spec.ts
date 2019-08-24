@@ -1,8 +1,54 @@
 import { describe, expect, it } from '../suite';
 import Mock from '../../../src/mock';
-import { It } from '../../../src/matcher';
+import { It, Matcher } from '../../../src/matcher';
 
 describe('Mock', () => {
+  function createTestsForStringMatcher(matcher: Matcher<string>) {
+    return () => {
+      it('single argument', () => {
+        interface Foo {
+          bar: (x: string) => number;
+        }
+
+        const mock = new Mock<Foo>();
+        mock.when(f => f.bar(matcher))
+          .returns(42);
+
+        expect(mock.stub.bar('a'))
+          .to
+          .equal(42);
+      });
+
+      it('multiple arguments', () => {
+        interface Foo {
+          bar: (x: string, y: string) => number;
+        }
+
+        const mock = new Mock<Foo>();
+        mock.when(f => f.bar(matcher, matcher))
+          .returns(10);
+
+        expect(mock.stub.bar('b', 'c'))
+          .to
+          .equal(10);
+      });
+
+      it('mixed arguments', () => {
+        interface Foo {
+          bar: (x: string, y: string, z: string) => number;
+        }
+
+        const mock = new Mock<Foo>();
+        mock.when(f => f.bar('a', matcher, 'c'))
+          .returns(99);
+
+        expect(mock.stub.bar('a', 'b', 'c'))
+          .to
+          .equal(99);
+      });
+    };
+  }
+
   describe('ignoring arguments', () => {
     describe('methods', () => {
       describe('anyNumber', () => {
@@ -40,110 +86,11 @@ describe('Mock', () => {
         });
       });
 
-      describe('anyString', () => {
-        it('single argument', () => {
-          interface Foo {
-            bar: (x: string) => number;
-          }
+      describe('anyString', createTestsForStringMatcher(It.isAnyString));
 
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.isAnyString)).returns(42);
+      describe('any', createTestsForStringMatcher(It.isAny));
 
-          expect(mock.stub.bar('a')).to.equal(42);
-        });
-
-        it('multiple arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.isAnyString, It.isAnyString)).returns(10);
-
-          expect(mock.stub.bar('b', 'c')).to.equal(10);
-        });
-
-        it('mixed arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string, z: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar('a', It.isAnyString, 'c')).returns(99);
-
-          expect(mock.stub.bar('a', 'b', 'c')).to.equal(99);
-        });
-      });
-
-      describe('any', () => {
-        it('single argument', () => {
-          interface Foo {
-            bar: (x: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.isAny)).returns(42);
-
-          expect(mock.stub.bar('a')).to.equal(42);
-        });
-
-        it('multiple arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.isAny, It.isAny)).returns(10);
-
-          expect(mock.stub.bar('b', 'c')).to.equal(10);
-        });
-
-        it('mixed arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string, z: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar('a', It.isAny, 'c')).returns(99);
-
-          expect(mock.stub.bar('a', 'b', 'c')).to.equal(99);
-        });
-      });
-
-      describe('matches', () => {
-        it('single argument', () => {
-          interface Foo {
-            bar: (x: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.matches(() => true))).returns(42);
-
-          expect(mock.stub.bar('a')).to.equal(42);
-        });
-
-        it('multiple arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar(It.matches(() => true), It.matches(() => true))).returns(10);
-
-          expect(mock.stub.bar('b', 'c')).to.equal(10);
-        });
-
-        it('mixed arguments', () => {
-          interface Foo {
-            bar: (x: string, y: string, z: string) => number;
-          }
-
-          const mock = new Mock<Foo>();
-          mock.when(f => f.bar('a', It.matches(() => true), 'c')).returns(99);
-
-          expect(mock.stub.bar('a', 'b', 'c')).to.equal(99);
-        });
-      });
+      describe('matches', createTestsForStringMatcher(It.matches(() => true)));
     });
 
     describe('functions', () => {

@@ -1,4 +1,4 @@
-type Matcher<T> = {
+export type Matcher<T> = {
   matches: (arg: any) => arg is T;
   __isMatcher: boolean;
 }
