@@ -8,11 +8,7 @@ export function isMatcher(f: any): f is Matcher<any> {
 }
 
 export type AllowAnyArgs<T extends any[]> = {
-  [K in keyof T]: T[K] extends number
-    ? T[K] | Matcher<number>
-    : T[K] extends string
-      ? T[K] | Matcher<string>
-      : T[K];
+  [K in keyof T]: T[K] | Matcher<T[K]>;
 }
 
 type AllowAnyForProperties<T> = {
