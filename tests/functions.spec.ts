@@ -142,5 +142,51 @@ describe('Mock', () => {
 
       expect(() => mock.stub(3, 4)).to.throw(WrongApplyArgsError);
     });
+
+    it('.call', () => {
+      const mock = new Mock<() => number>();
+      mock.when(f => f()).returns(1);
+
+      expect(mock.stub.call(null)).to.equal(1);
+    });
+
+    it('.call with args', () => {
+      const mock = new Mock<(x: number) => number>();
+      mock.when(f => f(1)).returns(1);
+
+      expect(mock.stub.call(null, 1)).to.equal(1);
+    });
+
+    it('multiple .call', () => {
+      const mock = new Mock<() => number>();
+      mock.when(f => f()).returns(1);
+      mock.when(f => f()).returns(2);
+
+      expect(mock.stub.call(null)).to.equal(1);
+      expect(mock.stub.call(null)).to.equal(2);
+    });
+
+    it('.apply', () => {
+      const mock = new Mock<() => void>();
+      mock.when(f => f()).returns(undefined);
+
+      mock.stub.apply(null);
+    });
+
+    it('multiple .apply', () => {
+      const mock = new Mock<() => number>();
+      mock.when(f => f()).returns(1);
+      mock.when(f => f()).returns(2);
+
+      expect(mock.stub.apply(null)).to.equal(1);
+      expect(mock.stub.apply(null)).to.equal(2);
+    });
+
+    it('.apply with args', () => {
+      const mock = new Mock<(x: number) => number>();
+      mock.when(f => f(1)).returns(1);
+
+      expect(mock.stub.apply(null, [1])).to.equal(1);
+    });
   });
 });

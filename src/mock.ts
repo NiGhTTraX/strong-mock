@@ -77,62 +77,19 @@ export default class Mock<T> {
   get stub(): T {
     return new Proxy(() => {}, {
       get: (target, property: string) => {
-        const propertyExpectations = this.propertyExpectations.get(property);
-
-        if (propertyExpectations) {
-          const expectation = propertyExpectations.find(e => !e.met);
-
-          if (!expectation) {
-            throw new UnexpectedAccessError(property);
-          }
-
-          expectation.met = true;
-
-          return expectation.r;
+        if (property === 'call') {
+          // Transform from .call's ...args to .apply's [...args].
+          return (thisArg: any, ...args: any[]) => this.apply(target, thisArg, args);
         }
 
-        const methodExpectations = this.methodExpectations.get(property);
-
-        if (!methodExpectations) {
-          // Since we don't have any property or method expectations we can't tell
-          // if the requested property is a method or just a getter, therefore we
-          // throw a generic message.
-          throw new UnexpectedAccessError(property);
+        if (property === 'apply') {
+          return this.apply.bind(null, target);
         }
 
-        return (...args: any[]) => {
-          // Find the first unmet expectation.
-          const expectation = methodExpectations.find(
-            this.isUnmetExpectationWithMatchingArgs(args)
-          );
-
-          if (!expectation) {
-            throw new WrongMethodArgsError(property, args, methodExpectations);
-          }
-
-          expectation.met = true;
-
-          return expectation.r;
-        };
+        return this.get(property);
       },
 
-      apply: (target: () => void, thisArg: any, argArray?: any) => {
-        if (!this.applyExpectations.length) {
-          throw new UnexpectedApplyError();
-        }
-
-        const expectation = this.applyExpectations.find(
-          this.isUnmetExpectationWithMatchingArgs(argArray)
-        );
-
-        if (!expectation) {
-          throw new WrongApplyArgsError(argArray, this.applyExpectations);
-        }
-
-        expectation.met = true;
-
-        return expectation.r;
-      }
+      apply: this.apply
     }) as unknown as T;
   }
 
@@ -165,6 +122,64 @@ export default class Mock<T> {
     this.methodExpectations.clear();
     this.applyExpectations = [];
   }
+
+  private get = (property: string) => {
+    const propertyExpectations = this.propertyExpectations.get(property);
+
+    if (propertyExpectations) {
+      const expectation = propertyExpectations.find(e => !e.met);
+
+      if (!expectation) {
+        throw new UnexpectedAccessError(property);
+      }
+
+      expectation.met = true;
+
+      return expectation.r;
+    }
+
+    const methodExpectations = this.methodExpectations.get(property);
+
+    if (!methodExpectations) {
+      // Since we don't have any property or method expectations we can't tell
+      // if the requested property is a method or just a getter, therefore we
+      // throw a generic message.
+      throw new UnexpectedAccessError(property);
+    }
+
+    return (...args: any[]) => {
+      // Find the first unmet expectation.
+      const expectation = methodExpectations.find(
+        this.isUnmetExpectationWithMatchingArgs(args)
+      );
+
+      if (!expectation) {
+        throw new WrongMethodArgsError(property, args, methodExpectations);
+      }
+
+      expectation.met = true;
+
+      return expectation.r;
+    };
+  };
+
+  private apply = (target: any, thisArg: any, argArray?: any) => {
+    if (!this.applyExpectations.length) {
+      throw new UnexpectedApplyError();
+    }
+
+    const expectation = this.applyExpectations.find(
+      this.isUnmetExpectationWithMatchingArgs(argArray)
+    );
+
+    if (!expectation) {
+      throw new WrongApplyArgsError(argArray, this.applyExpectations);
+    }
+
+    expectation.met = true;
+
+    return expectation.r;
+  };
 
   // eslint-disable-next-line class-methods-use-this
   private isUnmetExpectationWithMatchingArgs(args: any[]) {
