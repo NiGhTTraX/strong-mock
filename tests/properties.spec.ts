@@ -1,7 +1,7 @@
-import Mock from '../src/mock';
-import { UnexpectedAccessError } from '../src/errors';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { expect } from 'tdd-buffet/suite/expect';
+import { describe, it } from 'tdd-buffet/suite/node';
+import { UnexpectedAccessError } from '../src/errors';
+import Mock from '../src/mock';
 
 describe('Mock', () => {
   describe('property expectations', () => {

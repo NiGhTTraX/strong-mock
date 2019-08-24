@@ -1,6 +1,6 @@
-import Mock from '../src/mock';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { expect } from 'tdd-buffet/suite/expect';
+import { describe, it } from 'tdd-buffet/suite/node';
+import Mock from '../src/mock';
 
 describe('Mock', () => {
   describe('reset', () => {

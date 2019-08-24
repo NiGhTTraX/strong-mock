@@ -1,8 +1,8 @@
+import { expect } from 'tdd-buffet/suite/expect';
+import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedAccessError, WrongApplyArgsError, WrongMethodArgsError } from '../src/errors';
 import { MethodExpectation } from '../src/expectations';
 import { It } from '../src/matcher';
-import { describe, it } from 'tdd-buffet/suite/node';
-import { expect } from 'tdd-buffet/suite/expect';
 
 describe('Mock', () => {
   describe('errors', () => {

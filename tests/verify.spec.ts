@@ -1,11 +1,11 @@
-import Mock from '../src/mock';
+import { expect } from 'tdd-buffet/suite/expect';
+import { describe, it } from 'tdd-buffet/suite/node';
 import {
   UnmetApplyExpectationError,
   UnmetMethodExpectationError,
   UnmetPropertyExpectationError
 } from '../src/errors';
-import { describe, it } from 'tdd-buffet/suite/node';
-import { expect } from 'tdd-buffet/suite/expect';
+import Mock from '../src/mock';
 
 describe('Mock', () => {
   describe('verify', () => {
