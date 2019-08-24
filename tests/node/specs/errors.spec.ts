@@ -5,6 +5,7 @@ import {
   WrongMethodArgsError
 } from '../../../src/errors';
 import { MethodExpectation } from '../../../src/expectations';
+import { It } from '../../../src/matcher';
 
 describe('Mock', () => {
   describe('errors', () => {
@@ -66,8 +67,29 @@ describe('Mock', () => {
         expect(error.message).to.contain('[ 1 ] => 2').and.to.contain('[ 3 ] => 4');
       });
 
-      it('should shorten It.isAny');
-      it('should shorten It.matches');
+      it('should shorten It.isAny', () => {
+        const error = new WrongMethodArgsError(':irrelevant:', [], [
+          new MethodExpectation([It.isAny], 2)
+        ]);
+
+        expect(error.message).to.contain('[ any ] => 2');
+      });
+
+      it('should shorten anonymous It.matches with no args', () => {
+        const error = new WrongMethodArgsError(':irrelevant:', [], [
+          new MethodExpectation([It.matches(() => true)], 2)
+        ]);
+
+        expect(error.message).to.contain('[ function () { return true; } ] => 2');
+      });
+
+      it('should shorten anonymous It.matches with args', () => {
+        const error = new WrongMethodArgsError(':irrelevant:', [], [
+          new MethodExpectation([It.matches((x: number) => !!x)], 2)
+        ]);
+
+        expect(error.message).to.contain('[ function (x) { return !!x; } ] => 2');
+      });
     });
 
     describe('WrongApplyError', () => {

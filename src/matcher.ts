@@ -39,7 +39,11 @@ export type AllowAny<T> = T extends (...args: infer A) => infer R
 const isAny: Matcher<any> = {
   // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
   matches: (arg: any): arg is any => true,
-  __isMatcher: true
+  __isMatcher: true,
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return 'any';
+  }
 };
 
 /**
@@ -61,7 +65,11 @@ const isAny: Matcher<any> = {
  */
 const matches = (cb: (arg: any) => boolean): Matcher<any> => ({
   matches: (arg: any): arg is any => cb(arg),
-  __isMatcher: true
+  __isMatcher: true,
+
+  [Symbol.for('nodejs.util.inspect.custom')]() {
+    return cb.toString();
+  }
 });
 
 export const It = {
