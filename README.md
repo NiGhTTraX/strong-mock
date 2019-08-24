@@ -9,7 +9,7 @@
 - Mocks are always strict.
 - Useful error messages.
 - Simple and expressive API.
-- Supports argument matchers.
+- Type safe argument matchers.
 
 
 ## Limitations

@@ -37,8 +37,8 @@ describe('It', () => {
     it('should support custom predicates', () => {
       expect(It.matches(() => true).matches(':irrelevant:')).to.be.true;
       expect(It.matches(() => false).matches(':irrelevant:')).to.be.false;
-      expect(It.matches(arg => arg).matches(true)).to.be.true;
-      expect(It.matches(arg => arg).matches(false)).to.be.false;
+      expect(It.matches(arg => !!arg).matches(true)).to.be.true;
+      expect(It.matches(arg => !!arg).matches(false)).to.be.false;
     });
   });
 });

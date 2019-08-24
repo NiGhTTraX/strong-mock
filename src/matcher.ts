@@ -63,8 +63,8 @@ const isAny: Matcher<any> = {
  * mock.stub({foo: 'baz', bar: 0 }) // throws
  * ```
  */
-const matches = (cb: (arg: any) => boolean): Matcher<any> => ({
-  matches: (arg: any): arg is any => cb(arg),
+const matches = <T>(cb: (arg: T) => boolean): Matcher<T> => ({
+  matches: (arg: any): arg is T => cb(arg),
   __isMatcher: true,
 
   [Symbol.for('nodejs.util.inspect.custom')]() {
