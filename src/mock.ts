@@ -9,7 +9,7 @@ import {
   WrongMethodArgsError
 } from './errors';
 import { MethodExpectation, PropertyExpectation } from './expectations';
-import { AllowAny, isMatcher } from './matcher';
+import { isMatcher } from './matcher';
 
 export type Stub<T, R> = {
   returns(r: R): void;
@@ -27,7 +27,7 @@ export default class Mock<T> {
 
   private applyExpectations: MethodExpectation[] = [];
 
-  when<R>(cb: (fake: AllowAny<T>) => R): Stub<T, R> {
+  when<R>(cb: (fake: T) => R): Stub<T, R> {
     let expectedArgs: any[] | undefined;
     let expectedProperty: string;
 
@@ -45,7 +45,7 @@ export default class Mock<T> {
       }
     });
 
-    cb(proxy as unknown as AllowAny<T>);
+    cb(proxy as T);
 
     return {
       returns: (r: R) => {

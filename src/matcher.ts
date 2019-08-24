@@ -1,4 +1,4 @@
-export type Matcher<T> = {
+export type Matcher<T> = T & {
   matches: (arg: any) => arg is T;
   __isMatcher: boolean;
 }
@@ -6,20 +6,6 @@ export type Matcher<T> = {
 export function isMatcher(f: any): f is Matcher<any> {
   return (<Matcher<any>>f).__isMatcher;
 }
-
-export type AllowAnyArgs<T extends any[]> = {
-  [K in keyof T]: T[K] | Matcher<T[K]>;
-}
-
-type AllowAnyForProperties<T> = {
-  [K in keyof T]: T[K] extends (...args: infer A) => infer R
-    ? (...args: AllowAnyArgs<A>) => R
-    : T[K];
-};
-
-export type AllowAny<T> = T extends (...args: infer A) => infer R
-  ? ((...args: AllowAnyArgs<A>) => R) & AllowAnyForProperties<T>
-  : AllowAnyForProperties<T>;
 
 /**
  * Match any value.
@@ -70,7 +56,7 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> => ({
   [Symbol.for('nodejs.util.inspect.custom')]() {
     return cb.toString();
   }
-});
+} as any);
 
 export const It = {
   isAny,
