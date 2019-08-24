@@ -66,7 +66,8 @@ describe('Mock', () => {
         expect(error.message).to.contain('[ 1 ] => 2').and.to.contain('[ 3 ] => 4');
       });
 
-      it('should shorten isAnyNumber');
+      it('should shorten It.isAny');
+      it('should shorten It.matches');
     });
 
     describe('WrongApplyError', () => {

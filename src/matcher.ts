@@ -21,31 +21,50 @@ export type AllowAny<T> = T extends (...args: infer A) => infer R
   ? ((...args: AllowAnyArgs<A>) => R) & AllowAnyForProperties<T>
   : AllowAnyForProperties<T>;
 
-const isAnyNumber: Matcher<number> = {
-  matches: (arg: any): arg is number => typeof arg === 'number',
-  __isMatcher: true
-};
-
-const isAnyString: Matcher<string> = {
-  matches: (arg: any): arg is string => typeof arg === 'string',
-  __isMatcher: true
-};
-
+/**
+ * Match any value.
+ *
+ * The compiler will make sure the type is correct and the matcher
+ * will permit any value.
+ *
+ * @example
+ * ```
+ * const mock = new Mock<(x: number, y: string) => number>();
+ * mock.when(f => f(It.isAny, It.isAny)).returns(1);
+ *
+ * mock.stub(23, 'foobar') === 1
+ * mock.stub(23, true) // compiler error
+ * ```
+ */
 const isAny: Matcher<any> = {
   // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
   matches: (arg: any): arg is any => true,
   __isMatcher: true
 };
 
+/**
+ * Match a custom predicate.
+ *
+ * @param cb Will receive the value and returns whether it matches.
+ *
+ * @example
+ * ```
+ * type Foobar = { foo: 'string', bar: number };
+ *
+ * const mock = new Mock<(x: Foobar) => number>();
+ * mock.when(f => f(It.matches(x => x.foo === 'bar')).returns(1);
+ * mock.when(f => f(It.matches(x => x.bar >= 3)).returns(2);
+ *
+ * mock.stub({foo: 'bar', bar: 0 }) === 1
+ * mock.stub({foo: 'baz', bar: 0 }) // throws
+ * ```
+ */
 const matches = (cb: (arg: any) => boolean): Matcher<any> => ({
-  // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
   matches: (arg: any): arg is any => cb(arg),
   __isMatcher: true
 });
 
 export const It = {
-  isAnyNumber,
-  isAnyString,
   isAny,
   matches
 };
