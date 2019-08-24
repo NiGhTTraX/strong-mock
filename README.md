@@ -9,13 +9,13 @@
 - Mocks are always strict.
 - Useful error messages.
 - Simple and expressive API.
+- Supports argument matchers.
 
 
 ## Limitations
 
 - No call forwarding support.
 - No setter mocking support.
-- Can't ignore arguments in expectations e.g. `isAny()`.
 
 If you need any of the above check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
 
@@ -207,4 +207,22 @@ mock.reset();
 mock.when(f => f(1)).returns('baz');
 
 console.log(mock.stub(1)); // baz
+```
+
+
+### Argument matchers
+
+When setting up the mock expectations you can ignore arguments or you can use custom matchers for them.
+
+```typescript
+import Mock, { It } from 'strong-mock';
+
+const mock = new Mock<(x: number, y: string) => boolean>();
+
+mock.when(f => f(It.isAny, 'foobar')).returns(true);
+mock.when(f => f(It.matches(x => x > 0), It.matches(y => y))).returns(true);
+
+mock.stub(1, 'foobar'); // true
+mock.stub(-1, 'foobar'); // throws
+mock.stub(2, ''); // throws
 ```
