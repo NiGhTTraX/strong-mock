@@ -16,10 +16,9 @@ export type Stub<T, R> = {
 }
 
 /**
- * Mock interfaces and set method and property expectations.
+ * Mock types and set expectations.
  *
- * Mocks are strict by default - an unexpected call will throw an error
- * and so will a call with more params than expected.
+ * Mocks are strict by default - an unexpected call will throw an error.
  */
 export default class Mock<T> {
   private methodExpectations: Map<string, MethodExpectation[]> = new Map();
@@ -169,12 +168,8 @@ export default class Mock<T> {
 
   // eslint-disable-next-line class-methods-use-this
   private isUnmetExpectationWithMatchingArgs(args: any[]) {
-    // We check in both directions to
-    // 1) catch extra args that were not expected and
-    // 2) treat `undefined` and missing optional args as equal.
     return (e: MethodExpectation) => !e.met
-      && e.args.every(this.compareArgs(args))
-      && args.every(this.compareArgs(e.args));
+      && e.args.every(this.compareArgs(args));
   }
 
   // eslint-disable-next-line class-methods-use-this
