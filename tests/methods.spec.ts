@@ -1,6 +1,7 @@
-import { describe, expect, it } from '../suite';
-import Mock from '../../../src/mock';
-import { UnexpectedAccessError, WrongMethodArgsError } from '../../../src/errors';
+import Mock from '../src/mock';
+import { UnexpectedAccessError, WrongMethodArgsError } from '../src/errors';
+import { describe, it } from 'tdd-buffet/suite/node';
+import { expect } from 'tdd-buffet/suite/expect';
 
 describe('Mock', () => {
   describe('method expectations', () => {

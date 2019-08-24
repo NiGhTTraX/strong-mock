@@ -1,5 +1,6 @@
-import { describe, expect, it } from '../suite';
-import { It } from '../../../src/matcher';
+import { It } from '../src/matcher';
+import { describe, it } from 'tdd-buffet/suite/node';
+import { expect } from 'tdd-buffet/suite/expect';
 
 describe('It', () => {
   describe('isAny', () => {

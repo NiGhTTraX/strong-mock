@@ -26,10 +26,9 @@
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
     "lint": "eslint --ext ts,tsx,js .",
-    "test": "./tests/run.sh",
-    "test:node": "TS_NODE_CACHE=0 mocha --opts tests/node/mocha.opts",
-    "test:node:coverage": "TS_NODE_CACHE=0 COVERAGE=1 nyc --silent mocha --opts tests/node/mocha.coverage.opts",
-    "report-coverage": "nyc report --reporter=json && codecov -f tests/results/coverage/coverage-final.json"
+    "test": "tdd-buffet test",
+    "test:coverage": "tdd-buffet test --coverage",
+    "report-coverage": "nyc report --reporter=json && codecov -f tests/results/coverage-final.json"
   },
   "husky": {
     "hooks": {
@@ -44,27 +43,14 @@
     "@types/node": "~12.7.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.5.0",
-    "@babel/plugin-proposal-class-properties": "~7.5.0",
-    "@babel/plugin-proposal-decorators": "~7.4.0",
-    "@babel/preset-env": "~7.5.0",
-    "@babel/preset-typescript": "~7.3.0",
-    "@babel/register": "~7.5.0",
     "@nighttrax/eslint-config-ts": "~3.0.0",
-    "@types/chai": "~4.2.0",
-    "@types/mocha": "~5.2.5",
     "@typescript-eslint/eslint-plugin": "~2.0.0",
-    "babel-cli": "~6.26.0",
-    "babel-plugin-istanbul": "~5.2.0",
-    "chai": "~4.2.0",
     "codecov": "~3.5.0",
     "eslint": "~5.16.0",
     "husky": "~3.0.0",
-    "lerna": "~3.16.0",
+    "jest": "~24.9.0",
     "lint-staged": "~9.2.0",
-    "mocha": "~6.2.0",
-    "nyc": "~14.1.0",
-    "ts-node": "~8.3.0",
+    "tdd-buffet": "~0.7.3",
     "typescript": "~3.5.0"
   }
 }

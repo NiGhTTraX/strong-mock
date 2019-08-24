@@ -1,11 +1,8 @@
-import { describe, expect, it } from '../suite';
-import {
-  UnexpectedAccessError,
-  WrongApplyArgsError,
-  WrongMethodArgsError
-} from '../../../src/errors';
-import { MethodExpectation } from '../../../src/expectations';
-import { It } from '../../../src/matcher';
+import { UnexpectedAccessError, WrongApplyArgsError, WrongMethodArgsError } from '../src/errors';
+import { MethodExpectation } from '../src/expectations';
+import { It } from '../src/matcher';
+import { describe, it } from 'tdd-buffet/suite/node';
+import { expect } from 'tdd-buffet/suite/expect';
 
 describe('Mock', () => {
   describe('errors', () => {
@@ -80,7 +77,7 @@ describe('Mock', () => {
           new MethodExpectation([It.matches(() => true)], 2)
         ]);
 
-        expect(error.message).to.contain('[ function () { return true; } ] => 2');
+        expect(error.message).to.contain('[ () => true ] => 2');
       });
 
       it('should shorten anonymous It.matches with args', () => {
@@ -88,7 +85,7 @@ describe('Mock', () => {
           new MethodExpectation([It.matches((x: number) => !!x)], 2)
         ]);
 
-        expect(error.message).to.contain('[ function (x) { return !!x; } ] => 2');
+        expect(error.message).to.contain('[ (x) => !!x ] => 2');
       });
     });
 
