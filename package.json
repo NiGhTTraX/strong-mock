@@ -51,6 +51,6 @@
     "jest": "~24.9.0",
     "lint-staged": "~9.2.0",
     "tdd-buffet": "~0.8.0",
-    "typescript": "~3.5.0"
+    "typescript": "~3.6.0"
   }
 }
