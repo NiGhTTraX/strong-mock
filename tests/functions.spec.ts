@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/suite/expect';
+import { expect } from 'tdd-buffet/expect/chai';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedApplyError, WrongApplyArgsError } from '../src/errors';
 import Mock from '../src/mock';
