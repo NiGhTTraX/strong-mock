@@ -40,7 +40,7 @@
     "*.js": "eslint"
   },
   "dependencies": {
-    "@types/node": "~12.7.0"
+    "@types/node": "~12.11.0"
   },
   "devDependencies": {
     "@nighttrax/eslint-config-ts": "~3.0.0",
