@@ -24,8 +24,32 @@ interface StubTimes {
   times(x: number): void;
 }
 
-export type Stub<T, R> = {
-  returns(r: R): StubTimes;
+// Use a tuple to prevent union distribution, otherwise Stub<T, boolean>
+// will resolve to { returns(true & false (actually never) }. See for details:
+// https://github.com/microsoft/TypeScript/issues/32645#issuecomment-517102331
+export type Stub<T, R> = [R] extends [Promise<infer P>]
+  ? {
+    /**
+     * Resolve to the given value when the expectation is met.
+     *
+     * @param promiseValue The value the promise will resolve to.
+     */
+    resolves(promiseValue: P): StubTimes;
+
+    /**
+     * Return the given promise when the expectation is met.
+     *
+     * @param promise The promise to resolve to.
+     */
+    returns(promise: R): StubTimes;
+  }
+  : {
+    /**
+     * Return the given value when the expectation is met.
+     *
+     * @param returnValue
+     */
+  returns(returnValue: R): StubTimes;
 }
 
 /**
@@ -60,54 +84,61 @@ export default class Mock<T> {
 
     cb(proxy as T);
 
+    // @ts-ignore because we can't do a typeof on the expectation to decide
+    // if we should return the normal methods or the promise methods so we
+    // return both and rely on the compiler to force the usage of one or the
+    // other
     return {
-      returns: (r: R) => {
+      returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
+      resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r))
+    };
+  }
+
+  private returns(expectedArgs: any[] | undefined, expectedProperty: string, r: any) {
+    if (expectedArgs) {
+      if (expectedProperty) {
+        this.methodExpectations.set(
+          expectedProperty,
+          [
+            ...(this.methodExpectations.get(expectedProperty) || []),
+            new MethodExpectation(expectedArgs, r)
+          ]
+        );
+      } else {
+        this.applyExpectations.push(new MethodExpectation(expectedArgs, r));
+      }
+    } else {
+      this.propertyExpectations.set(
+        expectedProperty,
+        [
+          ...(this.propertyExpectations.get(expectedProperty) || []),
+          new PropertyExpectation(r)
+        ]
+      );
+    }
+
+    return {
+      always: () => {
         if (expectedArgs) {
           if (expectedProperty) {
-            this.methodExpectations.set(
-              expectedProperty,
-              [
-                ...(this.methodExpectations.get(expectedProperty) || []),
-                new MethodExpectation(expectedArgs, r)
-              ]
-            );
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
           } else {
-            this.applyExpectations.push(new MethodExpectation(expectedArgs, r));
+            this.applyExpectations.slice(-1)[0].times = -1;
           }
         } else {
-          this.propertyExpectations.set(
-            expectedProperty,
-            [
-              ...(this.propertyExpectations.get(expectedProperty) || []),
-              new PropertyExpectation(r)
-            ]
-          );
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
         }
-
-        return {
-          always: () => {
-            if (expectedArgs) {
-              if (expectedProperty) {
-                this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
-              } else {
-                this.applyExpectations.slice(-1)[0].times = -1;
-              }
-            } else {
-              this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
-            }
-          },
-          times: (x: number) => {
-            if (expectedArgs) {
-              if (expectedProperty) {
-                this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
-              } else {
-                this.applyExpectations.slice(-1)[0].times = x;
-              }
-            } else {
-              this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
-            }
+      },
+      times: (x: number) => {
+        if (expectedArgs) {
+          if (expectedProperty) {
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+          } else {
+            this.applyExpectations.slice(-1)[0].times = x;
           }
-        };
+        } else {
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+        }
       }
     };
   }
