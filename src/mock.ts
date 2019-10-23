@@ -16,6 +16,12 @@ interface StubTimes {
    * This expectation will never be consumed, unless the mock is reset.
    */
   always(): void;
+
+  /**
+   * This expectation will be consumed after `x` invocations.
+   * @param x
+   */
+  times(x: number): void;
 }
 
 export type Stub<T, R> = {
@@ -89,6 +95,17 @@ export default class Mock<T> {
             } else {
               this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
             }
+          },
+          times: (x: number) => {
+            if (expectedArgs) {
+              if (expectedProperty) {
+                this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+              } else {
+                this.applyExpectations.slice(-1)[0].times = x;
+              }
+            } else {
+              this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+            }
           }
         };
       }
@@ -155,7 +172,11 @@ export default class Mock<T> {
       }
 
       if (expectation.times !== -1) {
-        expectation.met = true;
+        expectation.times--;
+
+        if (expectation.times === 0) {
+          expectation.met = true;
+        }
       }
 
       return expectation.r;
@@ -181,7 +202,11 @@ export default class Mock<T> {
       }
 
       if (expectation.times !== -1) {
-        expectation.met = true;
+        expectation.times--;
+
+        if (expectation.times === 0) {
+          expectation.met = true;
+        }
       }
 
       return expectation.r;
@@ -202,7 +227,11 @@ export default class Mock<T> {
     }
 
     if (expectation.times !== -1) {
-      expectation.met = true;
+      expectation.times--;
+
+      if (expectation.times === 0) {
+        expectation.met = true;
+      }
     }
 
     return expectation.r;
