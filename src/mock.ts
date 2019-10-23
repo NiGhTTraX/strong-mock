@@ -11,8 +11,15 @@ import {
 import { MethodExpectation, PropertyExpectation } from './expectations';
 import { isMatcher } from './matcher';
 
+interface StubTimes {
+  /**
+   * This expectation will never be consumed, unless the mock is reset.
+   */
+  always(): void;
+}
+
 export type Stub<T, R> = {
-  returns(r: R): void;
+  returns(r: R): StubTimes;
 }
 
 /**
@@ -70,6 +77,20 @@ export default class Mock<T> {
             ]
           );
         }
+
+        return {
+          always: () => {
+            if (expectedArgs) {
+              if (expectedProperty) {
+                this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
+              } else {
+                this.applyExpectations.slice(-1)[0].times = -1;
+              }
+            } else {
+              this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
+            }
+          }
+        };
       }
     };
   }
@@ -133,7 +154,9 @@ export default class Mock<T> {
         throw new UnexpectedAccessError(property);
       }
 
-      expectation.met = true;
+      if (expectation.times !== -1) {
+        expectation.met = true;
+      }
 
       return expectation.r;
     }
@@ -157,7 +180,9 @@ export default class Mock<T> {
         throw new WrongMethodArgsError(property, args, methodExpectations);
       }
 
-      expectation.met = true;
+      if (expectation.times !== -1) {
+        expectation.met = true;
+      }
 
       return expectation.r;
     };
@@ -176,7 +201,9 @@ export default class Mock<T> {
       throw new WrongApplyArgsError(actualArgs, this.applyExpectations);
     }
 
-    expectation.met = true;
+    if (expectation.times !== -1) {
+      expectation.met = true;
+    }
 
     return expectation.r;
   };

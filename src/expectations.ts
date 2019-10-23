@@ -1,13 +1,17 @@
 import { inspect } from 'util';
 
-export class MethodExpectation {
-  public args: any[];
+export interface Expectation {
+  r: any;
+  met: boolean;
+  times: number;
+}
 
-  public r: any;
+export class MethodExpectation implements Expectation {
+  met: boolean;
 
-  public met: boolean;
+  times: number = 1;
 
-  constructor(args: any[], r: any) {
+  constructor(public args: any[], public r: any) {
     this.args = args;
     this.met = false;
     this.r = r;
@@ -18,14 +22,13 @@ export class MethodExpectation {
   }
 }
 
-export class PropertyExpectation {
-  public r: any;
+export class PropertyExpectation implements Expectation {
+  times: number = 1;
 
   public met: boolean;
 
-  constructor(r: any) {
+  constructor(public r: any) {
     this.met = false;
-    this.r = r;
   }
 
   toString() {
