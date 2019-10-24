@@ -210,7 +210,7 @@ export default class Mock<T> {
         }
       }
 
-      return expectation.r;
+      return expectation.returnValue;
     }
 
     const methodExpectations = this.methodExpectations.get(property);
@@ -240,7 +240,7 @@ export default class Mock<T> {
         }
       }
 
-      return expectation.r;
+      return expectation.returnValue;
     };
   };
 
@@ -265,7 +265,7 @@ export default class Mock<T> {
       }
     }
 
-    return expectation.r;
+    return expectation.returnValue;
   };
 
   // eslint-disable-next-line class-methods-use-this
