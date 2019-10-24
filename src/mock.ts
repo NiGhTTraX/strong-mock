@@ -94,6 +94,55 @@ export default class Mock<T> {
     };
   }
 
+  get stub(): T {
+    return new Proxy(() => {}, {
+      get: (target, property: string) => {
+        if (property === 'call') {
+          // Transform from .call's ...args to .apply's [...args].
+          return (thisArg: any, ...args: any[]) => this.apply(target, thisArg, args);
+        }
+
+        if (property === 'apply') {
+          return this.apply.bind(null, target);
+        }
+
+        return this.getPropertyOrMethod(property);
+      },
+
+      apply: this.apply
+    }) as unknown as T;
+  }
+
+  verifyAll() {
+    this.propertyExpectations.forEach((expectations, p) => {
+      expectations.forEach(expectation => {
+        if (!expectation.met) {
+          throw new UnmetPropertyExpectationError(p, expectation);
+        }
+      });
+    });
+
+    this.methodExpectations.forEach((expectations, p) => {
+      expectations.forEach(expectation => {
+        if (!expectation.met) {
+          throw new UnmetMethodExpectationError(p, expectation);
+        }
+      });
+    });
+
+    this.applyExpectations.forEach(expectation => {
+      if (!expectation.met) {
+        throw new UnmetApplyExpectationError(expectation);
+      }
+    });
+  }
+
+  reset() {
+    this.propertyExpectations.clear();
+    this.methodExpectations.clear();
+    this.applyExpectations = [];
+  }
+
   private returns(expectedArgs: any[] | undefined, expectedProperty: string, r: any) {
     if (expectedArgs) {
       if (expectedProperty) {
@@ -143,56 +192,7 @@ export default class Mock<T> {
     };
   }
 
-  get stub(): T {
-    return new Proxy(() => {}, {
-      get: (target, property: string) => {
-        if (property === 'call') {
-          // Transform from .call's ...args to .apply's [...args].
-          return (thisArg: any, ...args: any[]) => this.apply(target, thisArg, args);
-        }
-
-        if (property === 'apply') {
-          return this.apply.bind(null, target);
-        }
-
-        return this.get(property);
-      },
-
-      apply: this.apply
-    }) as unknown as T;
-  }
-
-  verifyAll() {
-    this.propertyExpectations.forEach((expectations, p) => {
-      expectations.forEach(expectation => {
-        if (!expectation.met) {
-          throw new UnmetPropertyExpectationError(p, expectation);
-        }
-      });
-    });
-
-    this.methodExpectations.forEach((expectations, p) => {
-      expectations.forEach(expectation => {
-        if (!expectation.met) {
-          throw new UnmetMethodExpectationError(p, expectation);
-        }
-      });
-    });
-
-    this.applyExpectations.forEach(expectation => {
-      if (!expectation.met) {
-        throw new UnmetApplyExpectationError(expectation);
-      }
-    });
-  }
-
-  reset() {
-    this.propertyExpectations.clear();
-    this.methodExpectations.clear();
-    this.applyExpectations = [];
-  }
-
-  private get = (property: string) => {
+  private getPropertyOrMethod = (property: string) => {
     const propertyExpectations = this.propertyExpectations.get(property);
 
     if (propertyExpectations) {
