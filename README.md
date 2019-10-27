@@ -163,7 +163,7 @@ Mocking functions is similar to mocking interfaces. You can also mock properties
 ```typescript
 import Mock from 'strong-mock';
 
-type Foo = (x: number) => number;
+type Foo = () => number;
 
 const mock = new Mock<Foo>();
 
