@@ -37,6 +37,13 @@ export type Stub<T, R> = [R] extends [Promise<infer P>]
     resolves(promiseValue: P): StubTimes;
 
     /**
+     * Reject with the given error.
+     *
+     * @param error Either an Error instance or an error message.
+     */
+    rejects(error: Error | string): StubTimes;
+
+    /**
      * Return the given promise when the expectation is met.
      *
      * @param promise The promise to resolve to.
@@ -98,7 +105,8 @@ export default class Mock<T> {
     return {
       throws: (e: Error | string) => this.returns(expectedArgs, expectedProperty, e, true),
       returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
-      resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r))
+      resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r)),
+      rejects: (e: Error | string) => this.returns(expectedArgs, expectedProperty, Promise.reject(typeof e === 'string' ? new Error(e) : e))
     };
   }
 

@@ -19,5 +19,35 @@ describe('Mock', () => {
       mock.when(f => f()).returns(Promise.resolve(23));
       expect(await mock.stub()).to.equal(23);
     });
+
+    it('rejects error', async () => {
+      type Foo = () => Promise<number>;
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f()).rejects(new Error('foo'));
+
+      return mock.stub()
+        .then(() => {
+          throw new Error('Expected promise to reject');
+        })
+        .catch(err => {
+          expect(err.message).to.equal('foo');
+        });
+    });
+
+    it('rejects message', async () => {
+      type Foo = () => Promise<number>;
+      const mock = new Mock<Foo>();
+
+      mock.when(f => f()).rejects('foo');
+
+      return mock.stub()
+        .then(() => {
+          throw new Error('Expected promise to reject');
+        })
+        .catch(err => {
+          expect(err.message).to.equal('foo');
+        });
+    });
   });
 });
