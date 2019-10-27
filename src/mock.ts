@@ -54,9 +54,9 @@ export type Stub<T, R> = [R] extends [Promise<infer P>]
     /**
      * Throw an error when the expectation is met.
      *
-     * @param error
+     * @param error Either an Error instance or an error message.
      */
-  throws(error: Error): StubTimes;
+  throws(error: Error | string): StubTimes;
 }
 
 /**
@@ -96,7 +96,7 @@ export default class Mock<T> {
     // return both and rely on the compiler to force the usage of one or the
     // other
     return {
-      throws: (e: Error) => this.returns(expectedArgs, expectedProperty, e, true),
+      throws: (e: Error | string) => this.returns(expectedArgs, expectedProperty, e, true),
       returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
       resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r))
     };
@@ -224,7 +224,11 @@ export default class Mock<T> {
       }
 
       if (expectation.throws) {
-        throw expectation.returnValue;
+        if (typeof expectation.returnValue === 'string') {
+          throw new Error(expectation.returnValue);
+        } else {
+          throw expectation.returnValue;
+        }
       }
 
       return expectation.returnValue;
@@ -258,7 +262,11 @@ export default class Mock<T> {
       }
 
       if (expectation.throws) {
-        throw expectation.returnValue;
+        if (typeof expectation.returnValue === 'string') {
+          throw new Error(expectation.returnValue);
+        } else {
+          throw expectation.returnValue;
+        }
       }
 
       return expectation.returnValue;
@@ -287,7 +295,11 @@ export default class Mock<T> {
     }
 
     if (expectation.throws) {
-      throw expectation.returnValue;
+      if (typeof expectation.returnValue === 'string') {
+        throw new Error(expectation.returnValue);
+      } else {
+        throw expectation.returnValue;
+      }
     }
 
     return expectation.returnValue;

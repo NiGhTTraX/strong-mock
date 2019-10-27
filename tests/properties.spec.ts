@@ -103,9 +103,16 @@ describe('Mock', () => {
       expect(() => mock.stub.bar()).to.throw(UnexpectedAccessError);
     });
 
-    it('throws', () => {
+    it('throws error', () => {
       const mock = new Mock<{ foo: number }>();
       mock.when(m => m.foo).throws(new Error('foo'));
+
+      expect(() => mock.stub.foo).to.throw('foo');
+    });
+
+    it('throws message', () => {
+      const mock = new Mock<{ foo: number }>();
+      mock.when(m => m.foo).throws('foo');
 
       expect(() => mock.stub.foo).to.throw('foo');
     });

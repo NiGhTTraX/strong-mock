@@ -189,9 +189,16 @@ describe('Mock', () => {
       expect(mock.stub.apply(null, [1])).to.equal(1);
     });
 
-    it('throws', () => {
+    it('throws error', () => {
       const mock = new Mock<() => void>();
       mock.when(f => f()).throws(new Error('foo'));
+
+      expect(() => mock.stub()).to.throw('foo');
+    });
+
+    it('throws message', () => {
+      const mock = new Mock<() => void>();
+      mock.when(f => f()).throws('foo');
 
       expect(() => mock.stub()).to.throw('foo');
     });
