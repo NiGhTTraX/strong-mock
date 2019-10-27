@@ -5,10 +5,8 @@ export class MethodExpectation {
 
   times: number = 1;
 
-  constructor(public args: any[], public returnValue: any) {
-    this.args = args;
+  constructor(public args: any[], public returnValue: any, public throws: boolean = false) {
     this.met = false;
-    this.returnValue = returnValue;
   }
 
   toString() {
@@ -21,7 +19,7 @@ export class PropertyExpectation {
 
   public met: boolean;
 
-  constructor(public returnValue: any) {
+  constructor(public returnValue: any, public throws: boolean = false) {
     this.met = false;
   }
 

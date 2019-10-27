@@ -140,5 +140,12 @@ describe('Mock', () => {
 
       expect(() => mock.stub.bar(3, 4)).to.throw(WrongMethodArgsError);
     });
+
+    it('throws', () => {
+      const mock = new Mock<{ foo:() => void}>();
+      mock.when(m => m.foo()).throws(new Error('foo'));
+
+      expect(() => mock.stub.foo()).to.throw('foo');
+    });
   });
 });

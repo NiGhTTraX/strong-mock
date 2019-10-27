@@ -188,5 +188,12 @@ describe('Mock', () => {
 
       expect(mock.stub.apply(null, [1])).to.equal(1);
     });
+
+    it('throws', () => {
+      const mock = new Mock<() => void>();
+      mock.when(f => f()).throws(new Error('foo'));
+
+      expect(() => mock.stub()).to.throw('foo');
+    });
   });
 });

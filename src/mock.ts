@@ -50,6 +50,13 @@ export type Stub<T, R> = [R] extends [Promise<infer P>]
      * @param returnValue
      */
   returns(returnValue: R): StubTimes;
+
+    /**
+     * Throw an error when the expectation is met.
+     *
+     * @param error
+     */
+  throws(error: Error): StubTimes;
 }
 
 /**
@@ -89,6 +96,7 @@ export default class Mock<T> {
     // return both and rely on the compiler to force the usage of one or the
     // other
     return {
+      throws: (e: Error) => this.returns(expectedArgs, expectedProperty, e, true),
       returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
       resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r))
     };
@@ -143,25 +151,30 @@ export default class Mock<T> {
     this.applyExpectations = [];
   }
 
-  private returns(expectedArgs: any[] | undefined, expectedProperty: string, r: any) {
+  private returns(
+    expectedArgs: any[] | undefined,
+    expectedProperty: string,
+    r: any,
+    throws: boolean = false
+  ) {
     if (expectedArgs) {
       if (expectedProperty) {
         this.methodExpectations.set(
           expectedProperty,
           [
             ...(this.methodExpectations.get(expectedProperty) || []),
-            new MethodExpectation(expectedArgs, r)
+            new MethodExpectation(expectedArgs, r, throws)
           ]
         );
       } else {
-        this.applyExpectations.push(new MethodExpectation(expectedArgs, r));
+        this.applyExpectations.push(new MethodExpectation(expectedArgs, r, throws));
       }
     } else {
       this.propertyExpectations.set(
         expectedProperty,
         [
           ...(this.propertyExpectations.get(expectedProperty) || []),
-          new PropertyExpectation(r)
+          new PropertyExpectation(r, throws)
         ]
       );
     }
@@ -210,6 +223,10 @@ export default class Mock<T> {
         }
       }
 
+      if (expectation.throws) {
+        throw expectation.returnValue;
+      }
+
       return expectation.returnValue;
     }
 
@@ -240,6 +257,10 @@ export default class Mock<T> {
         }
       }
 
+      if (expectation.throws) {
+        throw expectation.returnValue;
+      }
+
       return expectation.returnValue;
     };
   };
@@ -263,6 +284,10 @@ export default class Mock<T> {
       if (expectation.times === 0) {
         expectation.met = true;
       }
+    }
+
+    if (expectation.throws) {
+      throw expectation.returnValue;
     }
 
     return expectation.returnValue;
