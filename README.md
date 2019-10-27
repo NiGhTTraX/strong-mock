@@ -192,6 +192,39 @@ console.log(await mock.stub()); // 42
 ```
 
 
+### Throwing errors
+
+You can make any expectation result in an error.
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = () => void;
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f()).throws(new Error('oops'))
+mock.when(f => f()).throws('oh no');
+
+mock.stub(); // throws 'oops'
+mock.stub(); // throws 'oh no'
+```
+
+You can also make promises reject in a similar way.
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = () => Promise<number>;
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f()).rejects(new Error('oops'))
+
+mock.stub(); // rejects with 'oops'
+```
+
+
 ### Verifying expectations
 
 You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
