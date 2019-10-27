@@ -175,6 +175,23 @@ console.log(mock.stub); // 'foobar'
 ```
 
 
+### Mocking promises
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = () => Promise<number>;
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f()).resolves(23);
+mock.when(f => f()).returns(Promise.resolve(42));
+
+console.log(await mock.stub()); // 23
+console.log(await mock.stub()); // 42
+```
+
+
 ### Verifying expectations
 
 You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
