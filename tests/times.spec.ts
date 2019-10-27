@@ -1,6 +1,7 @@
 import { expect } from 'tdd-buffet/expect/chai';
 import { describe, it } from 'tdd-buffet/suite/node';
 import Mock from '../src';
+import { UnmetMethodExpectationError } from '../src/errors';
 
 describe('Mock', () => {
   describe('call count', () => {
@@ -93,6 +94,15 @@ describe('Mock', () => {
         expect(mock.stub()).to.equal(3);
         expect(mock.stub()).to.equal(3);
       });
+    });
+
+    describe('unmet', () => {
+      const mock = new Mock<() => void>();
+      mock.when(f => f()).returns(undefined).times(2);
+
+      mock.stub();
+
+      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
     });
   });
 });
