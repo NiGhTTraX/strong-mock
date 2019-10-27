@@ -223,23 +223,7 @@ export default class Mock<T> {
         throw new UnexpectedAccessError(property);
       }
 
-      if (expectation.times !== -1) {
-        expectation.times--;
-
-        if (expectation.times === 0) {
-          expectation.met = true;
-        }
-      }
-
-      if (expectation.throws) {
-        if (typeof expectation.returnValue === 'string') {
-          throw new Error(expectation.returnValue);
-        } else {
-          throw expectation.returnValue;
-        }
-      }
-
-      return expectation.returnValue;
+      return this.returnOrThrow(expectation);
     }
 
     const methodExpectations = this.methodExpectations.get(property);
@@ -261,23 +245,7 @@ export default class Mock<T> {
         throw new WrongMethodArgsError(property, args, methodExpectations);
       }
 
-      if (expectation.times !== -1) {
-        expectation.times--;
-
-        if (expectation.times === 0) {
-          expectation.met = true;
-        }
-      }
-
-      if (expectation.throws) {
-        if (typeof expectation.returnValue === 'string') {
-          throw new Error(expectation.returnValue);
-        } else {
-          throw expectation.returnValue;
-        }
-      }
-
-      return expectation.returnValue;
+      return this.returnOrThrow(expectation);
     };
   };
 
@@ -294,10 +262,17 @@ export default class Mock<T> {
       throw new WrongApplyArgsError(actualArgs, this.applyExpectations);
     }
 
+    return this.returnOrThrow(expectation);
+  };
+
+  // eslint-disable-next-line class-methods-use-this
+  private returnOrThrow(expectation: PropertyExpectation | MethodExpectation) {
     if (expectation.times !== -1) {
+      // eslint-disable-next-line no-param-reassign
       expectation.times--;
 
       if (expectation.times === 0) {
+        // eslint-disable-next-line no-param-reassign
         expectation.met = true;
       }
     }
@@ -311,7 +286,7 @@ export default class Mock<T> {
     }
 
     return expectation.returnValue;
-  };
+  }
 
   // eslint-disable-next-line class-methods-use-this
   private isUnmetExpectationWithMatchingArgs(actualArgs: any[]) {
