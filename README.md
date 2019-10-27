@@ -225,6 +225,25 @@ mock.stub(); // rejects with 'oops'
 ```
 
 
+### Invocation count
+
+```typescript
+import Mock from 'strong-mock';
+
+type Foo = () => number;
+
+const mock = new Mock<Foo>();
+
+mock.when(f => f()).returns(1).times(2);
+mock.when(f => f()).returns(2).always();
+
+mock.stub(); // 1
+mock.stub(); // 1
+mock.stub(); // 2
+mock.stub(); // 2
+```
+
+
 ### Verifying expectations
 
 You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
