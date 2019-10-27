@@ -223,7 +223,7 @@ export default class Mock<T> {
         throw new UnexpectedAccessError(property);
       }
 
-      return this.returnOrThrow(expectation);
+      return Mock.returnOrThrow(expectation);
     }
 
     const methodExpectations = this.methodExpectations.get(property);
@@ -245,7 +245,7 @@ export default class Mock<T> {
         throw new WrongMethodArgsError(property, args, methodExpectations);
       }
 
-      return this.returnOrThrow(expectation);
+      return Mock.returnOrThrow(expectation);
     };
   };
 
@@ -262,11 +262,11 @@ export default class Mock<T> {
       throw new WrongApplyArgsError(actualArgs, this.applyExpectations);
     }
 
-    return this.returnOrThrow(expectation);
+    return Mock.returnOrThrow(expectation);
   };
 
   // eslint-disable-next-line class-methods-use-this
-  private returnOrThrow(expectation: PropertyExpectation | MethodExpectation) {
+  private static returnOrThrow(expectation: PropertyExpectation | MethodExpectation) {
     if (expectation.times !== -1) {
       // eslint-disable-next-line no-param-reassign
       expectation.times--;
