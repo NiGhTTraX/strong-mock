@@ -78,5 +78,21 @@ describe('Mock', () => {
         expect(() => mock.stub.bar(2)).to.throw();
       });
     });
+
+    describe('mixed', () => {
+      it('should respect the definition order', () => {
+        const mock = new Mock<() => number>();
+        mock.when(f => f()).returns(1).times(1);
+        mock.when(f => f()).returns(2).times(2);
+        mock.when(f => f()).returns(3).always();
+        mock.when(f => f()).throws('should not reach here');
+
+        expect(mock.stub()).to.equal(1);
+        expect(mock.stub()).to.equal(2);
+        expect(mock.stub()).to.equal(2);
+        expect(mock.stub()).to.equal(3);
+        expect(mock.stub()).to.equal(3);
+      });
+    });
   });
 });
