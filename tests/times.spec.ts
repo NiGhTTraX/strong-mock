@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/chai';
 import { describe, it } from 'tdd-buffet/suite/node';
 import Mock from '../src';
-import { UnmetMethodExpectationError } from '../src/errors';
+import { UnmetApplyExpectationError } from '../src/errors';
 
 describe('Mock', () => {
   describe('call count', () => {
@@ -102,7 +102,7 @@ describe('Mock', () => {
 
       mock.stub();
 
-      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
+      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
     });
   });
 });
