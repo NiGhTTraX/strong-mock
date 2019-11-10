@@ -1,7 +1,7 @@
 export type Matcher<T> = T & {
   matches: (arg: any) => arg is T;
   __isMatcher: boolean;
-}
+};
 
 export function isMatcher(f: any): f is Matcher<any> {
   return (<Matcher<any>>f).__isMatcher;
@@ -49,14 +49,15 @@ const isAny: Matcher<any> = {
  * mock.stub({foo: 'baz', bar: 0 }) // throws
  * ```
  */
-const matches = <T>(cb: (arg: T) => boolean): Matcher<T> => ({
-  matches: (arg: any): arg is T => cb(arg),
-  __isMatcher: true,
+const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
+  ({
+    matches: (arg: any): arg is T => cb(arg),
+    __isMatcher: true,
 
-  [Symbol.for('nodejs.util.inspect.custom')]() {
-    return cb.toString();
-  }
-} as any);
+    [Symbol.for('nodejs.util.inspect.custom')]() {
+      return cb.toString();
+    }
+  } as any);
 
 export const It = {
   isAny,

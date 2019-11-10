@@ -29,7 +29,11 @@ export class UnmetPropertyExpectationError extends Error {
 }
 
 export class WrongMethodArgsError extends Error {
-  constructor(property: string, args: any[], expectations: MethodExpectation[]) {
+  constructor(
+    property: string,
+    args: any[],
+    expectations: MethodExpectation[]
+  ) {
     super(`${property} not expected to be called with ${inspect(args)}!
 
 Existing expectations:

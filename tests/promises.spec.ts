@@ -26,7 +26,8 @@ describe('Mock', () => {
 
       mock.when(f => f()).rejects(new Error('foo'));
 
-      return mock.stub()
+      return mock
+        .stub()
         .then(() => {
           throw new Error('Expected promise to reject');
         })
@@ -41,7 +42,8 @@ describe('Mock', () => {
 
       mock.when(f => f()).rejects('foo');
 
-      return mock.stub()
+      return mock
+        .stub()
         .then(() => {
           throw new Error('Expected promise to reject');
         })

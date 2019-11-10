@@ -39,42 +39,42 @@ interface StubTimes {
 // https://github.com/microsoft/TypeScript/issues/32645#issuecomment-517102331
 export type Stub<T, R> = [R] extends [Promise<infer P>]
   ? {
-    /**
-     * Resolve to the given value when the expectation is met.
-     *
-     * @param promiseValue The value the promise will resolve to.
-     */
-    resolves(promiseValue: P): StubTimes;
+      /**
+       * Resolve to the given value when the expectation is met.
+       *
+       * @param promiseValue The value the promise will resolve to.
+       */
+      resolves(promiseValue: P): StubTimes;
 
-    /**
-     * Reject with the given error.
-     *
-     * @param error Either an Error instance or an error message.
-     */
-    rejects(error: Error | string): StubTimes;
+      /**
+       * Reject with the given error.
+       *
+       * @param error Either an Error instance or an error message.
+       */
+      rejects(error: Error | string): StubTimes;
 
-    /**
-     * Return the given promise when the expectation is met.
-     *
-     * @param promise The promise to resolve to.
-     */
-    returns(promise: R): StubTimes;
-  }
+      /**
+       * Return the given promise when the expectation is met.
+       *
+       * @param promise The promise to resolve to.
+       */
+      returns(promise: R): StubTimes;
+    }
   : {
-    /**
-     * Return the given value when the expectation is met.
-     *
-     * @param returnValue
-     */
-  returns(returnValue: R): StubTimes;
+      /**
+       * Return the given value when the expectation is met.
+       *
+       * @param returnValue
+       */
+      returns(returnValue: R): StubTimes;
 
-    /**
-     * Throw an error when the expectation is met.
-     *
-     * @param error Either an Error instance or an error message.
-     */
-  throws(error: Error | string): StubTimes;
-}
+      /**
+       * Throw an error when the expectation is met.
+       *
+       * @param error Either an Error instance or an error message.
+       */
+      throws(error: Error | string): StubTimes;
+    };
 
 /**
  * Mock types and set expectations.
@@ -113,19 +113,27 @@ export default class Mock<T> {
     // return both and rely on the compiler to force the usage of one or the
     // other
     return {
-      throws: (e: Error | string) => this.returns(expectedArgs, expectedProperty, e, true),
+      throws: (e: Error | string) =>
+        this.returns(expectedArgs, expectedProperty, e, true),
       returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
-      resolves: (r: any) => this.returns(expectedArgs, expectedProperty, Promise.resolve(r)),
-      rejects: (e: Error | string) => this.returns(expectedArgs, expectedProperty, Promise.reject(typeof e === 'string' ? new Error(e) : e))
+      resolves: (r: any) =>
+        this.returns(expectedArgs, expectedProperty, Promise.resolve(r)),
+      rejects: (e: Error | string) =>
+        this.returns(
+          expectedArgs,
+          expectedProperty,
+          Promise.reject(typeof e === 'string' ? new Error(e) : e)
+        )
     };
   }
 
   get stub(): T {
-    return new Proxy(() => {}, {
+    return (new Proxy(() => {}, {
       get: (target, property: string) => {
         if (property === 'call') {
           // Transform from .call's ...args to .apply's [...args].
-          return (thisArg: any, ...args: any[]) => this.apply(target, thisArg, args);
+          return (thisArg: any, ...args: any[]) =>
+            this.apply(target, thisArg, args);
         }
 
         if (property === 'apply') {
@@ -136,7 +144,7 @@ export default class Mock<T> {
       },
 
       apply: this.apply
-    }) as unknown as T;
+    }) as unknown) as T;
   }
 
   verifyAll() {
@@ -177,24 +185,20 @@ export default class Mock<T> {
   ) {
     if (expectedArgs) {
       if (expectedProperty) {
-        this.methodExpectations.set(
-          expectedProperty,
-          [
-            ...(this.methodExpectations.get(expectedProperty) || []),
-            new MethodExpectation(expectedArgs, r, throws)
-          ]
-        );
+        this.methodExpectations.set(expectedProperty, [
+          ...(this.methodExpectations.get(expectedProperty) || []),
+          new MethodExpectation(expectedArgs, r, throws)
+        ]);
       } else {
-        this.applyExpectations.push(new MethodExpectation(expectedArgs, r, throws));
+        this.applyExpectations.push(
+          new MethodExpectation(expectedArgs, r, throws)
+        );
       }
     } else {
-      this.propertyExpectations.set(
-        expectedProperty,
-        [
-          ...(this.propertyExpectations.get(expectedProperty) || []),
-          new PropertyExpectation(r, throws)
-        ]
-      );
+      this.propertyExpectations.set(expectedProperty, [
+        ...(this.propertyExpectations.get(expectedProperty) || []),
+        new PropertyExpectation(r, throws)
+      ]);
     }
 
     return {
@@ -202,42 +206,62 @@ export default class Mock<T> {
         if (expectedArgs) {
           if (expectedProperty) {
             this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = Infinity;
+            this.methodExpectations
+              .get(expectedProperty)!
+              .slice(-1)[0].max = Infinity;
           } else {
             this.applyExpectations.slice(-1)[0].min = 0;
             this.applyExpectations.slice(-1)[0].max = Infinity;
           }
         } else {
           this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = Infinity;
+          this.propertyExpectations
+            .get(expectedProperty)!
+            .slice(-1)[0].max = Infinity;
         }
       },
       times: (exact: number) => {
         if (expectedArgs) {
           if (expectedProperty) {
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = exact;
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = exact;
+            this.methodExpectations
+              .get(expectedProperty)!
+              .slice(-1)[0].min = exact;
+            this.methodExpectations
+              .get(expectedProperty)!
+              .slice(-1)[0].max = exact;
           } else {
             this.applyExpectations.slice(-1)[0].min = exact;
             this.applyExpectations.slice(-1)[0].max = exact;
           }
         } else {
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = exact;
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = exact;
+          this.propertyExpectations
+            .get(expectedProperty)!
+            .slice(-1)[0].min = exact;
+          this.propertyExpectations
+            .get(expectedProperty)!
+            .slice(-1)[0].max = exact;
         }
       },
       between: (min: number, max: number) => {
         if (expectedArgs) {
           if (expectedProperty) {
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
+            this.methodExpectations
+              .get(expectedProperty)!
+              .slice(-1)[0].min = min;
+            this.methodExpectations
+              .get(expectedProperty)!
+              .slice(-1)[0].max = max;
           } else {
             this.applyExpectations.slice(-1)[0].min = min;
             this.applyExpectations.slice(-1)[0].max = max;
           }
         } else {
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
+          this.propertyExpectations
+            .get(expectedProperty)!
+            .slice(-1)[0].min = min;
+          this.propertyExpectations
+            .get(expectedProperty)!
+            .slice(-1)[0].max = max;
         }
       }
     };
@@ -296,7 +320,9 @@ export default class Mock<T> {
   };
 
   // eslint-disable-next-line class-methods-use-this
-  private static returnOrThrow(expectation: PropertyExpectation | MethodExpectation) {
+  private static returnOrThrow(
+    expectation: PropertyExpectation | MethodExpectation
+  ) {
     // eslint-disable-next-line no-param-reassign
     expectation.count++;
 
@@ -313,8 +339,8 @@ export default class Mock<T> {
 
   // eslint-disable-next-line class-methods-use-this
   private isAvailableExpectationWithMatchingArgs(actualArgs: any[]) {
-    return (e: MethodExpectation) => e.available
-      && e.args.every(this.compareArgs(actualArgs));
+    return (e: MethodExpectation) =>
+      e.available && e.args.every(this.compareArgs(actualArgs));
   }
 
   // eslint-disable-next-line class-methods-use-this

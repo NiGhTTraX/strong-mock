@@ -142,14 +142,14 @@ describe('Mock', () => {
     });
 
     it('throws error', () => {
-      const mock = new Mock<{ foo:() => void}>();
+      const mock = new Mock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws(new Error('foo'));
 
       expect(() => mock.stub.foo()).to.throw('foo');
     });
 
     it('throws message', () => {
-      const mock = new Mock<{ foo:() => void}>();
+      const mock = new Mock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws('foo');
 
       expect(() => mock.stub.foo()).to.throw('foo');

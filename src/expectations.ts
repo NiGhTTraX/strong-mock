@@ -55,12 +55,16 @@ class Expectation {
 }
 
 export class MethodExpectation extends Expectation {
-  constructor(public args: any[], public returnValue: any, public throws: boolean = false) {
+  constructor(
+    public args: any[],
+    public returnValue: any,
+    public throws: boolean = false
+  ) {
     super(returnValue, throws);
   }
 
   toString() {
-    return `${(this.formatArgs())} ${this.formatReturnValue()} ${this.formatInvocationCount()}`;
+    return `${this.formatArgs()} ${this.formatReturnValue()} ${this.formatInvocationCount()}`;
   }
 
   private formatArgs = () => inspect(this.args);

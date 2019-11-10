@@ -1,18 +1,25 @@
 import { expect } from 'tdd-buffet/expect/chai';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from '../src';
-import { UnexpectedAccessError, WrongApplyArgsError, WrongMethodArgsError } from '../src/errors';
+import {
+  UnexpectedAccessError,
+  WrongApplyArgsError,
+  WrongMethodArgsError
+} from '../src/errors';
 import { MethodExpectation, PropertyExpectation } from '../src/expectations';
 
 describe('Mock', () => {
   describe('errors', () => {
     describe('WrongMethodArgsError', () => {
       it('e2e', () => {
-        const error = new WrongMethodArgsError('foobar', [1, 2, 3], [
-          new MethodExpectation([1], 2)
-        ]);
+        const error = new WrongMethodArgsError(
+          'foobar',
+          [1, 2, 3],
+          [new MethodExpectation([1], 2)]
+        );
 
-        expect(error.message).to.equal(`foobar not expected to be called with [ 1, 2, 3 ]!
+        expect(error.message).to
+          .equal(`foobar not expected to be called with [ 1, 2, 3 ]!
 
 Existing expectations:
 [ 1 ] returns 2 exactly 1 time(s)`);
@@ -25,35 +32,40 @@ Existing expectations:
       });
 
       it('should contain all the expectations', () => {
-        const error = new WrongMethodArgsError(':irrelevant:', [], [
-          new MethodExpectation([1], 2),
-          new MethodExpectation([3], 4)
-        ]);
+        const error = new WrongMethodArgsError(
+          ':irrelevant:',
+          [],
+          [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
+        );
 
-        expect(error.message).to.contain('[ 1 ] returns 2')
+        expect(error.message)
+          .to.contain('[ 1 ] returns 2')
           .and.to.contain('[ 3 ] returns 4');
       });
     });
 
     describe('WrongApplyError', () => {
       it('e2e', () => {
-        const error = new WrongApplyArgsError([1, 2, 3], [
-          new MethodExpectation([1], 2)
-        ]);
+        const error = new WrongApplyArgsError(
+          [1, 2, 3],
+          [new MethodExpectation([1], 2)]
+        );
 
-        expect(error.message).to.equal(`Function not expected to be called with [ 1, 2, 3 ]!
+        expect(error.message).to
+          .equal(`Function not expected to be called with [ 1, 2, 3 ]!
 
 Existing expectations:
 [ 1 ] returns 2 exactly 1 time(s)`);
       });
 
       it('should contain all the expectations', () => {
-        const error = new WrongApplyArgsError([], [
-          new MethodExpectation([1], 2),
-          new MethodExpectation([3], 4)
-        ]);
+        const error = new WrongApplyArgsError(
+          [],
+          [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
+        );
 
-        expect(error.message).to.contain('[ 1 ] returns 2')
+        expect(error.message)
+          .to.contain('[ 1 ] returns 2')
           .and.to.contain('[ 3 ] returns 4');
       });
     });
@@ -70,7 +82,9 @@ Existing expectations:
       it('e2e', () => {
         const expectation = new MethodExpectation([], 2);
 
-        expect(expectation.toString()).to.equal('[] returns 2 exactly 1 time(s)');
+        expect(expectation.toString()).to.equal(
+          '[] returns 2 exactly 1 time(s)'
+        );
       });
 
       it('should contain the primitive arguments', () => {
@@ -88,7 +102,7 @@ Existing expectations:
       it('should contain the object arguments', () => {
         const expectation = new MethodExpectation([{ foo: 'bar' }], 2);
 
-        expect(expectation.toString()).to.contain('[ { foo: \'bar\' } ]');
+        expect(expectation.toString()).to.contain("[ { foo: 'bar' } ]");
       });
 
       it('should contain primitive return value', () => {
@@ -106,19 +120,19 @@ Existing expectations:
       it('should contain object return value', () => {
         const expectation = new MethodExpectation([], { foo: 'bar' });
 
-        expect(expectation.toString()).to.contain('returns { foo: \'bar\' }');
+        expect(expectation.toString()).to.contain("returns { foo: 'bar' }");
       });
 
       it('should contain throw message', () => {
         const expectation = new MethodExpectation([], 'foo', true);
 
-        expect(expectation.toString()).to.contain('throws \'foo\'');
+        expect(expectation.toString()).to.contain("throws 'foo'");
       });
 
       it('should contain throw error', () => {
         const expectation = new MethodExpectation([], new Error('foo'), true);
 
-        expect(expectation.toString()).to.contain('throws \'Error: foo\'');
+        expect(expectation.toString()).to.contain("throws 'Error: foo'");
       });
 
       it('should contain the invocation count for exact', () => {
@@ -158,7 +172,10 @@ Existing expectations:
       });
 
       it('should shorten anonymous It.matches with args', () => {
-        const expectation = new MethodExpectation([It.matches((x: number) => !!x)], 2);
+        const expectation = new MethodExpectation(
+          [It.matches((x: number) => !!x)],
+          2
+        );
 
         expect(expectation.toString()).to.contain('[ (x) => !!x ]');
       });
@@ -186,19 +203,19 @@ Existing expectations:
       it('should contain object return value', () => {
         const expectation = new PropertyExpectation({ foo: 'bar' });
 
-        expect(expectation.toString()).to.contain('returns { foo: \'bar\' }');
+        expect(expectation.toString()).to.contain("returns { foo: 'bar' }");
       });
 
       it('should contain throw message', () => {
         const expectation = new PropertyExpectation('foo', true);
 
-        expect(expectation.toString()).to.contain('throws \'foo\'');
+        expect(expectation.toString()).to.contain("throws 'foo'");
       });
 
       it('should contain throw error', () => {
         const expectation = new PropertyExpectation(new Error('foo'), true);
 
-        expect(expectation.toString()).to.contain('throws \'Error: foo\'');
+        expect(expectation.toString()).to.contain("throws 'Error: foo'");
       });
 
       it('should contain the invocation count for exact', () => {
