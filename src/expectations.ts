@@ -16,6 +16,9 @@ class Expectation {
    */
   max: number = 1;
 
+  // eslint-disable-next-line no-useless-constructor,no-empty-function
+  constructor(public returnValue: any, public throws: boolean) {}
+
   /**
    * Has the expectation been met?
    */
@@ -29,24 +32,46 @@ class Expectation {
   get available(): boolean {
     return this.count < this.max;
   }
+
+  protected formatInvocationCount = (): string => {
+    if (this.min === this.max) {
+      return `exactly ${this.min} time(s)`;
+    }
+
+    if (!Number.isFinite(this.max)) {
+      return 'at least once';
+    }
+
+    return `between ${this.min} and ${this.max} times`;
+  };
+
+  protected formatReturnValue = (): string => {
+    if (this.throws) {
+      return `throws '${this.returnValue}'`;
+    }
+
+    return `=> ${inspect(this.returnValue)}`;
+  };
 }
 
 export class MethodExpectation extends Expectation {
   constructor(public args: any[], public returnValue: any, public throws: boolean = false) {
-    super();
+    super(returnValue, throws);
   }
 
   toString() {
-    return `${inspect(this.args)} => ${inspect(this.returnValue)}`;
+    return `${(this.formatArgs())} ${this.formatReturnValue()} ${this.formatInvocationCount()}`;
   }
+
+  private formatArgs = () => inspect(this.args);
 }
 
 export class PropertyExpectation extends Expectation {
   constructor(public returnValue: any, public throws: boolean = false) {
-    super();
+    super(returnValue, throws);
   }
 
   toString() {
-    return `=> ${inspect(this.returnValue)}`;
+    return `${this.formatReturnValue()} ${this.formatInvocationCount()}`;
   }
 }
