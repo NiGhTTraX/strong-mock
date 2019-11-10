@@ -42,41 +42,115 @@ describe('Mock', () => {
     });
 
     describe('times', () => {
-      it('function', () => {
-        type Foo = () => number;
+      describe('exact', () => {
+        it('function', () => {
+          type Foo = () => number;
 
-        const mock = new Mock<Foo>();
-        mock.when(f => f()).returns(1).times(2);
+          const mock = new Mock<Foo>();
+          mock.when(f => f()).returns(1).times(2);
 
-        expect(mock.stub()).to.equal(1);
-        expect(mock.stub()).to.equal(1);
-        expect(() => mock.stub()).to.throw();
+          expect(mock.stub()).to.equal(1);
+          expect(mock.stub()).to.equal(1);
+          expect(() => mock.stub()).to.throw();
+        });
+
+        it('property', () => {
+          interface Foo {
+            bar: number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar).returns(1).times(2);
+
+          expect(mock.stub.bar).to.equal(1);
+          expect(mock.stub.bar).to.equal(1);
+          expect(() => mock.stub.bar).to.throw();
+        });
+
+        it('method', () => {
+          interface Foo {
+            bar(x: number): number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar(2)).returns(1).times(2);
+
+          expect(mock.stub.bar(2)).to.equal(1);
+          expect(mock.stub.bar(2)).to.equal(1);
+          expect(() => mock.stub.bar(2)).to.throw();
+        });
+
+        it('unmet', () => {
+          const mock = new Mock<() => void>();
+          mock.when(f => f()).returns(undefined).times(2);
+
+          mock.stub();
+
+          expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+        });
       });
 
-      it('property', () => {
-        interface Foo {
-          bar: number;
-        }
+      describe('between', () => {
+        it('function', () => {
+          type Foo = () => number;
 
-        const mock = new Mock<Foo>();
-        mock.when(f => f.bar).returns(1).times(2);
+          const mock = new Mock<Foo>();
+          mock.when(f => f()).returns(1).between(2, 3);
 
-        expect(mock.stub.bar).to.equal(1);
-        expect(mock.stub.bar).to.equal(1);
-        expect(() => mock.stub.bar).to.throw();
-      });
+          expect(mock.stub()).to.equal(1);
+          expect(mock.stub()).to.equal(1);
+          expect(mock.stub()).to.equal(1);
+          expect(() => mock.stub()).to.throw();
+        });
 
-      it('method', () => {
-        interface Foo {
-          bar(x: number): number;
-        }
+        it('property', () => {
+          interface Foo {
+            bar: number;
+          }
 
-        const mock = new Mock<Foo>();
-        mock.when(f => f.bar(2)).returns(1).times(2);
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar).returns(1).between(2, 3);
 
-        expect(mock.stub.bar(2)).to.equal(1);
-        expect(mock.stub.bar(2)).to.equal(1);
-        expect(() => mock.stub.bar(2)).to.throw();
+          expect(mock.stub.bar).to.equal(1);
+          expect(mock.stub.bar).to.equal(1);
+          expect(mock.stub.bar).to.equal(1);
+          expect(() => mock.stub.bar).to.throw();
+        });
+
+        it('method', () => {
+          interface Foo {
+            bar(x: number): number;
+          }
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f.bar(2)).returns(1).between(2, 3);
+
+          expect(mock.stub.bar(2)).to.equal(1);
+          expect(mock.stub.bar(2)).to.equal(1);
+          expect(mock.stub.bar(2)).to.equal(1);
+          expect(() => mock.stub.bar(2)).to.throw();
+        });
+
+        it('unmet', () => {
+          const mock = new Mock<() => void>();
+          mock.when(f => f()).returns(undefined).between(2, 4);
+
+          mock.stub();
+
+          expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+        });
+
+        it('multiple', () => {
+          type Foo = () => number;
+
+          const mock = new Mock<Foo>();
+          mock.when(f => f()).returns(1).between(1, 2);
+          mock.when(f => f()).returns(2).between(1, 2);
+
+          expect(mock.stub()).to.equal(1);
+          expect(mock.stub()).to.equal(1);
+          expect(mock.stub()).to.equal(2);
+        });
       });
     });
 
@@ -85,7 +159,8 @@ describe('Mock', () => {
         const mock = new Mock<() => number>();
         mock.when(f => f()).returns(1).times(1);
         mock.when(f => f()).returns(2).times(2);
-        mock.when(f => f()).returns(3).always();
+        mock.when(f => f()).returns(3).between(2, 3);
+        mock.when(f => f()).returns(4).always();
         mock.when(f => f()).throws('should not reach here');
 
         expect(mock.stub()).to.equal(1);
@@ -93,16 +168,9 @@ describe('Mock', () => {
         expect(mock.stub()).to.equal(2);
         expect(mock.stub()).to.equal(3);
         expect(mock.stub()).to.equal(3);
+        expect(mock.stub()).to.equal(3);
+        expect(mock.stub()).to.equal(4);
       });
-    });
-
-    describe('unmet', () => {
-      const mock = new Mock<() => void>();
-      mock.when(f => f()).returns(undefined).times(2);
-
-      mock.stub();
-
-      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
     });
   });
 });

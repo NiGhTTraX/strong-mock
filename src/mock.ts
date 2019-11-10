@@ -18,10 +18,20 @@ interface StubTimes {
   always(): void;
 
   /**
-   * This expectation will be consumed after `x` invocations.
-   * @param x
+   * This expectation will be consumed after `exact` invocations.
+   *
+   * If there are invocations left, `verifyAll` will throw. After the
+   * expectation is consumed future invocations will throw.
    */
-  times(x: number): void;
+  times(exact: number): void;
+
+  /**
+   * This expectation can be consumed between `min` and `max` times.
+   *
+   * `verifyAll` will throw if the expectation hasn't been met at least
+   * `min` times. After `max` invocations, future invocations will throw.
+   */
+  between(min: number, max: number): void;
 }
 
 // Use a tuple to prevent union distribution, otherwise Stub<T, boolean>
@@ -191,23 +201,43 @@ export default class Mock<T> {
       always: () => {
         if (expectedArgs) {
           if (expectedProperty) {
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = Infinity;
           } else {
-            this.applyExpectations.slice(-1)[0].times = -1;
+            this.applyExpectations.slice(-1)[0].min = 0;
+            this.applyExpectations.slice(-1)[0].max = Infinity;
           }
         } else {
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = -1;
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = Infinity;
         }
       },
-      times: (x: number) => {
+      times: (exact: number) => {
         if (expectedArgs) {
           if (expectedProperty) {
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = exact;
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = exact;
           } else {
-            this.applyExpectations.slice(-1)[0].times = x;
+            this.applyExpectations.slice(-1)[0].min = exact;
+            this.applyExpectations.slice(-1)[0].max = exact;
           }
         } else {
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].times = x;
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = exact;
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = exact;
+        }
+      },
+      between: (min: number, max: number) => {
+        if (expectedArgs) {
+          if (expectedProperty) {
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
+            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
+          } else {
+            this.applyExpectations.slice(-1)[0].min = min;
+            this.applyExpectations.slice(-1)[0].max = max;
+          }
+        } else {
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
+          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
         }
       }
     };
@@ -217,7 +247,7 @@ export default class Mock<T> {
     const propertyExpectations = this.propertyExpectations.get(property);
 
     if (propertyExpectations) {
-      const expectation = propertyExpectations.find(e => !e.met);
+      const expectation = propertyExpectations.find(e => e.available);
 
       if (!expectation) {
         throw new UnexpectedAccessError(property);
@@ -236,9 +266,9 @@ export default class Mock<T> {
     }
 
     return (...args: any[]) => {
-      // Find the first unmet expectation.
+      // Find the first available expectation.
       const expectation = methodExpectations.find(
-        this.isUnmetExpectationWithMatchingArgs(args)
+        this.isAvailableExpectationWithMatchingArgs(args)
       );
 
       if (!expectation) {
@@ -255,7 +285,7 @@ export default class Mock<T> {
     }
 
     const expectation = this.applyExpectations.find(
-      this.isUnmetExpectationWithMatchingArgs(actualArgs)
+      this.isAvailableExpectationWithMatchingArgs(actualArgs)
     );
 
     if (!expectation) {
@@ -267,15 +297,8 @@ export default class Mock<T> {
 
   // eslint-disable-next-line class-methods-use-this
   private static returnOrThrow(expectation: PropertyExpectation | MethodExpectation) {
-    if (expectation.times !== -1) {
-      // eslint-disable-next-line no-param-reassign
-      expectation.times--;
-
-      if (expectation.times === 0) {
-        // eslint-disable-next-line no-param-reassign
-        expectation.met = true;
-      }
-    }
+    // eslint-disable-next-line no-param-reassign
+    expectation.count++;
 
     if (expectation.throws) {
       if (typeof expectation.returnValue === 'string') {
@@ -289,8 +312,8 @@ export default class Mock<T> {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private isUnmetExpectationWithMatchingArgs(actualArgs: any[]) {
-    return (e: MethodExpectation) => !e.met
+  private isAvailableExpectationWithMatchingArgs(actualArgs: any[]) {
+    return (e: MethodExpectation) => e.available
       && e.args.every(this.compareArgs(actualArgs));
   }
 
