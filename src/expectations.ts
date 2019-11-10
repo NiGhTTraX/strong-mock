@@ -50,7 +50,7 @@ class Expectation {
       return `throws '${this.returnValue}'`;
     }
 
-    return `=> ${inspect(this.returnValue)}`;
+    return `returns ${inspect(this.returnValue)}`;
   };
 }
 

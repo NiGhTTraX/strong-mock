@@ -15,7 +15,7 @@ describe('Mock', () => {
         expect(error.message).to.equal(`foobar not expected to be called with [ 1, 2, 3 ]!
 
 Existing expectations:
-[ 1 ] => 2 exactly 1 time(s)`);
+[ 1 ] returns 2 exactly 1 time(s)`);
       });
 
       it('should contain the name of the method', () => {
@@ -30,8 +30,8 @@ Existing expectations:
           new MethodExpectation([3], 4)
         ]);
 
-        expect(error.message).to.contain('[ 1 ] => 2')
-          .and.to.contain('[ 3 ] => 4');
+        expect(error.message).to.contain('[ 1 ] returns 2')
+          .and.to.contain('[ 3 ] returns 4');
       });
     });
 
@@ -44,7 +44,7 @@ Existing expectations:
         expect(error.message).to.equal(`Function not expected to be called with [ 1, 2, 3 ]!
 
 Existing expectations:
-[ 1 ] => 2 exactly 1 time(s)`);
+[ 1 ] returns 2 exactly 1 time(s)`);
       });
 
       it('should contain all the expectations', () => {
@@ -53,8 +53,8 @@ Existing expectations:
           new MethodExpectation([3], 4)
         ]);
 
-        expect(error.message).to.contain('[ 1 ] => 2')
-          .and.to.contain('[ 3 ] => 4');
+        expect(error.message).to.contain('[ 1 ] returns 2')
+          .and.to.contain('[ 3 ] returns 4');
       });
     });
 
@@ -70,7 +70,7 @@ Existing expectations:
       it('e2e', () => {
         const expectation = new MethodExpectation([], 2);
 
-        expect(expectation.toString()).to.equal('[] => 2 exactly 1 time(s)');
+        expect(expectation.toString()).to.equal('[] returns 2 exactly 1 time(s)');
       });
 
       it('should contain the primitive arguments', () => {
@@ -94,19 +94,19 @@ Existing expectations:
       it('should contain primitive return value', () => {
         const expectation = new MethodExpectation([], 23);
 
-        expect(expectation.toString()).to.contain('=> 23');
+        expect(expectation.toString()).to.contain('returns 23');
       });
 
       it('should contain array return value', () => {
         const expectation = new MethodExpectation([], [1, 2, 3]);
 
-        expect(expectation.toString()).to.contain('=> [ 1, 2, 3 ]');
+        expect(expectation.toString()).to.contain('returns [ 1, 2, 3 ]');
       });
 
       it('should contain object return value', () => {
         const expectation = new MethodExpectation([], { foo: 'bar' });
 
-        expect(expectation.toString()).to.contain('=> { foo: \'bar\' }');
+        expect(expectation.toString()).to.contain('returns { foo: \'bar\' }');
       });
 
       it('should contain throw message', () => {
@@ -168,25 +168,25 @@ Existing expectations:
       it('e2e', () => {
         const expectation = new PropertyExpectation(2);
 
-        expect(expectation.toString()).to.equal('=> 2 exactly 1 time(s)');
+        expect(expectation.toString()).to.equal('returns 2 exactly 1 time(s)');
       });
 
       it('should contain primitive return value', () => {
         const expectation = new PropertyExpectation(23);
 
-        expect(expectation.toString()).to.contain('=> 23');
+        expect(expectation.toString()).to.contain('returns 23');
       });
 
       it('should contain array return value', () => {
         const expectation = new PropertyExpectation([1, 2, 3]);
 
-        expect(expectation.toString()).to.contain('=> [ 1, 2, 3 ]');
+        expect(expectation.toString()).to.contain('returns [ 1, 2, 3 ]');
       });
 
       it('should contain object return value', () => {
         const expectation = new PropertyExpectation({ foo: 'bar' });
 
-        expect(expectation.toString()).to.contain('=> { foo: \'bar\' }');
+        expect(expectation.toString()).to.contain('returns { foo: \'bar\' }');
       });
 
       it('should contain throw message', () => {
