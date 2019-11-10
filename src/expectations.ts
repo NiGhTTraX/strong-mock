@@ -1,6 +1,6 @@
 import { inspect } from 'util';
 
-class Expectation {
+export class Expectation {
   /**
    * Current invocation count.
    */
@@ -63,8 +63,12 @@ export class MethodExpectation extends Expectation {
     super(returnValue, throws);
   }
 
-  toString() {
-    return `${this.formatArgs()} ${this.formatReturnValue()} ${this.formatInvocationCount()}`;
+  toString(includeReturnValue = true) {
+    const ret = `${this.formatArgs()}`;
+
+    return includeReturnValue
+      ? `${ret} ${this.formatReturnValue()} ${this.formatInvocationCount()}`
+      : `${ret} ${this.formatInvocationCount()}`;
   }
 
   private formatArgs = () => inspect(this.args);
@@ -75,7 +79,9 @@ export class PropertyExpectation extends Expectation {
     super(returnValue, throws);
   }
 
-  toString() {
-    return `${this.formatReturnValue()} ${this.formatInvocationCount()}`;
+  toString(includeReturnValue = true) {
+    return includeReturnValue
+      ? `${this.formatReturnValue()} ${this.formatInvocationCount()}`
+      : this.formatInvocationCount();
   }
 }

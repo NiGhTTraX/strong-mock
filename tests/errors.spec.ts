@@ -3,6 +3,9 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from '../src';
 import {
   UnexpectedAccessError,
+  UnmetApplyExpectationError,
+  UnmetMethodExpectationError,
+  UnmetPropertyExpectationError,
   WrongApplyArgsError,
   WrongMethodArgsError
 } from '../src/errors';
@@ -15,14 +18,15 @@ describe('Mock', () => {
         const error = new WrongMethodArgsError(
           'foobar',
           [1, 2, 3],
-          [new MethodExpectation([1], 2)]
+          [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
         expect(error.message).to
-          .equal(`foobar not expected to be called with [ 1, 2, 3 ]!
+          .equal(`foobar not expected to have been called with [ 1, 2, 3 ]!
 
 Existing expectations:
-[ 1 ] returns 2 exactly 1 time(s)`);
+ - [ 1 ] returns 2 exactly 1 time(s)
+ - [ 3 ] returns 4 exactly 1 time(s)`);
       });
 
       it('should contain the name of the method', () => {
@@ -48,14 +52,15 @@ Existing expectations:
       it('e2e', () => {
         const error = new WrongApplyArgsError(
           [1, 2, 3],
-          [new MethodExpectation([1], 2)]
+          [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
         expect(error.message).to
-          .equal(`Function not expected to be called with [ 1, 2, 3 ]!
+          .equal(`Function not expected to have been called with [ 1, 2, 3 ]!
 
 Existing expectations:
-[ 1 ] returns 2 exactly 1 time(s)`);
+ - [ 1 ] returns 2 exactly 1 time(s)
+ - [ 3 ] returns 4 exactly 1 time(s)`);
       });
 
       it('should contain all the expectations', () => {
@@ -75,6 +80,56 @@ Existing expectations:
         const error = new UnexpectedAccessError('property');
 
         expect(error.message).to.contain('property');
+      });
+    });
+
+    describe('UnmetMethodExpectationError', () => {
+      it('e2e', () => {
+        const error = new UnmetMethodExpectationError(
+          'foobar',
+          new MethodExpectation([], 1),
+          [new MethodExpectation([], 1), new MethodExpectation([], 2)]
+        );
+
+        expect(error.message).to
+          .equal(`Expected foobar to have been called with [] exactly 1 time(s)
+
+Existing expectations:
+ - [] returns 1 exactly 1 time(s)
+ - [] returns 2 exactly 1 time(s)`);
+      });
+    });
+
+    describe('UnmetApplyExpectationError', () => {
+      it('e2e', () => {
+        const error = new UnmetApplyExpectationError(
+          new MethodExpectation([], 1),
+          [new MethodExpectation([], 1), new MethodExpectation([], 2)]
+        );
+
+        expect(error.message).to
+          .equal(`Expected function to have been called with [] exactly 1 time(s)
+
+Existing expectations:
+ - [] returns 1 exactly 1 time(s)
+ - [] returns 2 exactly 1 time(s)`);
+      });
+    });
+
+    describe('UnmetPropertyExpectationError', () => {
+      it('e2e', () => {
+        const error = new UnmetPropertyExpectationError(
+          'foobar',
+          new PropertyExpectation(1),
+          [new PropertyExpectation(1), new PropertyExpectation(2)]
+        );
+
+        expect(error.message).to
+          .equal(`Expected foobar to have been accessed exactly 1 time(s)
+
+Existing expectations:
+ - returns 1 exactly 1 time(s)
+ - returns 2 exactly 1 time(s)`);
       });
     });
 

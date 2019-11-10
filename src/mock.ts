@@ -151,7 +151,7 @@ export default class Mock<T> {
     this.propertyExpectations.forEach((expectations, p) => {
       expectations.forEach(expectation => {
         if (!expectation.met) {
-          throw new UnmetPropertyExpectationError(p, expectation);
+          throw new UnmetPropertyExpectationError(p, expectation, expectations);
         }
       });
     });
@@ -159,14 +159,17 @@ export default class Mock<T> {
     this.methodExpectations.forEach((expectations, p) => {
       expectations.forEach(expectation => {
         if (!expectation.met) {
-          throw new UnmetMethodExpectationError(p, expectation);
+          throw new UnmetMethodExpectationError(p, expectation, expectations);
         }
       });
     });
 
     this.applyExpectations.forEach(expectation => {
       if (!expectation.met) {
-        throw new UnmetApplyExpectationError(expectation);
+        throw new UnmetApplyExpectationError(
+          expectation,
+          this.applyExpectations
+        );
       }
     });
   }
