@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@nighttrax/eslint-config-ts": "~3.0.0",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
+    "@typescript-eslint/eslint-plugin": "~2.7.0",
     "codecov": "~3.6.0",
     "eslint": "~6.6.0",
     "eslint-config-prettier": "~6.5.0",
