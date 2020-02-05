@@ -206,68 +206,50 @@ export default class Mock<T> {
 
     return {
       always: () => {
-        if (expectedArgs) {
-          if (expectedProperty) {
-            this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
-            this.methodExpectations
-              .get(expectedProperty)!
-              .slice(-1)[0].max = Infinity;
-          } else {
-            this.applyExpectations.slice(-1)[0].min = 0;
-            this.applyExpectations.slice(-1)[0].max = Infinity;
-          }
-        } else {
-          this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = 0;
-          this.propertyExpectations
-            .get(expectedProperty)!
-            .slice(-1)[0].max = Infinity;
-        }
+        this.setInvocationCountExpectation(
+          expectedArgs,
+          expectedProperty,
+          0,
+          Infinity
+        );
       },
       times: (exact: number) => {
-        if (expectedArgs) {
-          if (expectedProperty) {
-            this.methodExpectations
-              .get(expectedProperty)!
-              .slice(-1)[0].min = exact;
-            this.methodExpectations
-              .get(expectedProperty)!
-              .slice(-1)[0].max = exact;
-          } else {
-            this.applyExpectations.slice(-1)[0].min = exact;
-            this.applyExpectations.slice(-1)[0].max = exact;
-          }
-        } else {
-          this.propertyExpectations
-            .get(expectedProperty)!
-            .slice(-1)[0].min = exact;
-          this.propertyExpectations
-            .get(expectedProperty)!
-            .slice(-1)[0].max = exact;
-        }
+        this.setInvocationCountExpectation(
+          expectedArgs,
+          expectedProperty,
+          exact,
+          exact
+        );
       },
       between: (min: number, max: number) => {
-        if (expectedArgs) {
-          if (expectedProperty) {
-            this.methodExpectations
-              .get(expectedProperty)!
-              .slice(-1)[0].min = min;
-            this.methodExpectations
-              .get(expectedProperty)!
-              .slice(-1)[0].max = max;
-          } else {
-            this.applyExpectations.slice(-1)[0].min = min;
-            this.applyExpectations.slice(-1)[0].max = max;
-          }
-        } else {
-          this.propertyExpectations
-            .get(expectedProperty)!
-            .slice(-1)[0].min = min;
-          this.propertyExpectations
-            .get(expectedProperty)!
-            .slice(-1)[0].max = max;
-        }
+        this.setInvocationCountExpectation(
+          expectedArgs,
+          expectedProperty,
+          min,
+          max
+        );
       }
     };
+  }
+
+  private setInvocationCountExpectation(
+    expectedArgs: undefined | any[],
+    expectedProperty: string,
+    min: number,
+    max: number
+  ) {
+    if (expectedArgs) {
+      if (expectedProperty) {
+        this.methodExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
+        this.methodExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
+      } else {
+        this.applyExpectations.slice(-1)[0].min = min;
+        this.applyExpectations.slice(-1)[0].max = max;
+      }
+    } else {
+      this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].min = min;
+      this.propertyExpectations.get(expectedProperty)!.slice(-1)[0].max = max;
+    }
   }
 
   private getPropertyOrMethod = (property: string) => {
