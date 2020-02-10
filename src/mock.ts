@@ -8,8 +8,9 @@ import {
   WrongApplyArgsError,
   WrongMethodArgsError
 } from './errors';
-import { MethodExpectation, PropertyExpectation } from './expectations';
 import { isMatcher } from './matcher';
+import { MethodExpectation } from './method-expectation';
+import { PropertyExpectation } from './property-expectation';
 
 interface StubTimes {
   /**

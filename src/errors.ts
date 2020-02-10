@@ -1,9 +1,7 @@
 import { inspect } from 'util';
-import {
-  Expectation,
-  MethodExpectation,
-  PropertyExpectation
-} from './expectations';
+import { Expectation } from './expectations';
+import { MethodExpectation } from './method-expectation';
+import { PropertyExpectation } from './property-expectation';
 
 const formatExpectationList = (expectations: Expectation[]) =>
   ` - ${expectations.join('\n - ')}`;

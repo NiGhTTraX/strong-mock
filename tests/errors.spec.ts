@@ -9,7 +9,8 @@ import {
   WrongApplyArgsError,
   WrongMethodArgsError
 } from '../src/errors';
-import { MethodExpectation, PropertyExpectation } from '../src/expectations';
+import { MethodExpectation } from '../src/method-expectation';
+import { PropertyExpectation } from '../src/property-expectation';
 
 describe('Mock', () => {
   describe('errors', () => {

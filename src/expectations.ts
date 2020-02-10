@@ -53,35 +53,3 @@ export class Expectation {
     return `returns ${inspect(this.returnValue)}`;
   };
 }
-
-export class MethodExpectation extends Expectation {
-  constructor(
-    public args: any[],
-    public returnValue: any,
-    public throws: boolean = false
-  ) {
-    super(returnValue, throws);
-  }
-
-  toString(includeReturnValue = true) {
-    const ret = `${this.formatArgs()}`;
-
-    return includeReturnValue
-      ? `${ret} ${this.formatReturnValue()} ${this.formatInvocationCount()}`
-      : `${ret} ${this.formatInvocationCount()}`;
-  }
-
-  private formatArgs = () => inspect(this.args);
-}
-
-export class PropertyExpectation extends Expectation {
-  constructor(public returnValue: any, public throws: boolean = false) {
-    super(returnValue, throws);
-  }
-
-  toString(includeReturnValue = true) {
-    return includeReturnValue
-      ? `${this.formatReturnValue()} ${this.formatInvocationCount()}`
-      : this.formatInvocationCount();
-  }
-}
