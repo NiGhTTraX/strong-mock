@@ -1,6 +1,6 @@
-import { MissingReturnValue, MissingWhen, MissingMock } from './errors';
+import { MissingMock, MissingReturnValue, MissingWhen } from './errors';
 import { ExpectationRepository } from './expectation-repository';
-import { Expectation, MethodExpectation } from './expectations';
+import { MethodExpectation } from './expectations';
 
 export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 
@@ -8,7 +8,7 @@ export type Mock<T> = T;
 
 let pendingReturn = false;
 let pendingMock: Mock<unknown> | undefined;
-let pendingExpectation: Expectation | undefined;
+let pendingArgs: any[] | undefined;
 
 export const strongMock = <T>(): Mock<T> => {
   const repo = new ExpectationRepository();
@@ -17,7 +17,7 @@ export const strongMock = <T>(): Mock<T> => {
   const stub = (((...args: any[]) => {
     pendingMock = stub;
 
-    pendingExpectation = new MethodExpectation(args);
+    pendingArgs = args;
   }) as unknown) as Mock<T>;
 
   MockMap.set(stub, repo);
@@ -39,7 +39,7 @@ export const when = <T>(expectation: T): Stub<T> => {
 
   return {
     returns(returnValue: T): void {
-      if (!pendingMock || !pendingExpectation) {
+      if (!pendingMock || !pendingArgs) {
         throw new MissingWhen();
       }
 
@@ -49,12 +49,11 @@ export const when = <T>(expectation: T): Stub<T> => {
         throw new MissingMock();
       }
 
-      pendingExpectation.returnValue = returnValue;
-      repo.addExpectation(pendingExpectation);
+      repo.addExpectation(new MethodExpectation(pendingArgs, returnValue));
 
       pendingMock = undefined;
       pendingReturn = false;
-      pendingExpectation = undefined;
+      pendingArgs = undefined;
     }
   };
 };

@@ -4,7 +4,5 @@ export interface Expectation {
 }
 
 export class MethodExpectation implements Expectation {
-  returnValue: any;
-
-  constructor(public args: any[]) {}
+  constructor(public args: any[], public returnValue: any) {}
 }
