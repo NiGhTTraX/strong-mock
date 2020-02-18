@@ -1,6 +1,6 @@
-export type Mock<T> = T;
+const expectationRepository = Symbol('repo');
 
-let pendingExpectation: MethodExpectation | undefined;
+export type Mock<T> = T & { [expectationRepository]: ExpectationRepository };
 
 class ExpectationRepository {
   private repo: MethodExpectation[] = [];
@@ -16,7 +16,8 @@ class ExpectationRepository {
   }
 }
 
-const repo = new ExpectationRepository();
+let pendingExpectation: MethodExpectation | undefined;
+let pendingRepo: ExpectationRepository | undefined;
 
 export class MissingReturnValue extends Error {
   constructor() {
@@ -33,7 +34,15 @@ class MethodExpectation {
 export const strongMock = <T>(): Mock<T> => {
   pendingExpectation = undefined;
 
-  return ((() => {}) as unknown) as Mock<T>;
+  const repo = new ExpectationRepository();
+
+  const stub = ((() => {
+    pendingRepo = repo;
+  }) as unknown) as Mock<T>;
+
+  stub[expectationRepository] = repo;
+
+  return stub;
 };
 
 interface Stub<T> {
@@ -51,12 +60,12 @@ export const when = <T>(x: T): Stub<T> => {
   return {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     returns(returnValue: T): void {
-      if (!pendingExpectation) {
+      if (!pendingExpectation || !pendingRepo) {
         throw new Error('this should not happen');
       }
 
       pendingExpectation.returnValue = returnValue;
-      repo.addExpectation(pendingExpectation);
+      pendingRepo.addExpectation(pendingExpectation);
       pendingExpectation = undefined;
     }
   };
@@ -65,7 +74,7 @@ export const when = <T>(x: T): Stub<T> => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const instance = <T>(mock: Mock<T>): T => {
   function extracted() {
-    return repo.getMatchingExpectation().returnValue;
+    return mock[expectationRepository].getMatchingExpectation().returnValue;
   }
 
   // @ts-ignore

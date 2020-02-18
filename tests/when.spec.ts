@@ -42,4 +42,32 @@ describe('when', () => {
     expect(instance(mock)()).toEqual(1);
     expect(instance(mock)()).toEqual(2);
   });
+
+  it('should set single expectations on different mocks', () => {
+    const mock1 = strongMock<() => number>();
+    const mock2 = strongMock<() => number>();
+
+    when(mock1()).returns(1);
+    when(mock2()).returns(2);
+
+    // Call in reverse order.
+    expect(instance(mock2)()).toEqual(2);
+    expect(instance(mock1)()).toEqual(1);
+  });
+
+  it('should set multiple expectations on different mocks', () => {
+    const mock1 = strongMock<() => number>();
+    const mock2 = strongMock<() => number>();
+
+    when(mock1()).returns(1);
+    when(mock2()).returns(3);
+    when(mock1()).returns(2);
+    when(mock2()).returns(4);
+
+    // Call in reverse order.
+    expect(instance(mock2)()).toEqual(3);
+    expect(instance(mock1)()).toEqual(1);
+    expect(instance(mock2)()).toEqual(4);
+    expect(instance(mock1)()).toEqual(2);
+  });
 });
