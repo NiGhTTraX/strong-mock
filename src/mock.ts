@@ -6,16 +6,15 @@ export const expectationRepository = Symbol('repo');
 
 export type Mock<T> = T & { [expectationRepository]: ExpectationRepository };
 
-let pendingExpectation: MethodExpectation | undefined;
-let pendingRepo: ExpectationRepository | undefined;
+let pendingReturn = false;
+let pendingMock: Mock<any> | undefined;
 
 export const strongMock = <T>(): Mock<T> => {
-  pendingExpectation = undefined;
-
   const repo = new ExpectationRepository();
+  pendingReturn = false;
 
   const stub = ((() => {
-    pendingRepo = repo;
+    pendingMock = stub;
   }) as unknown) as Mock<T>;
 
   stub[expectationRepository] = repo;
@@ -29,21 +28,23 @@ interface Stub<T> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <T>(x: T): Stub<T> => {
-  if (pendingExpectation) {
+  if (pendingReturn) {
     throw new MissingReturnValue();
   }
 
-  pendingExpectation = new MethodExpectation();
+  const expectation = new MethodExpectation();
+  pendingReturn = true;
 
   return {
     returns(returnValue: T): void {
-      if (!pendingExpectation || !pendingRepo) {
+      if (!pendingMock) {
         throw new Error('this should not happen');
       }
 
-      pendingExpectation.returnValue = returnValue;
-      pendingRepo.addExpectation(pendingExpectation);
-      pendingExpectation = undefined;
+      expectation.returnValue = returnValue;
+      pendingMock[expectationRepository].addExpectation(expectation);
+
+      pendingReturn = false;
     }
   };
 };
