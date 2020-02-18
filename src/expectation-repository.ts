@@ -1,15 +1,15 @@
-import { MethodExpectation } from './expectations';
+import { Expectation } from './expectations';
 
 export class ExpectationRepository {
-  private repo: MethodExpectation[] = [];
+  private repo: Expectation[] = [];
 
-  addExpectation(expectation: MethodExpectation) {
+  addExpectation(expectation: Expectation) {
     this.repo.push(expectation);
   }
 
-  getMatchingExpectation(): MethodExpectation | undefined {
-    const methodExpectation = this.repo[0];
+  getMatchingExpectation(): Expectation | undefined {
+    const expectation = this.repo[0];
     this.repo.splice(0, 1);
-    return methodExpectation;
+    return expectation;
   }
 }

@@ -1,5 +1,7 @@
-export class MethodExpectation {
-  public returnValue: any;
+export interface Expectation {
+  returnValue: any;
+}
 
-  constructor() {}
+export class MethodExpectation implements Expectation {
+  returnValue: any;
 }
