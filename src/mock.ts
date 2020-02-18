@@ -1,4 +1,4 @@
-import { MissingReturnValue } from './errors';
+import { MissingReturnValue, MissingWhen } from './errors';
 import { ExpectationRepository } from './expectation-repository';
 import { MethodExpectation } from './expectations';
 
@@ -39,11 +39,12 @@ export const when = <T>(x: T): Stub<T> => {
   return {
     returns(returnValue: T): void {
       if (!pendingMock) {
-        throw new Error('this should not happen');
+        throw new MissingWhen();
       }
 
       pendingMock[expectationRepository].last.returnValue = returnValue;
 
+      pendingMock = undefined;
       pendingReturn = false;
     }
   };

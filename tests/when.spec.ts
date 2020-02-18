@@ -1,6 +1,6 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { MissingReturnValue, UnexpectedCall } from '../src/errors';
+import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
 import { strongMock, when } from '../src/mock';
 
@@ -109,5 +109,15 @@ describe('when', () => {
     expect(instance(mock)(2)).toEqual(42);
     expect(instance(mock)(1)).toEqual(23);
     expect(instance(mock)(3)).toEqual(99);
+  });
+
+  it('should set expectations with args and return', () => {
+    const mock = strongMock<(x: number) => number>();
+
+    const stub = when(mock(1));
+
+    stub.returns(2);
+
+    expect(() => stub.returns(3)).toThrow(MissingWhen);
   });
 });
