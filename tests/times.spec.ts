@@ -13,7 +13,7 @@ describe('Mock', () => {
         mock
           .when(f => f())
           .returns(1)
-          .always();
+          .anyTimes();
 
         expect(mock.stub()).toEqual(1);
         expect(mock.stub()).toEqual(1);
@@ -28,7 +28,7 @@ describe('Mock', () => {
         mock
           .when(f => f.bar)
           .returns(1)
-          .always();
+          .anyTimes();
 
         expect(mock.stub.bar).toEqual(1);
         expect(mock.stub.bar).toEqual(1);
@@ -43,7 +43,7 @@ describe('Mock', () => {
         mock
           .when(f => f.bar(2))
           .returns(1)
-          .always();
+          .anyTimes();
 
         expect(mock.stub.bar(2)).toEqual(1);
         expect(mock.stub.bar(2)).toEqual(1);
@@ -211,7 +211,7 @@ describe('Mock', () => {
         mock
           .when(f => f())
           .returns(4)
-          .always();
+          .anyTimes();
         mock.when(f => f()).throws('should not reach here');
 
         expect(mock.stub()).toEqual(1);

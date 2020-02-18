@@ -15,8 +15,12 @@ import { PropertyExpectation } from './property-expectation';
 interface StubTimes {
   /**
    * This expectation will never be consumed, unless the mock is reset.
+   *
+   * `verifyAll` will never throw for this kind of expectation.
+   *
+   * This is a shortcut for `between(0, Infinity)`.
    */
-  always(): void;
+  anyTimes(): void;
 
   /**
    * This expectation will be consumed after `exact` invocations.
@@ -186,7 +190,7 @@ export default class Mock<T> {
     expectedProperty: string,
     r: any,
     throws: boolean = false
-  ) {
+  ): StubTimes {
     if (expectedArgs) {
       if (expectedProperty) {
         this.methodExpectations.set(expectedProperty, [
@@ -206,7 +210,7 @@ export default class Mock<T> {
     }
 
     return {
-      always: () => {
+      anyTimes: () => {
         this.setInvocationCountExpectation(
           expectedArgs,
           expectedProperty,
