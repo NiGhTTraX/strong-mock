@@ -1,7 +1,6 @@
-/* istanbul ignore file */
-import { It } from './matcher';
-import StrongMock from './mock';
+type Mock<T> = T;
 
-export default StrongMock;
+export const strongMock = <T>(): Mock<T> => ((() => {}) as unknown) as Mock<T>;
 
-export { It };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+export const when = <T>(x: T) => {};
