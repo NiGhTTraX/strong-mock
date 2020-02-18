@@ -1,11 +1,14 @@
-import { ExpectationRepository } from './expectation-repository';
+import {
+  ExpectationList,
+  ExpectationRepository
+} from './expectation-repository';
 
 export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 
 export type Mock<T> = T;
 
 class PendingMock {
-  public repo: ExpectationRepository | undefined;
+  public repo: ExpectationList | undefined;
 
   public returnValue = false;
 
@@ -15,15 +18,26 @@ class PendingMock {
 export const pendingMock = new PendingMock();
 
 export const strongMock = <T>(): Mock<T> => {
-  const repo = new ExpectationRepository();
+  const methodRepo = new ExpectationList();
+  const applyRepo = new ExpectationList();
   pendingMock.returnValue = false;
 
-  const stub = (((...args: any[]) => {
-    pendingMock.repo = repo;
-    pendingMock.args = args;
-  }) as unknown) as Mock<T>;
+  const stub = new Proxy(() => {}, {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+    get: (target, property: string) => {
+      return (...args: any[]) => {
+        pendingMock.repo = methodRepo;
+        pendingMock.args = args;
+      };
+    },
 
-  MockMap.set(stub, repo);
+    apply: (target: {}, thisArg: any, argArray?: any) => {
+      pendingMock.repo = applyRepo;
+      pendingMock.args = argArray;
+    }
+  });
 
-  return stub;
+  MockMap.set(stub, { apply: applyRepo, methods: methodRepo });
+
+  return (stub as unknown) as Mock<T>;
 };

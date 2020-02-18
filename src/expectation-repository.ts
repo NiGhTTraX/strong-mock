@@ -1,7 +1,7 @@
 import { UnexpectedCall } from './errors';
 import { Expectation } from './expectations';
 
-export class ExpectationRepository {
+export class ExpectationList {
   private repo: Expectation[] = [];
 
   addExpectation(expectation: Expectation) {
@@ -21,4 +21,9 @@ export class ExpectationRepository {
     this.repo.splice(expectationIndex, 1);
     return expectation;
   }
+}
+
+export interface ExpectationRepository {
+  methods: ExpectationList;
+  apply: ExpectationList;
 }

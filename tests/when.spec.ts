@@ -121,4 +121,16 @@ describe('when', () => {
 
     expect(() => stub.returns(3)).toThrow(MissingWhen);
   });
+
+  it('should set expectation on interface method', () => {
+    interface Foo {
+      bar(x: number): number;
+    }
+
+    const mock = strongMock<Foo>();
+
+    when(mock.bar(1)).returns(23);
+
+    expect(instance(mock).bar(1)).toEqual(23);
+  });
 });

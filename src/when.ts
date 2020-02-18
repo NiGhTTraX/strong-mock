@@ -20,9 +20,9 @@ export const when = <T>(expectation: T): Stub<T> => {
         throw new MissingWhen();
       }
 
-      const { repo } = pendingMock;
-
-      repo.addExpectation(new MethodExpectation(pendingMock.args, returnValue));
+      pendingMock.repo.addExpectation(
+        new MethodExpectation(pendingMock.args, returnValue)
+      );
 
       pendingMock.repo = undefined;
       pendingMock.returnValue = false;

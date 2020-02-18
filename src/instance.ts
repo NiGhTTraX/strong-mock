@@ -2,16 +2,24 @@ import { MissingMock } from './errors';
 import { Mock, MockMap } from './mock';
 
 export const instance = <T>(mock: Mock<T>): T => {
-  function extracted(args: any[]) {
-    const repo = MockMap.get(mock);
+  const repo = MockMap.get(mock);
 
-    if (!repo) {
-      throw new MissingMock();
-    }
-
-    return repo.getMatchingExpectation(args).returnValue;
+  if (!repo) {
+    throw new MissingMock();
   }
 
-  // @ts-ignore
-  return (...args: any[]) => extracted(args);
+  const proxy = new Proxy(() => {}, {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+    get: (target, property: string) => {
+      return (...args: any[]) => {
+        return repo.methods.getMatchingExpectation(args).returnValue;
+      };
+    },
+
+    apply: (target: {}, thisArg: any, argArray?: any) => {
+      return repo.apply.getMatchingExpectation(argArray).returnValue;
+    }
+  });
+
+  return (proxy as unknown) as Mock<T>;
 };
