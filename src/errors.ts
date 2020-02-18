@@ -9,7 +9,7 @@ const formatExpectationList = (expectations: Expectation[]) =>
 
 export function formatExpectedArgs(args: any[]) {
   if (!args.length) {
-    return printExpected('0 arguments');
+    return printExpected('no arguments');
   }
 
   return args

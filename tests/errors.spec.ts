@@ -126,11 +126,11 @@ Existing expectations:
 
         expectEqualAnsiless(
           error.message,
-          `Expected function to have been called with "0 arguments" exactly 1 time(s)
+          `Expected function to have been called with "no arguments" exactly 1 time(s)
 
 Existing expectations:
- - "0 arguments" returns 1 exactly 1 time(s)
- - "0 arguments" returns 2 exactly 1 time(s)`
+ - "no arguments" returns 1 exactly 1 time(s)
+ - "no arguments" returns 2 exactly 1 time(s)`
         );
       });
     });
@@ -160,7 +160,7 @@ Existing expectations:
 
         expectEqualAnsiless(
           expectation.toString(),
-          '"0 arguments" returns 2 exactly 1 time(s)'
+          '"no arguments" returns 2 exactly 1 time(s)'
         );
       });
 
@@ -242,7 +242,7 @@ Existing expectations:
         expectContainAnsiless(expectation.toString(), 'any');
       });
 
-      it('should shorten anonymous It.matches with "0 arguments"', () => {
+      it('should shorten anonymous It.matches with no arguments', () => {
         const expectation = new MethodExpectation([It.matches(() => true)], 2);
 
         expectContainAnsiless(expectation.toString(), '() => true');
