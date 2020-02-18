@@ -82,12 +82,16 @@ export type Stub<T, R> = [R] extends [Promise<infer P>]
     };
 
 export interface Mock<T> {
+  // TODO: add when(mock()).returns()
   when<R>(cb: (fake: T) => R): Stub<T, R>;
 
+  // TODO: add instance(mock)
   readonly stub: T;
 
+  // TODO: add verifyAll(mock)
   verifyAll(): void;
 
+  // TODO: add reset(mock)
   reset(): void;
 }
 
