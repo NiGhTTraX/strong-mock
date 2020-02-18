@@ -1,6 +1,12 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { instance, MissingReturnValue, strongMock, when } from '../src';
+import {
+  instance,
+  MissingReturnValue,
+  strongMock,
+  UnexpectedCall,
+  when
+} from '../src';
 
 describe('when', () => {
   it('should do nothing without a chained return', () => {
@@ -69,5 +75,21 @@ describe('when', () => {
     expect(instance(mock1)()).toEqual(1);
     expect(instance(mock2)()).toEqual(4);
     expect(instance(mock1)()).toEqual(2);
+  });
+
+  it('should throw when no matching expectations', () => {
+    const mock = strongMock<() => void>();
+
+    expect(() => instance(mock)()).toThrow(UnexpectedCall);
+  });
+
+  it('should throw when after all expectations are met', () => {
+    const mock = strongMock<() => void>();
+
+    when(mock()).returns(undefined);
+
+    instance(mock)();
+
+    expect(() => instance(mock)()).toThrow(UnexpectedCall);
   });
 });

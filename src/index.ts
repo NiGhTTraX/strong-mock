@@ -9,7 +9,7 @@ class ExpectationRepository {
     this.repo.push(expectation);
   }
 
-  getMatchingExpectation() {
+  getMatchingExpectation(): MethodExpectation | undefined {
     const methodExpectation = this.repo[0];
     this.repo.splice(0, 1);
     return methodExpectation;
@@ -22,6 +22,12 @@ let pendingRepo: ExpectationRepository | undefined;
 export class MissingReturnValue extends Error {
   constructor() {
     super(`You forgot to give a return value to the previous expectation`);
+  }
+}
+
+export class UnexpectedCall extends Error {
+  constructor() {
+    super(`Didn't expect method to be called`);
   }
 }
 
@@ -74,7 +80,11 @@ export const when = <T>(x: T): Stub<T> => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const instance = <T>(mock: Mock<T>): T => {
   function extracted() {
-    return mock[expectationRepository].getMatchingExpectation().returnValue;
+    const expectation = mock[expectationRepository].getMatchingExpectation();
+    if (!expectation) {
+      throw new UnexpectedCall();
+    }
+    return expectation.returnValue;
   }
 
   // @ts-ignore
