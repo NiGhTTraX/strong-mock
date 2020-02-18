@@ -36,7 +36,6 @@ export const when = <T>(x: T): Stub<T> => {
   pendingExpectation = new MethodExpectation();
 
   return {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     returns(returnValue: T): void {
       if (!pendingExpectation || !pendingRepo) {
         throw new Error('this should not happen');
