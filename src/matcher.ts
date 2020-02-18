@@ -16,20 +16,20 @@ export function isMatcher(f: any): f is Matcher<any> {
  * @example
  * ```
  * const mock = new Mock<(x: number, y: string) => number>();
- * mock.when(f => f(It.isAny, It.isAny)).returns(1);
+ * mock.when(f => f(It.isAny(), It.isAny())).returns(1);
  *
  * mock.stub(23, 'foobar') === 1
  * mock.stub(23, true) // compiler error
  * ```
  */
-const isAny: Matcher<any> = {
+const isAny = (): Matcher<any> => ({
   matches: () => true,
   __isMatcher: true,
 
   [Symbol.for('nodejs.util.inspect.custom')]() {
     return 'any';
   }
-};
+});
 
 /**
  * Match a custom predicate.

@@ -288,7 +288,7 @@ import Mock, { It } from 'strong-mock';
 
 const mock = new Mock<(x: number, y: string) => boolean>();
 
-mock.when(f => f(It.isAny, 'foobar')).returns(true);
+mock.when(f => f(It.isAny(), 'foobar')).returns(true);
 mock.when(f => f(It.matches(x => x > 0), It.matches(y => y))).returns(true);
 
 mock.stub(1, 'foobar'); // true

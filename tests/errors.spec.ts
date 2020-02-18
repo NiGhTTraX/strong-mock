@@ -216,7 +216,7 @@ Existing expectations:
       });
 
       it('should shorten It.isAny', () => {
-        const expectation = new MethodExpectation([It.isAny], 2);
+        const expectation = new MethodExpectation([It.isAny()], 2);
 
         expect(expectation.toString()).to.contain('[ any ]');
       });
