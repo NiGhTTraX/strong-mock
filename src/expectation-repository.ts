@@ -21,12 +21,4 @@ export class ExpectationRepository {
     this.repo.splice(expectationIndex, 1);
     return expectation;
   }
-
-  get last(): Expectation {
-    if (!this.repo.length) {
-      throw new Error('This should never happen');
-    }
-
-    return this.repo[this.repo.length - 1];
-  }
 }
