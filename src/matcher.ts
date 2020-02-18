@@ -1,5 +1,5 @@
 export type Matcher<T> = T & {
-  matches: (arg: any) => arg is T;
+  matches: (arg: any) => boolean;
   __isMatcher: boolean;
 };
 
@@ -23,8 +23,7 @@ export function isMatcher(f: any): f is Matcher<any> {
  * ```
  */
 const isAny: Matcher<any> = {
-  // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-  matches: (arg: any): arg is any => true,
+  matches: () => true,
   __isMatcher: true,
 
   [Symbol.for('nodejs.util.inspect.custom')]() {
@@ -51,7 +50,7 @@ const isAny: Matcher<any> = {
  */
 const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
   ({
-    matches: (arg: any): arg is T => cb(arg),
+    matches: (arg: any) => cb(arg),
     __isMatcher: true,
 
     [Symbol.for('nodejs.util.inspect.custom')]() {
