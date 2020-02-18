@@ -58,6 +58,7 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
     }
   } as any);
 
+// TODO: add matchesObject, matchesString
 export const It = {
   isAny,
   matches
