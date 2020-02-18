@@ -1,4 +1,4 @@
-import { UnexpectedCall, MissingMock } from './errors';
+import { MissingMock } from './errors';
 import { Mock, MockMap } from './mock';
 
 export const instance = <T>(mock: Mock<T>): T => {
@@ -9,12 +9,7 @@ export const instance = <T>(mock: Mock<T>): T => {
       throw new MissingMock();
     }
 
-    const expectation = repo.getMatchingExpectation(args);
-
-    if (!expectation) {
-      throw new UnexpectedCall();
-    }
-    return expectation.returnValue;
+    return repo.getMatchingExpectation(args).returnValue;
   }
 
   // @ts-ignore
