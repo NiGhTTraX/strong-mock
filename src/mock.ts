@@ -120,7 +120,9 @@ export default class Mock<T> {
     return {
       throws: (e: Error | string) =>
         this.returns(expectedArgs, expectedProperty, e, true),
+      // TODO: support callbacks
       returns: (r: any) => this.returns(expectedArgs, expectedProperty, r),
+      // TODO: support callbacks
       resolves: (r: any) =>
         this.returns(expectedArgs, expectedProperty, Promise.resolve(r)),
       rejects: (e: Error | string) =>
