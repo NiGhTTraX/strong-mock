@@ -118,6 +118,7 @@ export default class Mock<T> {
     // return both and rely on the compiler to force the usage of one or the
     // other
     return {
+      // TODO: make optional
       throws: (e: Error | string) =>
         this.returns(expectedArgs, expectedProperty, e, true),
       // TODO: support callbacks
@@ -125,6 +126,7 @@ export default class Mock<T> {
       // TODO: support callbacks
       resolves: (r: any) =>
         this.returns(expectedArgs, expectedProperty, Promise.resolve(r)),
+      // TODO: make optional
       rejects: (e: Error | string) =>
         this.returns(
           expectedArgs,
