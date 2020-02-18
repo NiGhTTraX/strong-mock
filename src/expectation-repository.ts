@@ -7,9 +7,16 @@ export class ExpectationRepository {
     this.repo.push(expectation);
   }
 
-  getMatchingExpectation(): Expectation | undefined {
-    const expectation = this.repo[0];
-    this.repo.splice(0, 1);
+  getMatchingExpectation(args: any[]): Expectation | undefined {
+    const expectationIndex = this.repo.findIndex(e =>
+      e.args.every((a, i) => args[i] === a)
+    );
+    const expectation = this.repo[expectationIndex];
+    this.repo.splice(expectationIndex, 1);
     return expectation;
+  }
+
+  get last(): Expectation {
+    return this.repo[this.repo.length - 1];
   }
 }

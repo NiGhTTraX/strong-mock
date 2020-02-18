@@ -7,14 +7,16 @@ export const expectationRepository = Symbol('repo');
 export type Mock<T> = T & { [expectationRepository]: ExpectationRepository };
 
 let pendingReturn = false;
-let pendingMock: Mock<any> | undefined;
+let pendingMock: Mock<unknown> | undefined;
 
 export const strongMock = <T>(): Mock<T> => {
   const repo = new ExpectationRepository();
   pendingReturn = false;
 
-  const stub = ((() => {
+  const stub = (((...args: any[]) => {
     pendingMock = stub;
+
+    stub[expectationRepository].addExpectation(new MethodExpectation(args));
   }) as unknown) as Mock<T>;
 
   stub[expectationRepository] = repo;
@@ -32,7 +34,6 @@ export const when = <T>(x: T): Stub<T> => {
     throw new MissingReturnValue();
   }
 
-  const expectation = new MethodExpectation();
   pendingReturn = true;
 
   return {
@@ -41,8 +42,7 @@ export const when = <T>(x: T): Stub<T> => {
         throw new Error('this should not happen');
       }
 
-      expectation.returnValue = returnValue;
-      pendingMock[expectationRepository].addExpectation(expectation);
+      pendingMock[expectationRepository].last.returnValue = returnValue;
 
       pendingReturn = false;
     }

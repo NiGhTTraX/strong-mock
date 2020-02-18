@@ -98,4 +98,16 @@ describe('when', () => {
     when(mock()).returns(2);
     expect(instance(mock)()).toEqual(2);
   });
+
+  it('should set expectations with args and return', () => {
+    const mock = strongMock<(x: number) => number>();
+
+    when(mock(1)).returns(23);
+    when(mock(2)).returns(42);
+    when(mock(3)).returns(99);
+
+    expect(instance(mock)(2)).toEqual(42);
+    expect(instance(mock)(1)).toEqual(23);
+    expect(instance(mock)(3)).toEqual(99);
+  });
 });

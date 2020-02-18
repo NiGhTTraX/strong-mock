@@ -3,8 +3,11 @@ import { UnexpectedCall } from './errors';
 import { expectationRepository, Mock } from './mock';
 
 export const instance = <T>(mock: Mock<T>): T => {
-  function extracted() {
-    const expectation = mock[expectationRepository].getMatchingExpectation();
+  function extracted(args: any[]) {
+    const expectation = mock[expectationRepository].getMatchingExpectation(
+      args
+    );
+
     if (!expectation) {
       throw new UnexpectedCall();
     }
@@ -12,5 +15,5 @@ export const instance = <T>(mock: Mock<T>): T => {
   }
 
   // @ts-ignore
-  return () => extracted();
+  return (...args: any[]) => extracted(args);
 };
