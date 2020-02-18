@@ -26,7 +26,7 @@ const isAny = (): Matcher<any> => ({
   matches: () => true,
   __isMatcher: true,
 
-  [Symbol.for('nodejs.util.inspect.custom')]() {
+  toString() {
     return 'any';
   }
 });
@@ -53,7 +53,7 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
     matches: (arg: any) => cb(arg),
     __isMatcher: true,
 
-    [Symbol.for('nodejs.util.inspect.custom')]() {
+    toString() {
       return cb.toString();
     }
   } as any);

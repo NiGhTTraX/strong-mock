@@ -1,4 +1,4 @@
-import { inspect } from 'util';
+import { printExpected } from 'jest-matcher-utils';
 
 export class Expectation {
   /**
@@ -35,21 +35,23 @@ export class Expectation {
 
   protected formatInvocationCount = (): string => {
     if (this.min === this.max) {
-      return `exactly ${this.min} time(s)`;
+      return `exactly ${printExpected(this.min)} time(s)`;
     }
 
     if (!Number.isFinite(this.max)) {
       return 'at least once';
     }
 
-    return `between ${this.min} and ${this.max} times`;
+    return `between ${printExpected(this.min)} and ${printExpected(
+      this.max
+    )} times`;
   };
 
   protected formatReturnValue = (): string => {
     if (this.throws) {
-      return `throws '${this.returnValue}'`;
+      return `throws ${printExpected(this.returnValue)}`;
     }
 
-    return `returns ${inspect(this.returnValue)}`;
+    return `returns ${printExpected(this.returnValue)}`;
   };
 }

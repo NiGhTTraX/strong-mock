@@ -1,10 +1,23 @@
-import { inspect } from 'util';
+import { printExpected } from 'jest-matcher-utils';
 import { Expectation } from './expectations';
+import { isMatcher } from './matcher';
 import { MethodExpectation } from './method-expectation';
 import { PropertyExpectation } from './property-expectation';
 
 const formatExpectationList = (expectations: Expectation[]) =>
   ` - ${expectations.join('\n - ')}`;
+
+export function formatExpectedArgs(args: any[]) {
+  if (!args.length) {
+    return printExpected('0 arguments');
+  }
+
+  return args
+    .map(a => {
+      return printExpected(isMatcher(a) ? a.toString() : a);
+    })
+    .join(', ');
+}
 
 /**
  * Thrown by `verifyAll` when a method has remaining unmet expectations.
@@ -15,9 +28,9 @@ export class UnmetMethodExpectationError extends Error {
     unmetExpectation: MethodExpectation,
     expectations: MethodExpectation[]
   ) {
-    super(`Expected ${method} to have been called with ${unmetExpectation.toString(
-      false
-    )}
+    super(`Expected ${printExpected(
+      method
+    )} to have been called with ${unmetExpectation.toString(false)}
 
 Existing expectations:
 ${formatExpectationList(expectations)}`);
@@ -77,7 +90,9 @@ export class WrongMethodArgsError extends Error {
     args: any[],
     expectations: MethodExpectation[]
   ) {
-    super(`${property} not expected to have been called with ${inspect(args)}!
+    super(`${printExpected(
+      property
+    )} not expected to have been called with ${formatExpectedArgs(args)}
 
 Existing expectations:
 ${formatExpectationList(expectations)}`);
@@ -92,7 +107,9 @@ ${formatExpectationList(expectations)}`);
  */
 export class WrongApplyArgsError extends Error {
   constructor(args: any[], expectations: MethodExpectation[]) {
-    super(`Function not expected to have been called with ${inspect(args)}!
+    super(`Function not expected to have been called with ${formatExpectedArgs(
+      args
+    )}
 
 Existing expectations:
 ${formatExpectationList(expectations)}`);
@@ -107,7 +124,7 @@ ${formatExpectationList(expectations)}`);
  */
 export class UnexpectedApplyError extends Error {
   constructor() {
-    super('Function not expected to have been called!');
+    super('Function not expected to have been called');
 
     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, UnexpectedApplyError.prototype);

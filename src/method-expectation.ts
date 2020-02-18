@@ -1,4 +1,4 @@
-import { inspect } from 'util';
+import { formatExpectedArgs } from './errors';
 import { Expectation } from './expectations';
 
 export class MethodExpectation extends Expectation {
@@ -18,5 +18,5 @@ export class MethodExpectation extends Expectation {
       : `${ret} ${this.formatInvocationCount()}`;
   }
 
-  private formatArgs = () => inspect(this.args);
+  private formatArgs = () => formatExpectedArgs(this.args);
 }

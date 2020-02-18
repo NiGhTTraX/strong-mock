@@ -1,4 +1,5 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import stripAnsi from 'strip-ansi';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from '../src';
 import {
@@ -14,6 +15,14 @@ import { PropertyExpectation } from '../src/property-expectation';
 
 describe('Mock', () => {
   describe('errors', () => {
+    function expectEqualAnsiless(actual: string, expected: string) {
+      expect(stripAnsi(actual)).toEqual(expected);
+    }
+
+    function expectContainAnsiless(actual: string, expected: string) {
+      expect(stripAnsi(actual)).toContain(expected);
+    }
+
     describe('WrongMethodArgsError', () => {
       it('e2e', () => {
         const error = new WrongMethodArgsError(
@@ -22,18 +31,20 @@ describe('Mock', () => {
           [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
-        expect(error.message).to
-          .equal(`foobar not expected to have been called with [ 1, 2, 3 ]!
+        expectEqualAnsiless(
+          error.message,
+          `"foobar" not expected to have been called with 1, 2, 3
 
 Existing expectations:
- - [ 1 ] returns 2 exactly 1 time(s)
- - [ 3 ] returns 4 exactly 1 time(s)`);
+ - 1 returns 2 exactly 1 time(s)
+ - 3 returns 4 exactly 1 time(s)`
+        );
       });
 
       it('should contain the name of the method', () => {
         const error = new WrongMethodArgsError('method', [], []);
 
-        expect(error.message).to.contain('method');
+        expectContainAnsiless(error.message, 'method');
       });
 
       it('should contain all the expectations', () => {
@@ -43,9 +54,8 @@ Existing expectations:
           [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
-        expect(error.message)
-          .to.contain('[ 1 ] returns 2')
-          .and.to.contain('[ 3 ] returns 4');
+        expectContainAnsiless(error.message, '1 returns 2');
+        expectContainAnsiless(error.message, '3 returns 4');
       });
     });
 
@@ -56,12 +66,14 @@ Existing expectations:
           [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
-        expect(error.message).to
-          .equal(`Function not expected to have been called with [ 1, 2, 3 ]!
+        expectEqualAnsiless(
+          error.message,
+          `Function not expected to have been called with 1, 2, 3
 
 Existing expectations:
- - [ 1 ] returns 2 exactly 1 time(s)
- - [ 3 ] returns 4 exactly 1 time(s)`);
+ - 1 returns 2 exactly 1 time(s)
+ - 3 returns 4 exactly 1 time(s)`
+        );
       });
 
       it('should contain all the expectations', () => {
@@ -70,9 +82,8 @@ Existing expectations:
           [new MethodExpectation([1], 2), new MethodExpectation([3], 4)]
         );
 
-        expect(error.message)
-          .to.contain('[ 1 ] returns 2')
-          .and.to.contain('[ 3 ] returns 4');
+        expectContainAnsiless(error.message, '1 returns 2');
+        expectContainAnsiless(error.message, '3 returns 4');
       });
     });
 
@@ -80,7 +91,7 @@ Existing expectations:
       it('should contain the name of the property', () => {
         const error = new UnexpectedAccessError('property');
 
-        expect(error.message).to.contain('property');
+        expectContainAnsiless(error.message, 'property');
       });
     });
 
@@ -88,16 +99,21 @@ Existing expectations:
       it('e2e', () => {
         const error = new UnmetMethodExpectationError(
           'foobar',
-          new MethodExpectation([], 1),
-          [new MethodExpectation([], 1), new MethodExpectation([], 2)]
+          new MethodExpectation([1, 2, 3], 1),
+          [
+            new MethodExpectation([1, 2, 3], 1),
+            new MethodExpectation([4, 5, 6], 2)
+          ]
         );
 
-        expect(error.message).to
-          .equal(`Expected foobar to have been called with [] exactly 1 time(s)
+        expectEqualAnsiless(
+          error.message,
+          `Expected "foobar" to have been called with 1, 2, 3 exactly 1 time(s)
 
 Existing expectations:
- - [] returns 1 exactly 1 time(s)
- - [] returns 2 exactly 1 time(s)`);
+ - 1, 2, 3 returns 1 exactly 1 time(s)
+ - 4, 5, 6 returns 2 exactly 1 time(s)`
+        );
       });
     });
 
@@ -108,12 +124,14 @@ Existing expectations:
           [new MethodExpectation([], 1), new MethodExpectation([], 2)]
         );
 
-        expect(error.message).to
-          .equal(`Expected function to have been called with [] exactly 1 time(s)
+        expectEqualAnsiless(
+          error.message,
+          `Expected function to have been called with "0 arguments" exactly 1 time(s)
 
 Existing expectations:
- - [] returns 1 exactly 1 time(s)
- - [] returns 2 exactly 1 time(s)`);
+ - "0 arguments" returns 1 exactly 1 time(s)
+ - "0 arguments" returns 2 exactly 1 time(s)`
+        );
       });
     });
 
@@ -125,12 +143,14 @@ Existing expectations:
           [new PropertyExpectation(1), new PropertyExpectation(2)]
         );
 
-        expect(error.message).to
-          .equal(`Expected foobar to have been accessed exactly 1 time(s)
+        expectEqualAnsiless(
+          error.message,
+          `Expected foobar to have been accessed exactly 1 time(s)
 
 Existing expectations:
  - returns 1 exactly 1 time(s)
- - returns 2 exactly 1 time(s)`);
+ - returns 2 exactly 1 time(s)`
+        );
       });
     });
 
@@ -138,57 +158,58 @@ Existing expectations:
       it('e2e', () => {
         const expectation = new MethodExpectation([], 2);
 
-        expect(expectation.toString()).to.equal(
-          '[] returns 2 exactly 1 time(s)'
+        expectEqualAnsiless(
+          expectation.toString(),
+          '"0 arguments" returns 2 exactly 1 time(s)'
         );
       });
 
       it('should contain the primitive arguments', () => {
         const expectation = new MethodExpectation([1, 2, 3], 2);
 
-        expect(expectation.toString()).to.contain('[ 1, 2, 3 ]');
+        expectContainAnsiless(expectation.toString(), '1, 2, 3');
       });
 
       it('should contain the array arguments', () => {
         const expectation = new MethodExpectation([[1, 2, 3]], 2);
 
-        expect(expectation.toString()).to.contain('[ [ 1, 2, 3 ] ]');
+        expectContainAnsiless(expectation.toString(), '[1, 2, 3]');
       });
 
       it('should contain the object arguments', () => {
         const expectation = new MethodExpectation([{ foo: 'bar' }], 2);
 
-        expect(expectation.toString()).to.contain("[ { foo: 'bar' } ]");
+        expectContainAnsiless(expectation.toString(), '{"foo": "bar"}');
       });
 
       it('should contain primitive return value', () => {
         const expectation = new MethodExpectation([], 23);
 
-        expect(expectation.toString()).to.contain('returns 23');
+        expectContainAnsiless(expectation.toString(), 'returns 23');
       });
 
       it('should contain array return value', () => {
         const expectation = new MethodExpectation([], [1, 2, 3]);
 
-        expect(expectation.toString()).to.contain('returns [ 1, 2, 3 ]');
+        expectContainAnsiless(expectation.toString(), 'returns [1, 2, 3]');
       });
 
       it('should contain object return value', () => {
         const expectation = new MethodExpectation([], { foo: 'bar' });
 
-        expect(expectation.toString()).to.contain("returns { foo: 'bar' }");
+        expectContainAnsiless(expectation.toString(), 'returns {"foo": "bar"}');
       });
 
       it('should contain throw message', () => {
         const expectation = new MethodExpectation([], 'foo', true);
 
-        expect(expectation.toString()).to.contain("throws 'foo'");
+        expectContainAnsiless(expectation.toString(), 'throws "foo"');
       });
 
       it('should contain throw error', () => {
         const expectation = new MethodExpectation([], new Error('foo'), true);
 
-        expect(expectation.toString()).to.contain("throws 'Error: foo'");
+        expectContainAnsiless(expectation.toString(), 'throws [Error: foo]');
       });
 
       it('should contain the invocation count for exact', () => {
@@ -196,7 +217,7 @@ Existing expectations:
         // eslint-disable-next-line no-multi-assign
         expectation.min = expectation.max = 2;
 
-        expect(expectation.toString()).to.contain('exactly 2 time(s)');
+        expectContainAnsiless(expectation.toString(), 'exactly 2 time(s)');
       });
 
       it('should contain the invocation count for between', () => {
@@ -204,7 +225,7 @@ Existing expectations:
         expectation.min = 2;
         expectation.max = 3;
 
-        expect(expectation.toString()).to.contain('between 2 and 3 times');
+        expectContainAnsiless(expectation.toString(), 'between 2 and 3 times');
       });
 
       it('should contain the invocation count for always', () => {
@@ -212,19 +233,19 @@ Existing expectations:
         expectation.min = 0;
         expectation.max = Infinity;
 
-        expect(expectation.toString()).to.contain('at least once');
+        expectContainAnsiless(expectation.toString(), 'at least once');
       });
 
       it('should shorten It.isAny', () => {
         const expectation = new MethodExpectation([It.isAny()], 2);
 
-        expect(expectation.toString()).to.contain('[ any ]');
+        expectContainAnsiless(expectation.toString(), 'any');
       });
 
-      it('should shorten anonymous It.matches with no args', () => {
+      it('should shorten anonymous It.matches with "0 arguments"', () => {
         const expectation = new MethodExpectation([It.matches(() => true)], 2);
 
-        expect(expectation.toString()).to.contain('[ () => true ]');
+        expectContainAnsiless(expectation.toString(), '() => true');
       });
 
       it('should shorten anonymous It.matches with args', () => {
@@ -233,7 +254,7 @@ Existing expectations:
           2
         );
 
-        expect(expectation.toString()).to.contain('[ (x) => !!x ]');
+        expectContainAnsiless(expectation.toString(), '(x) => !!x');
       });
     });
 
@@ -241,37 +262,40 @@ Existing expectations:
       it('e2e', () => {
         const expectation = new PropertyExpectation(2);
 
-        expect(expectation.toString()).to.equal('returns 2 exactly 1 time(s)');
+        expectEqualAnsiless(
+          expectation.toString(),
+          'returns 2 exactly 1 time(s)'
+        );
       });
 
       it('should contain primitive return value', () => {
         const expectation = new PropertyExpectation(23);
 
-        expect(expectation.toString()).to.contain('returns 23');
+        expectContainAnsiless(expectation.toString(), 'returns 23');
       });
 
       it('should contain array return value', () => {
         const expectation = new PropertyExpectation([1, 2, 3]);
 
-        expect(expectation.toString()).to.contain('returns [ 1, 2, 3 ]');
+        expectContainAnsiless(expectation.toString(), 'returns [1, 2, 3]');
       });
 
       it('should contain object return value', () => {
         const expectation = new PropertyExpectation({ foo: 'bar' });
 
-        expect(expectation.toString()).to.contain("returns { foo: 'bar' }");
+        expectContainAnsiless(expectation.toString(), 'returns {"foo": "bar"}');
       });
 
       it('should contain throw message', () => {
         const expectation = new PropertyExpectation('foo', true);
 
-        expect(expectation.toString()).to.contain("throws 'foo'");
+        expectContainAnsiless(expectation.toString(), 'throws "foo"');
       });
 
       it('should contain throw error', () => {
         const expectation = new PropertyExpectation(new Error('foo'), true);
 
-        expect(expectation.toString()).to.contain("throws 'Error: foo'");
+        expectContainAnsiless(expectation.toString(), 'throws [Error: foo]');
       });
 
       it('should contain the invocation count for exact', () => {
@@ -279,7 +303,7 @@ Existing expectations:
         // eslint-disable-next-line no-multi-assign
         expectation.min = expectation.max = 2;
 
-        expect(expectation.toString()).to.contain('exactly 2 time(s)');
+        expectContainAnsiless(expectation.toString(), 'exactly 2 time(s)');
       });
 
       it('should contain the invocation count for between', () => {
@@ -287,7 +311,7 @@ Existing expectations:
         expectation.min = 2;
         expectation.max = 3;
 
-        expect(expectation.toString()).to.contain('between 2 and 3 times');
+        expectContainAnsiless(expectation.toString(), 'between 2 and 3 times');
       });
 
       it('should contain the invocation count for always', () => {
@@ -295,7 +319,7 @@ Existing expectations:
         expectation.min = 0;
         expectation.max = Infinity;
 
-        expect(expectation.toString()).to.contain('at least once');
+        expectContainAnsiless(expectation.toString(), 'at least once');
       });
     });
   });
