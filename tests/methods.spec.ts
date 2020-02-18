@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedAccessError, WrongMethodArgsError } from '../src/errors';
-import Mock from '../src/mock';
+import StrongMock from '../src/mock';
 
 describe('Mock', () => {
   describe('method expectations', () => {
@@ -10,7 +10,7 @@ describe('Mock', () => {
         bar(): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
       expect(mock.stub.bar()).toBeUndefined();
@@ -21,7 +21,7 @@ describe('Mock', () => {
         bar(): string;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar()).returns('bar');
 
       expect(mock.stub.bar()).toEqual('bar');
@@ -32,7 +32,7 @@ describe('Mock', () => {
         bar(x: string): number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar('bar')).returns(23);
 
       expect(mock.stub.bar('bar')).toEqual(23);
@@ -43,7 +43,7 @@ describe('Mock', () => {
         bar(x: string, y: boolean): number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar('bar', true)).returns(23);
 
       expect(mock.stub.bar('bar', true)).toEqual(23);
@@ -54,7 +54,7 @@ describe('Mock', () => {
         bar(...args: number[]): number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1, 2, 3, 4)).returns(23);
 
       expect(mock.stub.bar(1, 2, 3, 4)).toEqual(23);
@@ -65,7 +65,7 @@ describe('Mock', () => {
         bar(x: number): number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1)).returns(2);
       mock.when(f => f.bar(1)).returns(3);
 
@@ -77,7 +77,7 @@ describe('Mock', () => {
       interface Foo {
         bar(x: number): number;
       }
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar(1));
       expect(() => mock.verifyAll()).not.toThrow();
@@ -92,7 +92,7 @@ describe('Mock', () => {
         bar(): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       expect(() => mock.stub.bar()).toThrow(UnexpectedAccessError);
     });
@@ -102,7 +102,7 @@ describe('Mock', () => {
         bar(x: number): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
       expect(() => mock.stub.bar(21)).toThrow(WrongMethodArgsError);
@@ -113,7 +113,7 @@ describe('Mock', () => {
         bar(x: number, y: number): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
       expect(() => mock.stub.bar(3, 4)).toThrow(WrongMethodArgsError);
@@ -124,7 +124,7 @@ describe('Mock', () => {
         bar(...args: number[]): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
       expect(() => mock.stub.bar(1, 2)).toThrow(WrongMethodArgsError);
@@ -135,21 +135,21 @@ describe('Mock', () => {
         bar(...args: number[]): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
       expect(() => mock.stub.bar(3, 4)).toThrow(WrongMethodArgsError);
     });
 
     it('throws error', () => {
-      const mock = new Mock<{ foo: () => void }>();
+      const mock = new StrongMock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws(new Error('foo'));
 
       expect(() => mock.stub.foo()).toThrow('foo');
     });
 
     it('throws message', () => {
-      const mock = new Mock<{ foo: () => void }>();
+      const mock = new StrongMock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws('foo');
 
       expect(() => mock.stub.foo()).toThrow('foo');

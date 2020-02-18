@@ -81,12 +81,22 @@ export type Stub<T, R> = [R] extends [Promise<infer P>]
       throws(error: Error | string): StubTimes;
     };
 
+export interface Mock<T> {
+  when<R>(cb: (fake: T) => R): Stub<T, R>;
+
+  readonly stub: T;
+
+  verifyAll(): void;
+
+  reset(): void;
+}
+
 /**
  * Mock types and set expectations.
  *
  * Mocks are strict by default - an unexpected call will throw an error.
  */
-export default class Mock<T> {
+export default class StrongMock<T> implements Mock<T> {
   private methodExpectations: Map<string, MethodExpectation[]> = new Map();
 
   private propertyExpectations: Map<string, PropertyExpectation[]> = new Map();
@@ -271,7 +281,7 @@ export default class Mock<T> {
         throw new UnexpectedAccessError(property);
       }
 
-      return Mock.returnOrThrow(expectation);
+      return StrongMock.returnOrThrow(expectation);
     }
 
     const methodExpectations = this.methodExpectations.get(property);
@@ -293,7 +303,7 @@ export default class Mock<T> {
         throw new WrongMethodArgsError(property, args, methodExpectations);
       }
 
-      return Mock.returnOrThrow(expectation);
+      return StrongMock.returnOrThrow(expectation);
     };
   };
 
@@ -310,7 +320,7 @@ export default class Mock<T> {
       throw new WrongApplyArgsError(actualArgs, this.applyExpectations);
     }
 
-    return Mock.returnOrThrow(expectation);
+    return StrongMock.returnOrThrow(expectation);
   };
 
   // eslint-disable-next-line class-methods-use-this

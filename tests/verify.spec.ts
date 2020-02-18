@@ -5,7 +5,7 @@ import {
   UnmetMethodExpectationError,
   UnmetPropertyExpectationError
 } from '../src/errors';
-import Mock from '../src/mock';
+import StrongMock from '../src/mock';
 
 describe('Mock', () => {
   describe('verify', () => {
@@ -14,7 +14,7 @@ describe('Mock', () => {
         bar(): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
       mock.stub.bar();
 
@@ -26,7 +26,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(23);
       mock.stub.bar;
 
@@ -38,7 +38,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(23);
       mock.when(f => f.bar).returns(24);
       mock.stub.bar;
@@ -50,7 +50,7 @@ describe('Mock', () => {
     it('single function expectation met', () => {
       type Foo = (x: number) => number;
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f(42)).returns(23);
       mock.stub(42);
 
@@ -62,7 +62,7 @@ describe('Mock', () => {
         bar(): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
       expect(() => mock.verifyAll()).toThrow(UnmetMethodExpectationError);
@@ -73,7 +73,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(23);
 
       expect(() => mock.verifyAll()).toThrow(UnmetPropertyExpectationError);
@@ -84,7 +84,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(23);
       mock.when(f => f.bar).returns(24);
       mock.stub.bar;
@@ -96,7 +96,7 @@ describe('Mock', () => {
     it('single function expectation unmet', () => {
       type Foo = (x: number) => number;
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f(42)).returns(23);
 
       expect(() => mock.verifyAll()).toThrow(UnmetApplyExpectationError);
@@ -107,7 +107,7 @@ describe('Mock', () => {
         bar(x: number): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1)).returns(undefined);
       mock.when(f => f.bar(2)).returns(undefined);
       mock.when(f => f.bar(3)).returns(undefined);
@@ -123,7 +123,7 @@ describe('Mock', () => {
         bar(x: number): void;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar(1)).returns(undefined);
       mock.when(f => f.bar(2)).returns(undefined);
       mock.when(f => f.bar(3)).returns(undefined);
@@ -135,7 +135,7 @@ describe('Mock', () => {
     it('multiple function expectations met', () => {
       type Foo = (x: number) => undefined;
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f(1)).returns(undefined);
       mock.when(f => f(2)).returns(undefined);
       mock.when(f => f(3)).returns(undefined);
@@ -149,7 +149,7 @@ describe('Mock', () => {
     it('multiple function expectations unmet', () => {
       type Foo = (x: number) => undefined;
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f(1)).returns(undefined);
       mock.when(f => f(2)).returns(undefined);
       mock.when(f => f(3)).returns(undefined);

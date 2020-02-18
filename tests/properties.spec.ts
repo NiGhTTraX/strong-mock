@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedAccessError } from '../src/errors';
-import Mock from '../src/mock';
+import StrongMock from '../src/mock';
 
 describe('Mock', () => {
   describe('property expectations', () => {
@@ -10,7 +10,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(23);
 
       expect(mock.stub.bar).toEqual(23);
@@ -21,7 +21,7 @@ describe('Mock', () => {
         bar: undefined;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(undefined);
 
       expect(mock.stub.bar).toBeUndefined();
@@ -32,7 +32,7 @@ describe('Mock', () => {
         bar: number[];
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns([1, 2]);
 
       expect(mock.stub.bar).toEqual([1, 2]);
@@ -43,7 +43,7 @@ describe('Mock', () => {
         bar(x: number): string;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar).returns((x: number) => `${x}`);
 
@@ -55,7 +55,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(1);
       mock.when(f => f.bar).returns(2);
 
@@ -68,7 +68,7 @@ describe('Mock', () => {
         bar: number;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
       mock.when(f => f.bar).returns(1);
       mock.stub.bar;
 
@@ -80,7 +80,7 @@ describe('Mock', () => {
         bar(): string;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar).returns(() => 'bar');
       mock.when(f => f.bar()).returns('baz');
@@ -94,7 +94,7 @@ describe('Mock', () => {
         bar(): string;
       }
 
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar()).returns('baz');
       mock.when(f => f.bar).returns(() => 'bar');
@@ -104,14 +104,14 @@ describe('Mock', () => {
     });
 
     it('throws error', () => {
-      const mock = new Mock<{ foo: number }>();
+      const mock = new StrongMock<{ foo: number }>();
       mock.when(m => m.foo).throws(new Error('foo'));
 
       expect(() => mock.stub.foo).toThrow('foo');
     });
 
     it('throws message', () => {
-      const mock = new Mock<{ foo: number }>();
+      const mock = new StrongMock<{ foo: number }>();
       mock.when(m => m.foo).throws('foo');
 
       expect(() => mock.stub.foo).toThrow('foo');

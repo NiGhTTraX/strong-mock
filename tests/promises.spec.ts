@@ -1,12 +1,12 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import Mock from '../src';
+import StrongMock from '../src';
 
-describe('Mock', () => {
+describe('StrongMock', () => {
   describe('promises', () => {
     it('resolves', async () => {
       type Foo = () => Promise<number>;
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f()).resolves(23);
       expect(await mock.stub()).toEqual(23);
@@ -14,7 +14,7 @@ describe('Mock', () => {
 
     it('returns', async () => {
       type Foo = () => Promise<number>;
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f()).returns(Promise.resolve(23));
       expect(await mock.stub()).toEqual(23);
@@ -22,7 +22,7 @@ describe('Mock', () => {
 
     it('rejects error', async () => {
       type Foo = () => Promise<number>;
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f()).rejects(new Error('foo'));
 
@@ -38,7 +38,7 @@ describe('Mock', () => {
 
     it('rejects message', async () => {
       type Foo = () => Promise<number>;
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f()).rejects('foo');
 

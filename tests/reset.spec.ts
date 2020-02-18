@@ -1,6 +1,6 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import Mock from '../src/mock';
+import StrongMock from '../src/mock';
 
 describe('Mock', () => {
   describe('reset', () => {
@@ -8,7 +8,7 @@ describe('Mock', () => {
       interface Foo {
         bar(x: number): number;
       }
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar(1)).returns(2);
       mock.reset();
@@ -25,7 +25,7 @@ describe('Mock', () => {
       interface Foo {
         bar: number;
       }
-      const mock = new Mock<Foo>();
+      const mock = new StrongMock<Foo>();
 
       mock.when(f => f.bar).returns(2);
       mock.reset();

@@ -6,7 +6,7 @@
 ## Features
 
 - _Strongly_ typed mocks from interfaces.
-- Mocks are always strict.
+- StrongMocks are always strict.
 - Useful error messages.
 - Simple and expressive API.
 - Type safe argument matchers.
@@ -34,7 +34,7 @@ Expectations are set by chaining a `.when()` call with a `.returns()` call. The 
 2. discourage side effects or at least make them explicit.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 import { expect } from 'chai';
 
 type Foo = (x: number) => string;
@@ -43,7 +43,7 @@ function bar(foo: Foo): boolean {
   return foo(23) === 'foobar';
 }
 
-const foo = Mock<Foo>();
+const foo = StrongMock<Foo>();
 foo.when(f => f(23)); // does nothing
 
 // Other libraries might cause this test to pass.
@@ -60,11 +60,11 @@ Since the callback in `.when()` receives a stub that is the same type you're moc
 However, the required type for the value in `.returns()` is inferred from the callback passed to `.when()`.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = (x: number) => string;
 
-const foo = Mock<Foo>();
+const foo = StrongMock<Foo>();
 foo
   .when(f => { f(23); })
   .returns(/* undefined is inferred here */);
@@ -78,9 +78,9 @@ Unfortunately there is no way to infer the key being accessed in `.when()` (if y
 You can set multiple expectations, even with the same arguments, and they will be fulfilled in the order they were set. Once all expectations are met further calls will throw.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
-const mock = Mock<(x: number) => string>();
+const mock = StrongMock<(x: number) => string>();
 
 mock.when(f => f(1)).returns('bar');
 mock.when(f => f(1)).returns('baz');
@@ -91,19 +91,19 @@ console.log(mock.stub(1)); // throws
 ```
 
 
-### Mocking interface methods
+### StrongMocking interface methods
 
 Passing an object/class interface will create a stub that mimics the properties on the interface. Since reflection is not supported in TypeScript, meaning the type information can't be read, the stub is actually an ES6 Proxy that intercepts property accesses and returns appropriate things based on the expectations that were set.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 interface Foo {
   bar(x: number): string;
   baz(): void;
 }
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f.bar(23)).returns('bar');
 
@@ -117,18 +117,18 @@ console.log(mock.stub.baz());
 There's no difference in passing an interface vs passing a concrete class - the mock will use a Proxy in both cases and unexpected property access will still throw. Moreover, there is no support for forwarding calls to the concrete class.
 
 
-### Mocking getters
+### StrongMocking getters
 
 You can mock properties/getters the same way as you would mock methods.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 interface Foo {
   bar: string;
 }
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f.bar).returns('bar');
 mock.when(f => f.bar).returns('baz');
@@ -140,13 +140,13 @@ console.log(mock.stub.bar); // 'baz'
 Note that you can't mock both a property access and a call for the same property name. **Property expectations will always have priority**.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 interface Foo {
   bar(): string;
 }
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f.bar).returns(() => 'bar');
 mock.when(f => f.bar()).returns('baz');
@@ -156,16 +156,16 @@ console.log(mock.stub.bar()); // throws
 ```
 
 
-### Mocking functions
+### StrongMocking functions
 
-Mocking functions is similar to mocking interfaces. You can also mock properties on the function, even inherited ones.
+StrongMocking functions is similar to mocking interfaces. You can also mock properties on the function, even inherited ones.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = () => number;
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f()).returns(23);
 mock.when(f => f.toString()).returns('foobar');
@@ -175,14 +175,14 @@ console.log(mock.stub); // 'foobar'
 ```
 
 
-### Mocking promises
+### StrongMocking promises
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = () => Promise<number>;
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f()).resolves(23);
 mock.when(f => f()).returns(Promise.resolve(42));
@@ -197,11 +197,11 @@ console.log(await mock.stub()); // 42
 You can make any expectation result in an error.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = () => void;
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f()).throws(new Error('oops'))
 mock.when(f => f()).throws('oh no');
@@ -213,11 +213,11 @@ mock.stub(); // throws 'oh no'
 You can also make promises reject in a similar way.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = () => Promise<number>;
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f()).rejects(new Error('oops'))
 
@@ -228,11 +228,11 @@ mock.stub(); // rejects with 'oops'
 ### Invocation count
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
 type Foo = () => number;
 
-const mock = new Mock<Foo>();
+const mock = new StrongMock<Foo>();
 
 mock.when(f => f()).returns(1).times(2);
 mock.when(f => f()).returns(2).always();
@@ -249,9 +249,9 @@ mock.stub(); // 2
 You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
-const mock = Mock<(x: number) => string>();
+const mock = StrongMock<(x: number) => string>();
 
 mock.when(f => f(1)).returns('bar');
 mock.when(f => f(2)).returns('baz');
@@ -267,9 +267,9 @@ mock.verifyAll(); // will throw because `bar(2)` hasn't been called
 By calling `.reset()` on the mock you can clear all expectations and start from the beginning. This is useful for test setup/teardown hooks.
 
 ```typescript
-import Mock from 'strong-mock';
+import StrongMock from 'strong-mock';
 
-const mock = Mock<(x: number) => string>();
+const mock = StrongMock<(x: number) => string>();
 
 mock.when(f => f(1)).returns('bar');
 mock.reset();
@@ -284,9 +284,9 @@ console.log(mock.stub(1)); // baz
 When setting up the mock expectations you can ignore arguments or you can use custom matchers for them.
 
 ```typescript
-import Mock, { It } from 'strong-mock';
+import StrongMock, { It } from 'strong-mock';
 
-const mock = new Mock<(x: number, y: string) => boolean>();
+const mock = new StrongMock<(x: number, y: string) => boolean>();
 
 mock.when(f => f(It.isAny(), 'foobar')).returns(true);
 mock.when(f => f(It.matches(x => x > 0), It.matches(y => y))).returns(true);
