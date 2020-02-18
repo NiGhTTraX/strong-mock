@@ -270,7 +270,7 @@ export default class Mock<T> {
 
     if (!methodExpectations) {
       // Since we don't have any property or method expectations we can't tell
-      // if the requested property is a method or just a getter, therefore we
+      // if the requested property is a method or just a member, therefore we
       // throw a generic message.
       throw new UnexpectedAccessError(property);
     }

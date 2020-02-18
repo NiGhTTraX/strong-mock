@@ -6,6 +6,9 @@ import { PropertyExpectation } from './property-expectation';
 const formatExpectationList = (expectations: Expectation[]) =>
   ` - ${expectations.join('\n - ')}`;
 
+/**
+ * Thrown by `verifyAll` when a method has remaining unmet expectations.
+ */
 export class UnmetMethodExpectationError extends Error {
   constructor(
     method: string,
@@ -24,6 +27,9 @@ ${formatExpectationList(expectations)}`);
   }
 }
 
+/**
+ * Thrown by `verifyAll` when a function has remaining unmet expectations.
+ */
 export class UnmetApplyExpectationError extends Error {
   constructor(
     unmetExpectation: MethodExpectation,
@@ -41,6 +47,9 @@ ${formatExpectationList(expectations)}`);
   }
 }
 
+/**
+ * Thrown by `verifyAll` when a property has remaining unmet expectations.
+ */
 export class UnmetPropertyExpectationError extends Error {
   constructor(
     property: string,
@@ -59,6 +68,9 @@ ${formatExpectationList(expectations)}`);
   }
 }
 
+/**
+ * Thrown when a method is called with arguments not matching any expectation.
+ */
 export class WrongMethodArgsError extends Error {
   constructor(
     property: string,
@@ -75,6 +87,9 @@ ${formatExpectationList(expectations)}`);
   }
 }
 
+/**
+ * Thrown when a function is called with arguments not matching any expectation.
+ */
 export class WrongApplyArgsError extends Error {
   constructor(args: any[], expectations: MethodExpectation[]) {
     super(`Function not expected to have been called with ${inspect(args)}!
@@ -87,6 +102,9 @@ ${formatExpectationList(expectations)}`);
   }
 }
 
+/**
+ * Thrown when a function is called and there are no expectations for it.
+ */
 export class UnexpectedApplyError extends Error {
   constructor() {
     super('Function not expected to have been called!');
@@ -96,6 +114,14 @@ export class UnexpectedApplyError extends Error {
   }
 }
 
+/**
+ * Thrown when either a method is called and there are no expectations for it
+ * or a property is accessed and there are no expectations for it.
+ *
+ * The 2 cases can't be distinguished because the ES6 proxy traps them both
+ * in the same way: as a property access. In the trap handler we don't know
+ * if this should be just a member or if it should be a method.
+ */
 export class UnexpectedAccessError extends Error {
   constructor(property: string) {
     super(`${property} not expected to have been accessed`);
