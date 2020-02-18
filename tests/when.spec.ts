@@ -88,4 +88,14 @@ describe('when', () => {
 
     expect(() => instance(mock)()).toThrow(UnexpectedCall);
   });
+
+  it('should allow setting new expectations after previous are consumed', () => {
+    const mock = strongMock<() => number>();
+
+    when(mock()).returns(1);
+    expect(instance(mock)()).toEqual(1);
+
+    when(mock()).returns(2);
+    expect(instance(mock)()).toEqual(2);
+  });
 });
