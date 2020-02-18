@@ -2,6 +2,22 @@ export type Mock<T> = T;
 
 let pendingExpectation: MethodExpectation | undefined;
 
+class ExpectationRepository {
+  private repo: MethodExpectation[] = [];
+
+  addExpectation(expectation: MethodExpectation) {
+    this.repo.push(expectation);
+  }
+
+  getMatchingExpectation() {
+    const methodExpectation = this.repo[0];
+    this.repo.splice(0, 1);
+    return methodExpectation;
+  }
+}
+
+const repo = new ExpectationRepository();
+
 export class MissingReturnValue extends Error {
   constructor() {
     super(`You forgot to give a return value to the previous expectation`);
@@ -40,12 +56,18 @@ export const when = <T>(x: T): Stub<T> => {
       }
 
       pendingExpectation.returnValue = returnValue;
+      repo.addExpectation(pendingExpectation);
+      pendingExpectation = undefined;
     }
   };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const instance = <T>(mock: Mock<T>): T => {
+  function extracted() {
+    return repo.getMatchingExpectation().returnValue;
+  }
+
   // @ts-ignore
-  return () => pendingExpectation.returnValue;
+  return () => extracted();
 };

@@ -32,4 +32,14 @@ describe('when', () => {
 
     expect(instance(mock)()).toEqual(23);
   });
+
+  it('should set multiple expectations with no args and a return', () => {
+    const mock = strongMock<() => number>();
+
+    when(mock()).returns(1);
+    when(mock()).returns(2);
+
+    expect(instance(mock)()).toEqual(1);
+    expect(instance(mock)()).toEqual(2);
+  });
 });
