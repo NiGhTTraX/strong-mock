@@ -1,8 +1,9 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
+import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
-import { strongMock, when } from '../src/mock';
+import { strongMock } from '../src/mock';
 
 describe('when', () => {
   it('should do nothing without a chained return', () => {

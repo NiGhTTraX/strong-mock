@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import { strongMock, when } from './mock';
+import { strongMock } from './mock';
 import { instance } from './instance';
+import { when } from './when';
 
 export { strongMock, when, instance };
