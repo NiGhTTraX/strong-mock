@@ -15,3 +15,9 @@ export class UnexpectedCall extends Error {
     super(`Didn't expect method to be called`);
   }
 }
+
+export class MissingMock extends Error {
+  constructor() {
+    super(`This should never happen`);
+  }
+}

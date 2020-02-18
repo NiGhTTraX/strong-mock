@@ -1,12 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-import { UnexpectedCall } from './errors';
-import { expectationRepository, Mock } from './mock';
+import { UnexpectedCall, MissingMock } from './errors';
+import { Mock, MockMap } from './mock';
 
 export const instance = <T>(mock: Mock<T>): T => {
   function extracted(args: any[]) {
-    const expectation = mock[expectationRepository].getMatchingExpectation(
-      args
-    );
+    const repo = MockMap.get(mock);
+
+    if (!repo) {
+      throw new MissingMock();
+    }
+
+    const expectation = repo.getMatchingExpectation(args);
 
     if (!expectation) {
       throw new UnexpectedCall();
