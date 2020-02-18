@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedAccessError, WrongMethodArgsError } from '../src/errors';
 import Mock from '../src/mock';
@@ -13,7 +13,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
-      expect(mock.stub.bar()).to.be.undefined;
+      expect(mock.stub.bar()).toBeUndefined();
     });
 
     it('no args and return', () => {
@@ -24,7 +24,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns('bar');
 
-      expect(mock.stub.bar()).to.equal('bar');
+      expect(mock.stub.bar()).toEqual('bar');
     });
 
     it('1 arg and return', () => {
@@ -35,7 +35,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar('bar')).returns(23);
 
-      expect(mock.stub.bar('bar')).to.equal(23);
+      expect(mock.stub.bar('bar')).toEqual(23);
     });
 
     it('2 args and return', () => {
@@ -46,7 +46,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar('bar', true)).returns(23);
 
-      expect(mock.stub.bar('bar', true)).to.equal(23);
+      expect(mock.stub.bar('bar', true)).toEqual(23);
     });
 
     it('variadic args and return', () => {
@@ -57,7 +57,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3, 4)).returns(23);
 
-      expect(mock.stub.bar(1, 2, 3, 4)).to.equal(23);
+      expect(mock.stub.bar(1, 2, 3, 4)).toEqual(23);
     });
 
     it('multiple expectations with same args', () => {
@@ -69,8 +69,8 @@ describe('Mock', () => {
       mock.when(f => f.bar(1)).returns(2);
       mock.when(f => f.bar(1)).returns(3);
 
-      expect(mock.stub.bar(1)).to.equal(2);
-      expect(mock.stub.bar(1)).to.equal(3);
+      expect(mock.stub.bar(1)).toEqual(2);
+      expect(mock.stub.bar(1)).toEqual(3);
     });
 
     it('should not set an expectation with no return value', () => {
@@ -80,11 +80,11 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
 
       mock.when(f => f.bar(1));
-      expect(() => mock.verifyAll()).to.not.throw();
+      expect(() => mock.verifyAll()).not.toThrow();
 
       mock.when(f => f.bar(2)).returns(3);
-      expect(mock.stub.bar(2)).to.equal(3);
-      expect(() => mock.verifyAll()).to.not.throw();
+      expect(mock.stub.bar(2)).toEqual(3);
+      expect(() => mock.verifyAll()).not.toThrow();
     });
 
     it('unexpected call', () => {
@@ -94,7 +94,7 @@ describe('Mock', () => {
 
       const mock = new Mock<Foo>();
 
-      expect(() => mock.stub.bar()).to.throw(UnexpectedAccessError);
+      expect(() => mock.stub.bar()).toThrow(UnexpectedAccessError);
     });
 
     it('called with wrong arg', () => {
@@ -105,7 +105,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(23)).returns(undefined);
 
-      expect(() => mock.stub.bar(21)).to.throw(WrongMethodArgsError);
+      expect(() => mock.stub.bar(21)).toThrow(WrongMethodArgsError);
     });
 
     it('called with wrong args', () => {
@@ -116,7 +116,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4)).to.throw(WrongMethodArgsError);
+      expect(() => mock.stub.bar(3, 4)).toThrow(WrongMethodArgsError);
     });
 
     it('called with less variadic args', () => {
@@ -127,7 +127,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2, 3)).returns(undefined);
 
-      expect(() => mock.stub.bar(1, 2)).to.throw(WrongMethodArgsError);
+      expect(() => mock.stub.bar(1, 2)).toThrow(WrongMethodArgsError);
     });
 
     it('called with wrong variadic args', () => {
@@ -138,21 +138,21 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar(1, 2)).returns(undefined);
 
-      expect(() => mock.stub.bar(3, 4)).to.throw(WrongMethodArgsError);
+      expect(() => mock.stub.bar(3, 4)).toThrow(WrongMethodArgsError);
     });
 
     it('throws error', () => {
       const mock = new Mock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws(new Error('foo'));
 
-      expect(() => mock.stub.foo()).to.throw('foo');
+      expect(() => mock.stub.foo()).toThrow('foo');
     });
 
     it('throws message', () => {
       const mock = new Mock<{ foo: () => void }>();
       mock.when(m => m.foo()).throws('foo');
 
-      expect(() => mock.stub.foo()).to.throw('foo');
+      expect(() => mock.stub.foo()).toThrow('foo');
     });
   });
 });

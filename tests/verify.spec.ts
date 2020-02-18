@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import {
   UnmetApplyExpectationError,
@@ -65,7 +65,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar()).returns(undefined);
 
-      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
+      expect(() => mock.verifyAll()).toThrow(UnmetMethodExpectationError);
     });
 
     it('single property expectation unmet', () => {
@@ -76,7 +76,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f.bar).returns(23);
 
-      expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
+      expect(() => mock.verifyAll()).toThrow(UnmetPropertyExpectationError);
     });
 
     it('multiple property expectations unmet', () => {
@@ -89,8 +89,8 @@ describe('Mock', () => {
       mock.when(f => f.bar).returns(24);
       mock.stub.bar;
 
-      expect(() => mock.verifyAll()).to.throw(UnmetPropertyExpectationError);
-      expect(() => mock.verifyAll()).to.throw(/24/s);
+      expect(() => mock.verifyAll()).toThrow(UnmetPropertyExpectationError);
+      expect(() => mock.verifyAll()).toThrow(/24/s);
     });
 
     it('single function expectation unmet', () => {
@@ -99,7 +99,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
       mock.when(f => f(42)).returns(23);
 
-      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+      expect(() => mock.verifyAll()).toThrow(UnmetApplyExpectationError);
     });
 
     it('multiple method expectations met', () => {
@@ -129,11 +129,11 @@ describe('Mock', () => {
       mock.when(f => f.bar(3)).returns(undefined);
       mock.stub.bar(2);
 
-      expect(() => mock.verifyAll()).to.throw(UnmetMethodExpectationError);
+      expect(() => mock.verifyAll()).toThrow(UnmetMethodExpectationError);
       // TODO: I'm accepting duplicating the error message test here
       // because it's a simple way of checking that the right expectation
       // is thrown
-      expect(() => mock.verifyAll()).to.throw(/\[ 1 ]/s);
+      expect(() => mock.verifyAll()).toThrow(/\[ 1 ]/s);
     });
 
     it('multiple function expectations met', () => {
@@ -159,11 +159,11 @@ describe('Mock', () => {
       mock.when(f => f(3)).returns(undefined);
       mock.stub(2);
 
-      expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+      expect(() => mock.verifyAll()).toThrow(UnmetApplyExpectationError);
       // TODO: I'm accepting duplicating the error message test here
       // because it's a simple way of checking that the right expectation
       // is thrown
-      expect(() => mock.verifyAll()).to.throw(/\[ 1 ]/s);
+      expect(() => mock.verifyAll()).toThrow(/\[ 1 ]/s);
     });
   });
 });

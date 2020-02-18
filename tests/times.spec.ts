@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import Mock from '../src';
 import { UnmetApplyExpectationError } from '../src/errors';
@@ -15,8 +15,8 @@ describe('Mock', () => {
           .returns(1)
           .always();
 
-        expect(mock.stub()).to.equal(1);
-        expect(mock.stub()).to.equal(1);
+        expect(mock.stub()).toEqual(1);
+        expect(mock.stub()).toEqual(1);
       });
 
       it('property', () => {
@@ -30,8 +30,8 @@ describe('Mock', () => {
           .returns(1)
           .always();
 
-        expect(mock.stub.bar).to.equal(1);
-        expect(mock.stub.bar).to.equal(1);
+        expect(mock.stub.bar).toEqual(1);
+        expect(mock.stub.bar).toEqual(1);
       });
 
       it('method', () => {
@@ -45,8 +45,8 @@ describe('Mock', () => {
           .returns(1)
           .always();
 
-        expect(mock.stub.bar(2)).to.equal(1);
-        expect(mock.stub.bar(2)).to.equal(1);
+        expect(mock.stub.bar(2)).toEqual(1);
+        expect(mock.stub.bar(2)).toEqual(1);
       });
     });
 
@@ -61,9 +61,9 @@ describe('Mock', () => {
             .returns(1)
             .times(2);
 
-          expect(mock.stub()).to.equal(1);
-          expect(mock.stub()).to.equal(1);
-          expect(() => mock.stub()).to.throw();
+          expect(mock.stub()).toEqual(1);
+          expect(mock.stub()).toEqual(1);
+          expect(() => mock.stub()).toThrow();
         });
 
         it('property', () => {
@@ -77,9 +77,9 @@ describe('Mock', () => {
             .returns(1)
             .times(2);
 
-          expect(mock.stub.bar).to.equal(1);
-          expect(mock.stub.bar).to.equal(1);
-          expect(() => mock.stub.bar).to.throw();
+          expect(mock.stub.bar).toEqual(1);
+          expect(mock.stub.bar).toEqual(1);
+          expect(() => mock.stub.bar).toThrow();
         });
 
         it('method', () => {
@@ -93,9 +93,9 @@ describe('Mock', () => {
             .returns(1)
             .times(2);
 
-          expect(mock.stub.bar(2)).to.equal(1);
-          expect(mock.stub.bar(2)).to.equal(1);
-          expect(() => mock.stub.bar(2)).to.throw();
+          expect(mock.stub.bar(2)).toEqual(1);
+          expect(mock.stub.bar(2)).toEqual(1);
+          expect(() => mock.stub.bar(2)).toThrow();
         });
 
         it('unmet', () => {
@@ -107,7 +107,7 @@ describe('Mock', () => {
 
           mock.stub();
 
-          expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+          expect(() => mock.verifyAll()).toThrow(UnmetApplyExpectationError);
         });
       });
 
@@ -121,10 +121,10 @@ describe('Mock', () => {
             .returns(1)
             .between(2, 3);
 
-          expect(mock.stub()).to.equal(1);
-          expect(mock.stub()).to.equal(1);
-          expect(mock.stub()).to.equal(1);
-          expect(() => mock.stub()).to.throw();
+          expect(mock.stub()).toEqual(1);
+          expect(mock.stub()).toEqual(1);
+          expect(mock.stub()).toEqual(1);
+          expect(() => mock.stub()).toThrow();
         });
 
         it('property', () => {
@@ -138,10 +138,10 @@ describe('Mock', () => {
             .returns(1)
             .between(2, 3);
 
-          expect(mock.stub.bar).to.equal(1);
-          expect(mock.stub.bar).to.equal(1);
-          expect(mock.stub.bar).to.equal(1);
-          expect(() => mock.stub.bar).to.throw();
+          expect(mock.stub.bar).toEqual(1);
+          expect(mock.stub.bar).toEqual(1);
+          expect(mock.stub.bar).toEqual(1);
+          expect(() => mock.stub.bar).toThrow();
         });
 
         it('method', () => {
@@ -155,10 +155,10 @@ describe('Mock', () => {
             .returns(1)
             .between(2, 3);
 
-          expect(mock.stub.bar(2)).to.equal(1);
-          expect(mock.stub.bar(2)).to.equal(1);
-          expect(mock.stub.bar(2)).to.equal(1);
-          expect(() => mock.stub.bar(2)).to.throw();
+          expect(mock.stub.bar(2)).toEqual(1);
+          expect(mock.stub.bar(2)).toEqual(1);
+          expect(mock.stub.bar(2)).toEqual(1);
+          expect(() => mock.stub.bar(2)).toThrow();
         });
 
         it('unmet', () => {
@@ -170,7 +170,7 @@ describe('Mock', () => {
 
           mock.stub();
 
-          expect(() => mock.verifyAll()).to.throw(UnmetApplyExpectationError);
+          expect(() => mock.verifyAll()).toThrow(UnmetApplyExpectationError);
         });
 
         it('multiple', () => {
@@ -186,9 +186,9 @@ describe('Mock', () => {
             .returns(2)
             .between(1, 2);
 
-          expect(mock.stub()).to.equal(1);
-          expect(mock.stub()).to.equal(1);
-          expect(mock.stub()).to.equal(2);
+          expect(mock.stub()).toEqual(1);
+          expect(mock.stub()).toEqual(1);
+          expect(mock.stub()).toEqual(2);
         });
       });
     });
@@ -214,13 +214,13 @@ describe('Mock', () => {
           .always();
         mock.when(f => f()).throws('should not reach here');
 
-        expect(mock.stub()).to.equal(1);
-        expect(mock.stub()).to.equal(2);
-        expect(mock.stub()).to.equal(2);
-        expect(mock.stub()).to.equal(3);
-        expect(mock.stub()).to.equal(3);
-        expect(mock.stub()).to.equal(3);
-        expect(mock.stub()).to.equal(4);
+        expect(mock.stub()).toEqual(1);
+        expect(mock.stub()).toEqual(2);
+        expect(mock.stub()).toEqual(2);
+        expect(mock.stub()).toEqual(3);
+        expect(mock.stub()).toEqual(3);
+        expect(mock.stub()).toEqual(3);
+        expect(mock.stub()).toEqual(4);
       });
     });
   });

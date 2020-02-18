@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import Mock from '../src';
 
@@ -9,7 +9,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
 
       mock.when(f => f()).resolves(23);
-      expect(await mock.stub()).to.equal(23);
+      expect(await mock.stub()).toEqual(23);
     });
 
     it('returns', async () => {
@@ -17,7 +17,7 @@ describe('Mock', () => {
       const mock = new Mock<Foo>();
 
       mock.when(f => f()).returns(Promise.resolve(23));
-      expect(await mock.stub()).to.equal(23);
+      expect(await mock.stub()).toEqual(23);
     });
 
     it('rejects error', async () => {
@@ -32,7 +32,7 @@ describe('Mock', () => {
           throw new Error('Expected promise to reject');
         })
         .catch(err => {
-          expect(err.message).to.equal('foo');
+          expect(err.message).toEqual('foo');
         });
     });
 
@@ -48,7 +48,7 @@ describe('Mock', () => {
           throw new Error('Expected promise to reject');
         })
         .catch(err => {
-          expect(err.message).to.equal('foo');
+          expect(err.message).toEqual('foo');
         });
     });
   });

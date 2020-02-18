@@ -1,4 +1,4 @@
-import { expect } from 'tdd-buffet/expect/chai';
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from '../src/matcher';
 import Mock from '../src/mock';
@@ -14,7 +14,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f.bar(It.isAny)).returns(42);
 
-        expect(mock.stub.bar('a')).to.equal(42);
+        expect(mock.stub.bar('a')).toEqual(42);
       });
 
       it('multiple arguments', () => {
@@ -25,7 +25,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f.bar(It.isAny, It.isAny)).returns(10);
 
-        expect(mock.stub.bar('b', 'c')).to.equal(10);
+        expect(mock.stub.bar('b', 'c')).toEqual(10);
       });
 
       it('mixed arguments', () => {
@@ -36,7 +36,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f.bar('a', It.isAny, 'c')).returns(99);
 
-        expect(mock.stub.bar('a', 'b', 'c')).to.equal(99);
+        expect(mock.stub.bar('a', 'b', 'c')).toEqual(99);
       });
     });
 
@@ -47,7 +47,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f(It.isAny)).returns(42);
 
-        expect(mock.stub(23)).to.equal(42);
+        expect(mock.stub(23)).toEqual(42);
       });
 
       it('multiple arguments', () => {
@@ -56,7 +56,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f(It.isAny, It.isAny)).returns(10);
 
-        expect(mock.stub(1, 2)).to.equal(10);
+        expect(mock.stub(1, 2)).toEqual(10);
       });
 
       it('mixed arguments', () => {
@@ -65,7 +65,7 @@ describe('Mock', () => {
         const mock = new Mock<Foo>();
         mock.when(f => f(1, It.isAny, 3)).returns(99);
 
-        expect(mock.stub(1, 2, 3)).to.equal(99);
+        expect(mock.stub(1, 2, 3)).toEqual(99);
       });
     });
 
@@ -80,8 +80,8 @@ describe('Mock', () => {
         mock.when(f => f(It.isAny)).returns(1);
         mock.when(f => f.bar(It.isAny)).returns(2);
 
-        expect(mock.stub(1)).to.equal(1);
-        expect(mock.stub.bar(2)).to.equal(2);
+        expect(mock.stub(1)).toEqual(1);
+        expect(mock.stub.bar(2)).toEqual(2);
       });
 
       it('multiple arguments', () => {
@@ -94,8 +94,8 @@ describe('Mock', () => {
         mock.when(f => f(It.isAny, It.isAny)).returns(3);
         mock.when(f => f.bar(It.isAny, It.isAny)).returns(4);
 
-        expect(mock.stub(1, 2)).to.equal(3);
-        expect(mock.stub.bar(1, 2)).to.equal(4);
+        expect(mock.stub(1, 2)).toEqual(3);
+        expect(mock.stub.bar(1, 2)).toEqual(4);
       });
 
       it('mixed arguments', () => {
@@ -108,8 +108,8 @@ describe('Mock', () => {
         mock.when(f => f(1, It.isAny, 3)).returns(5);
         mock.when(f => f.bar(1, It.isAny, 3)).returns(6);
 
-        expect(mock.stub(1, 2, 3)).to.equal(5);
-        expect(mock.stub.bar(1, 2, 3)).to.equal(6);
+        expect(mock.stub(1, 2, 3)).toEqual(5);
+        expect(mock.stub.bar(1, 2, 3)).toEqual(6);
       });
     });
   });
