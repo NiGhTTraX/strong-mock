@@ -1,6 +1,6 @@
 export type Mock<T> = T;
 
-let pendingExpectation = 0;
+let pendingExpectation: MethodExpectation | undefined;
 
 export class MissingReturnValue extends Error {
   constructor() {
@@ -8,8 +8,14 @@ export class MissingReturnValue extends Error {
   }
 }
 
+class MethodExpectation {
+  public returnValue: any;
+
+  constructor() {}
+}
+
 export const strongMock = <T>(): Mock<T> => {
-  pendingExpectation = 0;
+  pendingExpectation = undefined;
 
   return ((() => {}) as unknown) as Mock<T>;
 };
@@ -23,16 +29,23 @@ export const when = <T>(x: T): Stub<T> => {
   if (pendingExpectation) {
     throw new MissingReturnValue();
   }
-  pendingExpectation = 1;
+
+  pendingExpectation = new MethodExpectation();
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-    returns(returnValue: T): void {}
+    returns(returnValue: T): void {
+      if (!pendingExpectation) {
+        throw new Error('this should not happen');
+      }
+
+      pendingExpectation.returnValue = returnValue;
+    }
   };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const instance = <T>(mock: Mock<T>): T => {
   // @ts-ignore
-  return () => {};
+  return () => pendingExpectation.returnValue;
 };

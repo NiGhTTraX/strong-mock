@@ -24,4 +24,12 @@ describe('when', () => {
 
     expect(instance(mock)()).toBeUndefined();
   });
+
+  it('should set an expectation with no args and a return', () => {
+    const mock = strongMock<() => number>();
+
+    when(mock()).returns(23);
+
+    expect(instance(mock)()).toEqual(23);
+  });
 });
