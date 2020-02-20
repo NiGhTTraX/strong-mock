@@ -53,6 +53,6 @@
     "lint-staged": "~10.0.0",
     "prettier": "~1.19.1",
     "tdd-buffet": "~0.15.0",
-    "typescript": "~3.7.0"
+    "typescript": "~3.8.0"
   }
 }
