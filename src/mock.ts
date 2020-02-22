@@ -1,3 +1,4 @@
+import { MissingReturnValue } from './errors';
 import {
   ExpectationList,
   ExpectationRepository
@@ -9,17 +10,26 @@ export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 export type Mock<T> = T;
 
 class PendingMock {
-  public repo: ExpectationList | undefined;
+  private _repo: ExpectationList | undefined;
 
-  public hasReturnValue = false;
+  get repo(): ExpectationList | undefined {
+    return this._repo;
+  }
+
+  set repo(value: ExpectationList | undefined) {
+    if (this._repo) {
+      throw new MissingReturnValue();
+    }
+
+    this._repo = value;
+  }
 
   public args: any[] | undefined;
 
   public property: string = '';
 
   clear() {
-    this.repo = undefined;
-    this.hasReturnValue = false;
+    this._repo = undefined;
     this.args = undefined;
     this.property = '';
   }
