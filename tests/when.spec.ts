@@ -122,30 +122,32 @@ describe('when', () => {
     expect(() => stub.returns(3)).toThrow(MissingWhen);
   });
 
-  it('should set expectation on interface method', () => {
-    interface Foo {
-      bar(x: number): number;
-    }
+  describe('interface', () => {
+    it('should set expectation on one method', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
 
-    const mock = strongMock<Foo>();
+      const mock = strongMock<Foo>();
 
-    when(mock.bar(1)).returns(23);
+      when(mock.bar(1)).returns(23);
 
-    expect(instance(mock).bar(1)).toEqual(23);
-  });
+      expect(instance(mock).bar(1)).toEqual(23);
+    });
 
-  it('should set expectation on multiple interface methods', async () => {
-    interface Foo {
-      bar(x: number): number;
-      baz(x: number): number;
-    }
+    it('should set expectations on multiple methods', async () => {
+      interface Foo {
+        bar(x: number): number;
+        baz(x: number): number;
+      }
 
-    const mock = strongMock<Foo>();
+      const mock = strongMock<Foo>();
 
-    when(mock.bar(1)).returns(-1);
-    when(mock.baz(1)).returns(-2);
+      when(mock.bar(1)).returns(-1);
+      when(mock.baz(1)).returns(-2);
 
-    expect(instance(mock).baz(1)).toEqual(-2);
-    expect(instance(mock).bar(1)).toEqual(-1);
+      expect(instance(mock).baz(1)).toEqual(-2);
+      expect(instance(mock).bar(1)).toEqual(-1);
+    });
   });
 });
