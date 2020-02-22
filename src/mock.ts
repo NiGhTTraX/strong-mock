@@ -1,5 +1,5 @@
 import { ExpectationRepository } from './expectation-repository';
-import { pendingMock } from './pending-mock';
+import { pendingExpectation } from './pending-expectation';
 import { createProxy } from './proxy';
 
 export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
@@ -9,16 +9,16 @@ export type Mock<T> = T;
 export const strongMock = <T>(): Mock<T> => {
   const repo = new ExpectationRepository();
 
-  pendingMock.clear();
+  pendingExpectation.clear();
 
   const stub = createProxy({
     get: (args, property: string) => {
-      pendingMock.start(repo);
-      pendingMock.setPendingMethod(property, args);
+      pendingExpectation.start(repo);
+      pendingExpectation.setPendingMethod(property, args);
     },
     apply: (argArray?: any) => {
-      pendingMock.start(repo);
-      pendingMock.setPendingApply(argArray);
+      pendingExpectation.start(repo);
+      pendingExpectation.setPendingApply(argArray);
     }
   });
 

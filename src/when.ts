@@ -1,4 +1,4 @@
-import { pendingMock } from './pending-mock';
+import { pendingExpectation } from './pending-expectation';
 
 interface Stub<T> {
   returns(returnValue: T): void;
@@ -8,7 +8,7 @@ interface Stub<T> {
 export const when = <T>(expectation: T): Stub<T> => {
   return {
     returns(returnValue: T): void {
-      pendingMock.finish(returnValue);
+      pendingExpectation.finish(returnValue);
     }
   };
 };
