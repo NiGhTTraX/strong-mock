@@ -100,6 +100,32 @@ describe('when', () => {
     expect(instance(mock)()).toEqual(2);
   });
 
+  it('should let functions be called with .call and .apply', () => {
+    const mock = strongMock<(x: number, y: number) => number>();
+
+    when(mock(1, 2)).returns(3);
+    when(mock(4, 5)).returns(6);
+
+    expect(instance(mock).apply(null, [1, 2])).toEqual(3);
+    expect(instance(mock).call(null, 4, 5)).toEqual(6);
+  });
+
+  it('should set expectation on .call', () => {
+    const mock = strongMock<(x: number, y: number) => number>();
+
+    when(mock.call(null, 1, 2)).returns(3);
+
+    expect(instance(mock)(1, 2)).toEqual(3);
+  });
+
+  it('should set expectation on .apply', () => {
+    const mock = strongMock<(x: number, y: number) => number>();
+
+    when(mock.apply(null, [1, 2])).returns(3);
+
+    expect(instance(mock)(1, 2)).toEqual(3);
+  });
+
   it('should set expectations with args and return', () => {
     const mock = strongMock<(x: number) => number>();
 

@@ -11,8 +11,8 @@ export class MissingWhen extends Error {
 }
 
 export class UnexpectedCall extends Error {
-  constructor() {
-    super(`Didn't expect method to be called`);
+  constructor(property: string) {
+    super(`Didn't expect method ${property} to be called`);
   }
 }
 

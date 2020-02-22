@@ -14,7 +14,7 @@ export class ExpectationRepository {
     );
 
     if (expectationIndex === -1) {
-      throw new UnexpectedCall();
+      throw new UnexpectedCall(property);
     }
 
     const expectation = this.repo[expectationIndex];
