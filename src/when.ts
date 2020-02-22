@@ -1,6 +1,6 @@
 import { MissingWhen } from './errors';
 import { MethodExpectation } from './expectations';
-import { pendingMock } from './mock';
+import { pendingMock } from './pending-mock';
 
 interface Stub<T> {
   returns(returnValue: T): void;
