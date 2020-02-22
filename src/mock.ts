@@ -19,13 +19,8 @@ class PendingMock {
 
 export const pendingMock = new PendingMock();
 
-export const strongMock = <T>(): Mock<T> => {
-  const methodRepo = new ExpectationList();
-  const applyRepo = new ExpectationList();
-  // TODO: add clear method
-  pendingMock.returnValue = false;
-
-  const stub = new Proxy(() => {}, {
+function createProxy(methodRepo: ExpectationList, applyRepo: ExpectationList) {
+  return new Proxy(() => {}, {
     get: (target, property: string) => {
       return (...args: any[]) => {
         pendingMock.repo = methodRepo;
@@ -39,6 +34,15 @@ export const strongMock = <T>(): Mock<T> => {
       pendingMock.args = argArray;
     }
   });
+}
+
+export const strongMock = <T>(): Mock<T> => {
+  const methodRepo = new ExpectationList();
+  const applyRepo = new ExpectationList();
+  // TODO: add clear method
+  pendingMock.returnValue = false;
+
+  const stub = createProxy(methodRepo, applyRepo);
 
   MockMap.set(stub, { apply: applyRepo, methods: methodRepo });
 
