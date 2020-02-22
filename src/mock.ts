@@ -11,11 +11,18 @@ export type Mock<T> = T;
 class PendingMock {
   public repo: ExpectationList | undefined;
 
-  public returnValue = false;
+  public hasReturnValue = false;
 
   public args: any[] | undefined;
 
   public property: string = '';
+
+  clear() {
+    this.repo = undefined;
+    this.hasReturnValue = false;
+    this.args = undefined;
+    this.property = '';
+  }
 }
 
 export const pendingMock = new PendingMock();
@@ -24,8 +31,7 @@ export const strongMock = <T>(): Mock<T> => {
   const methodRepo = new ExpectationList();
   const applyRepo = new ExpectationList();
 
-  // TODO: add clear method
-  pendingMock.returnValue = false;
+  pendingMock.clear();
 
   const stub = createProxy({
     get: (args, property: string) => {

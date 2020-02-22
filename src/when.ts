@@ -8,11 +8,11 @@ interface Stub<T> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <T>(expectation: T): Stub<T> => {
-  if (pendingMock.returnValue) {
+  if (pendingMock.hasReturnValue) {
     throw new MissingReturnValue();
   }
 
-  pendingMock.returnValue = true;
+  pendingMock.hasReturnValue = true;
 
   return {
     returns(returnValue: T): void {
@@ -28,10 +28,7 @@ export const when = <T>(expectation: T): Stub<T> => {
         )
       );
 
-      pendingMock.repo = undefined;
-      pendingMock.returnValue = false;
-      pendingMock.args = undefined;
-      pendingMock.property = '';
+      pendingMock.clear();
     }
   };
 };
