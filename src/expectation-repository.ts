@@ -11,7 +11,8 @@ export class ExpectationRepository {
 
   getMatchingExpectation(args: any[], property: string): Expectation {
     const expectationIndex = this.repo.findIndex(
-      e => e.property === property && isEqual(e.args, args)
+      e =>
+        e.property === property && e.args.every((a, i) => isEqual(a, args[i]))
     );
 
     if (expectationIndex === -1) {

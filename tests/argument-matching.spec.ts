@@ -1,6 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance, strongMock, when } from '../src';
+import { UnexpectedCall } from '../src/errors';
 
 describe('argument matching', () => {
   it('should match primitives', () => {
@@ -71,5 +72,37 @@ describe('argument matching', () => {
         ])
       )
     ).toEqual(23);
+  });
+
+  it('should match optional args against undefined', () => {
+    const mock = strongMock<(x?: number) => number>();
+
+    when(mock(undefined)).returns(23);
+
+    expect(instance(mock)()).toEqual(23);
+  });
+
+  it('should throw for expected optional arg', () => {
+    const mock = strongMock<(x?: number) => number>();
+
+    when(mock(23)).returns(23);
+
+    expect(() => instance(mock)()).toThrow(UnexpectedCall);
+  });
+
+  it('should match passed in optional args', () => {
+    const mock = strongMock<(x?: number) => number>();
+
+    when(mock()).returns(23);
+
+    expect(instance(mock)(42)).toEqual(23);
+  });
+
+  it('should throw for expected undefined optional arg', () => {
+    const mock = strongMock<(x?: number) => number>();
+
+    when(mock(undefined)).returns(23);
+
+    expect(() => instance(mock)(42)).toThrow(UnexpectedCall);
   });
 });
