@@ -19,7 +19,7 @@ export const createProxy = ({ get, apply }: ProxyTraps) =>
       };
     },
 
-    apply: (target: {}, thisArg: any, argArray?: any) => {
-      return apply(argArray);
+    apply: (target, thisArg: any, args?: any[]) => {
+      return apply(args);
     }
   });
