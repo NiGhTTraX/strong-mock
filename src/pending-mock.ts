@@ -1,14 +1,14 @@
 import { MissingReturnValue } from './errors';
-import { ExpectationList } from './expectation-repository';
+import { ExpectationRepository } from './expectation-repository';
 
 class PendingMock {
-  private _repo: ExpectationList | undefined;
+  private _repo: ExpectationRepository | undefined;
 
-  get repo(): ExpectationList | undefined {
+  get repo(): ExpectationRepository | undefined {
     return this._repo;
   }
 
-  set repo(value: ExpectationList | undefined) {
+  set repo(value: ExpectationRepository | undefined) {
     if (this._repo) {
       throw new MissingReturnValue();
     }
