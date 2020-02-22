@@ -1,20 +1,6 @@
 import { MissingMock } from './errors';
-import { ExpectationRepository } from './expectation-repository';
 import { Mock, MockMap } from './mock';
-
-function createProxy(repo: ExpectationRepository) {
-  return new Proxy(() => {}, {
-    get: (target, property: string) => {
-      return (...args: any[]) => {
-        return repo.methods.getMatchingExpectation(args, property).returnValue;
-      };
-    },
-
-    apply: (target: {}, thisArg: any, argArray?: any) => {
-      return repo.apply.getMatchingExpectation(argArray, '').returnValue;
-    }
-  });
-}
+import { createProxy } from './proxy';
 
 export const instance = <T>(mock: Mock<T>): T => {
   const repo = MockMap.get(mock);
@@ -23,7 +9,12 @@ export const instance = <T>(mock: Mock<T>): T => {
     throw new MissingMock();
   }
 
-  const proxy = createProxy(repo);
+  const proxy = createProxy({
+    get: (args: any[], property: string) =>
+      repo.methods.getMatchingExpectation(args, property).returnValue,
+    apply: (argArray: any | undefined) =>
+      repo.apply.getMatchingExpectation(argArray, '').returnValue
+  });
 
   return (proxy as unknown) as Mock<T>;
 };
