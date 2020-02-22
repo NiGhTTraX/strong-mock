@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual';
 import { UnexpectedCall } from './errors';
 import { Expectation } from './expectations';
 
@@ -10,7 +11,7 @@ export class ExpectationRepository {
 
   getMatchingExpectation(args: any[], property: string): Expectation {
     const expectationIndex = this.repo.findIndex(
-      e => e.property === property && e.args.every((a, i) => args[i] === a)
+      e => e.property === property && isEqual(e.args, args)
     );
 
     if (expectationIndex === -1) {
