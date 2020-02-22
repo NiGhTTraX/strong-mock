@@ -31,6 +31,7 @@ export const when = <T>(expectation: T): Stub<T> => {
       pendingMock.repo = undefined;
       pendingMock.returnValue = false;
       pendingMock.args = undefined;
+      pendingMock.property = '';
     }
   };
 };

@@ -135,7 +135,7 @@ describe('when', () => {
       expect(instance(mock).bar(1)).toEqual(23);
     });
 
-    it('should set expectations on multiple methods', async () => {
+    it('should set expectations on multiple methods', () => {
       interface Foo {
         bar(x: number): number;
         baz(x: number): number;
@@ -148,6 +148,21 @@ describe('when', () => {
 
       expect(instance(mock).baz(1)).toEqual(-2);
       expect(instance(mock).bar(1)).toEqual(-1);
+    });
+
+    it('should set expectations on function and methods', () => {
+      interface Foo {
+        (x: number): number;
+        bar(y: number): number;
+      }
+
+      const mock = strongMock<Foo>();
+
+      when(mock(1)).returns(2);
+      when(mock.bar(3)).returns(4);
+
+      expect(instance(mock)(1)).toEqual(2);
+      expect(instance(mock).bar(3)).toEqual(4);
     });
   });
 });
