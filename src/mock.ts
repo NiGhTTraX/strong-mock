@@ -13,13 +13,12 @@ export const strongMock = <T>(): Mock<T> => {
 
   const stub = createProxy({
     get: (args, property: string) => {
-      pendingMock.repo = repo;
-      pendingMock.args = args;
-      pendingMock.property = property;
+      pendingMock.start(repo);
+      pendingMock.setPendingMethod(property, args);
     },
     apply: (argArray?: any) => {
-      pendingMock.repo = repo;
-      pendingMock.args = argArray;
+      pendingMock.start(repo);
+      pendingMock.setPendingApply(argArray);
     }
   });
 

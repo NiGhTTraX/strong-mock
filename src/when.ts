@@ -1,5 +1,3 @@
-import { MissingWhen } from './errors';
-import { MethodExpectation } from './expectations';
 import { pendingMock } from './pending-mock';
 
 interface Stub<T> {
@@ -10,19 +8,7 @@ interface Stub<T> {
 export const when = <T>(expectation: T): Stub<T> => {
   return {
     returns(returnValue: T): void {
-      if (!pendingMock.repo || !pendingMock.args) {
-        throw new MissingWhen();
-      }
-
-      pendingMock.repo.addExpectation(
-        new MethodExpectation(
-          pendingMock.args,
-          returnValue,
-          pendingMock.property
-        )
-      );
-
-      pendingMock.clear();
+      pendingMock.finish(returnValue);
     }
   };
 };
