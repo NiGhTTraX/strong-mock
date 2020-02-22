@@ -21,7 +21,11 @@ export const when = <T>(expectation: T): Stub<T> => {
       }
 
       pendingMock.repo.addExpectation(
-        new MethodExpectation(pendingMock.args, returnValue)
+        new MethodExpectation(
+          pendingMock.args,
+          returnValue,
+          pendingMock.property
+        )
       );
 
       pendingMock.repo = undefined;

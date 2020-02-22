@@ -9,15 +9,14 @@ export const instance = <T>(mock: Mock<T>): T => {
   }
 
   const proxy = new Proxy(() => {}, {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     get: (target, property: string) => {
       return (...args: any[]) => {
-        return repo.methods.getMatchingExpectation(args).returnValue;
+        return repo.methods.getMatchingExpectation(args, property).returnValue;
       };
     },
 
     apply: (target: {}, thisArg: any, argArray?: any) => {
-      return repo.apply.getMatchingExpectation(argArray).returnValue;
+      return repo.apply.getMatchingExpectation(argArray, '').returnValue;
     }
   });
 

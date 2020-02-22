@@ -133,4 +133,19 @@ describe('when', () => {
 
     expect(instance(mock).bar(1)).toEqual(23);
   });
+
+  it('should set expectation on multiple interface methods', async () => {
+    interface Foo {
+      bar(x: number): number;
+      baz(x: number): number;
+    }
+
+    const mock = strongMock<Foo>();
+
+    when(mock.bar(1)).returns(-1);
+    when(mock.baz(1)).returns(-2);
+
+    expect(instance(mock).baz(1)).toEqual(-2);
+    expect(instance(mock).bar(1)).toEqual(-1);
+  });
 });

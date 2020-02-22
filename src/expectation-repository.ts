@@ -8,9 +8,9 @@ export class ExpectationList {
     this.repo.push(expectation);
   }
 
-  getMatchingExpectation(args: any[]): Expectation {
-    const expectationIndex = this.repo.findIndex(e =>
-      e.args.every((a, i) => args[i] === a)
+  getMatchingExpectation(args: any[], property: string): Expectation {
+    const expectationIndex = this.repo.findIndex(
+      e => e.property === property && e.args.every((a, i) => args[i] === a)
     );
 
     if (expectationIndex === -1) {

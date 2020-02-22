@@ -13,6 +13,8 @@ class PendingMock {
   public returnValue = false;
 
   public args: any[] | undefined;
+
+  public property: string = '';
 }
 
 export const pendingMock = new PendingMock();
@@ -20,14 +22,15 @@ export const pendingMock = new PendingMock();
 export const strongMock = <T>(): Mock<T> => {
   const methodRepo = new ExpectationList();
   const applyRepo = new ExpectationList();
+  // TODO: add clear method
   pendingMock.returnValue = false;
 
   const stub = new Proxy(() => {}, {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     get: (target, property: string) => {
       return (...args: any[]) => {
         pendingMock.repo = methodRepo;
         pendingMock.args = args;
+        pendingMock.property = property;
       };
     },
 
