@@ -46,4 +46,12 @@ export class PendingExpectation {
     this.args = undefined;
     this.property = '';
   }
+
+  setProperty(property: string) {
+    this.property = property;
+  }
+
+  setArgs(args: any[]) {
+    this.args = args;
+  }
 }

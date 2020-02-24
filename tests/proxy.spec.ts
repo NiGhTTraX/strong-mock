@@ -7,7 +7,8 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      property: () => {},
+      method: () => {},
       apply: argArray => {
         args = argArray;
       }
@@ -22,7 +23,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {},
       apply: argArray => {
         args = argArray;
       }
@@ -37,7 +41,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {},
       apply: argArray => {
         args = argArray;
       }
@@ -52,7 +59,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {},
       apply: argArray => {
         args = argArray;
       }
@@ -65,14 +75,18 @@ describe('proxy', () => {
 
   it('should call on foo.bar(...args)', () => {
     let args: number[] = [];
-    let prop = '';
+    let callProp = '';
+    let getProp = '';
 
     const proxy = createProxy<{
       bar: (x: number, y: number, z: number) => void;
     }>({
-      get: (argArray, property) => {
+      property: property => {
+        getProp = property;
+      },
+      method: (argArray, property) => {
         args = argArray;
-        prop = property;
+        callProp = property;
       },
       apply: () => {}
     });
@@ -80,19 +94,24 @@ describe('proxy', () => {
     proxy.bar(1, 2, 3);
 
     expect(args).toEqual([1, 2, 3]);
-    expect(prop).toEqual('bar');
+    expect(callProp).toEqual('bar');
+    expect(getProp).toEqual('bar');
   });
 
   it('should call on foo.bar.call(this, ...args)', () => {
     let args: number[] = [];
-    let prop = '';
+    let callProp = '';
+    let getProp = '';
 
     const proxy = createProxy<{
       bar: (x: number, y: number, z: number) => void;
     }>({
-      get: (argArray, property) => {
+      property: property => {
+        getProp = property;
+      },
+      method: (argArray, property) => {
         args = argArray;
-        prop = property;
+        callProp = property;
       },
       apply: () => {}
     });
@@ -100,6 +119,7 @@ describe('proxy', () => {
     proxy.bar.call(null, 1, 2, 3);
 
     expect(args).toEqual([1, 2, 3]);
-    expect(prop).toEqual('bar');
+    expect(callProp).toEqual('bar');
+    expect(getProp).toEqual('bar');
   });
 });

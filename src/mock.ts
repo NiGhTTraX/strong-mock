@@ -11,15 +11,25 @@ export const strongMock = <T>(): Mock<T> => {
   const pendingExpectation = new PendingExpectation();
 
   const stub = createProxy({
-    get: (args, property: string) => {
+    property: (property: string) => {
       pendingExpectation.start(repo);
-      pendingExpectation.setPendingMethod(property, args);
+      pendingExpectation.setProperty(property);
 
       return pendingExpectation;
     },
+
+    method: (args, property) => {
+      // TODO: this should not be needed
+      pendingExpectation.setProperty(property);
+      pendingExpectation.setArgs(args);
+
+      return pendingExpectation;
+    },
+
     apply: (argArray?: any) => {
       pendingExpectation.start(repo);
-      pendingExpectation.setPendingApply(argArray);
+      pendingExpectation.setProperty('');
+      pendingExpectation.setArgs(argArray);
 
       return pendingExpectation;
     }

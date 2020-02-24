@@ -9,10 +9,16 @@ export class ExpectationRepository {
     this.repo.push(expectation);
   }
 
-  getMatchingExpectation(args: any[], property: string): Expectation {
+  // TODO: flip params
+  getMatchingExpectation(
+    args: any[] | undefined,
+    property: string
+  ): Expectation {
     const expectationIndex = this.repo.findIndex(
       e =>
-        e.property === property && e.args.every((a, i) => isEqual(a, args[i]))
+        e.property === property &&
+        args &&
+        e.args.every((a, i) => isEqual(a, args[i]))
     );
 
     if (expectationIndex === -1) {
