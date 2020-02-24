@@ -5,9 +5,9 @@ interface Stub<T> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const when = <T>(expectation: T): Stub<T> => {
+export const when = <R>(expectation: R): Stub<R> => {
   return {
-    returns(returnValue: T): void {
+    returns(returnValue: R): void {
       pendingExpectation.finish(returnValue);
     }
   };
