@@ -1,6 +1,43 @@
 interface ProxyTraps {
-  get: (args: any[], property: string) => any;
-  apply: (argArray: any | undefined) => any;
+  /**
+   * Called when mocking an object member or method.
+   *
+   * @example
+   * ```
+   * foo.bar
+   * ```
+   *
+   * @example
+   * ```
+   * foo.baz(...args)
+   * ```
+   */
+  get: (args: any[], property: string) => void;
+
+  /**
+   * Called when mocking a function.
+   *
+   * @example
+   * ```
+   * fn(...args)
+   * ```
+   *
+   * @example
+   * ```
+   * fn.call(this, ...args)
+   * ```
+   *
+   * @example
+   * ```
+   * fn.apply(this, [...args])
+   * ```
+   *
+   * @example
+   * ```
+   * Reflect.apply(fn, this, [...args])
+   * ```
+   */
+  apply: (argArray: any | undefined) => void;
 }
 
 export const createProxy = ({ get, apply }: ProxyTraps) =>
