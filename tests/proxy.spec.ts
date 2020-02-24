@@ -73,6 +73,27 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
+  it('should call after binding', () => {
+    let args: number[] = [];
+
+    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
+        throw new Error('should not be called');
+      },
+      apply: argArray => {
+        args = argArray;
+      }
+    });
+
+    const bound = proxy.bind(null, 1, 2);
+    bound(3);
+
+    expect(args).toEqual([1, 2, 3]);
+  });
+
   it('should call on foo.bar(...args)', () => {
     let args: number[] = [];
     let callProp = '';

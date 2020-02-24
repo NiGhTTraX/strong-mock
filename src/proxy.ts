@@ -53,8 +53,14 @@ interface ProxyTraps {
 export const createProxy = <T>({ property, method, apply }: ProxyTraps) =>
   (new Proxy(() => {}, {
     get: (target, prop: string) => {
-      if (prop !== 'call' && prop !== 'apply') {
+      if (prop !== 'call' && prop !== 'apply' && prop !== 'bind') {
         property(prop);
+      }
+
+      if (prop === 'bind') {
+        return (thisArg: any, ...args: any[]) => {
+          return (...moreArgs: any[]) => apply([...args, ...moreArgs]);
+        };
       }
 
       return (...args: any[]) => {
