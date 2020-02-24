@@ -9,8 +9,6 @@ export type Mock<T> = T;
 export const strongMock = <T>(): Mock<T> => {
   const repo = new ExpectationRepository();
 
-  pendingExpectation.clear();
-
   const stub = createProxy({
     get: (args, property: string) => {
       pendingExpectation.start(repo);

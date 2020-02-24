@@ -1,11 +1,16 @@
 import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
+import { afterEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
 import { strongMock } from '../src/mock';
+import { pendingExpectation } from '../src/pending-expectation';
 
 describe('when', () => {
+  afterEach(() => {
+    pendingExpectation.clear();
+  });
+
   it('should do nothing without a chained return', () => {
     const mock = strongMock<() => void>();
 
@@ -34,6 +39,21 @@ describe('when', () => {
     when(mock()).returns(23);
 
     expect(instance(mock)()).toEqual(23);
+  });
+
+  it('should allow to set an expectation at any time', () => {
+    const mock1 = strongMock<() => number>();
+
+    const { returns: returns1 } = when(mock1());
+
+    const mock2 = strongMock<() => number>();
+
+    returns1(1);
+
+    when(mock2()).returns(2);
+
+    expect(instance(mock1)()).toEqual(1);
+    expect(instance(mock2)()).toEqual(2);
   });
 
   it('should set multiple expectations with no args and a return', () => {

@@ -14,6 +14,8 @@ class PendingExpectation {
       throw new MissingReturnValue();
     }
 
+    this.clear();
+
     this._repo = repo;
   }
 
