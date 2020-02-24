@@ -2,7 +2,7 @@ import { MissingReturnValue, MissingWhen } from './errors';
 import { ExpectationRepository } from './expectation-repository';
 import { MethodExpectation } from './expectations';
 
-class PendingExpectation {
+export class PendingExpectation {
   private _repo: ExpectationRepository | undefined;
 
   private args: any[] | undefined;
@@ -47,5 +47,3 @@ class PendingExpectation {
     this.property = '';
   }
 }
-
-export const pendingExpectation = new PendingExpectation();

@@ -1,16 +1,11 @@
 import { expect } from 'tdd-buffet/expect/jest';
-import { afterEach, describe, it } from 'tdd-buffet/suite/node';
+import { describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
 import { strongMock } from '../src/mock';
-import { pendingExpectation } from '../src/pending-expectation';
 
 describe('when', () => {
-  afterEach(() => {
-    pendingExpectation.clear();
-  });
-
   it('should do nothing without a chained return', () => {
     const mock = strongMock<() => void>();
 
