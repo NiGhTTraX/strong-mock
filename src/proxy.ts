@@ -40,8 +40,8 @@ interface ProxyTraps {
   apply: (argArray: any | undefined) => void;
 }
 
-export const createProxy = ({ get, apply }: ProxyTraps) =>
-  new Proxy(() => {}, {
+export const createProxy = <T>({ get, apply }: ProxyTraps) =>
+  (new Proxy(() => {}, {
     get: (target, property: string) => {
       return (...args: any[]) => {
         if (property === 'apply') {
@@ -59,4 +59,4 @@ export const createProxy = ({ get, apply }: ProxyTraps) =>
     apply: (target, thisArg: any, args?: any[]) => {
       return apply(args);
     }
-  });
+  }) as unknown) as T;
