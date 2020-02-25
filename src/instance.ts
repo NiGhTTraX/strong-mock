@@ -1,5 +1,5 @@
 import { MissingMock } from './errors';
-import { Mock, MockMap } from './mock';
+import { ApplyProp, Mock, MockMap } from './mock';
 import { createProxy } from './proxy';
 
 export const instance = <T>(mock: Mock<T>): T => {
@@ -14,6 +14,6 @@ export const instance = <T>(mock: Mock<T>): T => {
     method: (args: any[], property: string) =>
       repo.getMatchingExpectation(args, property).returnValue,
     apply: (argArray: any | undefined) =>
-      repo.getMatchingExpectation(argArray, '').returnValue
+      repo.getMatchingExpectation(argArray, ApplyProp).returnValue
   });
 };

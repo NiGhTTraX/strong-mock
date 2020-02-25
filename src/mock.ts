@@ -6,6 +6,9 @@ export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 
 export type Mock<T> = T;
 
+// TODO: make Symbol and support mocking symbols
+export const ApplyProp = '';
+
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   const pendingExpectation = new PendingExpectation();
 
@@ -21,7 +24,7 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
     },
     apply: (args: any[]) => {
       pendingExpectation.start(repo);
-      pendingExpectation.property = '';
+      pendingExpectation.property = ApplyProp;
       pendingExpectation.args = args;
 
       return pendingExpectation;
