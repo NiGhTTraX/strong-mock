@@ -13,7 +13,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>({
-      get: () => {
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -30,7 +33,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>({
-      get: () => {
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -47,7 +53,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>({
-      get: () => {
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -64,7 +73,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>({
-      get: () => {
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -81,7 +93,10 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>({
-      get: () => {
+      property: () => {
+        throw new Error('should not be called');
+      },
+      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -100,9 +115,11 @@ describe('proxy', () => {
     let prop = '';
 
     const proxy = createProxy<Foo>({
-      get: (argArray, property) => {
-        args = argArray;
+      property: property => {
         prop = property;
+      },
+      method: argArray => {
+        args = argArray;
       },
       apply: () => {
         throw new Error('should not be called');
@@ -120,9 +137,11 @@ describe('proxy', () => {
     let prop = '';
 
     const proxy = createProxy<Foo>({
-      get: (argArray, property) => {
-        args = argArray;
+      property: property => {
         prop = property;
+      },
+      method: argArray => {
+        args = argArray;
       },
       apply: () => {
         throw new Error('should not be called');

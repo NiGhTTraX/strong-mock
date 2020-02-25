@@ -3,11 +3,27 @@ import { ExpectationRepository } from './expectation-repository';
 import { MethodExpectation } from './expectations';
 
 export class PendingExpectation {
+  get args(): any[] | undefined {
+    return this._args;
+  }
+
+  set args(value: any[] | undefined) {
+    this._args = value;
+  }
+
+  get property(): string {
+    return this._property;
+  }
+
+  set property(value: string) {
+    this._property = value;
+  }
+
   private _repo: ExpectationRepository | undefined;
 
-  private args: any[] | undefined;
+  private _args: any[] | undefined;
 
-  private property: string = '';
+  private _property: string = '';
 
   start(repo: ExpectationRepository) {
     if (this._repo) {
@@ -20,22 +36,22 @@ export class PendingExpectation {
   }
 
   setPendingMethod(property: string, args: any[]) {
-    this.args = args;
-    this.property = property;
+    this._args = args;
+    this._property = property;
   }
 
   setPendingApply(args: any[]) {
-    this.property = '';
-    this.args = args;
+    this._property = '';
+    this._args = args;
   }
 
   finish(returnValue: any) {
-    if (!this._repo || !this.args) {
+    if (!this._repo || !this._args) {
       throw new MissingWhen();
     }
 
     this._repo.addExpectation(
-      new MethodExpectation(this.args, returnValue, this.property)
+      new MethodExpectation(this._args, returnValue, this._property)
     );
 
     this.clear();
@@ -43,7 +59,7 @@ export class PendingExpectation {
 
   clear() {
     this._repo = undefined;
-    this.args = undefined;
-    this.property = '';
+    this._args = undefined;
+    this._property = '';
   }
 }

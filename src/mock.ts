@@ -10,15 +10,19 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   const pendingExpectation = new PendingExpectation();
 
   return createProxy<T>({
-    get: (args, property: string) => {
+    property: property => {
       pendingExpectation.start(repo);
-      pendingExpectation.setPendingMethod(property, args);
+      pendingExpectation.property = property;
+    },
+    method: args => {
+      pendingExpectation.args = args;
 
       return pendingExpectation;
     },
-    apply: (argArray?: any) => {
+    apply: (args: any[]) => {
       pendingExpectation.start(repo);
-      pendingExpectation.setPendingApply(argArray);
+      pendingExpectation.property = '';
+      pendingExpectation.args = args;
 
       return pendingExpectation;
     }

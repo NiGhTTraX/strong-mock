@@ -2,22 +2,23 @@ import { Mock } from './mock';
 
 interface ProxyTraps {
   /**
-   * Called when mocking an object member or method.
-   *
-   * @example
-   * ```
-   * foo.bar
-   * ```
+   * Called when accessing any property on an object, except for
+   * `.call`, `.apply` and `.bind`.
+   */
+  property: (property: string) => void;
+
+  /**
+   * Called when calling a method on an object.
    *
    * @example
    * ```
    * foo.baz(...args)
    * ```
    */
-  get: (args: any[], property: string) => void;
+  method: (args: any[], property: string) => void;
 
   /**
-   * Called when mocking a function.
+   * Called when calling a function.
    *
    * @example
    * ```
@@ -39,32 +40,40 @@ interface ProxyTraps {
    * Reflect.apply(fn, this, [...args])
    * ```
    */
-  apply: (argArray: any | undefined) => void;
+  apply: (args: any[]) => void;
 }
 
-export const createProxy = <T>({ get, apply }: ProxyTraps): Mock<T> =>
+export const createProxy = <T>({
+  method,
+  apply,
+  property
+}: ProxyTraps): Mock<T> =>
   (new Proxy(() => {}, {
-    get: (target, property: string) => {
-      if (property === 'bind') {
+    get: (target, prop: string) => {
+      if (prop === 'bind') {
         return (thisArg: any, ...args: any[]) => {
           return (...moreArgs: any[]) => apply([...args, ...moreArgs]);
         };
       }
 
-      if (property === 'apply') {
+      if (prop === 'apply') {
         return (thisArg: any, args: any[]) => apply(args);
       }
 
-      if (property === 'call') {
+      if (prop === 'call') {
         return (thisArg: any, ...args: any[]) => apply(args);
       }
 
+      if (property) {
+        property(prop);
+      }
+
       return (...args: any[]) => {
-        return get(args, property);
+        return method(args, prop);
       };
     },
 
-    apply: (target, thisArg: any, args?: any[]) => {
+    apply: (target, thisArg: any, args: any[]) => {
       return apply(args);
     }
   }) as unknown) as Mock<T>;
