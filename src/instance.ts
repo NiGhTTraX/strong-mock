@@ -9,12 +9,10 @@ export const instance = <T>(mock: Mock<T>): T => {
     throw new MissingMock();
   }
 
-  const proxy = createProxy({
+  return createProxy<T>({
     get: (args: any[], property: string) =>
       repo.getMatchingExpectation(args, property).returnValue,
     apply: (argArray: any | undefined) =>
       repo.getMatchingExpectation(argArray, '').returnValue
   });
-
-  return (proxy as unknown) as Mock<T>;
 };

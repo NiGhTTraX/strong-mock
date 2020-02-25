@@ -9,7 +9,7 @@ export type Mock<T> = T;
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   const pendingExpectation = new PendingExpectation();
 
-  const stub = createProxy({
+  return createProxy<T>({
     get: (args, property: string) => {
       pendingExpectation.start(repo);
       pendingExpectation.setPendingMethod(property, args);
@@ -23,8 +23,6 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
       return pendingExpectation;
     }
   });
-
-  return (stub as unknown) as Mock<T>;
 };
 
 export const strongMock = <T>(): Mock<T> => {

@@ -1,3 +1,5 @@
+import { Mock } from './mock';
+
 interface ProxyTraps {
   /**
    * Called when mocking an object member or method.
@@ -40,7 +42,7 @@ interface ProxyTraps {
   apply: (argArray: any | undefined) => void;
 }
 
-export const createProxy = <T>({ get, apply }: ProxyTraps) =>
+export const createProxy = <T>({ get, apply }: ProxyTraps): Mock<T> =>
   (new Proxy(() => {}, {
     get: (target, property: string) => {
       if (property === 'bind') {
@@ -65,4 +67,4 @@ export const createProxy = <T>({ get, apply }: ProxyTraps) =>
     apply: (target, thisArg: any, args?: any[]) => {
       return apply(args);
     }
-  }) as unknown) as T;
+  }) as unknown) as Mock<T>;
