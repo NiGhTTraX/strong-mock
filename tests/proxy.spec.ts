@@ -3,10 +3,16 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import { createProxy } from '../src/proxy';
 
 describe('proxy', () => {
+  type Fn = (x: number, y: number, z: number) => void;
+
+  interface Foo {
+    bar: Fn;
+  }
+
   it('should call on fn(...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+    const proxy = createProxy<Fn>({
       get: () => {
         throw new Error('should not be called');
       },
@@ -23,7 +29,7 @@ describe('proxy', () => {
   it('should call on fn.call(this, ...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+    const proxy = createProxy<Fn>({
       get: () => {
         throw new Error('should not be called');
       },
@@ -40,7 +46,7 @@ describe('proxy', () => {
   it('should call on fn.apply(this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+    const proxy = createProxy<Fn>({
       get: () => {
         throw new Error('should not be called');
       },
@@ -57,7 +63,7 @@ describe('proxy', () => {
   it('should call on Reflect.apply(fn, this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+    const proxy = createProxy<Fn>({
       get: () => {
         throw new Error('should not be called');
       },
@@ -74,7 +80,7 @@ describe('proxy', () => {
   it('should call after binding', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<(x: number, y: number, z: number) => void>({
+    const proxy = createProxy<Fn>({
       get: () => {
         throw new Error('should not be called');
       },
@@ -93,9 +99,7 @@ describe('proxy', () => {
     let args: number[] = [];
     let prop = '';
 
-    const proxy = createProxy<{
-      bar: (x: number, y: number, z: number) => void;
-    }>({
+    const proxy = createProxy<Foo>({
       get: (argArray, property) => {
         args = argArray;
         prop = property;
@@ -115,9 +119,7 @@ describe('proxy', () => {
     let args: number[] = [];
     let prop = '';
 
-    const proxy = createProxy<{
-      bar: (x: number, y: number, z: number) => void;
-    }>({
+    const proxy = createProxy<Foo>({
       get: (argArray, property) => {
         args = argArray;
         prop = property;
