@@ -6,8 +6,7 @@ export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 
 export type Mock<T> = T;
 
-export const strongMock = <T>(): Mock<T> => {
-  const repo = new ExpectationRepository();
+export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   const pendingExpectation = new PendingExpectation();
 
   const stub = createProxy({
@@ -25,7 +24,14 @@ export const strongMock = <T>(): Mock<T> => {
     }
   });
 
+  return (stub as unknown) as Mock<T>;
+};
+
+export const strongMock = <T>(): Mock<T> => {
+  const repo = new ExpectationRepository();
+  const stub = createStub<T>(repo);
+
   MockMap.set(stub, repo);
 
-  return (stub as unknown) as Mock<T>;
+  return stub;
 };
