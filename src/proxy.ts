@@ -51,15 +51,15 @@ export const createProxy = <T>({ get, apply }: ProxyTraps): Mock<T> =>
         };
       }
 
+      if (property === 'apply') {
+        return (thisArg: any, args: any[]) => apply(args);
+      }
+
+      if (property === 'call') {
+        return (thisArg: any, ...args: any[]) => apply(args);
+      }
+
       return (...args: any[]) => {
-        if (property === 'apply') {
-          return apply(args[1]);
-        }
-
-        if (property === 'call') {
-          return apply(args.slice(1));
-        }
-
         return get(args, property);
       };
     },
