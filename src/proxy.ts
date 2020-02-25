@@ -1,6 +1,6 @@
 interface ProxyTraps {
   /**
-   * Called when accessing any property other than `.call` and `.apply`.
+   * Called when mocking an object member or method.
    *
    * @example
    * ```
@@ -12,17 +12,7 @@ interface ProxyTraps {
    * foo.baz(...args)
    * ```
    */
-  property: (property: string) => void;
-
-  /**
-   * Called when calling a method.
-   *
-   * @example
-   * ```
-   * foo.baz(...args)
-   * ```
-   */
-  method: (args: any[], property: string) => void;
+  get: (args: any[], property: string) => void;
 
   /**
    * Called when mocking a function.
@@ -50,29 +40,25 @@ interface ProxyTraps {
   apply: (argArray: any | undefined) => void;
 }
 
-export const createProxy = <T>({ property, method, apply }: ProxyTraps) =>
+export const createProxy = <T>({ get, apply }: ProxyTraps) =>
   (new Proxy(() => {}, {
-    get: (target, prop: string) => {
-      if (prop !== 'call' && prop !== 'apply' && prop !== 'bind') {
-        property(prop);
-      }
-
-      if (prop === 'bind') {
+    get: (target, property: string) => {
+      if (property === 'bind') {
         return (thisArg: any, ...args: any[]) => {
           return (...moreArgs: any[]) => apply([...args, ...moreArgs]);
         };
       }
 
       return (...args: any[]) => {
-        if (prop === 'apply') {
+        if (property === 'apply') {
           return apply(args[1]);
         }
 
-        if (prop === 'call') {
+        if (property === 'call') {
           return apply(args.slice(1));
         }
 
-        return method(args, prop);
+        return get(args, property);
       };
     },
 
