@@ -7,7 +7,9 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      get: () => {
+        throw new Error('should not be called');
+      },
       apply: argArray => {
         args = argArray;
       }
@@ -22,7 +24,9 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      get: () => {
+        throw new Error('should not be called');
+      },
       apply: argArray => {
         args = argArray;
       }
@@ -37,7 +41,9 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      get: () => {
+        throw new Error('should not be called');
+      },
       apply: argArray => {
         args = argArray;
       }
@@ -52,7 +58,9 @@ describe('proxy', () => {
     let args: number[] = [];
 
     const proxy = createProxy<(x: number, y: number, z: number) => void>({
-      get: () => {},
+      get: () => {
+        throw new Error('should not be called');
+      },
       apply: argArray => {
         args = argArray;
       }
@@ -92,7 +100,9 @@ describe('proxy', () => {
         args = argArray;
         prop = property;
       },
-      apply: () => {}
+      apply: () => {
+        throw new Error('should not be called');
+      }
     });
 
     proxy.bar(1, 2, 3);
@@ -112,7 +122,9 @@ describe('proxy', () => {
         args = argArray;
         prop = property;
       },
-      apply: () => {}
+      apply: () => {
+        throw new Error('should not be called');
+      }
     });
 
     proxy.bar.call(null, 1, 2, 3);
