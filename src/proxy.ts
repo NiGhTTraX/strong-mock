@@ -64,9 +64,7 @@ export const createProxy = <T>({
         return (thisArg: any, ...args: any[]) => apply(args);
       }
 
-      if (property) {
-        property(prop);
-      }
+      property(prop);
 
       return (...args: any[]) => {
         return method(args, prop);
