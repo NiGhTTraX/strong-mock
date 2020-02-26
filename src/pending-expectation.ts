@@ -3,22 +3,6 @@ import { ExpectationRepository } from './expectation-repository';
 import { MethodExpectation } from './expectations';
 
 export class PendingExpectation {
-  get args(): any[] | undefined {
-    return this._args;
-  }
-
-  set args(value: any[] | undefined) {
-    this._args = value;
-  }
-
-  get property(): string {
-    return this._property;
-  }
-
-  set property(value: string) {
-    this._property = value;
-  }
-
   private _repo: ExpectationRepository | undefined;
 
   private _args: any[] | undefined;
@@ -35,14 +19,12 @@ export class PendingExpectation {
     this._repo = repo;
   }
 
-  setPendingMethod(property: string, args: any[]) {
-    this._args = args;
-    this._property = property;
+  set property(value: string) {
+    this._property = value;
   }
 
-  setPendingApply(args: any[]) {
-    this._property = '';
-    this._args = args;
+  set args(value: any[] | undefined) {
+    this._args = value;
   }
 
   finish(returnValue: any) {
