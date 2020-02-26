@@ -1,5 +1,5 @@
 import { ExpectationRepository } from './expectation-repository';
-import { PendingExpectation } from './pending-expectation';
+import { singletonPendingExpectation } from './pending-expectation';
 import { createProxy } from './proxy';
 
 export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
@@ -10,24 +10,20 @@ export type Mock<T> = T;
 export const ApplyProp = '';
 
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
-  const pendingExpectation = new PendingExpectation();
-
   return createProxy<T>({
     property: property => {
-      pendingExpectation.start(repo);
-      pendingExpectation.property = property;
+      singletonPendingExpectation.start(repo);
+      singletonPendingExpectation.property = property;
     },
-    method: args => {
-      pendingExpectation.args = args;
-
-      return pendingExpectation;
+    method: (args, property) => {
+      // TODO: the property should have already been set in the `property` trap
+      singletonPendingExpectation.property = property;
+      singletonPendingExpectation.args = args;
     },
     apply: (args: any[]) => {
-      pendingExpectation.start(repo);
-      pendingExpectation.property = ApplyProp;
-      pendingExpectation.args = args;
-
-      return pendingExpectation;
+      singletonPendingExpectation.start(repo);
+      singletonPendingExpectation.property = ApplyProp;
+      singletonPendingExpectation.args = args;
     }
   });
 };

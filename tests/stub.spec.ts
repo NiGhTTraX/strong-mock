@@ -2,7 +2,7 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { ExpectationRepository } from '../src/expectation-repository';
 import { createStub } from '../src/mock';
-import { PendingExpectation } from '../src/pending-expectation';
+import { singletonPendingExpectation } from '../src/pending-expectation';
 
 describe('createStub', () => {
   type Fn = (x: number, y: number, z: number) => number;
@@ -15,7 +15,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Fn>(repo);
 
-    ((stub(1, 2, 3) as unknown) as PendingExpectation).finish(23);
+    stub(1, 2, 3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], '').returnValue).toEqual(23);
   });
@@ -24,7 +26,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Fn>(repo);
 
-    ((stub.call(null, 1, 2, 3) as unknown) as PendingExpectation).finish(23);
+    stub.call(null, 1, 2, 3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], '').returnValue).toEqual(23);
   });
@@ -33,7 +37,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Fn>(repo);
 
-    ((stub.apply(null, [1, 2, 3]) as unknown) as PendingExpectation).finish(23);
+    stub.apply(null, [1, 2, 3]);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], '').returnValue).toEqual(23);
   });
@@ -42,11 +48,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Fn>(repo);
 
-    ((Reflect.apply(stub, null, [
-      1,
-      2,
-      3
-    ]) as unknown) as PendingExpectation).finish(23);
+    Reflect.apply(stub, null, [1, 2, 3]);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], '').returnValue).toEqual(23);
   });
@@ -55,7 +59,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Fn>(repo);
 
-    ((stub.bind(null, 1, 2)(3) as unknown) as PendingExpectation).finish(23);
+    stub.bind(null, 1, 2)(3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], '').returnValue).toEqual(23);
   });
@@ -64,7 +70,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Foo>(repo);
 
-    ((stub.bar(1, 2, 3) as unknown) as PendingExpectation).finish(23);
+    stub.bar(1, 2, 3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], 'bar').returnValue).toEqual(
       23
@@ -75,9 +83,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Foo>(repo);
 
-    ((stub.bar.call(null, 1, 2, 3) as unknown) as PendingExpectation).finish(
-      23
-    );
+    stub.bar.call(null, 1, 2, 3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], 'bar').returnValue).toEqual(
       23
@@ -88,9 +96,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Foo>(repo);
 
-    ((stub.bar.apply(null, [1, 2, 3]) as unknown) as PendingExpectation).finish(
-      23
-    );
+    stub.bar.apply(null, [1, 2, 3]);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], 'bar').returnValue).toEqual(
       23
@@ -101,9 +109,9 @@ describe('createStub', () => {
     const repo = new ExpectationRepository();
     const stub = createStub<Foo>(repo);
 
-    ((stub.bar.bind(null, 1, 2)(3) as unknown) as PendingExpectation).finish(
-      23
-    );
+    stub.bar.bind(null, 1, 2)(3);
+
+    singletonPendingExpectation.finish(23);
 
     expect(repo.getMatchingExpectation([1, 2, 3], 'bar').returnValue).toEqual(
       23

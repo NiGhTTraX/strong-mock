@@ -63,3 +63,5 @@ export class PendingExpectation {
     this._property = '';
   }
 }
+
+export const singletonPendingExpectation = new PendingExpectation();
