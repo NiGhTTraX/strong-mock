@@ -16,9 +16,6 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      method: () => {
-        throw new Error('should not be called');
-      },
       apply: argArray => {
         args = argArray;
       }
@@ -34,9 +31,6 @@ describe('proxy', () => {
 
     const proxy = createProxy<Fn>({
       property: () => {
-        throw new Error('should not be called');
-      },
-      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -56,9 +50,6 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      method: () => {
-        throw new Error('should not be called');
-      },
       apply: argArray => {
         args = argArray;
       }
@@ -74,9 +65,6 @@ describe('proxy', () => {
 
     const proxy = createProxy<Fn>({
       property: () => {
-        throw new Error('should not be called');
-      },
-      method: () => {
         throw new Error('should not be called');
       },
       apply: argArray => {
@@ -96,9 +84,6 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      method: () => {
-        throw new Error('should not be called');
-      },
       apply: argArray => {
         args = argArray;
       }
@@ -110,47 +95,20 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call on foo.bar(...args)', () => {
-    let args: number[] = [];
+  it('should call on foo.bar', () => {
     let prop = '';
 
     const proxy = createProxy<Foo>({
       property: property => {
         prop = property;
       },
-      method: argArray => {
-        args = argArray;
-      },
       apply: () => {
         throw new Error('should not be called');
       }
     });
 
-    proxy.bar(1, 2, 3);
+    proxy.bar;
 
-    expect(args).toEqual([1, 2, 3]);
-    expect(prop).toEqual('bar');
-  });
-
-  it('should call on foo.bar.call(this, ...args)', () => {
-    let args: number[] = [];
-    let prop = '';
-
-    const proxy = createProxy<Foo>({
-      property: property => {
-        prop = property;
-      },
-      method: argArray => {
-        args = argArray;
-      },
-      apply: () => {
-        throw new Error('should not be called');
-      }
-    });
-
-    proxy.bar.call(null, 1, 2, 3);
-
-    expect(args).toEqual([1, 2, 3]);
     expect(prop).toEqual('bar');
   });
 });

@@ -8,16 +8,6 @@ interface ProxyTraps {
   property: (property: string) => void;
 
   /**
-   * Called when calling a method on an object.
-   *
-   * @example
-   * ```
-   * foo.baz(...args)
-   * ```
-   */
-  method: (args: any[], property: string) => void;
-
-  /**
    * Called when calling a function.
    *
    * @example
@@ -43,11 +33,7 @@ interface ProxyTraps {
   apply: (args: any[]) => void;
 }
 
-export const createProxy = <T>({
-  method,
-  apply,
-  property
-}: ProxyTraps): Mock<T> =>
+export const createProxy = <T>({ apply, property }: ProxyTraps): Mock<T> =>
   (new Proxy(() => {}, {
     get: (target, prop: string) => {
       if (prop === 'bind') {
@@ -64,11 +50,7 @@ export const createProxy = <T>({
         return (thisArg: any, ...args: any[]) => apply(args);
       }
 
-      property(prop);
-
-      return (...args: any[]) => {
-        return method(args, prop);
-      };
+      return property(prop);
     },
 
     apply: (target, thisArg: any, args: any[]) => {

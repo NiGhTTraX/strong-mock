@@ -14,11 +14,10 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
     property: property => {
       singletonPendingExpectation.start(repo);
       singletonPendingExpectation.property = property;
-    },
-    method: (args, property) => {
-      // TODO: the property should have already been set in the `property` trap
-      singletonPendingExpectation.property = property;
-      singletonPendingExpectation.args = args;
+
+      return (...args: any[]) => {
+        singletonPendingExpectation.args = args;
+      };
     },
     apply: (args: any[]) => {
       singletonPendingExpectation.start(repo);
