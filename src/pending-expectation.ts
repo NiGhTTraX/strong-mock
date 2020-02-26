@@ -28,7 +28,7 @@ export class PendingExpectation {
   }
 
   finish(returnValue: any) {
-    if (!this._repo || !this._args) {
+    if (!this._repo) {
       throw new MissingWhen();
     }
 

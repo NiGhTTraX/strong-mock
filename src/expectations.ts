@@ -1,12 +1,13 @@
 export interface Expectation {
   returnValue: any;
-  args: any[];
+  args?: any[];
   property: string;
 }
 
 export class MethodExpectation implements Expectation {
   constructor(
-    public args: any[],
+    // TODO: flip params
+    public args: any[] | undefined,
     public returnValue: any,
     public property: string
   ) {}
