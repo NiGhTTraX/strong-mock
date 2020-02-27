@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
-import { ExpectationRepository } from '../src/expectation-repository';
+import { FIFORepository } from '../src/expectation-repository';
 import { MethodExpectation } from '../src/expectations';
 import { ApplyProp, MockMap, strongMock } from '../src/mock';
 
@@ -12,7 +12,7 @@ describe('instance', () => {
 
   it('get matching expectation for apply', () => {
     const mock = strongMock<(x: number) => number>();
-    const repo = new ExpectationRepository();
+    const repo = new FIFORepository();
 
     MockMap.set(mock, repo);
 
@@ -23,7 +23,7 @@ describe('instance', () => {
 
   it('get matching expectation for method', () => {
     const mock = strongMock<{ bar: (x: number) => number }>();
-    const repo = new ExpectationRepository();
+    const repo = new FIFORepository();
 
     MockMap.set(mock, repo);
 
@@ -34,7 +34,7 @@ describe('instance', () => {
 
   it('get matching expectation for property', () => {
     const mock = strongMock<{ bar: number }>();
-    const repo = new ExpectationRepository();
+    const repo = new FIFORepository();
 
     MockMap.set(mock, repo);
 
@@ -45,7 +45,7 @@ describe('instance', () => {
 
   it('get matching expectation for property method', () => {
     const mock = strongMock<{ bar: (x: number) => number }>();
-    const repo = new ExpectationRepository();
+    const repo = new FIFORepository();
 
     let x = -1;
 
@@ -68,7 +68,7 @@ describe('instance', () => {
 
   it('get matching expectation for property before method', () => {
     const mock = strongMock<{ bar: (x: number) => number }>();
-    const repo = new ExpectationRepository();
+    const repo = new FIFORepository();
 
     MockMap.set(mock, repo);
 

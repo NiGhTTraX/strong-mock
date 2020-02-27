@@ -8,7 +8,7 @@ const returnOrThrow = (
   args: any[] | undefined,
   property: string
 ) => {
-  const expectation = repo.findFirst(args, property);
+  const expectation = repo.find(args, property);
 
   if (!expectation) {
     throw new UnexpectedCall(property);
@@ -26,7 +26,7 @@ export const instance = <T>(mock: Mock<T>): T => {
 
   return createProxy<T>({
     property: (property: string) => {
-      const propertyExpectation = repo.findFirst(undefined, property);
+      const propertyExpectation = repo.find(undefined, property);
 
       if (propertyExpectation) {
         return propertyExpectation.returnValue;

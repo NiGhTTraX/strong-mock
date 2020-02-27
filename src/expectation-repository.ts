@@ -1,34 +1,36 @@
 import isEqual from 'lodash/isEqual';
-import { UnexpectedCall } from './errors';
 import { Expectation } from './expectations';
 
-export class ExpectationRepository {
-  private repo: Expectation[] = [];
-
+export interface ExpectationRepository {
   /**
    * Add expectation to the end of the repo.
    */
+  add(expectation: Expectation): void;
+
+  /**
+   * Find the first matching expectation.
+   */
+  find(args: any[] | undefined, property: string): Expectation | undefined;
+}
+
+/**
+ * Expectations will be returned in the order they were added.
+ *
+ * Once an expectation is found it is immediately removed. If no matching
+ * expectations are found then `find` will return `undefined`.
+ * TODO: add invocation count
+ */
+export class FIFORepository implements ExpectationRepository {
+  private repo: Expectation[] = [];
+
   add(expectation: Expectation) {
     this.repo.push(expectation);
   }
 
   /**
-   * Remove the given expectation from the repo.
-   * @param expectation
-   */
-  remove(expectation: Expectation) {
-    this.repo = this.repo.filter(e => e !== expectation);
-  }
-
-  /**
-   * Find the first matching expectation.
-   *
    * @returns If nothing matches will return `undefined`.
    */
-  findFirst(
-    args: any[] | undefined,
-    property: string
-  ): Expectation | undefined {
+  find(args: any[] | undefined, property: string): Expectation | undefined {
     const expectation = this.repo.find(
       e => e.property === property && this.compareArgs(e, args)
     );
@@ -36,23 +38,6 @@ export class ExpectationRepository {
     if (expectation) {
       this.remove(expectation);
     }
-
-    return expectation;
-  }
-
-  /**
-   * Get the first matching expectation.
-   *
-   * @throws If nothing matching will throw.
-   */
-  getFirst(args: any[], property: string): Expectation {
-    const expectation = this.findFirst(args, property);
-
-    if (!expectation) {
-      throw new UnexpectedCall(property);
-    }
-
-    this.remove(expectation);
 
     return expectation;
   }
@@ -68,5 +53,9 @@ export class ExpectationRepository {
     }
 
     return e.args.every((a, i) => isEqual(a, args[i]));
+  }
+
+  private remove(expectation: Expectation) {
+    this.repo = this.repo.filter(e => e !== expectation);
   }
 }

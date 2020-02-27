@@ -1,4 +1,7 @@
-import { ExpectationRepository } from './expectation-repository';
+import {
+  ExpectationRepository,
+  FIFORepository
+} from './expectation-repository';
 import { singletonPendingExpectation } from './pending-expectation';
 import { createProxy } from './proxy';
 
@@ -28,7 +31,7 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
 };
 
 export const strongMock = <T>(): Mock<T> => {
-  const repo = new ExpectationRepository();
+  const repo = new FIFORepository();
   const stub = createStub<T>(repo);
 
   MockMap.set(stub, repo);
