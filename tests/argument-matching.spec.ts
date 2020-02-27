@@ -5,58 +5,58 @@ import { UnexpectedCall } from '../src/errors';
 
 describe('argument matching', () => {
   it('should match primitives', () => {
-    const mock = strongMock<(x: number, y: string, z: boolean) => number>();
+    const fn = strongMock<(x: number, y: string, z: boolean) => number>();
 
-    when(mock(1, '2', true)).returns(23);
+    when(fn(1, '2', true)).returns(23);
 
-    expect(instance(mock)(1, '2', true)).toEqual(23);
+    expect(instance(fn)(1, '2', true)).toEqual(23);
   });
 
   it('should match objects', () => {
-    const mock = strongMock<(foo: { bar: { baz: number } }) => number>();
+    const fn = strongMock<(foo: { bar: { baz: number } }) => number>();
 
     when(
-      mock({
+      fn({
         bar: { baz: 42 }
       })
     ).returns(23);
 
     expect(
-      instance(mock)({
+      instance(fn)({
         bar: { baz: 42 }
       })
     ).toEqual(23);
   });
 
   it('should match arrays', () => {
-    const mock = strongMock<(foo: number[]) => number>();
+    const fn = strongMock<(foo: number[]) => number>();
 
-    when(mock([1, 2, 3])).returns(23);
+    when(fn([1, 2, 3])).returns(23);
 
-    expect(instance(mock)([1, 2, 3])).toEqual(23);
+    expect(instance(fn)([1, 2, 3])).toEqual(23);
   });
 
   it('should match arrays', () => {
-    const mock = strongMock<(foo: number[]) => number>();
+    const fn = strongMock<(foo: number[]) => number>();
 
-    when(mock([1, 2, 3])).returns(23);
+    when(fn([1, 2, 3])).returns(23);
 
-    expect(instance(mock)([1, 2, 3])).toEqual(23);
+    expect(instance(fn)([1, 2, 3])).toEqual(23);
   });
 
   it('should match sets', () => {
-    const mock = strongMock<(foo: Set<number>) => number>();
+    const fn = strongMock<(foo: Set<number>) => number>();
 
-    when(mock(new Set([1, 2, 3]))).returns(23);
+    when(fn(new Set([1, 2, 3]))).returns(23);
 
-    expect(instance(mock)(new Set([1, 2, 3]))).toEqual(23);
+    expect(instance(fn)(new Set([1, 2, 3]))).toEqual(23);
   });
 
   it('should match maps', () => {
-    const mock = strongMock<(foo: Map<number, boolean>) => number>();
+    const fn = strongMock<(foo: Map<number, boolean>) => number>();
 
     when(
-      mock(
+      fn(
         new Map([
           [1, true],
           [2, false]
@@ -65,7 +65,7 @@ describe('argument matching', () => {
     ).returns(23);
 
     expect(
-      instance(mock)(
+      instance(fn)(
         new Map([
           [1, true],
           [2, false]
@@ -75,34 +75,34 @@ describe('argument matching', () => {
   });
 
   it('should match optional args against undefined', () => {
-    const mock = strongMock<(x?: number) => number>();
+    const fn = strongMock<(x?: number) => number>();
 
-    when(mock(undefined)).returns(23);
+    when(fn(undefined)).returns(23);
 
-    expect(instance(mock)()).toEqual(23);
+    expect(instance(fn)()).toEqual(23);
   });
 
   it('should throw for expected optional arg', () => {
-    const mock = strongMock<(x?: number) => number>();
+    const fn = strongMock<(x?: number) => number>();
 
-    when(mock(23)).returns(23);
+    when(fn(23)).returns(23);
 
-    expect(() => instance(mock)()).toThrow(UnexpectedCall);
+    expect(() => instance(fn)()).toThrow(UnexpectedCall);
   });
 
   it('should match passed in optional args', () => {
-    const mock = strongMock<(x?: number) => number>();
+    const fn = strongMock<(x?: number) => number>();
 
-    when(mock()).returns(23);
+    when(fn()).returns(23);
 
-    expect(instance(mock)(42)).toEqual(23);
+    expect(instance(fn)(42)).toEqual(23);
   });
 
   it('should throw for expected undefined optional arg', () => {
-    const mock = strongMock<(x?: number) => number>();
+    const fn = strongMock<(x?: number) => number>();
 
-    when(mock(undefined)).returns(23);
+    when(fn(undefined)).returns(23);
 
-    expect(() => instance(mock)(42)).toThrow(UnexpectedCall);
+    expect(() => instance(fn)(42)).toThrow(UnexpectedCall);
   });
 });

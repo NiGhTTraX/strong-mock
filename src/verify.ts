@@ -1,8 +1,8 @@
 import { UnmetExpectation } from './errors';
-import { getRepoForStub, Mock } from './mock';
+import { getRepoForMock, Mock } from './mock';
 
 export const verifyAll = <T>(mock: Mock<T>): void => {
-  const repo = getRepoForStub(mock);
+  const repo = getRepoForMock(mock);
 
   if (repo.getUnmet().length) {
     throw new UnmetExpectation();

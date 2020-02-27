@@ -1,6 +1,6 @@
 import { UnexpectedCall } from './errors';
 import { ExpectationRepository } from './expectation-repository';
-import { ApplyProp, getRepoForStub, Mock } from './mock';
+import { ApplyProp, getRepoForMock, Mock } from './mock';
 import { createProxy } from './proxy';
 
 const returnOrThrow = (
@@ -18,7 +18,7 @@ const returnOrThrow = (
 };
 
 export const instance = <T>(mock: Mock<T>): T => {
-  const repo = getRepoForStub(mock);
+  const repo = getRepoForMock(mock);
 
   return createProxy<T>(repo, {
     property: property => {

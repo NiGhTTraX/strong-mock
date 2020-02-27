@@ -2,17 +2,9 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { createProxy } from '../src/proxy';
 import { EmptyRepository } from './expectation-repository';
+import { Bar, Fn, Foo, xxx } from './fixtures';
 
 describe('proxy', () => {
-  type Fn = (x: number, y: number, z: number) => void;
-
-  const xxx = Symbol('xxx');
-
-  interface Foo {
-    bar: Fn;
-    [xxx]: number;
-  }
-
   it('should trap fn(...args)', () => {
     let args: number[] = [];
 
@@ -119,7 +111,7 @@ describe('proxy', () => {
   it('should trap foo[Symbol]', () => {
     let prop;
 
-    const proxy = createProxy<Foo>(new EmptyRepository(), {
+    const proxy = createProxy<Bar>(new EmptyRepository(), {
       property: property => {
         prop = property;
       },

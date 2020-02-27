@@ -15,15 +15,15 @@ describe('verifyAll', () => {
     const repo = new OneExistingExpectationRepository(
       new Expectation(ApplyProp, [], 23)
     );
-    const mock = strongMock<() => number>(repo);
+    const fn = strongMock<() => number>(repo);
 
-    expect(() => verifyAll(mock)).toThrow(UnmetExpectation);
+    expect(() => verifyAll(fn)).toThrow(UnmetExpectation);
   });
 
   it('should not throw if all expectations met', () => {
     const repo = new EmptyRepository();
-    const mock = strongMock<() => number>(repo);
+    const fn = strongMock<() => number>(repo);
 
-    expect(() => verifyAll(mock)).not.toThrow();
+    expect(() => verifyAll(fn)).not.toThrow();
   });
 });

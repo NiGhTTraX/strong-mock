@@ -5,14 +5,9 @@ import { Expectation } from '../src/expectation';
 import { ApplyProp, createStub } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
+import { Fn, Foo } from './fixtures';
 
 describe('createStub', () => {
-  type Fn = (x: number, y: number, z: number) => number;
-
-  interface Foo {
-    bar: Fn;
-  }
-
   it('should intercept fn(...args)', () => {
     const repo = new OneIncomingExpectationRepository();
     const stub = createStub<Fn>(repo);

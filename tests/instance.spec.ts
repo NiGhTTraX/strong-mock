@@ -11,53 +11,53 @@ import { EmptyRepository } from './expectation-repository';
 describe('instance', () => {
   it('should get matching expectation for apply', () => {
     const repo = new FIFORepository();
-    const mock = strongMock<(x: number) => number>(repo);
+    const fn = strongMock<(x: number) => number>(repo);
 
     repo.add(new Expectation(ApplyProp, [1], 2));
 
-    expect(instance(mock)(1)).toEqual(2);
+    expect(instance(fn)(1)).toEqual(2);
   });
 
   it('should get matching expectation for method', () => {
     const repo = new FIFORepository();
-    const mock = strongMock<{ bar: (x: number) => number }>(repo);
+    const foo = strongMock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [1], 2));
 
-    expect(instance(mock).bar(1)).toEqual(2);
+    expect(instance(foo).bar(1)).toEqual(2);
   });
 
   it('should get matching expectation for property', () => {
     const repo = new FIFORepository();
-    const mock = strongMock<{ bar: number }>(repo);
+    const foo = strongMock<{ bar: number }>(repo);
 
     repo.add(new Expectation('bar', undefined, 23));
 
-    expect(instance(mock).bar).toEqual(23);
+    expect(instance(foo).bar).toEqual(23);
   });
 
   it('should throw if no expectation for property', () => {
     const repo = new EmptyRepository();
-    const mock = strongMock<{ bar: number }>(repo);
+    const foo = strongMock<{ bar: number }>(repo);
 
-    expect(() => instance(mock).bar).toThrow(UnexpectedCall);
+    expect(() => instance(foo).bar).toThrow(UnexpectedCall);
   });
 
   it('should throw if no expectation for method', () => {
     const repo = new EmptyRepository();
-    const mock = strongMock<{ bar: () => void }>(repo);
+    const foo = strongMock<{ bar: () => void }>(repo);
 
-    expect(() => instance(mock).bar()).toThrow(UnexpectedCall);
+    expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
   });
 
   it('get matching expectation for property before method', () => {
     const repo = new FIFORepository();
-    const mock = strongMock<{ bar: (x: number) => number }>(repo);
+    const foo = strongMock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [13], 23));
     repo.add(new Expectation('bar', undefined, () => 42));
 
-    expect(instance(mock).bar(-1)).toEqual(42);
-    expect(instance(mock).bar(13)).toEqual(23);
+    expect(instance(foo).bar(-1)).toEqual(42);
+    expect(instance(foo).bar(13)).toEqual(23);
   });
 });

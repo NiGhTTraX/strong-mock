@@ -8,9 +8,9 @@ import { createProxy } from './proxy';
 
 export const repoHolder = Symbol('repo');
 
-export const getRepoForStub = (stub: Mock<any>): ExpectationRepository => {
-  if (repoHolder in stub) {
-    return stub[repoHolder];
+export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
+  if (repoHolder in mock) {
+    return mock[repoHolder];
   }
 
   throw new NotAMock();
