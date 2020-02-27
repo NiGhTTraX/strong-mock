@@ -13,7 +13,7 @@ describe('proxy', () => {
     [xxx]: number;
   }
 
-  it('should call on fn(...args)', () => {
+  it('should trap fn(...args)', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>(new EmptyRepository(), {
@@ -30,7 +30,7 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call on fn.call(this, ...args)', () => {
+  it('should trap fn.call(this, ...args)', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>(new EmptyRepository(), {
@@ -47,7 +47,7 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call on fn.apply(this, [...args])', () => {
+  it('should trap fn.apply(this, [...args])', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>(new EmptyRepository(), {
@@ -64,7 +64,7 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call on Reflect.apply(fn, this, [...args])', () => {
+  it('should trap Reflect.apply(fn, this, [...args])', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>(new EmptyRepository(), {
@@ -81,7 +81,7 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call after binding', () => {
+  it('should trap binding', () => {
     let args: number[] = [];
 
     const proxy = createProxy<Fn>(new EmptyRepository(), {
@@ -99,7 +99,7 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
-  it('should call on foo.bar', () => {
+  it('should trap foo.bar', () => {
     let prop;
 
     const proxy = createProxy<Foo>(new EmptyRepository(), {
@@ -116,7 +116,7 @@ describe('proxy', () => {
     expect(prop).toEqual('bar');
   });
 
-  it('should call on foo[Symbol]', () => {
+  it('should trap foo[Symbol]', () => {
     let prop;
 
     const proxy = createProxy<Foo>(new EmptyRepository(), {
@@ -133,7 +133,7 @@ describe('proxy', () => {
     expect(prop).toEqual(xxx);
   });
 
-  it('should call on foo[23]', () => {
+  it('should trap foo[23]', () => {
     let prop;
 
     const proxy = createProxy<[1, 2, 3]>(new EmptyRepository(), {
