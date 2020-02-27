@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { Expectation } from '../src/expectation';
 import { singletonPendingExpectation } from '../src/pending-expectation';
-import { OneExpectationRepository } from './expectation-repository';
+import { OneIncomingExpectationRepository } from './expectation-repository';
 
 describe('invocation count', () => {
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('invocation count', () => {
   });
 
   it('when should set the min and max', () => {
-    const repo = new OneExpectationRepository();
+    const repo = new OneIncomingExpectationRepository();
 
     singletonPendingExpectation.start(repo);
     singletonPendingExpectation.property = 'bar';
