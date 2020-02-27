@@ -1,3 +1,4 @@
+// TODO: improve all error messages
 export class MissingReturnValue extends Error {
   constructor() {
     super(`You forgot to give a return value to the previous expectation`);
