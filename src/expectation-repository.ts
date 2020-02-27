@@ -9,6 +9,15 @@ export class ExpectationRepository {
     this.repo.push(expectation);
   }
 
+  findMatchingExpectation(
+    args: any[] | undefined,
+    property: string
+  ): Expectation | undefined {
+    return this.repo.find(
+      e => e.property === property && this.compareArgs(e, args)
+    );
+  }
+
   getMatchingExpectation(args: any[], property: string): Expectation {
     const expectationIndex = this.repo.findIndex(
       e => e.property === property && this.compareArgs(e, args)
@@ -34,5 +43,9 @@ export class ExpectationRepository {
     }
 
     return e.args.every((a, i) => isEqual(a, args[i]));
+  }
+
+  remove(expectation: Expectation) {
+    this.repo = this.repo.filter(e => e !== expectation);
   }
 }

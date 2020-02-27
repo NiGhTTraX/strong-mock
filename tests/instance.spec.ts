@@ -31,4 +31,51 @@ describe('instance', () => {
 
     expect(instance(mock).bar(1)).toEqual(2);
   });
+
+  it('get matching expectation for property', () => {
+    const mock = strongMock<{ bar: number }>();
+    const repo = new ExpectationRepository();
+
+    MockMap.set(mock, repo);
+
+    repo.addExpectation(new MethodExpectation(undefined, 23, 'bar'));
+
+    expect(instance(mock).bar).toEqual(23);
+  });
+
+  it('get matching expectation for property method', () => {
+    const mock = strongMock<{ bar: (x: number) => number }>();
+    const repo = new ExpectationRepository();
+
+    let x = -1;
+
+    MockMap.set(mock, repo);
+
+    repo.addExpectation(
+      new MethodExpectation(
+        undefined,
+        (xArg: number) => {
+          x = xArg;
+          return 2;
+        },
+        'bar'
+      )
+    );
+
+    expect(instance(mock).bar(1)).toEqual(2);
+    expect(x).toEqual(1);
+  });
+
+  it('get matching expectation for property before method', () => {
+    const mock = strongMock<{ bar: (x: number) => number }>();
+    const repo = new ExpectationRepository();
+
+    MockMap.set(mock, repo);
+
+    repo.addExpectation(new MethodExpectation([13], 23, 'bar'));
+    repo.addExpectation(new MethodExpectation(undefined, () => 42, 'bar'));
+
+    expect(instance(mock).bar(-1)).toEqual(42);
+    expect(instance(mock).bar(13)).toEqual(23);
+  });
 });

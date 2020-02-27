@@ -211,16 +211,16 @@ describe('when', () => {
       expect(instance(mock).bar(3)).toEqual(4);
     });
 
-    // it('should set expectations on members', () => {
-    //   interface Foo {
-    //     bar: number;
-    //   }
-    //
-    //   const mock = strongMock<Foo>();
-    //
-    //   when(mock.bar).returns(23);
-    //
-    //   expect(instance(mock)).toEqual(23);
-    // });
+    it('should set expectations on members', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const mock = strongMock<Foo>();
+
+      when(mock.bar).returns(23);
+
+      expect(instance(mock).bar).toEqual(23);
+    });
   });
 });

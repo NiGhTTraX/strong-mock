@@ -10,8 +10,20 @@ export const instance = <T>(mock: Mock<T>): T => {
   }
 
   return createProxy<T>({
-    property: (property: string) => (...args: any[]) =>
-      repo.getMatchingExpectation(args, property).returnValue,
+    property: (property: string) => {
+      const propertyExpectation = repo.findMatchingExpectation(
+        undefined,
+        property
+      );
+
+      if (propertyExpectation) {
+        repo.remove(propertyExpectation);
+        return propertyExpectation.returnValue;
+      }
+
+      return (...args: any[]) =>
+        repo.getMatchingExpectation(args, property).returnValue;
+    },
     apply: (argArray: any | undefined) =>
       repo.getMatchingExpectation(argArray, ApplyProp).returnValue
   });
