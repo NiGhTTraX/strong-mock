@@ -4,11 +4,11 @@ import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
 import { strongMock } from '../src/mock';
-import { singletonPendingExpectation } from '../src/pending-expectation';
+import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 
 describe('when', () => {
   afterEach(() => {
-    singletonPendingExpectation.clear();
+    SINGLETON_PENDING_EXPECTATION.clear();
   });
 
   it('should do nothing without a chained return', () => {

@@ -1,8 +1,8 @@
 import { MissingMock, UnmetExpectation } from './errors';
-import { Mock, MockMap } from './mock';
+import { Mock, MOCK_MAP } from './mock';
 
 export const verifyAll = <T>(mock: Mock<T>): void => {
-  const repo = MockMap.get(mock);
+  const repo = MOCK_MAP.get(mock);
 
   if (!repo) {
     throw new MissingMock();

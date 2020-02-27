@@ -3,8 +3,8 @@ import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { strongMock } from '../src';
 import { UnmetExpectation } from '../src/errors';
 import { Expectation } from '../src/expectation';
-import { ApplyProp, MockMap } from '../src/mock';
-import { singletonPendingExpectation } from '../src/pending-expectation';
+import { ApplyProp, MOCK_MAP } from '../src/mock';
+import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 import { verifyAll } from '../src/verify';
 import {
   EmptyRepository,
@@ -13,7 +13,7 @@ import {
 
 describe('verifyAll', () => {
   beforeEach(() => {
-    singletonPendingExpectation.clear();
+    SINGLETON_PENDING_EXPECTATION.clear();
   });
 
   it('should throw if remaining expectations', () => {
@@ -22,7 +22,7 @@ describe('verifyAll', () => {
     );
     const mock = strongMock<() => number>();
 
-    MockMap.set(mock, repo);
+    MOCK_MAP.set(mock, repo);
 
     expect(() => verifyAll(mock)).toThrow(UnmetExpectation);
   });
@@ -31,7 +31,7 @@ describe('verifyAll', () => {
     const repo = new EmptyRepository();
     const mock = strongMock<() => number>();
 
-    MockMap.set(mock, repo);
+    MOCK_MAP.set(mock, repo);
 
     expect(() => verifyAll(mock)).not.toThrow();
   });

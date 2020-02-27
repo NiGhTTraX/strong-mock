@@ -1,6 +1,6 @@
 import { MissingMock, UnexpectedCall } from './errors';
 import { ExpectationRepository } from './expectation-repository';
-import { ApplyProp, Mock, MockMap } from './mock';
+import { ApplyProp, Mock, MOCK_MAP } from './mock';
 import { createProxy } from './proxy';
 
 const returnOrThrow = (
@@ -18,7 +18,7 @@ const returnOrThrow = (
 };
 
 export const instance = <T>(mock: Mock<T>): T => {
-  const repo = MockMap.get(mock);
+  const repo = MOCK_MAP.get(mock);
 
   if (!repo) {
     throw new MissingMock();

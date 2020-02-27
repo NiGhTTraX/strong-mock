@@ -1,4 +1,4 @@
-import { singletonPendingExpectation } from './pending-expectation';
+import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
 
 interface InvocationCount {
   /**
@@ -40,10 +40,10 @@ interface Stub<T> {
 export const when = <R>(expectation: R): Stub<R> => {
   return {
     returns(returnValue: R): InvocationCount {
-      const finishedExpectation = singletonPendingExpectation.finish(
+      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
         returnValue
       );
-      singletonPendingExpectation.clear();
+      SINGLETON_PENDING_EXPECTATION.clear();
 
       return {
         between: (min, max) => {

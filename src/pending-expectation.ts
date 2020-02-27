@@ -51,4 +51,4 @@ export class PendingExpectation {
   }
 }
 
-export const singletonPendingExpectation = new PendingExpectation();
+export const SINGLETON_PENDING_EXPECTATION = new PendingExpectation();

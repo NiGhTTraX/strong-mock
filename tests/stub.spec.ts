@@ -3,7 +3,7 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { Expectation } from '../src/expectation';
 import { ApplyProp, createStub } from '../src/mock';
-import { singletonPendingExpectation } from '../src/pending-expectation';
+import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
 
 describe('createStub', () => {
@@ -19,7 +19,7 @@ describe('createStub', () => {
 
     stub(1, 2, 3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
   });
@@ -30,7 +30,7 @@ describe('createStub', () => {
 
     stub.call(null, 1, 2, 3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
   });
@@ -41,7 +41,7 @@ describe('createStub', () => {
 
     stub.apply(null, [1, 2, 3]);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
   });
@@ -52,7 +52,7 @@ describe('createStub', () => {
 
     Reflect.apply(stub, null, [1, 2, 3]);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
   });
@@ -63,7 +63,7 @@ describe('createStub', () => {
 
     stub.bind(null, 1, 2)(3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
   });
@@ -74,7 +74,7 @@ describe('createStub', () => {
 
     stub.bar(1, 2, 3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
   });
@@ -85,7 +85,7 @@ describe('createStub', () => {
 
     stub.bar.call(null, 1, 2, 3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
   });
@@ -96,7 +96,7 @@ describe('createStub', () => {
 
     stub.bar.apply(null, [1, 2, 3]);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
   });
@@ -107,7 +107,7 @@ describe('createStub', () => {
 
     stub.bar.bind(null, 1, 2)(3);
 
-    singletonPendingExpectation.finish(23);
+    SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
   });
