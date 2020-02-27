@@ -5,11 +5,27 @@ import { Expectation } from './expectations';
 export class ExpectationRepository {
   private repo: Expectation[] = [];
 
-  addExpectation(expectation: Expectation) {
+  /**
+   * Add expectation to the end of the repo.
+   */
+  add(expectation: Expectation) {
     this.repo.push(expectation);
   }
 
-  findMatchingExpectation(
+  /**
+   * Remove the given expectation from the repo.
+   * @param expectation
+   */
+  remove(expectation: Expectation) {
+    this.repo = this.repo.filter(e => e !== expectation);
+  }
+
+  /**
+   * Find the first matching expectation.
+   *
+   * @returns If nothing matches will return `undefined`.
+   */
+  findFirst(
     args: any[] | undefined,
     property: string
   ): Expectation | undefined {
@@ -18,17 +34,20 @@ export class ExpectationRepository {
     );
   }
 
-  getMatchingExpectation(args: any[], property: string): Expectation {
-    const expectationIndex = this.repo.findIndex(
-      e => e.property === property && this.compareArgs(e, args)
-    );
+  /**
+   * Get the first matching expectation.
+   *
+   * @throws If nothing matching will throw.
+   */
+  getFirst(args: any[], property: string): Expectation {
+    const expectation = this.findFirst(args, property);
 
-    if (expectationIndex === -1) {
+    if (!expectation) {
       throw new UnexpectedCall(property);
     }
 
-    const expectation = this.repo[expectationIndex];
-    this.repo.splice(expectationIndex, 1);
+    this.remove(expectation);
+
     return expectation;
   }
 
@@ -43,9 +62,5 @@ export class ExpectationRepository {
     }
 
     return e.args.every((a, i) => isEqual(a, args[i]));
-  }
-
-  remove(expectation: Expectation) {
-    this.repo = this.repo.filter(e => e !== expectation);
   }
 }

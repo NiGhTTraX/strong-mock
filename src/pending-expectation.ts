@@ -32,7 +32,7 @@ export class PendingExpectation {
       throw new MissingWhen();
     }
 
-    this._repo.addExpectation(
+    this._repo.add(
       new MethodExpectation(this._args, returnValue, this._property)
     );
 
