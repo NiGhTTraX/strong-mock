@@ -33,9 +33,9 @@ export class PendingExpectation {
     }
 
     const expectation = new Expectation(
+      this._property,
       this._args,
-      returnValue,
-      this._property
+      returnValue
     );
     this._repo.add(expectation);
 

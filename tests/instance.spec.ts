@@ -16,7 +16,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new Expectation([1], 2, ApplyProp));
+    repo.add(new Expectation(ApplyProp, [1], 2));
 
     expect(instance(mock)(1)).toEqual(2);
   });
@@ -27,7 +27,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new Expectation([1], 2, 'bar'));
+    repo.add(new Expectation('bar', [1], 2));
 
     expect(instance(mock).bar(1)).toEqual(2);
   });
@@ -38,7 +38,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new Expectation(undefined, 23, 'bar'));
+    repo.add(new Expectation('bar', undefined, 23));
 
     expect(instance(mock).bar).toEqual(23);
   });
@@ -52,14 +52,10 @@ describe('instance', () => {
     MockMap.set(mock, repo);
 
     repo.add(
-      new Expectation(
-        undefined,
-        (xArg: number) => {
-          x = xArg;
-          return 2;
-        },
-        'bar'
-      )
+      new Expectation('bar', undefined, (xArg: number) => {
+        x = xArg;
+        return 2;
+      })
     );
 
     expect(instance(mock).bar(1)).toEqual(2);
@@ -72,8 +68,8 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new Expectation([13], 23, 'bar'));
-    repo.add(new Expectation(undefined, () => 42, 'bar'));
+    repo.add(new Expectation('bar', [13], 23));
+    repo.add(new Expectation('bar', undefined, () => 42));
 
     expect(instance(mock).bar(-1)).toEqual(42);
     expect(instance(mock).bar(13)).toEqual(23);

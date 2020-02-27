@@ -20,6 +20,6 @@ describe('invocation count', () => {
       .returns(23)
       .between(2, 8);
 
-    expect(repo.expectation).toEqual(new Expectation([], 23, 'bar', 2, 8));
+    expect(repo.expectation).toEqual(new Expectation('bar', [], 23, 2, 8));
   });
 });
