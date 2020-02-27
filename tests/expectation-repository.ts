@@ -13,6 +13,10 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     return this.expectation;
   }
 
+  hasFor() {
+    return !!this.expectation;
+  }
+
   getUnmet() {
     return this.expectation ? [this.expectation] : [];
   }
@@ -29,6 +33,10 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
     return this.expectation;
   }
 
+  hasFor() {
+    return true;
+  }
+
   getUnmet() {
     return [this.expectation];
   }
@@ -39,6 +47,10 @@ export class EmptyRepository implements ExpectationRepository {
 
   find() {
     return undefined;
+  }
+
+  hasFor() {
+    return false;
   }
 
   getUnmet() {

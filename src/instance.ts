@@ -22,6 +22,10 @@ export const instance = <T>(mock: Mock<T>): T => {
 
   return createProxy<T>(repo, {
     property: property => {
+      if (!repo.hasFor(property)) {
+        throw new UnexpectedCall(property);
+      }
+
       const propertyExpectation = repo.find(undefined, property);
 
       if (propertyExpectation) {

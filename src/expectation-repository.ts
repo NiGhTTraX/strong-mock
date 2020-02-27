@@ -13,6 +13,11 @@ export interface ExpectationRepository {
   find(args: any[] | undefined, property: PropertyKey): Expectation | undefined;
 
   /**
+   * Does any expectation exist for the given property?
+   */
+  hasFor(property: PropertyKey): boolean;
+
+  /**
    * Get all remaining unmet expectations
    */
   getUnmet(): Expectation[];
@@ -41,6 +46,10 @@ export class FIFORepository implements ExpectationRepository {
     }
 
     return expectation;
+  }
+
+  hasFor(property: PropertyKey) {
+    return !!this.repo.find(e => e.property === property);
   }
 
   getUnmet() {
