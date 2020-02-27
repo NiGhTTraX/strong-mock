@@ -4,14 +4,14 @@ import { instance } from '../src';
 import { UnexpectedCall } from '../src/errors';
 import { Expectation } from '../src/expectation';
 import { FIFORepository } from '../src/expectation-repository';
-import { ApplyProp, strongMock } from '../src/mock';
+import { ApplyProp, mock } from '../src/mock';
 import { EmptyRepository } from './expectation-repository';
 
 // TODO: decouple tests from FIFORepository
 describe('instance', () => {
   it('should get matching expectation for apply', () => {
     const repo = new FIFORepository();
-    const fn = strongMock<(x: number) => number>(repo);
+    const fn = mock<(x: number) => number>(repo);
 
     repo.add(new Expectation(ApplyProp, [1], 2));
 
@@ -20,7 +20,7 @@ describe('instance', () => {
 
   it('should get matching expectation for method', () => {
     const repo = new FIFORepository();
-    const foo = strongMock<{ bar: (x: number) => number }>(repo);
+    const foo = mock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [1], 2));
 
@@ -29,7 +29,7 @@ describe('instance', () => {
 
   it('should get matching expectation for property', () => {
     const repo = new FIFORepository();
-    const foo = strongMock<{ bar: number }>(repo);
+    const foo = mock<{ bar: number }>(repo);
 
     repo.add(new Expectation('bar', undefined, 23));
 
@@ -38,21 +38,21 @@ describe('instance', () => {
 
   it('should throw if no expectation for property', () => {
     const repo = new EmptyRepository();
-    const foo = strongMock<{ bar: number }>(repo);
+    const foo = mock<{ bar: number }>(repo);
 
     expect(() => instance(foo).bar).toThrow(UnexpectedCall);
   });
 
   it('should throw if no expectation for method', () => {
     const repo = new EmptyRepository();
-    const foo = strongMock<{ bar: () => void }>(repo);
+    const foo = mock<{ bar: () => void }>(repo);
 
     expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
   });
 
   it('get matching expectation for property before method', () => {
     const repo = new FIFORepository();
-    const foo = strongMock<{ bar: (x: number) => number }>(repo);
+    const foo = mock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [13], 23));
     repo.add(new Expectation('bar', undefined, () => 42));

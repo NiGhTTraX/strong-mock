@@ -38,7 +38,7 @@ export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   });
 };
 
-export const strongMock = <T>(
+export const mock = <T>(
   repository: ExpectationRepository = new FIFORepository()
 ): Mock<T> => {
   const stub = createStub<T>(repository);

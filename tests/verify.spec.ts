@@ -1,6 +1,6 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { strongMock } from '../src';
+import { mock } from '../src';
 import { UnmetExpectation } from '../src/errors';
 import { Expectation } from '../src/expectation';
 import { ApplyProp } from '../src/mock';
@@ -15,14 +15,14 @@ describe('verifyAll', () => {
     const repo = new OneExistingExpectationRepository(
       new Expectation(ApplyProp, [], 23)
     );
-    const fn = strongMock<() => number>(repo);
+    const fn = mock<() => number>(repo);
 
     expect(() => verifyAll(fn)).toThrow(UnmetExpectation);
   });
 
   it('should not throw if all expectations met', () => {
     const repo = new EmptyRepository();
-    const fn = strongMock<() => number>(repo);
+    const fn = mock<() => number>(repo);
 
     expect(() => verifyAll(fn)).not.toThrow();
   });

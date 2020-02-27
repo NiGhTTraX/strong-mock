@@ -3,7 +3,7 @@ import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
-import { strongMock } from '../src/mock';
+import { mock } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 
 describe('when', () => {
@@ -12,13 +12,13 @@ describe('when', () => {
   });
 
   it('should do nothing without a chained return', () => {
-    const fn = strongMock<() => void>();
+    const fn = mock<() => void>();
 
     when(fn());
   });
 
   it('should throw if previous expectation is missing return', () => {
-    const fn = strongMock<() => void>();
+    const fn = mock<() => void>();
 
     when(fn());
 
@@ -26,7 +26,7 @@ describe('when', () => {
   });
 
   it('should set an expectation with no args and no return', () => {
-    const fn = strongMock<() => void>();
+    const fn = mock<() => void>();
 
     when(fn()).returns(undefined);
 
@@ -34,7 +34,7 @@ describe('when', () => {
   });
 
   it('should set an expectation with no args and a return', () => {
-    const fn = strongMock<() => number>();
+    const fn = mock<() => number>();
 
     when(fn()).returns(23);
 
@@ -42,11 +42,11 @@ describe('when', () => {
   });
 
   it('should allow to set an expectation at any time', () => {
-    const fn1 = strongMock<() => number>();
+    const fn1 = mock<() => number>();
 
     const { returns: returns1 } = when(fn1());
 
-    const fn2 = strongMock<() => number>();
+    const fn2 = mock<() => number>();
 
     returns1(1);
 
@@ -57,7 +57,7 @@ describe('when', () => {
   });
 
   it('should set multiple expectations with no args and a return', () => {
-    const fn = strongMock<() => number>();
+    const fn = mock<() => number>();
 
     when(fn()).returns(1);
     when(fn()).returns(2);
@@ -67,8 +67,8 @@ describe('when', () => {
   });
 
   it('should set single expectations on different mocks', () => {
-    const fn1 = strongMock<() => number>();
-    const fn2 = strongMock<() => number>();
+    const fn1 = mock<() => number>();
+    const fn2 = mock<() => number>();
 
     when(fn1()).returns(1);
     when(fn2()).returns(2);
@@ -79,8 +79,8 @@ describe('when', () => {
   });
 
   it('should set multiple expectations on different mocks', () => {
-    const fn1 = strongMock<() => number>();
-    const fn2 = strongMock<() => number>();
+    const fn1 = mock<() => number>();
+    const fn2 = mock<() => number>();
 
     when(fn1()).returns(1);
     when(fn2()).returns(3);
@@ -95,13 +95,13 @@ describe('when', () => {
   });
 
   it('should throw when no matching expectations', () => {
-    const fn = strongMock<() => void>();
+    const fn = mock<() => void>();
 
     expect(() => instance(fn)()).toThrow(UnexpectedCall);
   });
 
   it('should throw when after all expectations are met', () => {
-    const fn = strongMock<() => void>();
+    const fn = mock<() => void>();
 
     when(fn()).returns(undefined);
 
@@ -111,7 +111,7 @@ describe('when', () => {
   });
 
   it('should allow setting new expectations after previous are consumed', () => {
-    const fn = strongMock<() => number>();
+    const fn = mock<() => number>();
 
     when(fn()).returns(1);
     expect(instance(fn)()).toEqual(1);
@@ -121,7 +121,7 @@ describe('when', () => {
   });
 
   it('should let functions be called with .call and .apply', () => {
-    const fn = strongMock<(x: number, y: number) => number>();
+    const fn = mock<(x: number, y: number) => number>();
 
     when(fn(1, 2)).returns(3);
     when(fn(4, 5)).returns(6);
@@ -131,7 +131,7 @@ describe('when', () => {
   });
 
   it('should set expectation on .call', () => {
-    const fn = strongMock<(x: number, y: number) => number>();
+    const fn = mock<(x: number, y: number) => number>();
 
     when(fn.call(null, 1, 2)).returns(3);
 
@@ -139,7 +139,7 @@ describe('when', () => {
   });
 
   it('should set expectation on .apply', () => {
-    const fn = strongMock<(x: number, y: number) => number>();
+    const fn = mock<(x: number, y: number) => number>();
 
     when(fn.apply(null, [1, 2])).returns(3);
 
@@ -147,7 +147,7 @@ describe('when', () => {
   });
 
   it('should set expectations with args and return', () => {
-    const fn = strongMock<(x: number) => number>();
+    const fn = mock<(x: number) => number>();
 
     when(fn(1)).returns(23);
     when(fn(2)).returns(42);
@@ -159,7 +159,7 @@ describe('when', () => {
   });
 
   it('should set expectations with args and return', () => {
-    const fn = strongMock<(x: number) => number>();
+    const fn = mock<(x: number) => number>();
 
     const stub = when(fn(1));
 
@@ -174,7 +174,7 @@ describe('when', () => {
         bar(x: number): number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo.bar(1)).returns(23);
 
@@ -187,7 +187,7 @@ describe('when', () => {
         baz(x: number): number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo.bar(1)).returns(-1);
       when(foo.baz(1)).returns(-2);
@@ -202,7 +202,7 @@ describe('when', () => {
         bar(y: number): number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo(1)).returns(2);
       when(foo.bar(3)).returns(4);
@@ -216,7 +216,7 @@ describe('when', () => {
         bar: number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo.bar).returns(23);
 
@@ -230,7 +230,7 @@ describe('when', () => {
         [s]: number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo[s]).returns(23);
 
@@ -242,7 +242,7 @@ describe('when', () => {
         0: number;
       }
 
-      const foo = strongMock<Foo>();
+      const foo = mock<Foo>();
 
       when(foo[0]).returns(23);
 
