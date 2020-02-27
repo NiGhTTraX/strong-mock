@@ -34,7 +34,8 @@ interface InvocationCount {
 
 interface Stub<T> {
   // TODO: add resolves/rejects
-  // TODO; add throws
+  // TODO: add throws
+  // TODO: add calls
   returns(returnValue: T): InvocationCount;
 }
 

@@ -6,6 +6,8 @@ import {
 import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
 import { createProxy } from './proxy';
 
+// TODO: revert to the singleton MapMock because this has ugly implications
+// on the proxy getter and it doesn't enable verifyAll to verify all mocks
 export const repoHolder = Symbol('repo');
 
 export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
