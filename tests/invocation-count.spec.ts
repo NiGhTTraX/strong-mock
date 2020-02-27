@@ -1,6 +1,5 @@
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
-import { Expectation } from '../src/expectation';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
 
@@ -20,6 +19,7 @@ describe('invocation count', () => {
       .returns(23)
       .between(2, 8);
 
-    expect(repo.expectation).toEqual(new Expectation('bar', [], 23, 2, 8));
+    expect(repo.expectation?.min).toEqual(2);
+    expect(repo.expectation?.max).toEqual(8);
   });
 });
