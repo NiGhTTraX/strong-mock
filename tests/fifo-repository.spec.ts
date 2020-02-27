@@ -40,10 +40,11 @@ describe('FIFORepository', () => {
     expect(repository.find([1, 2, 3], ApplyProp)).toEqual(undefined);
   });
 
-  it('should return undefined when no matching expectation', () => {
+  it('should not return anything when no matching expectation', () => {
     const repository = new FIFORepository();
 
     expect(repository.find(undefined, ApplyProp)).toEqual(undefined);
+    expect(repository.getUnmet()).toHaveLength(0);
   });
 
   it('should keep consuming an expectation', () => {
