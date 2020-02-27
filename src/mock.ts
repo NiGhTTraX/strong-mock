@@ -5,6 +5,7 @@ import {
 import { singletonPendingExpectation } from './pending-expectation';
 import { createProxy } from './proxy';
 
+// TODO: camel case
 export const MockMap = new Map<Mock<unknown>, ExpectationRepository>();
 
 export type Mock<T> = T;

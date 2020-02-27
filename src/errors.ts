@@ -21,3 +21,5 @@ export class MissingMock extends Error {
     super(`This should never happen`);
   }
 }
+
+export class UnmetExpectation extends Error {}

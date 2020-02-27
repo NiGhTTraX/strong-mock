@@ -11,6 +11,11 @@ export interface ExpectationRepository {
    * Find the first matching expectation.
    */
   find(args: any[] | undefined, property: string): Expectation | undefined;
+
+  /**
+   * Get all remaining unmet expectations
+   */
+  getUnmet(): Expectation[];
 }
 
 /**
@@ -26,7 +31,7 @@ export class FIFORepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  find(args: any[] | undefined, property: string): Expectation | undefined {
+  find(args: any[] | undefined, property: string) {
     const expectation = this.repo.find(
       e => e.property === property && this.compareArgs(e, args)
     );
@@ -38,8 +43,12 @@ export class FIFORepository implements ExpectationRepository {
     return expectation;
   }
 
+  getUnmet() {
+    return this.repo;
+  }
+
   // eslint-disable-next-line class-methods-use-this
-  private compareArgs(e: Expectation, args: any[] | undefined) {
+  private compareArgs(e: Expectation, args: any[] | undefined): boolean {
     if (!args && !e.args) {
       return true;
     }
