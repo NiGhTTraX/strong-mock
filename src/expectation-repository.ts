@@ -15,10 +15,6 @@ export interface ExpectationRepository {
 
 /**
  * Expectations will be returned in the order they were added.
- *
- * Once an expectation is found it is immediately removed. If no matching
- * expectations are found then `find` will return `undefined`.
- * TODO: add invocation count
  */
 export class FIFORepository implements ExpectationRepository {
   private repo: Expectation[] = [];
@@ -36,7 +32,7 @@ export class FIFORepository implements ExpectationRepository {
     );
 
     if (expectation) {
-      this.remove(expectation);
+      this.consume(expectation);
     }
 
     return expectation;
@@ -55,7 +51,14 @@ export class FIFORepository implements ExpectationRepository {
     return e.args.every((a, i) => isEqual(a, args[i]));
   }
 
-  private remove(expectation: Expectation) {
-    this.repo = this.repo.filter(e => e !== expectation);
+  private consume(expectation: Expectation) {
+    // eslint-disable-next-line no-param-reassign
+    expectation.min--;
+    // eslint-disable-next-line no-param-reassign
+    expectation.max--;
+
+    if (expectation.max === 0) {
+      this.repo = this.repo.filter(e => e !== expectation);
+    }
   }
 }
