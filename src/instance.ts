@@ -6,7 +6,7 @@ import { createProxy } from './proxy';
 const returnOrThrow = (
   repo: ExpectationRepository,
   args: any[] | undefined,
-  property: string
+  property: PropertyKey
 ) => {
   const expectation = repo.find(args, property);
 
@@ -21,7 +21,7 @@ export const instance = <T>(mock: Mock<T>): T => {
   const repo = getRepoForStub(mock);
 
   return createProxy<T>(repo, {
-    property: (property: string) => {
+    property: property => {
       const propertyExpectation = repo.find(undefined, property);
 
       if (propertyExpectation) {

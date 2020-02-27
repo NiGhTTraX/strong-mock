@@ -7,7 +7,7 @@ export class PendingExpectation {
 
   private _args: any[] | undefined;
 
-  private _property: string = '';
+  private _property: PropertyKey = '';
 
   start(repo: ExpectationRepository) {
     if (this._repo) {
@@ -19,7 +19,7 @@ export class PendingExpectation {
     this._repo = repo;
   }
 
-  set property(value: string) {
+  set property(value: PropertyKey) {
     this._property = value;
   }
 

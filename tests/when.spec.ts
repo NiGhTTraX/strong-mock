@@ -211,7 +211,7 @@ describe('when', () => {
       expect(instance(mock).bar(3)).toEqual(4);
     });
 
-    it('should set expectations on members', () => {
+    it('should set expectations on string members', () => {
       interface Foo {
         bar: number;
       }
@@ -221,6 +221,32 @@ describe('when', () => {
       when(mock.bar).returns(23);
 
       expect(instance(mock).bar).toEqual(23);
+    });
+
+    it('should set expectations on symbol members', () => {
+      const s = Symbol('s');
+
+      interface Foo {
+        [s]: number;
+      }
+
+      const mock = strongMock<Foo>();
+
+      when(mock[s]).returns(23);
+
+      expect(instance(mock)[s]).toEqual(23);
+    });
+
+    it('should set expectations on number members', () => {
+      interface Foo {
+        0: number;
+      }
+
+      const mock = strongMock<Foo>();
+
+      when(mock[0]).returns(23);
+
+      expect(instance(mock)[0]).toEqual(23);
     });
   });
 });

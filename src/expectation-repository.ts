@@ -10,7 +10,7 @@ export interface ExpectationRepository {
   /**
    * Find the first matching expectation.
    */
-  find(args: any[] | undefined, property: string): Expectation | undefined;
+  find(args: any[] | undefined, property: PropertyKey): Expectation | undefined;
 
   /**
    * Get all remaining unmet expectations
@@ -31,7 +31,7 @@ export class FIFORepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  find(args: any[] | undefined, property: string) {
+  find(args: any[] | undefined, property: PropertyKey) {
     const expectation = this.repo.find(
       e => e.property === property && this.compareArgs(e, args)
     );

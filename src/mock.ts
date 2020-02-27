@@ -18,8 +18,7 @@ export const getRepoForStub = (stub: Mock<any>): ExpectationRepository => {
 
 export type Mock<T> = T;
 
-// TODO: make Symbol and support mocking symbols
-export const ApplyProp = '';
+export const ApplyProp = Symbol('apply');
 
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
   return createProxy<T>(repo, {

@@ -1,12 +1,12 @@
 import { ExpectationRepository } from './expectation-repository';
 import { Mock, repoHolder } from './mock';
 
-interface ProxyTraps {
+interface ProxyTraps<T> {
   /**
    * Called when accessing any property on an object, except for
    * `.call`, `.apply` and `.bind`.
    */
-  property: (property: string) => void;
+  property: (property: keyof T) => void;
 
   /**
    * Called when calling a function.
@@ -36,16 +36,12 @@ interface ProxyTraps {
 
 export const createProxy = <T>(
   repository: ExpectationRepository,
-  { apply, property }: ProxyTraps
+  { apply, property }: ProxyTraps<T>
 ): Mock<T> =>
   (new Proxy(() => {}, {
-    get: (target, prop: string | symbol) => {
+    get: (target, prop: keyof T) => {
       if (prop === repoHolder) {
         return repository;
-      }
-
-      if (typeof prop !== 'string') {
-        throw new Error('not supported');
       }
 
       if (prop === 'bind') {

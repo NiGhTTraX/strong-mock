@@ -6,8 +6,11 @@ import { EmptyRepository } from './expectation-repository';
 describe('proxy', () => {
   type Fn = (x: number, y: number, z: number) => void;
 
+  const xxx = Symbol('xxx');
+
   interface Foo {
     bar: Fn;
+    [xxx]: number;
   }
 
   it('should call on fn(...args)', () => {
@@ -97,7 +100,7 @@ describe('proxy', () => {
   });
 
   it('should call on foo.bar', () => {
-    let prop = '';
+    let prop;
 
     const proxy = createProxy<Foo>(new EmptyRepository(), {
       property: property => {
@@ -111,5 +114,40 @@ describe('proxy', () => {
     proxy.bar;
 
     expect(prop).toEqual('bar');
+  });
+
+  it('should call on foo[Symbol]', () => {
+    let prop;
+
+    const proxy = createProxy<Foo>(new EmptyRepository(), {
+      property: property => {
+        prop = property;
+      },
+      apply: () => {
+        throw new Error('should not be called');
+      }
+    });
+
+    proxy[xxx]++;
+
+    expect(prop).toEqual(xxx);
+  });
+
+  it('should call on foo[23]', () => {
+    let prop;
+
+    const proxy = createProxy<[1, 2, 3]>(new EmptyRepository(), {
+      property: property => {
+        prop = property;
+      },
+      apply: () => {
+        throw new Error('should not be called');
+      }
+    });
+
+    proxy[0]++;
+
+    // TODO: the returned key is a string, but the original is a number
+    expect(prop).toEqual('0');
   });
 });

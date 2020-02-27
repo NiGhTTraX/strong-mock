@@ -1,6 +1,6 @@
 export class Expectation {
   constructor(
-    public property: string,
+    public property: PropertyKey,
     public args: any[] | undefined,
     public returnValue: any,
     public min: number = 1,
