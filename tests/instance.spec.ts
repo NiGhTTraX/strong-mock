@@ -1,8 +1,8 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
+import { Expectation } from '../src/expectation';
 import { FIFORepository } from '../src/expectation-repository';
-import { MethodExpectation } from '../src/expectations';
 import { ApplyProp, MockMap, strongMock } from '../src/mock';
 
 describe('instance', () => {
@@ -16,7 +16,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new MethodExpectation([1], 2, ApplyProp));
+    repo.add(new Expectation([1], 2, ApplyProp));
 
     expect(instance(mock)(1)).toEqual(2);
   });
@@ -27,7 +27,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new MethodExpectation([1], 2, 'bar'));
+    repo.add(new Expectation([1], 2, 'bar'));
 
     expect(instance(mock).bar(1)).toEqual(2);
   });
@@ -38,7 +38,7 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new MethodExpectation(undefined, 23, 'bar'));
+    repo.add(new Expectation(undefined, 23, 'bar'));
 
     expect(instance(mock).bar).toEqual(23);
   });
@@ -52,7 +52,7 @@ describe('instance', () => {
     MockMap.set(mock, repo);
 
     repo.add(
-      new MethodExpectation(
+      new Expectation(
         undefined,
         (xArg: number) => {
           x = xArg;
@@ -72,8 +72,8 @@ describe('instance', () => {
 
     MockMap.set(mock, repo);
 
-    repo.add(new MethodExpectation([13], 23, 'bar'));
-    repo.add(new MethodExpectation(undefined, () => 42, 'bar'));
+    repo.add(new Expectation([13], 23, 'bar'));
+    repo.add(new Expectation(undefined, () => 42, 'bar'));
 
     expect(instance(mock).bar(-1)).toEqual(42);
     expect(instance(mock).bar(13)).toEqual(23);

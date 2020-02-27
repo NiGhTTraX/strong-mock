@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { MethodExpectation } from '../src/expectations';
+import { Expectation } from '../src/expectation';
 import { ApplyProp, createStub } from '../src/mock';
 import { singletonPendingExpectation } from '../src/pending-expectation';
 import { OneExpectationRepository } from './expectation-repository';
@@ -21,9 +21,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, ApplyProp)
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, ApplyProp));
   });
 
   it('should intercept fn.call(this, ...args)', () => {
@@ -34,9 +32,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, ApplyProp)
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, ApplyProp));
   });
 
   it('should intercept fn.apply(this, [...args])', () => {
@@ -47,9 +43,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, ApplyProp)
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, ApplyProp));
   });
 
   it('should intercept Reflect.apply(fn, this, [...args])', () => {
@@ -60,9 +54,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, ApplyProp)
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, ApplyProp));
   });
 
   it('should intercept fn.bind(this, ...args)', () => {
@@ -73,9 +65,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, ApplyProp)
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, ApplyProp));
   });
 
   it('should intercept foo.bar(...args)', () => {
@@ -86,9 +76,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, 'bar')
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, 'bar'));
   });
 
   it('should intercept foo.bar.call(this, ...args)', () => {
@@ -99,9 +87,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, 'bar')
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, 'bar'));
   });
 
   it('should intercept foo.bar.apply(this, [...args])', () => {
@@ -112,9 +98,7 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, 'bar')
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, 'bar'));
   });
 
   it('should intercept foo.bar.bind(this, ...args)', () => {
@@ -125,8 +109,6 @@ describe('createStub', () => {
 
     singletonPendingExpectation.finish(23);
 
-    expect(repo.expectation).toEqual(
-      new MethodExpectation([1, 2, 3], 23, 'bar')
-    );
+    expect(repo.expectation).toEqual(new Expectation([1, 2, 3], 23, 'bar'));
   });
 });

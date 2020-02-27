@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { Expectation } from './expectations';
+import { Expectation } from './expectation';
 
 export interface ExpectationRepository {
   /**

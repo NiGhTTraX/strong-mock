@@ -1,6 +1,6 @@
 import { MissingReturnValue, MissingWhen } from './errors';
+import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { Expectation, MethodExpectation } from './expectations';
 
 export class PendingExpectation {
   private _repo: ExpectationRepository | undefined;
@@ -32,7 +32,7 @@ export class PendingExpectation {
       throw new MissingWhen();
     }
 
-    const expectation = new MethodExpectation(
+    const expectation = new Expectation(
       this._args,
       returnValue,
       this._property

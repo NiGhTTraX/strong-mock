@@ -1,12 +1,4 @@
-export interface Expectation {
-  min: number;
-  max: number;
-  returnValue: any;
-  args?: any[];
-  property: string;
-}
-
-export class MethodExpectation implements Expectation {
+export class Expectation {
   constructor(
     // TODO: flip params
     public args: any[] | undefined,
