@@ -1,6 +1,21 @@
-import { MissingMock } from './errors';
+import { MissingMock, UnexpectedCall } from './errors';
+import { ExpectationRepository } from './expectation-repository';
 import { ApplyProp, Mock, MockMap } from './mock';
 import { createProxy } from './proxy';
+
+const returnOrThrow = (
+  repo: ExpectationRepository,
+  args: any[] | undefined,
+  property: string
+) => {
+  const expectation = repo.findFirst(args, property);
+
+  if (!expectation) {
+    throw new UnexpectedCall(property);
+  }
+
+  return expectation.returnValue;
+};
 
 export const instance = <T>(mock: Mock<T>): T => {
   const repo = MockMap.get(mock);
@@ -14,13 +29,13 @@ export const instance = <T>(mock: Mock<T>): T => {
       const propertyExpectation = repo.findFirst(undefined, property);
 
       if (propertyExpectation) {
-        repo.remove(propertyExpectation);
         return propertyExpectation.returnValue;
       }
 
-      return (...args: any[]) => repo.getFirst(args, property).returnValue;
+      return (...args: any[]) => returnOrThrow(repo, args, property);
     },
-    apply: (argArray: any | undefined) =>
-      repo.getFirst(argArray, ApplyProp).returnValue
+    apply: (argArray: any | undefined) => {
+      return returnOrThrow(repo, argArray, ApplyProp);
+    }
   });
 };

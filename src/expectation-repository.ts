@@ -29,9 +29,15 @@ export class ExpectationRepository {
     args: any[] | undefined,
     property: string
   ): Expectation | undefined {
-    return this.repo.find(
+    const expectation = this.repo.find(
       e => e.property === property && this.compareArgs(e, args)
     );
+
+    if (expectation) {
+      this.remove(expectation);
+    }
+
+    return expectation;
   }
 
   /**
