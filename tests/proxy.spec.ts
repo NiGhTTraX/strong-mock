@@ -1,6 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { createProxy } from '../src/proxy';
+import { EmptyRepository } from './expectation-repository';
 
 describe('proxy', () => {
   type Fn = (x: number, y: number, z: number) => void;
@@ -12,7 +13,7 @@ describe('proxy', () => {
   it('should call on fn(...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>({
+    const proxy = createProxy<Fn>(new EmptyRepository(), {
       property: () => {
         throw new Error('should not be called');
       },
@@ -29,7 +30,7 @@ describe('proxy', () => {
   it('should call on fn.call(this, ...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>({
+    const proxy = createProxy<Fn>(new EmptyRepository(), {
       property: () => {
         throw new Error('should not be called');
       },
@@ -46,7 +47,7 @@ describe('proxy', () => {
   it('should call on fn.apply(this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>({
+    const proxy = createProxy<Fn>(new EmptyRepository(), {
       property: () => {
         throw new Error('should not be called');
       },
@@ -63,7 +64,7 @@ describe('proxy', () => {
   it('should call on Reflect.apply(fn, this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>({
+    const proxy = createProxy<Fn>(new EmptyRepository(), {
       property: () => {
         throw new Error('should not be called');
       },
@@ -80,7 +81,7 @@ describe('proxy', () => {
   it('should call after binding', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>({
+    const proxy = createProxy<Fn>(new EmptyRepository(), {
       property: () => {
         throw new Error('should not be called');
       },
@@ -98,7 +99,7 @@ describe('proxy', () => {
   it('should call on foo.bar', () => {
     let prop = '';
 
-    const proxy = createProxy<Foo>({
+    const proxy = createProxy<Foo>(new EmptyRepository(), {
       property: property => {
         prop = property;
       },

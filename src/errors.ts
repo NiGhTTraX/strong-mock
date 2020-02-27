@@ -16,9 +16,9 @@ export class UnexpectedCall extends Error {
   }
 }
 
-export class MissingMock extends Error {
+export class NotAMock extends Error {
   constructor() {
-    super(`This should never happen`);
+    super(`This is not a mock`);
   }
 }
 

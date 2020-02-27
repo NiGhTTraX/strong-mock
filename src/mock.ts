@@ -1,3 +1,4 @@
+import { NotAMock } from './errors';
 import {
   ExpectationRepository,
   FIFORepository
@@ -5,7 +6,15 @@ import {
 import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
 import { createProxy } from './proxy';
 
-export const MOCK_MAP = new Map<Mock<unknown>, ExpectationRepository>();
+export const repoHolder = Symbol('repo');
+
+export const getRepoForStub = (stub: Mock<any>): ExpectationRepository => {
+  if (repoHolder in stub) {
+    return stub[repoHolder];
+  }
+
+  throw new NotAMock();
+};
 
 export type Mock<T> = T;
 
@@ -13,7 +22,7 @@ export type Mock<T> = T;
 export const ApplyProp = '';
 
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
-  return createProxy<T>({
+  return createProxy<T>(repo, {
     property: property => {
       SINGLETON_PENDING_EXPECTATION.start(repo);
       SINGLETON_PENDING_EXPECTATION.property = property;
@@ -35,7 +44,8 @@ export const strongMock = <T>(
 ): Mock<T> => {
   const stub = createStub<T>(repository);
 
-  MOCK_MAP.set(stub, repository);
+  // @ts-ignore
+  stub[repoHolder] = repository;
 
   return stub;
 };

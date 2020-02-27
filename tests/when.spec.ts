@@ -1,5 +1,5 @@
 import { expect } from 'tdd-buffet/expect/jest';
-import { afterEach, describe, it } from 'tdd-buffet/suite/node';
+import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
 import { instance } from '../src/instance';
@@ -7,7 +7,7 @@ import { strongMock } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 
 describe('when', () => {
-  afterEach(() => {
+  beforeEach(() => {
     SINGLETON_PENDING_EXPECTATION.clear();
   });
 

@@ -1,20 +1,15 @@
 import { expect } from 'tdd-buffet/expect/jest';
-import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
+import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { Expectation } from '../src/expectation';
 import { FIFORepository } from '../src/expectation-repository';
-import { ApplyProp, MOCK_MAP, strongMock } from '../src/mock';
+import { ApplyProp, strongMock } from '../src/mock';
 
+// TODO: decouple tests from FIFORepository
 describe('instance', () => {
-  beforeEach(() => {
-    MOCK_MAP.clear();
-  });
-
   it('get matching expectation for apply', () => {
-    const mock = strongMock<(x: number) => number>();
     const repo = new FIFORepository();
-
-    MOCK_MAP.set(mock, repo);
+    const mock = strongMock<(x: number) => number>(repo);
 
     repo.add(new Expectation(ApplyProp, [1], 2));
 
@@ -22,10 +17,8 @@ describe('instance', () => {
   });
 
   it('get matching expectation for method', () => {
-    const mock = strongMock<{ bar: (x: number) => number }>();
     const repo = new FIFORepository();
-
-    MOCK_MAP.set(mock, repo);
+    const mock = strongMock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [1], 2));
 
@@ -33,10 +26,8 @@ describe('instance', () => {
   });
 
   it('get matching expectation for property', () => {
-    const mock = strongMock<{ bar: number }>();
     const repo = new FIFORepository();
-
-    MOCK_MAP.set(mock, repo);
+    const mock = strongMock<{ bar: number }>(repo);
 
     repo.add(new Expectation('bar', undefined, 23));
 
@@ -44,12 +35,10 @@ describe('instance', () => {
   });
 
   it('get matching expectation for property method', () => {
-    const mock = strongMock<{ bar: (x: number) => number }>();
     const repo = new FIFORepository();
+    const mock = strongMock<{ bar: (x: number) => number }>(repo);
 
     let x = -1;
-
-    MOCK_MAP.set(mock, repo);
 
     repo.add(
       new Expectation('bar', undefined, (xArg: number) => {
@@ -63,10 +52,8 @@ describe('instance', () => {
   });
 
   it('get matching expectation for property before method', () => {
-    const mock = strongMock<{ bar: (x: number) => number }>();
     const repo = new FIFORepository();
-
-    MOCK_MAP.set(mock, repo);
+    const mock = strongMock<{ bar: (x: number) => number }>(repo);
 
     repo.add(new Expectation('bar', [13], 23));
     repo.add(new Expectation('bar', undefined, () => 42));
