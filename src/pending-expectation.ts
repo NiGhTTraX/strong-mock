@@ -51,4 +51,20 @@ export class PendingExpectation {
   }
 }
 
+/**
+ * Since `when()` doesn't receive the mock subject (because we can't make it
+ * consistently return it from `mock()`, `mock.bar` and `mock.ba()`) we need
+ * to store a global state for the currently active mock.
+ *
+ * We also want to throw in the following case:
+ *
+ * ```
+ * when(mock()) // forgot returns here
+ * when(mock()) // should throw
+ * ```
+ *
+ * For that reason we can't just store the currently active mock, but also
+ * whether we finished the expectation or not. We encode those 2 pieces of info
+ * in one variable - "pending expectation".
+ */
 export const SINGLETON_PENDING_EXPECTATION = new PendingExpectation();
