@@ -3,12 +3,12 @@ import { Expectation } from './expectation';
 
 export interface ExpectationRepository {
   /**
-   * Add expectation to the end of the repo.
+   * Add expectation to the repo.
    */
   add(expectation: Expectation): void;
 
   /**
-   * Find the first matching expectation and consume it.
+   * Find a matching expectation and consume it.
    */
   findAndConsume(
     args: any[] | undefined,
@@ -21,7 +21,7 @@ export interface ExpectationRepository {
   hasFor(property: PropertyKey): boolean;
 
   /**
-   * Get all remaining unmet expectations
+   * Get all remaining unmet expectations.
    */
   getUnmet(): Expectation[];
 }
