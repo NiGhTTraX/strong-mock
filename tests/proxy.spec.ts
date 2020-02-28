@@ -1,14 +1,13 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { createProxy } from '../src/proxy';
-import { EmptyRepository } from './expectation-repository';
 import { Bar, Fn, Foo, xxx } from './fixtures';
 
 describe('proxy', () => {
   it('should trap fn(...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>(new EmptyRepository(), {
+    const proxy = createProxy<Fn>({
       property: () => {
         throw new Error('should not be called');
       },
@@ -25,7 +24,7 @@ describe('proxy', () => {
   it('should trap fn.call(this, ...args)', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>(new EmptyRepository(), {
+    const proxy = createProxy<Fn>({
       property: () => {
         throw new Error('should not be called');
       },
@@ -42,7 +41,7 @@ describe('proxy', () => {
   it('should trap fn.apply(this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>(new EmptyRepository(), {
+    const proxy = createProxy<Fn>({
       property: () => {
         throw new Error('should not be called');
       },
@@ -59,7 +58,7 @@ describe('proxy', () => {
   it('should trap Reflect.apply(fn, this, [...args])', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>(new EmptyRepository(), {
+    const proxy = createProxy<Fn>({
       property: () => {
         throw new Error('should not be called');
       },
@@ -76,7 +75,7 @@ describe('proxy', () => {
   it('should trap binding', () => {
     let args: number[] = [];
 
-    const proxy = createProxy<Fn>(new EmptyRepository(), {
+    const proxy = createProxy<Fn>({
       property: () => {
         throw new Error('should not be called');
       },
@@ -94,7 +93,7 @@ describe('proxy', () => {
   it('should trap foo.bar', () => {
     let prop;
 
-    const proxy = createProxy<Foo>(new EmptyRepository(), {
+    const proxy = createProxy<Foo>({
       property: property => {
         prop = property;
       },
@@ -111,7 +110,7 @@ describe('proxy', () => {
   it('should trap foo[Symbol]', () => {
     let prop;
 
-    const proxy = createProxy<Bar>(new EmptyRepository(), {
+    const proxy = createProxy<Bar>({
       property: property => {
         prop = property;
       },
@@ -128,7 +127,7 @@ describe('proxy', () => {
   it('should trap foo[23]', () => {
     let prop;
 
-    const proxy = createProxy<[1, 2, 3]>(new EmptyRepository(), {
+    const proxy = createProxy<[1, 2, 3]>({
       property: property => {
         prop = property;
       },

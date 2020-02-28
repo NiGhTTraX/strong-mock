@@ -6,24 +6,22 @@ import {
 import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
 import { createProxy } from './proxy';
 
-// TODO: revert to the singleton MapMock because this has ugly implications
-// on the proxy getter and it doesn't enable verifyAll to verify all mocks
-export const repoHolder = Symbol('repo');
+export type Mock<T> = T;
+
+export const mockMap = new Map<Mock<any>, ExpectationRepository>();
 
 export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
-  if (repoHolder in mock) {
-    return mock[repoHolder];
+  if (mockMap.has(mock)) {
+    return mockMap.get(mock)!;
   }
 
   throw new NotAMock();
 };
 
-export type Mock<T> = T;
-
 export const ApplyProp = Symbol('apply');
 
 export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
-  return createProxy<T>(repo, {
+  return createProxy<T>({
     property: property => {
       SINGLETON_PENDING_EXPECTATION.start(repo);
       SINGLETON_PENDING_EXPECTATION.property = property;
@@ -45,8 +43,7 @@ export const mock = <T>(
 ): Mock<T> => {
   const stub = createStub<T>(repository);
 
-  // @ts-ignore
-  stub[repoHolder] = repository;
+  mockMap.set(stub, repository);
 
   return stub;
 };

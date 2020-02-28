@@ -20,7 +20,7 @@ const returnOrThrow = (
 export const instance = <T>(mock: Mock<T>): T => {
   const repo = getRepoForMock(mock);
 
-  return createProxy<T>(repo, {
+  return createProxy<T>({
     property: property => {
       if (!repo.hasFor(property)) {
         throw new UnexpectedCall(property);

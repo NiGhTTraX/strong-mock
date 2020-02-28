@@ -1,5 +1,4 @@
-import { ExpectationRepository } from './expectation-repository';
-import { Mock, repoHolder } from './mock';
+import { Mock } from './mock';
 
 interface ProxyTraps<T> {
   /**
@@ -34,16 +33,9 @@ interface ProxyTraps<T> {
   apply: (args: any[]) => void;
 }
 
-export const createProxy = <T>(
-  repository: ExpectationRepository,
-  { apply, property }: ProxyTraps<T>
-): Mock<T> =>
+export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
   (new Proxy(() => {}, {
     get: (target, prop: keyof T) => {
-      if (prop === repoHolder) {
-        return repository;
-      }
-
       if (prop === 'bind') {
         return (thisArg: any, ...args: any[]) => {
           return (...moreArgs: any[]) => apply([...args, ...moreArgs]);
