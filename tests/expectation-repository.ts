@@ -20,6 +20,10 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   getUnmet() {
     return this.expectation ? [this.expectation] : [];
   }
+
+  clear(): void {
+    this.expectation = undefined;
+  }
 }
 
 export class OneExistingExpectationRepository implements ExpectationRepository {
@@ -40,6 +44,10 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
   getUnmet() {
     return [this.expectation];
   }
+
+  clear(): void {
+    throw new Error('not supported');
+  }
 }
 
 export class EmptyRepository implements ExpectationRepository {
@@ -56,4 +64,6 @@ export class EmptyRepository implements ExpectationRepository {
   getUnmet() {
     return [];
   }
+
+  clear(): void {}
 }

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 import { instance } from './instance';
 import { mock } from './mock';
-import { when } from './when';
+import { reset } from './reset';
 import { verifyAll } from './verify';
+import { when } from './when';
 
-// TODO: add reset()
-export { mock, when, instance, verifyAll };
+export { mock, when, instance, verifyAll, reset };

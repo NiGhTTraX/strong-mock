@@ -24,6 +24,8 @@ export interface ExpectationRepository {
    * Get all remaining unmet expectations.
    */
   getUnmet(): Expectation[];
+
+  clear(): void;
 }
 
 /**
@@ -57,6 +59,10 @@ export class FIFORepository implements ExpectationRepository {
 
   getUnmet() {
     return this.repo;
+  }
+
+  clear(): void {
+    this.repo = [];
   }
 
   // TODO: add matchers
