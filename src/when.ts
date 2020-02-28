@@ -54,7 +54,7 @@ type NonPromiseStub<R> = {
 
 type Stub<T> = T extends Promise<infer U> ? PromiseStub<U> : NonPromiseStub<T>;
 
-function returnInvocationCount(expectation: Expectation): InvocationCount {
+const returnInvocationCount = (expectation: Expectation): InvocationCount => {
   /* eslint-disable no-param-reassign, no-multi-assign */
   return {
     between: (min, max) => {
@@ -80,70 +80,46 @@ function returnInvocationCount(expectation: Expectation): InvocationCount {
     }
   };
   /* eslint-enable no-param-reassign, no-multi-assign */
-}
+};
+
+const finishPendingExpectation = (returnValue: any) => {
+  const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(returnValue);
+  SINGLETON_PENDING_EXPECTATION.clear();
+
+  return returnInvocationCount(finishedExpectation);
+};
+
+const getError = (errorOrMessage: Error | string | undefined) => {
+  if (typeof errorOrMessage === 'string') {
+    return new Error(errorOrMessage);
+  }
+
+  if (errorOrMessage instanceof Error) {
+    return errorOrMessage;
+  }
+
+  return new Error();
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: R): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
-    returns(returnValue: any): InvocationCount {
-      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
-        returnValue
-      );
-      SINGLETON_PENDING_EXPECTATION.clear();
+    returns: (returnValue: any): InvocationCount =>
+      finishPendingExpectation(returnValue),
 
-      return returnInvocationCount(finishedExpectation);
-    },
-
-    throws(errorOrMessage?: Error | string): InvocationCount {
-      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
-        // eslint-disable-next-line no-nested-ternary
-        typeof errorOrMessage === 'string'
-          ? new Error(errorOrMessage)
-          : errorOrMessage instanceof Error
-          ? errorOrMessage
-          : new Error()
-      );
-      SINGLETON_PENDING_EXPECTATION.clear();
-
-      return returnInvocationCount(finishedExpectation);
-    }
+    throws: (errorOrMessage?: Error | string): InvocationCount =>
+      finishPendingExpectation(getError(errorOrMessage))
   };
 
   const promiseStub: PromiseStub<any> = {
-    // TODO: reduce duplication
-    returns(returnValue: Promise<any>): InvocationCount {
-      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
-        returnValue
-      );
-      SINGLETON_PENDING_EXPECTATION.clear();
+    returns: (returnValue: Promise<any>): InvocationCount =>
+      finishPendingExpectation(returnValue),
 
-      return returnInvocationCount(finishedExpectation);
-    },
+    resolves: (returnValue: any): InvocationCount =>
+      finishPendingExpectation(Promise.resolve(returnValue)),
 
-    resolves(returnValue: any): InvocationCount {
-      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
-        Promise.resolve(returnValue)
-      );
-      SINGLETON_PENDING_EXPECTATION.clear();
-
-      return returnInvocationCount(finishedExpectation);
-    },
-
-    rejects(errorOrMessage?: Error | string): InvocationCount {
-      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
-        Promise.reject(
-          // eslint-disable-next-line no-nested-ternary
-          typeof errorOrMessage === 'string'
-            ? new Error(errorOrMessage)
-            : errorOrMessage instanceof Error
-            ? errorOrMessage
-            : new Error()
-        )
-      );
-      SINGLETON_PENDING_EXPECTATION.clear();
-
-      return returnInvocationCount(finishedExpectation);
-    }
+    rejects: (errorOrMessage?: Error | string): InvocationCount =>
+      finishPendingExpectation(Promise.reject(getError(errorOrMessage)))
   };
 
   // @ts-ignore
