@@ -168,6 +168,31 @@ describe('when', () => {
     expect(() => stub.returns(3)).toThrow(MissingWhen);
   });
 
+  it('should set expectation with custom error', () => {
+    const fn = mock<() => {}>();
+    const error = new Error();
+
+    when(fn()).throws(error);
+
+    expect(() => instance(fn)()).toThrow(error);
+  });
+
+  it('should set expectation with error message', () => {
+    const fn = mock<() => {}>();
+
+    when(fn()).throws('foobar');
+
+    expect(() => instance(fn)()).toThrow('foobar');
+  });
+
+  it('should set expectation with empty error', () => {
+    const fn = mock<() => {}>();
+
+    when(fn()).throws();
+
+    expect(() => instance(fn)()).toThrow('');
+  });
+
   describe('interface', () => {
     it('should set expectation on one method', () => {
       interface Foo {

@@ -1,3 +1,4 @@
+import { Expectation } from './expectation';
 import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
 
 interface InvocationCount {
@@ -34,9 +35,42 @@ interface InvocationCount {
 
 interface Stub<T> {
   // TODO: add resolves/rejects
-  // TODO: add throws
   // TODO: add calls
   returns(returnValue: T): InvocationCount;
+
+  throws(error: Error): InvocationCount;
+
+  throws(message: string): InvocationCount;
+
+  throws(): InvocationCount;
+}
+
+function returnInvocationCount(expectation: Expectation): InvocationCount {
+  /* eslint-disable no-param-reassign, no-multi-assign */
+  return {
+    between: (min, max) => {
+      expectation.min = min;
+      expectation.max = max;
+    },
+    times: exact => {
+      expectation.min = expectation.max = exact;
+    },
+    atLeast(min: number): void {
+      expectation.min = min;
+      expectation.max = Infinity;
+    },
+    atMost(max: number): void {
+      expectation.min = 0;
+      expectation.max = max;
+    },
+    once(): void {
+      expectation.min = expectation.max = 1;
+    },
+    twice(): void {
+      expectation.min = expectation.max = 2;
+    }
+  };
+  /* eslint-enable no-param-reassign, no-multi-assign */
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
@@ -48,32 +82,21 @@ export const when = <R>(expectation: R): Stub<R> => {
       );
       SINGLETON_PENDING_EXPECTATION.clear();
 
-      return {
-        between: (min, max) => {
-          finishedExpectation.min = min;
-          finishedExpectation.max = max;
-        },
-        times: exact => {
-          // eslint-disable-next-line no-multi-assign
-          finishedExpectation.min = finishedExpectation.max = exact;
-        },
-        atLeast(min: number): void {
-          finishedExpectation.min = min;
-          finishedExpectation.max = Infinity;
-        },
-        atMost(max: number): void {
-          finishedExpectation.min = 0;
-          finishedExpectation.max = max;
-        },
-        once(): void {
-          // eslint-disable-next-line no-multi-assign
-          finishedExpectation.min = finishedExpectation.max = 1;
-        },
-        twice(): void {
-          // eslint-disable-next-line no-multi-assign
-          finishedExpectation.min = finishedExpectation.max = 2;
-        }
-      };
+      return returnInvocationCount(finishedExpectation);
+    },
+
+    throws(errorOrMessage?: Error | string): InvocationCount {
+      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
+        // eslint-disable-next-line no-nested-ternary
+        typeof errorOrMessage === 'string'
+          ? new Error(errorOrMessage)
+          : errorOrMessage instanceof Error
+          ? errorOrMessage
+          : new Error()
+      );
+      SINGLETON_PENDING_EXPECTATION.clear();
+
+      return returnInvocationCount(finishedExpectation);
     }
   };
 };

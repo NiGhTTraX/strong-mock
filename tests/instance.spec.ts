@@ -60,4 +60,34 @@ describe('instance', () => {
     expect(instance(foo).bar(-1)).toEqual(42);
     expect(instance(foo).bar(13)).toEqual(23);
   });
+
+  it('should throw error for function', () => {
+    const repo = new FIFORepository();
+    const foo = mock<() => void>(repo);
+
+    const error = new Error();
+    repo.add(new Expectation(ApplyProp, [], error));
+
+    expect(() => instance(foo)()).toThrow(error);
+  });
+
+  it('should throw error for method', () => {
+    const repo = new FIFORepository();
+    const foo = mock<{ bar: () => void }>(repo);
+
+    const error = new Error();
+    repo.add(new Expectation('bar', [], error));
+
+    expect(() => instance(foo).bar()).toThrow(error);
+  });
+
+  it('should throw error for property', () => {
+    const repo = new FIFORepository();
+    const foo = mock<{ bar: number }>(repo);
+
+    const error = new Error();
+    repo.add(new Expectation('bar', undefined, error));
+
+    expect(() => instance(foo).bar).toThrow(error);
+  });
 });

@@ -1,9 +1,20 @@
 import { UnexpectedCall } from './errors';
+import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { ApplyProp, getRepoForMock, Mock } from './mock';
 import { createProxy } from './proxy';
 
-const returnOrThrow = (
+const returnOrThrow = (expectation: Expectation) => {
+  const { returnValue } = expectation;
+
+  if (returnValue instanceof Error) {
+    throw returnValue;
+  }
+
+  return returnValue;
+};
+
+const findAndReturn = (
   repo: ExpectationRepository,
   args: any[] | undefined,
   property: PropertyKey
@@ -14,7 +25,7 @@ const returnOrThrow = (
     throw new UnexpectedCall(property);
   }
 
-  return expectation.returnValue;
+  return returnOrThrow(expectation);
 };
 
 export const instance = <T>(mock: Mock<T>): T => {
@@ -29,13 +40,13 @@ export const instance = <T>(mock: Mock<T>): T => {
       const propertyExpectation = repo.findAndConsume(undefined, property);
 
       if (propertyExpectation) {
-        return propertyExpectation.returnValue;
+        return returnOrThrow(propertyExpectation);
       }
 
-      return (...args: any[]) => returnOrThrow(repo, args, property);
+      return (...args: any[]) => findAndReturn(repo, args, property);
     },
     apply: (argArray: any | undefined) => {
-      return returnOrThrow(repo, argArray, ApplyProp);
+      return findAndReturn(repo, argArray, ApplyProp);
     }
   });
 };
