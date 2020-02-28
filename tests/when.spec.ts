@@ -193,6 +193,31 @@ describe('when', () => {
     expect(() => instance(fn)()).toThrow('');
   });
 
+  it('should set expectation with promise', async () => {
+    const fn = mock<() => Promise<number>>();
+
+    when(fn()).resolves(23);
+
+    await expect(instance(fn)()).resolves.toEqual(23);
+  });
+
+  it('should set expectation with promise value', async () => {
+    const fn = mock<() => Promise<number>>();
+
+    when(fn()).returns(Promise.resolve(23));
+
+    await expect(instance(fn)()).resolves.toEqual(23);
+  });
+
+  it('should set expectation with promise rejection', async () => {
+    const fn = mock<() => Promise<number>>();
+
+    const error = new Error();
+    when(fn()).rejects(error);
+
+    await expect(instance(fn)()).rejects.toEqual(error);
+  });
+
   describe('interface', () => {
     it('should set expectation on one method', () => {
       interface Foo {

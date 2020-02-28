@@ -33,17 +33,26 @@ interface InvocationCount {
   twice(): void;
 }
 
-interface Stub<T> {
-  // TODO: add resolves/rejects
+type PromiseStub<R> = {
   // TODO: add calls
-  returns(returnValue: T): InvocationCount;
+  returns(returnValue: Promise<R>): InvocationCount;
+  resolves(returnValue: R): InvocationCount;
+
+  rejects(error: Error): InvocationCount;
+  rejects(message: string): InvocationCount;
+  rejects(): InvocationCount;
+};
+
+type NonPromiseStub<R> = {
+  // TODO: add calls
+  returns(returnValue: R): InvocationCount;
 
   throws(error: Error): InvocationCount;
-
   throws(message: string): InvocationCount;
-
   throws(): InvocationCount;
-}
+};
+
+type Stub<T> = T extends Promise<infer U> ? PromiseStub<U> : NonPromiseStub<T>;
 
 function returnInvocationCount(expectation: Expectation): InvocationCount {
   /* eslint-disable no-param-reassign, no-multi-assign */
@@ -75,8 +84,8 @@ function returnInvocationCount(expectation: Expectation): InvocationCount {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: R): Stub<R> => {
-  return {
-    returns(returnValue: R): InvocationCount {
+  const nonPromiseStub: NonPromiseStub<any> = {
+    returns(returnValue: any): InvocationCount {
       const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
         returnValue
       );
@@ -99,4 +108,44 @@ export const when = <R>(expectation: R): Stub<R> => {
       return returnInvocationCount(finishedExpectation);
     }
   };
+
+  const promiseStub: PromiseStub<any> = {
+    // TODO: reduce duplication
+    returns(returnValue: Promise<any>): InvocationCount {
+      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
+        returnValue
+      );
+      SINGLETON_PENDING_EXPECTATION.clear();
+
+      return returnInvocationCount(finishedExpectation);
+    },
+
+    resolves(returnValue: any): InvocationCount {
+      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
+        Promise.resolve(returnValue)
+      );
+      SINGLETON_PENDING_EXPECTATION.clear();
+
+      return returnInvocationCount(finishedExpectation);
+    },
+
+    rejects(errorOrMessage?: Error | string): InvocationCount {
+      const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(
+        Promise.reject(
+          // eslint-disable-next-line no-nested-ternary
+          typeof errorOrMessage === 'string'
+            ? new Error(errorOrMessage)
+            : errorOrMessage instanceof Error
+            ? errorOrMessage
+            : new Error()
+        )
+      );
+      SINGLETON_PENDING_EXPECTATION.clear();
+
+      return returnInvocationCount(finishedExpectation);
+    }
+  };
+
+  // @ts-ignore
+  return { ...nonPromiseStub, ...promiseStub };
 };
