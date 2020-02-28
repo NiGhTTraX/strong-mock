@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { createProxy } from '../src/proxy';
-import { Bar, Fn, Foo, xxx } from './fixtures';
+import { Bar, Fn, Foo, uniqueSymbol } from './fixtures';
 
 describe('proxy', () => {
   it('should trap fn(...args)', () => {
@@ -119,9 +119,9 @@ describe('proxy', () => {
       }
     });
 
-    proxy[xxx]++;
+    proxy[uniqueSymbol]++;
 
-    expect(prop).toEqual(xxx);
+    expect(prop).toEqual(uniqueSymbol);
   });
 
   it('should trap foo[23]', () => {

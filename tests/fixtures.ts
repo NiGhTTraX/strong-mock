@@ -4,10 +4,10 @@ export interface Foo {
   bar: Fn;
 }
 
-export const xxx = Symbol('xxx');
+export const uniqueSymbol = Symbol('xxx');
 
 export interface Bar {
-  [xxx]: number;
+  [uniqueSymbol]: number;
 }
 
 export interface Baz {
