@@ -9,7 +9,7 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     this.expectation = expectation;
   }
 
-  find() {
+  findAndConsume() {
     return this.expectation;
   }
 
@@ -29,7 +29,7 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
     throw new Error('not supported');
   }
 
-  find() {
+  findAndConsume() {
     return this.expectation;
   }
 
@@ -45,7 +45,7 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
 export class EmptyRepository implements ExpectationRepository {
   add() {}
 
-  find() {
+  findAndConsume() {
     return undefined;
   }
 

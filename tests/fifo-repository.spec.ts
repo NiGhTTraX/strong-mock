@@ -13,7 +13,7 @@ describe('FIFORepository', () => {
     repository.add(expectation1);
     repository.add(expectation2);
 
-    expect(repository.find(undefined, 'bar')).toEqual(expectation1);
+    expect(repository.findAndConsume(undefined, 'bar')).toEqual(expectation1);
   });
 
   it('should return the first matching expectation with args', () => {
@@ -25,7 +25,7 @@ describe('FIFORepository', () => {
     repository.add(expectation1);
     repository.add(expectation2);
 
-    expect(repository.find([1, 2, 3], 'bar')).toEqual(expectation1);
+    expect(repository.findAndConsume([1, 2, 3], 'bar')).toEqual(expectation1);
   });
 
   it('should completely consume an expectation', () => {
@@ -35,14 +35,14 @@ describe('FIFORepository', () => {
 
     repository.add(expectation);
 
-    expect(repository.find([1, 2, 3], 'bar')).toEqual(expectation);
-    expect(repository.find([1, 2, 3], 'bar')).toEqual(undefined);
+    expect(repository.findAndConsume([1, 2, 3], 'bar')).toEqual(expectation);
+    expect(repository.findAndConsume([1, 2, 3], 'bar')).toEqual(undefined);
   });
 
   it('should not return anything when no matching expectation', () => {
     const repository = new FIFORepository();
 
-    expect(repository.find(undefined, 'bar')).toEqual(undefined);
+    expect(repository.findAndConsume(undefined, 'bar')).toEqual(undefined);
     expect(repository.getUnmet()).toHaveLength(0);
   });
 
@@ -52,7 +52,7 @@ describe('FIFORepository', () => {
     const expectation = new Expectation('bar', undefined, 23, 0, Infinity);
     repository.add(expectation);
 
-    expect(repository.find(undefined, 'bar')).toEqual(expectation);
-    expect(repository.find(undefined, 'bar')).toEqual(expectation);
+    expect(repository.findAndConsume(undefined, 'bar')).toEqual(expectation);
+    expect(repository.findAndConsume(undefined, 'bar')).toEqual(expectation);
   });
 });

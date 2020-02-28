@@ -8,9 +8,12 @@ export interface ExpectationRepository {
   add(expectation: Expectation): void;
 
   /**
-   * Find the first matching expectation.
+   * Find the first matching expectation and consume it.
    */
-  find(args: any[] | undefined, property: PropertyKey): Expectation | undefined;
+  findAndConsume(
+    args: any[] | undefined,
+    property: PropertyKey
+  ): Expectation | undefined;
 
   /**
    * Does any expectation exist for the given property?
@@ -36,7 +39,7 @@ export class FIFORepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  find(args: any[] | undefined, property: PropertyKey) {
+  findAndConsume(args: any[] | undefined, property: PropertyKey) {
     const expectation = this.repo.find(
       e => e.property === property && this.compareArgs(e, args)
     );
