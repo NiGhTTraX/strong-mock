@@ -14,6 +14,7 @@ describe('createStub', () => {
 
     stub(1, 2, 3);
 
+    // TODO: inject a PendingExpectation in createStub
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
     expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));

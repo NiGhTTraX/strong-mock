@@ -65,7 +65,7 @@ export class FIFORepository implements ExpectationRepository {
     this.repo = [];
   }
 
-  // TODO: add matchers
+  // TODO: add matchers (should this be moved to Expectation?)
   // eslint-disable-next-line class-methods-use-this
   private compareArgs(e: Expectation, args: any[] | undefined): boolean {
     if (!args && !e.args) {
