@@ -1,108 +1,134 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { instance, mock, when } from '../src';
-import { UnexpectedCall } from '../src/errors';
+import { Expectation } from '../src/expectation';
+import { FIFORepository } from '../src/expectation-repository';
 
-describe('argument matching', () => {
+describe('FIFORepository argument matching', () => {
   it('should match primitives', () => {
-    const fn = mock<(x: number, y: string, z: boolean) => number>();
+    const repo = new FIFORepository();
 
-    when(fn(1, '2', true)).returns(23);
+    const expectation = new Expectation('bar', [1, '2', true], undefined);
+    repo.add(expectation);
 
-    expect(instance(fn)(1, '2', true)).toEqual(23);
+    expect(repo.findAndConsume([1, '2', true], 'bar')).toEqual(expectation);
   });
 
   it('should match objects', () => {
-    const fn = mock<(foo: { bar: { baz: number } }) => number>();
+    const repo = new FIFORepository();
 
-    when(
-      fn({
-        bar: { baz: 42 }
-      })
-    ).returns(23);
+    const expectation = new Expectation(
+      'bar',
+      [
+        {
+          bar: { baz: 42 }
+        }
+      ],
+      undefined
+    );
+    repo.add(expectation);
 
     expect(
-      instance(fn)({
-        bar: { baz: 42 }
-      })
-    ).toEqual(23);
+      repo.findAndConsume(
+        [
+          {
+            bar: { baz: 42 }
+          }
+        ],
+        'bar'
+      )
+    ).toEqual(expectation);
   });
 
   it('should match arrays', () => {
-    const fn = mock<(foo: number[]) => number>();
+    const repo = new FIFORepository();
 
-    when(fn([1, 2, 3])).returns(23);
+    const expectation = new Expectation('bar', [[1, 2, 3]], 23);
+    repo.add(expectation);
 
-    expect(instance(fn)([1, 2, 3])).toEqual(23);
+    expect(repo.findAndConsume([[1, 2, 3]], 'bar')).toEqual(expectation);
   });
 
-  it('should match arrays', () => {
-    const fn = mock<(foo: number[]) => number>();
+  it('should match deep arrays', () => {
+    const repo = new FIFORepository();
 
-    when(fn([1, 2, 3])).returns(23);
+    const expectation = new Expectation('bar', [[1, 2, [3, 4]]], 23);
+    repo.add(expectation);
 
-    expect(instance(fn)([1, 2, 3])).toEqual(23);
+    expect(repo.findAndConsume([[1, 2, [3, 4]]], 'bar')).toEqual(expectation);
   });
 
   it('should match sets', () => {
-    const fn = mock<(foo: Set<number>) => number>();
+    const repo = new FIFORepository();
 
-    when(fn(new Set([1, 2, 3]))).returns(23);
+    const expectation = new Expectation('bar', [new Set([1, 2, 3])], 23);
+    repo.add(expectation);
 
-    expect(instance(fn)(new Set([1, 2, 3]))).toEqual(23);
+    expect(repo.findAndConsume([new Set([1, 2, 3])], 'bar')).toEqual(
+      expectation
+    );
   });
 
   it('should match maps', () => {
-    const fn = mock<(foo: Map<number, boolean>) => number>();
+    const repo = new FIFORepository();
 
-    when(
-      fn(
+    const expectation = new Expectation(
+      'bar',
+      [
         new Map([
           [1, true],
           [2, false]
         ])
-      )
-    ).returns(23);
+      ],
+      23
+    );
+    repo.add(expectation);
 
     expect(
-      instance(fn)(
-        new Map([
-          [1, true],
-          [2, false]
-        ])
+      repo.findAndConsume(
+        [
+          new Map([
+            [1, true],
+            [2, false]
+          ])
+        ],
+        'bar'
       )
-    ).toEqual(23);
+    ).toEqual(expectation);
   });
 
   it('should match optional args against undefined', () => {
-    const fn = mock<(x?: number) => number>();
+    const repo = new FIFORepository();
 
-    when(fn(undefined)).returns(23);
+    const expectation = new Expectation('bar', [undefined], 23);
+    repo.add(expectation);
 
-    expect(instance(fn)()).toEqual(23);
-  });
-
-  it('should throw for expected optional arg', () => {
-    const fn = mock<(x?: number) => number>();
-
-    when(fn(23)).returns(23);
-
-    expect(() => instance(fn)()).toThrow(UnexpectedCall);
+    expect(repo.findAndConsume([], 'bar')).toEqual(expectation);
   });
 
   it('should match passed in optional args', () => {
-    const fn = mock<(x?: number) => number>();
+    const repo = new FIFORepository();
 
-    when(fn()).returns(23);
+    const expectation = new Expectation('bar', [], 23);
+    repo.add(expectation);
 
-    expect(instance(fn)(42)).toEqual(23);
+    expect(repo.findAndConsume([42], 'bar')).toEqual(expectation);
   });
 
-  it('should throw for expected undefined optional arg', () => {
-    const fn = mock<(x?: number) => number>();
+  it('should not match expected optional arg', () => {
+    const repo = new FIFORepository();
 
-    when(fn(undefined)).returns(23);
+    const expectation = new Expectation('bar', [23], 23);
+    repo.add(expectation);
 
-    expect(() => instance(fn)(42)).toThrow(UnexpectedCall);
+    expect(repo.findAndConsume([], 'bar')).toBeUndefined();
+  });
+
+  it('should not match expected undefined optional arg', () => {
+    const repo = new FIFORepository();
+
+    const expectation = new Expectation('bar', [undefined], 23);
+    repo.add(expectation);
+
+    expect(repo.findAndConsume([42], 'bar')).toBeUndefined();
   });
 });
