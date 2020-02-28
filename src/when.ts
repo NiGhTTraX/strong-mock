@@ -34,7 +34,6 @@ interface InvocationCount {
 }
 
 type PromiseStub<R> = {
-  // TODO: add calls
   returns(returnValue: Promise<R>): InvocationCount;
   resolves(returnValue: R): InvocationCount;
 
@@ -44,7 +43,6 @@ type PromiseStub<R> = {
 };
 
 type NonPromiseStub<R> = {
-  // TODO: add calls
   returns(returnValue: R): InvocationCount;
 
   throws(error: Error): InvocationCount;
