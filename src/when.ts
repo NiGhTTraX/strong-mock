@@ -55,25 +55,30 @@ type Stub<T> = T extends Promise<infer U> ? PromiseStub<U> : NonPromiseStub<T>;
 const returnInvocationCount = (expectation: Expectation): InvocationCount => {
   /* eslint-disable no-param-reassign, no-multi-assign */
   return {
-    between: (min, max) => {
+    between(min, max) {
       expectation.min = min;
       expectation.max = max;
     },
-    times: exact => {
+    /* istanbul ignore next */
+    times(exact) {
       expectation.min = expectation.max = exact;
     },
-    atLeast(min: number): void {
+    /* istanbul ignore next */
+    atLeast(min: number) {
       expectation.min = min;
       expectation.max = Infinity;
     },
-    atMost(max: number): void {
+    /* istanbul ignore next */
+    atMost(max: number) {
       expectation.min = 0;
       expectation.max = max;
     },
-    once(): void {
+    /* istanbul ignore next */
+    once() {
       expectation.min = expectation.max = 1;
     },
-    twice(): void {
+    /* istanbul ignore next */
+    twice() {
       expectation.min = expectation.max = 2;
     }
   };
@@ -102,8 +107,12 @@ const getError = (errorOrMessage: Error | string | undefined) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: R): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
-    returns: (returnValue: any): InvocationCount =>
-      finishPendingExpectation(returnValue),
+    returns: (returnValue: any): InvocationCount => {
+      // TODO: should probably fix this
+      /* istanbul ignore next: because it will be overridden by
+       * promiseStub and the types are compatible */
+      return finishPendingExpectation(returnValue);
+    },
 
     throws: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(getError(errorOrMessage))
@@ -120,6 +129,7 @@ export const when = <R>(expectation: R): Stub<R> => {
       finishPendingExpectation(Promise.reject(getError(errorOrMessage)))
   };
 
-  // @ts-ignore
+  // @ts-ignore TODO: because the return type is a conditional and
+  // we're doing something fishy here that TS doesn't like
   return { ...nonPromiseStub, ...promiseStub };
 };
