@@ -34,7 +34,7 @@ interface InvocationCount {
 }
 
 type PromiseStub<R> = {
-  returns(returnValue: Promise<R>): InvocationCount;
+  returns(promise: Promise<R>): InvocationCount;
   resolves(returnValue: R): InvocationCount;
 
   rejects(error: Error): InvocationCount;
@@ -119,8 +119,8 @@ export const when = <R>(expectation: R): Stub<R> => {
   };
 
   const promiseStub: PromiseStub<any> = {
-    returns: (returnValue: Promise<any>): InvocationCount =>
-      finishPendingExpectation(returnValue),
+    returns: (promise: Promise<any>): InvocationCount =>
+      finishPendingExpectation(promise),
 
     resolves: (returnValue: any): InvocationCount =>
       finishPendingExpectation(Promise.resolve(returnValue)),
