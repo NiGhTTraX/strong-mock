@@ -1,40 +1,8 @@
-import { Expectation } from './expectation';
+import { InvocationCount, returnInvocationCount } from './invocation-count';
 import {
   PendingExpectation,
   SINGLETON_PENDING_EXPECTATION
 } from './pending-expectation';
-
-interface InvocationCount {
-  /**
-   * `min` and `max` are inclusive.
-   */
-  between(min: number, max: number): void;
-
-  /**
-   * Shortcut for `between(exact, exact)`.
-   */
-  times(exact: number): void;
-
-  /**
-   * Shortcut for `between(min, Infinity)`.
-   */
-  atLeast(min: number): void;
-
-  /**
-   * Shortcut for `between(0, max)`.
-   */
-  atMost(max: number): void;
-
-  /**
-   * Shortcut for `times(1)`.
-   */
-  once(): void;
-
-  /**
-   * Shortcut for `times(2)`.
-   */
-  twice(): void;
-}
 
 type PromiseStub<R> = {
   returns(promise: Promise<R>): InvocationCount;
@@ -54,41 +22,6 @@ type NonPromiseStub<R> = {
 };
 
 type Stub<T> = T extends Promise<infer U> ? PromiseStub<U> : NonPromiseStub<T>;
-
-export const returnInvocationCount = (
-  expectation: Expectation
-): InvocationCount => {
-  /* eslint-disable no-param-reassign, no-multi-assign */
-  return {
-    between(min, max) {
-      expectation.min = min;
-      expectation.max = max;
-    },
-    /* istanbul ignore next */
-    times(exact) {
-      expectation.min = expectation.max = exact;
-    },
-    /* istanbul ignore next */
-    atLeast(min: number) {
-      expectation.min = min;
-      expectation.max = Infinity;
-    },
-    /* istanbul ignore next */
-    atMost(max: number) {
-      expectation.min = 0;
-      expectation.max = max;
-    },
-    /* istanbul ignore next */
-    once() {
-      expectation.min = expectation.max = 1;
-    },
-    /* istanbul ignore next */
-    twice() {
-      expectation.min = expectation.max = 2;
-    }
-  };
-  /* eslint-enable no-param-reassign, no-multi-assign */
-};
 
 export const finishPendingExpectation = (
   returnValue: any,
