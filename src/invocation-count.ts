@@ -32,44 +32,40 @@ export interface InvocationCount {
   twice(): void;
 }
 
-export class ExpectationInvocationCount implements InvocationCount {
-  constructor(private expectation: Expectation) {}
-
+export const createInvocationCount = (
+  expectation: Expectation
+): InvocationCount => ({
   /* eslint-disable no-param-reassign, no-multi-assign */
   between(min: number, max: number) {
-    this.expectation.min = min;
-    this.expectation.max = max;
-  }
+    expectation.min = min;
+    expectation.max = max;
+  },
 
   /* istanbul ignore next */
   times(exact: number) {
-    this.expectation.min = this.expectation.max = exact;
-  }
+    expectation.min = expectation.max = exact;
+  },
 
   /* istanbul ignore next */
   atLeast(min: number) {
-    this.expectation.min = min;
-    this.expectation.max = Infinity;
-  }
+    expectation.min = min;
+    expectation.max = Infinity;
+  },
 
   /* istanbul ignore next */
   atMost(max: number) {
-    this.expectation.min = 0;
-    this.expectation.max = max;
-  }
+    expectation.min = 0;
+    expectation.max = max;
+  },
 
   /* istanbul ignore next */
   once() {
-    this.expectation.min = this.expectation.max = 1;
-  }
+    expectation.min = expectation.max = 1;
+  },
 
   /* istanbul ignore next */
   twice() {
-    this.expectation.min = this.expectation.max = 2;
+    expectation.min = expectation.max = 2;
   }
   /* eslint-enable no-param-reassign, no-multi-assign */
-}
-
-export const returnInvocationCount = (
-  expectation: Expectation
-): InvocationCount => new ExpectationInvocationCount(expectation);
+});

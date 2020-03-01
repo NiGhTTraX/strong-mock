@@ -1,12 +1,12 @@
 import { describe, it } from 'tdd-buffet/suite/node';
-import { ExpectationInvocationCount } from '../src/invocation-count';
+import { createInvocationCount } from '../src/invocation-count';
 import { SpyExpectation } from './expectations';
 
 describe('invocation count', () => {
   it('should set the min and max', () => {
     const expectation = new SpyExpectation('bar', undefined, undefined);
 
-    const invocationCount = new ExpectationInvocationCount(expectation);
+    const invocationCount = createInvocationCount(expectation);
     invocationCount.between(2, 8);
 
     expect(expectation.min).toEqual(2);

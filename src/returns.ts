@@ -1,4 +1,4 @@
-import { InvocationCount, returnInvocationCount } from './invocation-count';
+import { InvocationCount, createInvocationCount } from './invocation-count';
 import { PendingExpectation } from './pending-expectation';
 
 type PromiseStub<R> = {
@@ -29,7 +29,7 @@ export const finishPendingExpectation = (
   const finishedExpectation = pendingExpectation.finish(returnValue);
   pendingExpectation.clear();
 
-  return returnInvocationCount(finishedExpectation);
+  return createInvocationCount(finishedExpectation);
 };
 
 const getError = (errorOrMessage: Error | string | undefined) => {
