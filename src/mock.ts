@@ -3,7 +3,10 @@ import {
   ExpectationRepository,
   FIFORepository
 } from './expectation-repository';
-import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
+import {
+  PendingExpectation,
+  SINGLETON_PENDING_EXPECTATION
+} from './pending-expectation';
 import { createProxy } from './proxy';
 
 export type Mock<T> = T;
@@ -20,20 +23,27 @@ export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
 
 export const ApplyProp = Symbol('apply');
 
-export const createStub = <T>(repo: ExpectationRepository): Mock<T> => {
+export const createStub = <T>(
+  repo: ExpectationRepository,
+  pendingExpectation: PendingExpectation = SINGLETON_PENDING_EXPECTATION
+): Mock<T> => {
   return createProxy<T>({
     property: property => {
-      SINGLETON_PENDING_EXPECTATION.start(repo);
-      SINGLETON_PENDING_EXPECTATION.property = property;
+      pendingExpectation.start(repo);
+      // eslint-disable-next-line no-param-reassign
+      pendingExpectation.property = property;
 
       return (...args: any[]) => {
-        SINGLETON_PENDING_EXPECTATION.args = args;
+        // eslint-disable-next-line no-param-reassign
+        pendingExpectation.args = args;
       };
     },
     apply: (args: any[]) => {
-      SINGLETON_PENDING_EXPECTATION.start(repo);
-      SINGLETON_PENDING_EXPECTATION.property = ApplyProp;
-      SINGLETON_PENDING_EXPECTATION.args = args;
+      pendingExpectation.start(repo);
+      // eslint-disable-next-line no-param-reassign
+      pendingExpectation.property = ApplyProp;
+      // eslint-disable-next-line no-param-reassign
+      pendingExpectation.args = args;
     }
   });
 };
