@@ -1,5 +1,8 @@
 import { Expectation } from './expectation';
-import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
+import {
+  PendingExpectation,
+  SINGLETON_PENDING_EXPECTATION
+} from './pending-expectation';
 
 interface InvocationCount {
   /**
@@ -85,9 +88,12 @@ const returnInvocationCount = (expectation: Expectation): InvocationCount => {
   /* eslint-enable no-param-reassign, no-multi-assign */
 };
 
-const finishPendingExpectation = (returnValue: any) => {
-  const finishedExpectation = SINGLETON_PENDING_EXPECTATION.finish(returnValue);
-  SINGLETON_PENDING_EXPECTATION.clear();
+export const finishPendingExpectation = (
+  returnValue: any,
+  pendingExpectation: PendingExpectation = SINGLETON_PENDING_EXPECTATION
+) => {
+  const finishedExpectation = pendingExpectation.finish(returnValue);
+  pendingExpectation.clear();
 
   return returnInvocationCount(finishedExpectation);
 };

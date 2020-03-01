@@ -1,25 +1,19 @@
-import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { when } from '../src';
-import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
+import { describe, it } from 'tdd-buffet/suite/node';
+import { PendingExpectation } from '../src/pending-expectation';
+import { finishPendingExpectation } from '../src/when';
 import { OneIncomingExpectationRepository } from './expectation-repository';
+import { XXX } from './expectations';
 
 describe('invocation count', () => {
-  beforeEach(() => {
-    SINGLETON_PENDING_EXPECTATION.clear();
-  });
+  it('should set the min and max', () => {
+    const expectation = new XXX('bar', undefined, undefined);
 
-  it('when should set the min and max', () => {
-    const repo = new OneIncomingExpectationRepository();
+    const pendingExpectation = new PendingExpectation(() => expectation);
+    pendingExpectation.start(new OneIncomingExpectationRepository());
 
-    SINGLETON_PENDING_EXPECTATION.start(repo);
-    SINGLETON_PENDING_EXPECTATION.property = 'bar';
-    SINGLETON_PENDING_EXPECTATION.args = [];
+    finishPendingExpectation(23, pendingExpectation).between(2, 8);
 
-    when(1)
-      .returns(23)
-      .between(2, 8);
-
-    expect(repo.expectation?.min).toEqual(2);
-    expect(repo.expectation?.max).toEqual(8);
+    expect(expectation.min).toEqual(2);
+    expect(expectation.max).toEqual(8);
   });
 });
