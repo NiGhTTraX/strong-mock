@@ -90,7 +90,7 @@ const returnInvocationCount = (expectation: Expectation): InvocationCount => {
 
 export const finishPendingExpectation = (
   returnValue: any,
-  pendingExpectation: PendingExpectation = SINGLETON_PENDING_EXPECTATION
+  pendingExpectation: PendingExpectation
 ) => {
   const finishedExpectation = pendingExpectation.finish(returnValue);
   pendingExpectation.clear();
@@ -110,32 +110,42 @@ const getError = (errorOrMessage: Error | string | undefined) => {
   return new Error();
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const when = <R>(expectation: R): Stub<R> => {
+const createReturn = <R>(pendingExpectation: PendingExpectation): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
     returns: (returnValue: any): InvocationCount => {
       // TODO: should probably fix this
       /* istanbul ignore next: because it will be overridden by
        * promiseStub and the types are compatible */
-      return finishPendingExpectation(returnValue);
+      return finishPendingExpectation(returnValue, pendingExpectation);
     },
 
     throws: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(getError(errorOrMessage))
+      finishPendingExpectation(getError(errorOrMessage), pendingExpectation)
   };
 
   const promiseStub: PromiseStub<any> = {
     returns: (promise: Promise<any>): InvocationCount =>
-      finishPendingExpectation(promise),
+      finishPendingExpectation(promise, pendingExpectation),
 
     resolves: (returnValue: any): InvocationCount =>
-      finishPendingExpectation(Promise.resolve(returnValue)),
+      finishPendingExpectation(
+        Promise.resolve(returnValue),
+        pendingExpectation
+      ),
 
     rejects: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(Promise.reject(getError(errorOrMessage)))
+      finishPendingExpectation(
+        Promise.reject(getError(errorOrMessage)),
+        pendingExpectation
+      )
   };
 
   // @ts-ignore TODO: because the return type is a conditional and
   // we're doing something fishy here that TS doesn't like
   return { ...nonPromiseStub, ...promiseStub };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+export const when = <R>(expectation: R): Stub<R> => {
+  return createReturn<R>(SINGLETON_PENDING_EXPECTATION);
 };
