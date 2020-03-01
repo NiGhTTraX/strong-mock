@@ -1,5 +1,5 @@
 import { MissingReturnValue, MissingWhen } from './errors';
-import { Expectation, DeepComparisonExpectation } from './expectation';
+import { DeepComparisonExpectation, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 
 export type ExpectationFactory = (
@@ -8,7 +8,19 @@ export type ExpectationFactory = (
   returnValue: any
 ) => Expectation;
 
-export class PendingExpectation {
+export interface PendingExpectation {
+  start(repo: ExpectationRepository): void;
+
+  finish(returnValue: any): Expectation;
+
+  clear(): void;
+
+  property: PropertyKey;
+
+  args: any[] | undefined;
+}
+
+export class SingletonPendingExpectation implements PendingExpectation {
   private _repo: ExpectationRepository | undefined;
 
   private _args: any[] | undefined;
@@ -75,7 +87,7 @@ export class PendingExpectation {
  * whether we finished the expectation or not. We encode those 2 pieces of info
  * in one variable - "pending expectation".
  */
-export const SINGLETON_PENDING_EXPECTATION = new PendingExpectation(
+export const SINGLETON_PENDING_EXPECTATION = new SingletonPendingExpectation(
   (property, args, returnValue) =>
     new DeepComparisonExpectation(property, args, returnValue)
 );

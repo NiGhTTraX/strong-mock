@@ -1,24 +1,17 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { ApplyProp, createStub } from '../src/mock';
-import {
-  ExpectationFactory,
-  PendingExpectation
-} from '../src/pending-expectation';
+import { SingletonPendingExpectation } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
-import { SpyExpectation } from './expectations';
+import { spyExpectationFactory } from './expectations';
 import { Fn, Foo } from './fixtures';
 
 describe('createStub', () => {
-  const expectationFactory: ExpectationFactory = (
-    property,
-    args,
-    returnValue
-  ) => new SpyExpectation(property, args, returnValue);
-
   it('should intercept fn(...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     stub(1, 2, 3);
@@ -32,7 +25,9 @@ describe('createStub', () => {
 
   it('should intercept fn.call(this, ...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     stub.call(null, 1, 2, 3);
@@ -46,7 +41,9 @@ describe('createStub', () => {
 
   it('should intercept fn.apply(this, [...args])', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     stub.apply(null, [1, 2, 3]);
@@ -60,7 +57,9 @@ describe('createStub', () => {
 
   it('should intercept Reflect.apply(fn, this, [...args])', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     Reflect.apply(stub, null, [1, 2, 3]);
@@ -74,7 +73,9 @@ describe('createStub', () => {
 
   it('should intercept fn.bind(this, ...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     stub.bind(null, 1, 2)(3);
@@ -88,7 +89,9 @@ describe('createStub', () => {
 
   it('should intercept foo.bar(...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Foo>(repo, pendingExpectation);
 
     stub.bar(1, 2, 3);
@@ -102,7 +105,9 @@ describe('createStub', () => {
 
   it('should intercept foo.bar.call(this, ...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Foo>(repo, pendingExpectation);
 
     stub.bar.call(null, 1, 2, 3);
@@ -116,7 +121,9 @@ describe('createStub', () => {
 
   it('should intercept foo.bar.apply(this, [...args])', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Foo>(repo, pendingExpectation);
 
     stub.bar.apply(null, [1, 2, 3]);
@@ -130,7 +137,9 @@ describe('createStub', () => {
 
   it('should intercept foo.bar.bind(this, ...args)', () => {
     const repo = new OneIncomingExpectationRepository();
-    const pendingExpectation = new PendingExpectation(expectationFactory);
+    const pendingExpectation = new SingletonPendingExpectation(
+      spyExpectationFactory
+    );
     const stub = createStub<Foo>(repo, pendingExpectation);
 
     stub.bar.bind(null, 1, 2)(3);

@@ -55,7 +55,9 @@ type NonPromiseStub<R> = {
 
 type Stub<T> = T extends Promise<infer U> ? PromiseStub<U> : NonPromiseStub<T>;
 
-const returnInvocationCount = (expectation: Expectation): InvocationCount => {
+export const returnInvocationCount = (
+  expectation: Expectation
+): InvocationCount => {
   /* eslint-disable no-param-reassign, no-multi-assign */
   return {
     between(min, max) {
@@ -110,7 +112,9 @@ const getError = (errorOrMessage: Error | string | undefined) => {
   return new Error();
 };
 
-const createReturn = <R>(pendingExpectation: PendingExpectation): Stub<R> => {
+export const createReturns = <R>(
+  pendingExpectation: PendingExpectation
+): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
     returns: (returnValue: any): InvocationCount => {
       // TODO: should probably fix this
@@ -147,5 +151,5 @@ const createReturn = <R>(pendingExpectation: PendingExpectation): Stub<R> => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: R): Stub<R> => {
-  return createReturn<R>(SINGLETON_PENDING_EXPECTATION);
+  return createReturns<R>(SINGLETON_PENDING_EXPECTATION);
 };
