@@ -2,12 +2,20 @@ import { MissingReturnValue, MissingWhen } from './errors';
 import { Expectation, DeepComparisonExpectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 
+export type ExpectationFactory = (
+  property: PropertyKey,
+  args: any[] | undefined,
+  returnValue: any
+) => Expectation;
+
 export class PendingExpectation {
   private _repo: ExpectationRepository | undefined;
 
   private _args: any[] | undefined;
 
   private _property: PropertyKey = '';
+
+  constructor(private createExpectation: ExpectationFactory) {}
 
   start(repo: ExpectationRepository) {
     if (this._repo) {
@@ -32,8 +40,7 @@ export class PendingExpectation {
       throw new MissingWhen();
     }
 
-    // TODO: inject factory?
-    const expectation = new DeepComparisonExpectation(
+    const expectation = this.createExpectation(
       this._property,
       this._args,
       returnValue
@@ -68,4 +75,7 @@ export class PendingExpectation {
  * whether we finished the expectation or not. We encode those 2 pieces of info
  * in one variable - "pending expectation".
  */
-export const SINGLETON_PENDING_EXPECTATION = new PendingExpectation();
+export const SINGLETON_PENDING_EXPECTATION = new PendingExpectation(
+  (property, args, returnValue) =>
+    new DeepComparisonExpectation(property, args, returnValue)
+);
