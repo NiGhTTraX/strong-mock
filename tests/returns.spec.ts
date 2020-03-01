@@ -1,9 +1,9 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { createReturns } from '../src/when';
+import { createReturns } from '../src/returns';
 import { SpyPendingExpectation } from './expectations';
 
-describe('createReturns', () => {
+describe('returns', () => {
   it('should set a return value', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
