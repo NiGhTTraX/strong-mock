@@ -17,7 +17,7 @@ describe('when', () => {
     when(fn());
   });
 
-  it('should throw if previous expectation is missing return', () => {
+  it('should throw if previous expectation was not finished', () => {
     const fn = mock<() => void>();
 
     when(fn());
@@ -25,23 +25,7 @@ describe('when', () => {
     expect(() => when(fn())).toThrow(MissingReturnValue);
   });
 
-  it('should set an expectation with no args and no return', () => {
-    const fn = mock<() => void>();
-
-    when(fn()).returns(undefined);
-
-    expect(instance(fn)()).toBeUndefined();
-  });
-
-  it('should set an expectation with no args and a return', () => {
-    const fn = mock<() => number>();
-
-    when(fn()).returns(23);
-
-    expect(instance(fn)()).toEqual(23);
-  });
-
-  it('should allow to set an expectation at any time', () => {
+  it('should allow to set an expectation after another mock was created', () => {
     const fn1 = mock<() => number>();
 
     const { returns: returns1 } = when(fn1());
@@ -56,7 +40,17 @@ describe('when', () => {
     expect(instance(fn2)()).toEqual(2);
   });
 
-  it('should set multiple expectations with no args and a return', () => {
+  it('should throw when setting a return value without an expectation', () => {
+    const fn = mock<(x: number) => number>();
+
+    const stub = when(fn(1));
+
+    stub.returns(2);
+
+    expect(() => stub.returns(3)).toThrow(MissingWhen);
+  });
+
+  it('should set multiple expectations', () => {
     const fn = mock<() => number>();
 
     when(fn()).returns(1);
@@ -66,7 +60,7 @@ describe('when', () => {
     expect(instance(fn)()).toEqual(2);
   });
 
-  it('should set single expectations on different mocks', () => {
+  it('should set expectations on different mocks', () => {
     const fn1 = mock<() => number>();
     const fn2 = mock<() => number>();
 
@@ -78,29 +72,13 @@ describe('when', () => {
     expect(instance(fn1)()).toEqual(1);
   });
 
-  it('should set multiple expectations on different mocks', () => {
-    const fn1 = mock<() => number>();
-    const fn2 = mock<() => number>();
-
-    when(fn1()).returns(1);
-    when(fn2()).returns(3);
-    when(fn1()).returns(2);
-    when(fn2()).returns(4);
-
-    // Call in reverse order.
-    expect(instance(fn2)()).toEqual(3);
-    expect(instance(fn1)()).toEqual(1);
-    expect(instance(fn2)()).toEqual(4);
-    expect(instance(fn1)()).toEqual(2);
-  });
-
   it('should throw when no matching expectations', () => {
     const fn = mock<() => void>();
 
     expect(() => instance(fn)()).toThrow(UnexpectedCall);
   });
 
-  it('should throw when after all expectations are met', () => {
+  it('should throw after all expectations are met', () => {
     const fn = mock<() => void>();
 
     when(fn()).returns(undefined);
@@ -110,87 +88,13 @@ describe('when', () => {
     expect(() => instance(fn)()).toThrow(UnexpectedCall);
   });
 
-  it('should allow setting new expectations after previous are consumed', () => {
-    const fn = mock<() => number>();
-
-    when(fn()).returns(1);
-    expect(instance(fn)()).toEqual(1);
-
-    when(fn()).returns(2);
-    expect(instance(fn)()).toEqual(2);
-  });
-
-  it('should let functions be called with .call and .apply', () => {
-    const fn = mock<(x: number, y: number) => number>();
-
-    when(fn(1, 2)).returns(3);
-    when(fn(4, 5)).returns(6);
-
-    expect(instance(fn).apply(null, [1, 2])).toEqual(3);
-    expect(instance(fn).call(null, 4, 5)).toEqual(6);
-  });
-
-  it('should set expectation on .call', () => {
-    const fn = mock<(x: number, y: number) => number>();
-
-    when(fn.call(null, 1, 2)).returns(3);
-
-    expect(instance(fn)(1, 2)).toEqual(3);
-  });
-
-  it('should set expectation on .apply', () => {
-    const fn = mock<(x: number, y: number) => number>();
-
-    when(fn.apply(null, [1, 2])).returns(3);
-
-    expect(instance(fn)(1, 2)).toEqual(3);
-  });
-
-  it('should set expectations with args and return', () => {
-    const fn = mock<(x: number) => number>();
-
-    when(fn(1)).returns(23);
-    when(fn(2)).returns(42);
-    when(fn(3)).returns(99);
-
-    expect(instance(fn)(2)).toEqual(42);
-    expect(instance(fn)(1)).toEqual(23);
-    expect(instance(fn)(3)).toEqual(99);
-  });
-
-  it('should set expectations with args and return', () => {
-    const fn = mock<(x: number) => number>();
-
-    const stub = when(fn(1));
-
-    stub.returns(2);
-
-    expect(() => stub.returns(3)).toThrow(MissingWhen);
-  });
-
-  it('should set expectation with custom error', () => {
+  it('should set expectation to throw', () => {
     const fn = mock<() => {}>();
     const error = new Error();
 
     when(fn()).throws(error);
 
     expect(() => instance(fn)()).toThrow(error);
-  });
-
-  it('should set expectation with error message', () => {
-    const fn = mock<() => {}>();
-
-    when(fn()).throws('foobar');
-
-    expect(() => instance(fn)()).toThrow('foobar');
-  });
-
-  it('should set expectation with empty error', () => {
-    const fn = mock<() => {}>();
-
-    when(fn()).throws();
-
-    expect(() => instance(fn)()).toThrow('');
   });
 
   it('should set expectation with promise', async () => {
@@ -201,25 +105,8 @@ describe('when', () => {
     await expect(instance(fn)()).resolves.toEqual(23);
   });
 
-  it('should set expectation with promise value', async () => {
-    const fn = mock<() => Promise<number>>();
-
-    when(fn()).returns(Promise.resolve(23));
-
-    await expect(instance(fn)()).resolves.toEqual(23);
-  });
-
-  it('should set expectation with promise rejection', async () => {
-    const fn = mock<() => Promise<number>>();
-
-    const error = new Error();
-    when(fn()).rejects(error);
-
-    await expect(instance(fn)()).rejects.toEqual(error);
-  });
-
   describe('interface', () => {
-    it('should set expectation on one method', () => {
+    it('should set expectation on method', () => {
       interface Foo {
         bar(x: number): number;
       }
@@ -231,37 +118,7 @@ describe('when', () => {
       expect(instance(foo).bar(1)).toEqual(23);
     });
 
-    it('should set expectations on multiple methods', () => {
-      interface Foo {
-        bar(x: number): number;
-        baz(x: number): number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo.bar(1)).returns(-1);
-      when(foo.baz(1)).returns(-2);
-
-      expect(instance(foo).baz(1)).toEqual(-2);
-      expect(instance(foo).bar(1)).toEqual(-1);
-    });
-
-    it('should set expectations on function and methods', () => {
-      interface Foo {
-        (x: number): number;
-        bar(y: number): number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo(1)).returns(2);
-      when(foo.bar(3)).returns(4);
-
-      expect(instance(foo)(1)).toEqual(2);
-      expect(instance(foo).bar(3)).toEqual(4);
-    });
-
-    it('should set expectations on string members', () => {
+    it('should set expectation on member', () => {
       interface Foo {
         bar: number;
       }
@@ -271,32 +128,6 @@ describe('when', () => {
       when(foo.bar).returns(23);
 
       expect(instance(foo).bar).toEqual(23);
-    });
-
-    it('should set expectations on symbol members', () => {
-      const s = Symbol('s');
-
-      interface Foo {
-        [s]: number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo[s]).returns(23);
-
-      expect(instance(foo)[s]).toEqual(23);
-    });
-
-    it('should set expectations on number members', () => {
-      interface Foo {
-        0: number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo[0]).returns(23);
-
-      expect(instance(foo)[0]).toEqual(23);
     });
   });
 });
