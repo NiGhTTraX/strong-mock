@@ -2,92 +2,71 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { UnexpectedCall } from '../src/errors';
-import { DeepComparisonExpectation } from '../src/expectation';
-import { FIFORepository } from '../src/expectation-repository';
 import { ApplyProp, mock } from '../src/mock';
-import { EmptyRepository } from './expectation-repository';
+import { EmptyRepository, SpyRepository } from './expectation-repository';
+import {
+  OneUseAlwaysMatchingExpectation,
+  SingleUseExpectationWithReturn
+} from './expectations';
 
-// TODO: decouple tests from FIFORepository
 describe('instance', () => {
   it('should get matching expectation for apply', () => {
-    const repo = new FIFORepository();
+    const repo = new SpyRepository(true, [
+      new OneUseAlwaysMatchingExpectation()
+    ]);
     const fn = mock<(x: number) => number>(repo);
 
-    repo.add(new DeepComparisonExpectation(ApplyProp, [1], 2));
-
-    expect(instance(fn)(1)).toEqual(2);
+    expect(instance(fn)(1)).toEqual(42);
+    expect(repo.findAndConsumeCalledWith).toEqual([ApplyProp, [1]]);
   });
 
   it('should get matching expectation for method', () => {
-    const repo = new FIFORepository();
+    const repo = new SpyRepository(true, [
+      undefined,
+      new SingleUseExpectationWithReturn(42)
+    ]);
     const foo = mock<{ bar: (x: number) => number }>(repo);
 
-    repo.add(new DeepComparisonExpectation('bar', [1], 2));
-
-    expect(instance(foo).bar(1)).toEqual(2);
+    expect(instance(foo).bar(1)).toEqual(42);
+    expect(repo.findAndConsumeCalledWith).toEqual(['bar', [1]]);
   });
 
   it('should get matching expectation for property', () => {
-    const repo = new FIFORepository();
+    const repo = new SpyRepository(true, [
+      new SingleUseExpectationWithReturn(42)
+    ]);
     const foo = mock<{ bar: number }>(repo);
 
-    repo.add(new DeepComparisonExpectation('bar', undefined, 23));
-
-    expect(instance(foo).bar).toEqual(23);
+    expect(instance(foo).bar).toEqual(42);
+    expect(repo.findAndConsumeCalledWith).toEqual(['bar', undefined]);
   });
 
   it('should throw if no expectation for property', () => {
-    const repo = new EmptyRepository();
-    const foo = mock<{ bar: number }>(repo);
+    const foo = mock<{ bar: number }>(new EmptyRepository());
 
     expect(() => instance(foo).bar).toThrow(UnexpectedCall);
   });
 
   it('should throw if no expectation for method', () => {
-    const repo = new EmptyRepository();
-    const foo = mock<{ bar: () => void }>(repo);
+    const foo = mock<{ bar: () => void }>(new EmptyRepository());
 
     expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
   });
 
   it('get matching expectation for property before method', () => {
-    const repo = new FIFORepository();
-    const foo = mock<{ bar: (x: number) => number }>(repo);
+    const repo = new SpyRepository(true, [
+      // First call fins a property expectation.
+      new SingleUseExpectationWithReturn(() => 1),
+      // Second call doesn't find a property expectation.
+      undefined,
+      // Third call finds a method expectation.
+      new SingleUseExpectationWithReturn(2)
+    ]);
+    const foo = mock<{ bar: (x: string) => number }>(repo);
 
-    repo.add(new DeepComparisonExpectation('bar', [13], 23));
-    repo.add(new DeepComparisonExpectation('bar', undefined, () => 42));
+    expect(instance(foo).bar(':irrelevant:')).toEqual(1);
+    expect(instance(foo).bar(':irrelevant:')).toEqual(2);
 
-    expect(instance(foo).bar(-1)).toEqual(42);
-    expect(instance(foo).bar(13)).toEqual(23);
-  });
-
-  it('should throw error for function', () => {
-    const repo = new FIFORepository();
-    const foo = mock<() => void>(repo);
-
-    const error = new Error();
-    repo.add(new DeepComparisonExpectation(ApplyProp, [], error));
-
-    expect(() => instance(foo)()).toThrow(error);
-  });
-
-  it('should throw error for method', () => {
-    const repo = new FIFORepository();
-    const foo = mock<{ bar: () => void }>(repo);
-
-    const error = new Error();
-    repo.add(new DeepComparisonExpectation('bar', [], error));
-
-    expect(() => instance(foo).bar()).toThrow(error);
-  });
-
-  it('should throw error for property', () => {
-    const repo = new FIFORepository();
-    const foo = mock<{ bar: number }>(repo);
-
-    const error = new Error();
-    repo.add(new DeepComparisonExpectation('bar', undefined, error));
-
-    expect(() => instance(foo).bar).toThrow(error);
+    expect(repo.hasForCalledWith).toEqual('bar');
   });
 });

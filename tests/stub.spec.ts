@@ -6,7 +6,7 @@ import {
   PendingExpectation
 } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
-import { XXX } from './expectations';
+import { SpyExpectation } from './expectations';
 import { Fn, Foo } from './fixtures';
 
 describe('createStub', () => {
@@ -14,7 +14,7 @@ describe('createStub', () => {
     property,
     args,
     returnValue
-  ) => new XXX(property, args, returnValue);
+  ) => new SpyExpectation(property, args, returnValue);
 
   it('should intercept fn(...args)', () => {
     const repo = new OneIncomingExpectationRepository();

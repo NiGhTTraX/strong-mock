@@ -23,7 +23,7 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
 
   property = 'bar';
 
-  returnValue = undefined;
+  returnValue = 42;
 
   matches = () => true;
 }
@@ -34,7 +34,7 @@ export class NeverEndingAlwaysMatchingExpectation extends OneUseAlwaysMatchingEx
   max = Infinity;
 }
 
-export class XXX implements Expectation {
+export class SpyExpectation implements Expectation {
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
@@ -46,4 +46,16 @@ export class XXX implements Expectation {
   min = 1;
 
   matches = () => false;
+}
+
+export class SingleUseExpectationWithReturn extends SpyExpectation {
+  constructor(public returnValue: any) {
+    super(':irrelevant:', undefined, returnValue);
+  }
+
+  min = 1;
+
+  max = 1;
+
+  matches = () => true;
 }

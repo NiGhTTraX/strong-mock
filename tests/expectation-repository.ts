@@ -67,3 +67,40 @@ export class EmptyRepository implements ExpectationRepository {
 
   clear(): void {}
 }
+
+// TODO: use this to remove the other mocks
+export class SpyRepository implements ExpectationRepository {
+  public addCalledWith: Expectation | undefined;
+
+  public findAndConsumeCalledWith: [PropertyKey, any[] | undefined] | undefined;
+
+  public hasForCalledWith: PropertyKey | undefined;
+
+  private findAndConsumeCounter = 0;
+
+  constructor(
+    private hasForReturn: boolean,
+    private findAndConsumeReturn: (Expectation | undefined)[]
+  ) {}
+
+  add(expectation: Expectation) {
+    this.addCalledWith = expectation;
+  }
+
+  clear() {}
+
+  findAndConsume(property: PropertyKey, args: any[] | undefined) {
+    this.findAndConsumeCalledWith = [property, args];
+
+    return this.findAndConsumeReturn[this.findAndConsumeCounter++];
+  }
+
+  getUnmet() {
+    return [];
+  }
+
+  hasFor(property: PropertyKey) {
+    this.hasForCalledWith = property;
+    return this.hasForReturn;
+  }
+}
