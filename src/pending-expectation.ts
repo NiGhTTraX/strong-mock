@@ -1,5 +1,5 @@
 import { MissingReturnValue, MissingWhen } from './errors';
-import { Expectation } from './expectation';
+import { Expectation, DeepComparisonExpectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 
 export class PendingExpectation {
@@ -32,7 +32,8 @@ export class PendingExpectation {
       throw new MissingWhen();
     }
 
-    const expectation = new Expectation(
+    // TODO: inject factory?
+    const expectation = new DeepComparisonExpectation(
       this._property,
       this._args,
       returnValue

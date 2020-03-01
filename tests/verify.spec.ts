@@ -2,17 +2,17 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { mock } from '../src';
 import { UnmetExpectation } from '../src/errors';
-import { Expectation } from '../src/expectation';
 import { verifyAll } from '../src/verify';
 import {
   EmptyRepository,
   OneExistingExpectationRepository
 } from './expectation-repository';
+import { OneUseAlwaysMatchingExpectation } from './expectations';
 
 describe('verifyAll', () => {
   it('should throw if remaining expectations', () => {
     const repo = new OneExistingExpectationRepository(
-      new Expectation('bar', [], 23)
+      new OneUseAlwaysMatchingExpectation()
     );
     const fn = mock<() => number>(repo);
 

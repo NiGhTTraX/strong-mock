@@ -1,4 +1,3 @@
-import isEqual from 'lodash/isEqual';
 import { Expectation } from './expectation';
 
 export interface ExpectationRepository {
@@ -11,8 +10,8 @@ export interface ExpectationRepository {
    * Find a matching expectation and consume it.
    */
   findAndConsume(
-    args: any[] | undefined,
-    property: PropertyKey
+    property: PropertyKey,
+    args: any[] | undefined
   ): Expectation | undefined;
 
   /**
@@ -41,10 +40,8 @@ export class FIFORepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  findAndConsume(args: any[] | undefined, property: PropertyKey) {
-    const expectation = this.repo.find(
-      e => e.property === property && this.compareArgs(e, args)
-    );
+  findAndConsume(property: PropertyKey, args: any[] | undefined) {
+    const expectation = this.repo.find(e => e.matches(property, args));
 
     if (expectation) {
       this.consume(expectation);
@@ -63,20 +60,6 @@ export class FIFORepository implements ExpectationRepository {
 
   clear(): void {
     this.repo = [];
-  }
-
-  // TODO: add matchers (should this be moved to Expectation?)
-  // eslint-disable-next-line class-methods-use-this
-  private compareArgs(e: Expectation, args: any[] | undefined): boolean {
-    if (!args && !e.args) {
-      return true;
-    }
-
-    if (!args || !e.args) {
-      return false;
-    }
-
-    return e.args.every((a, i) => isEqual(a, args[i]));
   }
 
   private consume(expectation: Expectation) {

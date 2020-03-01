@@ -2,7 +2,7 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { UnexpectedCall } from '../src/errors';
-import { Expectation } from '../src/expectation';
+import { DeepComparisonExpectation } from '../src/expectation';
 import { FIFORepository } from '../src/expectation-repository';
 import { ApplyProp, mock } from '../src/mock';
 import { EmptyRepository } from './expectation-repository';
@@ -13,7 +13,7 @@ describe('instance', () => {
     const repo = new FIFORepository();
     const fn = mock<(x: number) => number>(repo);
 
-    repo.add(new Expectation(ApplyProp, [1], 2));
+    repo.add(new DeepComparisonExpectation(ApplyProp, [1], 2));
 
     expect(instance(fn)(1)).toEqual(2);
   });
@@ -22,7 +22,7 @@ describe('instance', () => {
     const repo = new FIFORepository();
     const foo = mock<{ bar: (x: number) => number }>(repo);
 
-    repo.add(new Expectation('bar', [1], 2));
+    repo.add(new DeepComparisonExpectation('bar', [1], 2));
 
     expect(instance(foo).bar(1)).toEqual(2);
   });
@@ -31,7 +31,7 @@ describe('instance', () => {
     const repo = new FIFORepository();
     const foo = mock<{ bar: number }>(repo);
 
-    repo.add(new Expectation('bar', undefined, 23));
+    repo.add(new DeepComparisonExpectation('bar', undefined, 23));
 
     expect(instance(foo).bar).toEqual(23);
   });
@@ -54,8 +54,8 @@ describe('instance', () => {
     const repo = new FIFORepository();
     const foo = mock<{ bar: (x: number) => number }>(repo);
 
-    repo.add(new Expectation('bar', [13], 23));
-    repo.add(new Expectation('bar', undefined, () => 42));
+    repo.add(new DeepComparisonExpectation('bar', [13], 23));
+    repo.add(new DeepComparisonExpectation('bar', undefined, () => 42));
 
     expect(instance(foo).bar(-1)).toEqual(42);
     expect(instance(foo).bar(13)).toEqual(23);
@@ -66,7 +66,7 @@ describe('instance', () => {
     const foo = mock<() => void>(repo);
 
     const error = new Error();
-    repo.add(new Expectation(ApplyProp, [], error));
+    repo.add(new DeepComparisonExpectation(ApplyProp, [], error));
 
     expect(() => instance(foo)()).toThrow(error);
   });
@@ -76,7 +76,7 @@ describe('instance', () => {
     const foo = mock<{ bar: () => void }>(repo);
 
     const error = new Error();
-    repo.add(new Expectation('bar', [], error));
+    repo.add(new DeepComparisonExpectation('bar', [], error));
 
     expect(() => instance(foo).bar()).toThrow(error);
   });
@@ -86,7 +86,7 @@ describe('instance', () => {
     const foo = mock<{ bar: number }>(repo);
 
     const error = new Error();
-    repo.add(new Expectation('bar', undefined, error));
+    repo.add(new DeepComparisonExpectation('bar', undefined, error));
 
     expect(() => instance(foo).bar).toThrow(error);
   });

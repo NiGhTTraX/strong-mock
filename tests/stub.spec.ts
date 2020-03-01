@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { Expectation } from '../src/expectation';
+import { DeepComparisonExpectation } from '../src/expectation';
 import { ApplyProp, createStub } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
@@ -17,7 +17,9 @@ describe('createStub', () => {
     // TODO: inject a PendingExpectation in createStub
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation(ApplyProp, [1, 2, 3], 23)
+    );
   });
 
   it('should intercept fn.call(this, ...args)', () => {
@@ -28,7 +30,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation(ApplyProp, [1, 2, 3], 23)
+    );
   });
 
   it('should intercept fn.apply(this, [...args])', () => {
@@ -39,7 +43,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation(ApplyProp, [1, 2, 3], 23)
+    );
   });
 
   it('should intercept Reflect.apply(fn, this, [...args])', () => {
@@ -50,7 +56,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation(ApplyProp, [1, 2, 3], 23)
+    );
   });
 
   it('should intercept fn.bind(this, ...args)', () => {
@@ -61,7 +69,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation(ApplyProp, [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation(ApplyProp, [1, 2, 3], 23)
+    );
   });
 
   it('should intercept foo.bar(...args)', () => {
@@ -72,7 +82,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation('bar', [1, 2, 3], 23)
+    );
   });
 
   it('should intercept foo.bar.call(this, ...args)', () => {
@@ -83,7 +95,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation('bar', [1, 2, 3], 23)
+    );
   });
 
   it('should intercept foo.bar.apply(this, [...args])', () => {
@@ -94,7 +108,9 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation('bar', [1, 2, 3], 23)
+    );
   });
 
   it('should intercept foo.bar.bind(this, ...args)', () => {
@@ -105,6 +121,8 @@ describe('createStub', () => {
 
     SINGLETON_PENDING_EXPECTATION.finish(23);
 
-    expect(repo.expectation).toEqual(new Expectation('bar', [1, 2, 3], 23));
+    expect(repo.expectation).toEqual(
+      new DeepComparisonExpectation('bar', [1, 2, 3], 23)
+    );
   });
 });
