@@ -55,8 +55,7 @@ export class FIFORepository implements ExpectationRepository {
   }
 
   getUnmet() {
-    // TODO: this might contain expectations that have been met, but not fully consumed
-    return this.repo;
+    return this.repo.filter(e => e.min > 0);
   }
 
   clear(): void {

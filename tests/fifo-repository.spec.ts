@@ -31,12 +31,23 @@ describe('FIFORepository', () => {
 
     expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
     expect(repository.findAndConsume('bar', undefined)).toEqual(undefined);
+    expect(repository.getUnmet()).toHaveLength(0);
   });
 
-  it('should not return anything when no matching expectation', () => {
+  it('should not return any unmet expectations when empty', () => {
     const repository = new FIFORepository();
 
     expect(repository.findAndConsume('bar', undefined)).toEqual(undefined);
+    expect(repository.getUnmet()).toHaveLength(0);
+  });
+
+  it('should not return any unmet expectations when min has been satisfied', () => {
+    const repository = new FIFORepository();
+
+    const expectation = new NeverEndingAlwaysMatchingExpectation();
+
+    repository.add(expectation);
+
     expect(repository.getUnmet()).toHaveLength(0);
   });
 
