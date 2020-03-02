@@ -1,5 +1,5 @@
 // TODO: improve all error messages
-import { RECEIVED_COLOR } from 'jest-matcher-utils';
+import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import { Expectation } from './expectation';
 import { PendingExpectation } from './pending-expectation';
 import { printCall, printProperty } from './print';
@@ -22,8 +22,8 @@ export class MissingWhen extends Error {
 
 export class UnexpectedAccess extends Error {
   constructor(property: PropertyKey, expectations: Expectation[]) {
-    super(`Didn't expect mock${RECEIVED_COLOR(
-      printProperty(property)
+    super(`Didn't expect ${EXPECTED_COLOR(
+      `mock${printProperty(property)}`
     )} to be accessed.
 
 Remaining expectations:
@@ -33,7 +33,9 @@ Remaining expectations:
 
 export class UnexpectedCall extends Error {
   constructor(property: PropertyKey, args: any[], expectations: Expectation[]) {
-    super(`Didn't expect mock${printCall(property, args)} to be called.
+    super(`Didn't expect ${EXPECTED_COLOR(
+      `mock${printCall(property, args)}`
+    )} to be called.
 
 Remaining expectations:
  - ${expectations.map(e => e.toString()).join('\n - ')}`);

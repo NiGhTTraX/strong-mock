@@ -1,4 +1,4 @@
-import { EXPECTED_COLOR, printReceived } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
 import { ApplyProp } from './mock';
 
 export const printProperty = (property: PropertyKey) => {
@@ -14,21 +14,21 @@ export const printProperty = (property: PropertyKey) => {
 };
 
 export const printCall = (property: PropertyKey, args: any[]) => {
-  const prettyArgs = args.map(printReceived).join(', ');
+  const prettyArgs = args.map(printExpected).join(', ');
   const prettyProperty = printProperty(property);
 
   return `${prettyProperty}(${prettyArgs})`;
 };
 
 export const printReturns = (returnValue: any, min: number, max: number) =>
-  `.returns(${returnValue}).between(${min}, ${max})`;
+  `.returns(${printExpected(returnValue)}).between(${min}, ${max})`;
 
 export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
   if (args) {
-    return `when(mock${EXPECTED_COLOR(printCall(property, args))})`;
+    return `when(${EXPECTED_COLOR(`mock${printCall(property, args)}`)})`;
   }
 
-  return `when(mock${EXPECTED_COLOR(printProperty(property))})`;
+  return `when(${EXPECTED_COLOR(`mock${printProperty(property)}`)})`;
 };
 
 export const printExpectation = (
