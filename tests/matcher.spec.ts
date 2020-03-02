@@ -31,6 +31,10 @@ describe('It', () => {
     it('should match arrays', () => {
       expect(It.isAny().matches([1, 2, 3])).toBeTruthy();
     });
+
+    it('should pretty print', () => {
+      expect(It.isAny().toJSON()).toEqual('anything');
+    });
   });
 
   describe('matches', () => {
@@ -39,6 +43,10 @@ describe('It', () => {
       expect(It.matches(() => false).matches(':irrelevant:')).toBeFalsy();
       expect(It.matches(arg => !!arg).matches(true)).toBeTruthy();
       expect(It.matches(arg => !!arg).matches(false)).toBeFalsy();
+    });
+
+    it('should pretty print', () => {
+      expect(It.matches(() => true).toJSON()).toEqual('matches(() => true)');
     });
   });
 });

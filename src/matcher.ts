@@ -1,5 +1,6 @@
 export type Matcher<T> = T & {
   matches: (arg: any) => boolean;
+  toJSON(): string;
   __isMatcher: boolean;
 };
 
@@ -26,8 +27,8 @@ const isAny = (): Matcher<any> => ({
   matches: () => true,
   __isMatcher: true,
 
-  toString() {
-    return 'any';
+  toJSON() {
+    return 'anything';
   }
 });
 
@@ -53,8 +54,8 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
     matches: (arg: any) => cb(arg),
     __isMatcher: true,
 
-    toString() {
-      return cb.toString();
+    toJSON() {
+      return `matches(${cb.toString()})`;
     }
   } as any);
 

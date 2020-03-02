@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
+import { It } from '../src/matcher';
 import { ApplyProp } from '../src/mock';
 import { printCall, printProperty, printReturns } from '../src/print';
 import { expectAnsilessEqual } from './ansiless';
@@ -39,6 +40,13 @@ describe('print', () => {
       expectAnsilessEqual(
         printCall('bar', [1, 2, { foo: 'bar' }]),
         `.bar(1, 2, {"foo": "bar"})`
+      );
+    });
+
+    it('should print arg matchers', () => {
+      expectAnsilessEqual(
+        printCall('bar', [It.isAny(), It.matches(() => true)]),
+        `.bar("anything", "matches(() => true)")`
       );
     });
   });
