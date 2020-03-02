@@ -1,6 +1,8 @@
-import { MissingReturnValue, MissingWhen } from './errors';
+import { EXPECTED_COLOR } from 'jest-matcher-utils';
+import { MissingWhen, UnfinishedExpectation } from './errors';
 import { DeepComparisonExpectation, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
+import { ApplyProp } from './mock';
 
 export type ExpectationFactory = (
   property: PropertyKey,
@@ -31,7 +33,7 @@ export class SingletonPendingExpectation implements PendingExpectation {
 
   start(repo: ExpectationRepository) {
     if (this._repo) {
-      throw new MissingReturnValue();
+      throw new UnfinishedExpectation(this);
     }
 
     this.clear();
@@ -68,6 +70,36 @@ export class SingletonPendingExpectation implements PendingExpectation {
     this._repo = undefined;
     this._args = undefined;
     this._property = '';
+  }
+
+  toString() {
+    const property = this.printProperty();
+
+    if (this._args && this._property) {
+      const args = this._args.join(', ');
+
+      const call = `${property}(${args})`;
+
+      return `when(mock${EXPECTED_COLOR(call)})`;
+    }
+
+    if (!this._args && this._property) {
+      return `when(mock${EXPECTED_COLOR(property)})`;
+    }
+
+    return `when(mock${EXPECTED_COLOR(this._args)})`;
+  }
+
+  private printProperty() {
+    if (this._property === ApplyProp) {
+      return '';
+    }
+
+    if (typeof this._property === 'symbol') {
+      return `[${this._property.toString()}]`;
+    }
+
+    return `.${this._property}`;
   }
 }
 

@@ -1,7 +1,13 @@
 // TODO: improve all error messages
-export class MissingReturnValue extends Error {
-  constructor() {
-    super(`You forgot to give a return value to the previous expectation`);
+import { PendingExpectation } from './pending-expectation';
+
+export class UnfinishedExpectation extends Error {
+  constructor(pendingExpectation: PendingExpectation) {
+    super(`There is an unfinished pending expectation:
+
+${pendingExpectation.toString()}
+
+Please finish it by chaining the expectation with a returns call.`);
   }
 }
 

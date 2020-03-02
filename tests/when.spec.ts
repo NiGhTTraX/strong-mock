@@ -1,7 +1,11 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
-import { MissingReturnValue, MissingWhen, UnexpectedCall } from '../src/errors';
+import {
+  UnfinishedExpectation,
+  MissingWhen,
+  UnexpectedCall
+} from '../src/errors';
 import { instance } from '../src/instance';
 import { mock } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
@@ -22,7 +26,7 @@ describe('when', () => {
 
     when(fn());
 
-    expect(() => when(fn())).toThrow(MissingReturnValue);
+    expect(() => when(fn())).toThrow(UnfinishedExpectation);
   });
 
   it('should allow to set an expectation after another mock was created', () => {
