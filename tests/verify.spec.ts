@@ -2,7 +2,7 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { mock } from '../src';
 import { UnmetExpectation } from '../src/errors';
-import { verifyAll } from '../src/verify';
+import { verify } from '../src/verify';
 import {
   EmptyRepository,
   OneExistingExpectationRepository
@@ -16,13 +16,13 @@ describe('verifyAll', () => {
     );
     const fn = mock<() => number>(repo);
 
-    expect(() => verifyAll(fn)).toThrow(UnmetExpectation);
+    expect(() => verify(fn)).toThrow(UnmetExpectation);
   });
 
   it('should not throw if all expectations met', () => {
     const repo = new EmptyRepository();
     const fn = mock<() => number>(repo);
 
-    expect(() => verifyAll(fn)).not.toThrow();
+    expect(() => verify(fn)).not.toThrow();
   });
 });

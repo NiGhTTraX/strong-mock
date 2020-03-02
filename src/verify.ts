@@ -1,8 +1,8 @@
 import { UnmetExpectation } from './errors';
 import { getRepoForMock, Mock } from './mock';
 
-// TODO: verify all mocks
-export const verifyAll = <T>(mock: Mock<T>): void => {
+// TODO: add verifyAll
+export const verify = <T>(mock: Mock<T>): void => {
   const repo = getRepoForMock(mock);
 
   if (repo.getUnmet().length) {
