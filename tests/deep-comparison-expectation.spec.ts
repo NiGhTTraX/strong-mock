@@ -1,9 +1,10 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { DeepComparisonExpectation } from '../src/expectation';
+import { Matcher } from '../src/matcher';
 import { expectAnsilessEqual } from './ansiless';
 
-describe('Expectation', () => {
+describe('DeepComparisonExpectation', () => {
   it('should match same prop', () => {
     const expectation = new DeepComparisonExpectation('bar', [], undefined);
 
@@ -130,6 +131,23 @@ describe('Expectation', () => {
     const expectation = new DeepComparisonExpectation('bar', [undefined], 23);
 
     expect(expectation.matches('bar', [42])).toBeFalsy();
+  });
+
+  it('should call matchers', () => {
+    let matchesCalledWith;
+
+    const spyMatcher: Matcher<any> = {
+      __isMatcher: true,
+      matches: (arg: any) => {
+        matchesCalledWith = arg;
+        return true;
+      }
+    };
+
+    const expectation = new DeepComparisonExpectation('bar', [spyMatcher], 23);
+
+    expect(expectation.matches('bar', [23])).toBeTruthy();
+    expect(matchesCalledWith).toEqual(23);
   });
 
   it('should print when, returns and invocation count', () => {

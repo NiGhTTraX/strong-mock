@@ -3,8 +3,10 @@ import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingWhen, UnfinishedExpectation } from '../src/errors';
 import { instance } from '../src/instance';
+import { It } from '../src/matcher';
 import { mock } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
+import { Fn } from './fixtures';
 
 describe('when', () => {
   beforeEach(() => {
@@ -93,6 +95,20 @@ describe('when', () => {
     when(fn()).thenResolve(23);
 
     await expect(instance(fn)()).resolves.toEqual(23);
+  });
+
+  it('should support ignoring arguments', () => {
+    const fn = mock<Fn>();
+
+    when(
+      fn(
+        1,
+        It.isAny(),
+        It.matches(z => z === 3)
+      )
+    ).thenReturn(23);
+
+    expect(instance(fn)(1, 2, 3)).toEqual(23);
   });
 
   describe('interface', () => {

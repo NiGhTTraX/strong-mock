@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual';
+import { isMatcher } from './matcher';
 import { printExpectation } from './print';
 
 export interface Expectation {
@@ -20,7 +21,6 @@ export class DeepComparisonExpectation implements Expectation {
     public max: number = 1
   ) {}
 
-  // TODO: add matchers
   matches(property: PropertyKey, args: any[] | undefined): boolean {
     if (property !== this.property) {
       return false;
@@ -34,7 +34,13 @@ export class DeepComparisonExpectation implements Expectation {
       return false;
     }
 
-    return this.args.every((arg, i) => isEqual(arg, args[i]));
+    return this.args.every((arg, i) => {
+      if (arg && isMatcher(arg)) {
+        return arg.matches(args[i]);
+      }
+
+      return isEqual(arg, args[i]);
+    });
   }
 
   toString() {
