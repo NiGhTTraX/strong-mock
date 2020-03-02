@@ -28,13 +28,13 @@ describe('when', () => {
   it('should allow to set an expectation after another mock was created', () => {
     const fn1 = mock<() => number>();
 
-    const { returns: returns1 } = when(fn1());
+    const { thenReturn: returns1 } = when(fn1());
 
     const fn2 = mock<() => number>();
 
     returns1(1);
 
-    when(fn2()).returns(2);
+    when(fn2()).thenReturn(2);
 
     expect(instance(fn1)()).toEqual(1);
     expect(instance(fn2)()).toEqual(2);
@@ -45,9 +45,9 @@ describe('when', () => {
 
     const stub = when(fn(1));
 
-    stub.returns(2);
+    stub.thenReturn(2);
 
-    expect(() => stub.returns(3)).toThrow(MissingWhen);
+    expect(() => stub.thenReturn(3)).toThrow(MissingWhen);
   });
 
   it('should not throw if called without when or instance', () => {
@@ -59,8 +59,8 @@ describe('when', () => {
   it('should set multiple expectations', () => {
     const fn = mock<() => number>();
 
-    when(fn()).returns(1);
-    when(fn()).returns(2);
+    when(fn()).thenReturn(1);
+    when(fn()).thenReturn(2);
 
     expect(instance(fn)()).toEqual(1);
     expect(instance(fn)()).toEqual(2);
@@ -70,8 +70,8 @@ describe('when', () => {
     const fn1 = mock<() => number>();
     const fn2 = mock<() => number>();
 
-    when(fn1()).returns(1);
-    when(fn2()).returns(2);
+    when(fn1()).thenReturn(1);
+    when(fn2()).thenReturn(2);
 
     // Call in reverse order.
     expect(instance(fn2)()).toEqual(2);
@@ -82,7 +82,7 @@ describe('when', () => {
     const fn = mock<() => {}>();
     const error = new Error();
 
-    when(fn()).throws(error);
+    when(fn()).thenThrow(error);
 
     expect(() => instance(fn)()).toThrow(error);
   });
@@ -90,7 +90,7 @@ describe('when', () => {
   it('should set expectation with promise', async () => {
     const fn = mock<() => Promise<number>>();
 
-    when(fn()).resolves(23);
+    when(fn()).thenResolve(23);
 
     await expect(instance(fn)()).resolves.toEqual(23);
   });
@@ -103,7 +103,7 @@ describe('when', () => {
 
       const foo = mock<Foo>();
 
-      when(foo.bar(1)).returns(23);
+      when(foo.bar(1)).thenReturn(23);
 
       expect(instance(foo).bar(1)).toEqual(23);
     });
@@ -115,7 +115,7 @@ describe('when', () => {
 
       const foo = mock<Foo>();
 
-      when(foo.bar).returns(23);
+      when(foo.bar).thenReturn(23);
 
       expect(instance(foo).bar).toEqual(23);
     });

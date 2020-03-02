@@ -22,7 +22,11 @@ export const printCall = (property: PropertyKey, args: any[]) => {
 };
 
 export const printReturns = (returnValue: any, min: number, max: number) =>
-  `.returns(${printExpected(returnValue)}).between(${min}, ${max})`;
+  `.${
+    returnValue instanceof Error ? 'thenThrow' : 'thenReturn'
+  }(${printExpected(
+    returnValue instanceof Error ? returnValue.message : returnValue
+  )}).between(${min}, ${max})`;
 
 export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
   if (args) {

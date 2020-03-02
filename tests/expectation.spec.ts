@@ -139,7 +139,7 @@ describe('Expectation', () => {
 
     expectAnsilessEqual(
       expectation.toString(),
-      `when(mock.baz(4, 5, 6)).returns(42).between(2, 3)`
+      `when(mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
     );
   });
 });

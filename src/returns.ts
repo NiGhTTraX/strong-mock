@@ -2,20 +2,20 @@ import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from './pending-expectation';
 
 type PromiseStub<R> = {
-  returns(promise: Promise<R>): InvocationCount;
-  resolves(returnValue: R): InvocationCount;
+  thenReturn(promise: Promise<R>): InvocationCount;
+  thenResolve(returnValue: R): InvocationCount;
 
-  rejects(error: Error): InvocationCount;
-  rejects(message: string): InvocationCount;
-  rejects(): InvocationCount;
+  thenReject(error: Error): InvocationCount;
+  thenReject(message: string): InvocationCount;
+  thenReject(): InvocationCount;
 };
 
 type NonPromiseStub<R> = {
-  returns(returnValue: R): InvocationCount;
+  thenReturn(returnValue: R): InvocationCount;
 
-  throws(error: Error): InvocationCount;
-  throws(message: string): InvocationCount;
-  throws(): InvocationCount;
+  thenThrow(error: Error): InvocationCount;
+  thenThrow(message: string): InvocationCount;
+  thenThrow(): InvocationCount;
 };
 
 export type Stub<T> = T extends Promise<infer U>
@@ -48,28 +48,28 @@ export const createReturns = <R>(
   pendingExpectation: PendingExpectation
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
-    returns: (returnValue: any): InvocationCount => {
+    thenReturn: (returnValue: any): InvocationCount => {
       // TODO: should probably fix this
       /* istanbul ignore next: because it will be overridden by
        * promiseStub and the types are compatible */
       return finishPendingExpectation(returnValue, pendingExpectation);
     },
 
-    throws: (errorOrMessage?: Error | string): InvocationCount =>
+    thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(getError(errorOrMessage), pendingExpectation)
   };
 
   const promiseStub: PromiseStub<any> = {
-    returns: (promise: Promise<any>): InvocationCount =>
+    thenReturn: (promise: Promise<any>): InvocationCount =>
       finishPendingExpectation(promise, pendingExpectation),
 
-    resolves: (returnValue: any): InvocationCount =>
+    thenResolve: (returnValue: any): InvocationCount =>
       finishPendingExpectation(
         Promise.resolve(returnValue),
         pendingExpectation
       ),
 
-    rejects: (errorOrMessage?: Error | string): InvocationCount =>
+    thenReject: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
         Promise.reject(getError(errorOrMessage)),
         pendingExpectation

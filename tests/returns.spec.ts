@@ -7,7 +7,7 @@ describe('returns', () => {
   it('should set a return value', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).returns(23);
+    createReturns<number>(pendingExpectation).thenReturn(23);
 
     expect(pendingExpectation.finishCalledWith).toEqual(23);
   });
@@ -16,7 +16,7 @@ describe('returns', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     const error = new Error();
-    createReturns<number>(pendingExpectation).throws(error);
+    createReturns<number>(pendingExpectation).thenThrow(error);
 
     expect(pendingExpectation.finishCalledWith).toEqual(error);
   });
@@ -24,7 +24,7 @@ describe('returns', () => {
   it('should set an empty exception', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).throws();
+    createReturns<number>(pendingExpectation).thenThrow();
 
     expect(pendingExpectation.finishCalledWith).toEqual(new Error());
   });
@@ -32,7 +32,7 @@ describe('returns', () => {
   it('should set a exception message', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).throws('foobar');
+    createReturns<number>(pendingExpectation).thenThrow('foobar');
 
     expect(pendingExpectation.finishCalledWith).toEqual(new Error('foobar'));
   });
@@ -40,7 +40,7 @@ describe('returns', () => {
   it('should set a return promise', async () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).returns(
+    createReturns<Promise<number>>(pendingExpectation).thenReturn(
       Promise.resolve(23)
     );
 
@@ -50,7 +50,7 @@ describe('returns', () => {
   it('should set a return promise value', async () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).resolves(23);
+    createReturns<Promise<number>>(pendingExpectation).thenResolve(23);
 
     await expect(pendingExpectation.finishCalledWith).resolves.toEqual(23);
   });
@@ -59,7 +59,7 @@ describe('returns', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     const error = new Error();
-    createReturns<Promise<number>>(pendingExpectation).rejects(error);
+    createReturns<Promise<number>>(pendingExpectation).thenReject(error);
 
     await expect(pendingExpectation.finishCalledWith).rejects.toEqual(error);
   });
@@ -67,7 +67,7 @@ describe('returns', () => {
   it('should set an empty promise rejection', async () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).rejects();
+    createReturns<Promise<number>>(pendingExpectation).thenReject();
 
     await expect(pendingExpectation.finishCalledWith).rejects.toEqual(
       new Error()
@@ -77,7 +77,7 @@ describe('returns', () => {
   it('should set a promise rejection message', async () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).rejects('foobar');
+    createReturns<Promise<number>>(pendingExpectation).thenReject('foobar');
 
     await expect(pendingExpectation.finishCalledWith).rejects.toEqual(
       new Error('foobar')

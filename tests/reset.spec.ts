@@ -11,7 +11,7 @@ describe('reset', () => {
     const repo = new FIFORepository();
     const fn = mock<() => void>(repo);
 
-    when(fn()).returns(undefined);
+    when(fn()).thenReturn(undefined);
     reset(fn);
 
     expect(repo.getUnmet()).toHaveLength(0);
