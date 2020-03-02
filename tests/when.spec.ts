@@ -50,6 +50,12 @@ describe('when', () => {
     expect(() => stub.returns(3)).toThrow(MissingWhen);
   });
 
+  it('should not throw if called without when or instance', () => {
+    const fn = mock<() => void>();
+
+    fn();
+  });
+
   it('should set multiple expectations', () => {
     const fn = mock<() => number>();
 
