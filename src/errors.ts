@@ -1,6 +1,8 @@
 // TODO: improve all error messages
+import { RECEIVED_COLOR } from 'jest-matcher-utils';
 import { Expectation } from './expectation';
 import { PendingExpectation } from './pending-expectation';
+import { printProperty } from './print';
 
 export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
@@ -18,9 +20,14 @@ export class MissingWhen extends Error {
   }
 }
 
-export class UnexpectedCall extends Error {
-  constructor(property: PropertyKey) {
-    super(`Didn't expect method ${property.toString()} to be called`);
+export class UnexpectedAccess extends Error {
+  constructor(property: PropertyKey, expectations: Expectation[]) {
+    super(`Didn't expect mock${RECEIVED_COLOR(
+      printProperty(property)
+    )} to be accessed.
+
+Remaining expectations:
+ - ${expectations.map(e => e.toString()).join('\n - ')}`);
   }
 }
 

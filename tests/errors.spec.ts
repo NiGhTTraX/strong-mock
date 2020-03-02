@@ -1,6 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
-import { UnfinishedExpectation, UnmetExpectations } from '../src/errors';
+import {
+  UnexpectedAccess,
+  UnfinishedExpectation,
+  UnmetExpectations
+} from '../src/errors';
 import { SingletonPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
@@ -71,6 +75,25 @@ Please finish it by chaining the expectation with a returns call.`
         error.message,
         `There are unmet expectations:
 
+ - e1
+ - e2`
+      );
+    });
+  });
+
+  describe('UnexpectedAccess', () => {
+    it('should print the property and the existing expectations', () => {
+      const e1 = new NeverMatchingExpectation();
+      const e2 = new NeverMatchingExpectation();
+      e1.toString = () => 'e1';
+      e2.toString = () => 'e2';
+      const error = new UnexpectedAccess('bar', [e1, e2]);
+
+      expectAnsilessEqual(
+        error.message,
+        `Didn't expect mock.bar to be accessed.
+
+Remaining expectations:
  - e1
  - e2`
       );

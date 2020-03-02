@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
-import { UnexpectedCall } from '../src/errors';
+import { UnexpectedAccess } from '../src/errors';
 import { ApplyProp, mock } from '../src/mock';
 import { EmptyRepository, SpyRepository } from './expectation-repository';
 import {
@@ -44,13 +44,13 @@ describe('instance', () => {
   it('should throw if no expectation for property', () => {
     const foo = mock<{ bar: number }>(new EmptyRepository());
 
-    expect(() => instance(foo).bar).toThrow(UnexpectedCall);
+    expect(() => instance(foo).bar).toThrow(UnexpectedAccess);
   });
 
   it('should throw if no expectation for method', () => {
     const foo = mock<{ bar: () => void }>(new EmptyRepository());
 
-    expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
+    expect(() => instance(foo).bar()).toThrow(UnexpectedAccess);
   });
 
   it('get matching expectation for property before method', () => {

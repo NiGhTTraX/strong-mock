@@ -4,7 +4,7 @@ import { when } from '../src';
 import {
   UnfinishedExpectation,
   MissingWhen,
-  UnexpectedCall
+  UnexpectedAccess
 } from '../src/errors';
 import { instance } from '../src/instance';
 import { mock } from '../src/mock';
@@ -85,7 +85,7 @@ describe('when', () => {
   it('should throw when no matching expectations', () => {
     const fn = mock<() => void>();
 
-    expect(() => instance(fn)()).toThrow(UnexpectedCall);
+    expect(() => instance(fn)()).toThrow(UnexpectedAccess);
   });
 
   it('should throw after all expectations are met', () => {
@@ -95,7 +95,7 @@ describe('when', () => {
 
     instance(fn)();
 
-    expect(() => instance(fn)()).toThrow(UnexpectedCall);
+    expect(() => instance(fn)()).toThrow(UnexpectedAccess);
   });
 
   it('should set expectation to throw', () => {

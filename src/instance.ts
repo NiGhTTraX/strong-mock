@@ -1,4 +1,4 @@
-import { UnexpectedCall } from './errors';
+import { UnexpectedAccess } from './errors';
 import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { ApplyProp, getRepoForMock, Mock } from './mock';
@@ -22,7 +22,7 @@ const findAndReturn = (
   const expectation = repo.findAndConsume(property, args);
 
   if (!expectation) {
-    throw new UnexpectedCall(property);
+    throw new UnexpectedAccess(property, repo.getUnmet());
   }
 
   return returnOrThrow(expectation);
@@ -34,7 +34,7 @@ export const instance = <T>(mock: Mock<T>): T => {
   return createProxy<T>({
     property: property => {
       if (!repo.hasFor(property)) {
-        throw new UnexpectedCall(property);
+        throw new UnexpectedAccess(property, repo.getUnmet());
       }
 
       const propertyExpectation = repo.findAndConsume(property, undefined);
