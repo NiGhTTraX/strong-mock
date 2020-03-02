@@ -1,5 +1,5 @@
 import { MissingWhen, UnfinishedExpectation } from './errors';
-import { DeepComparisonExpectation, Expectation } from './expectation';
+import { StrongExpectation, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { printWhen } from './print';
 
@@ -94,5 +94,5 @@ export class SingletonPendingExpectation implements PendingExpectation {
  */
 export const SINGLETON_PENDING_EXPECTATION = new SingletonPendingExpectation(
   (property, args, returnValue) =>
-    new DeepComparisonExpectation(property, args, returnValue)
+    new StrongExpectation(property, args, returnValue)
 );

@@ -12,7 +12,7 @@ export interface Expectation {
   matches(property: PropertyKey, args: any[] | undefined): boolean;
 }
 
-export class DeepComparisonExpectation implements Expectation {
+export class StrongExpectation implements Expectation {
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
