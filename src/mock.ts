@@ -9,6 +9,8 @@ import {
 } from './pending-expectation';
 import { createProxy } from './proxy';
 
+// TODO: is it possible to return a type here that won't be assignable to T,
+// but still has the same properties as T?
 export type Mock<T> = T;
 
 export const mockMap = new Map<Mock<any>, ExpectationRepository>();
