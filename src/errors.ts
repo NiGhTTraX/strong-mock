@@ -1,4 +1,3 @@
-// TODO: improve all error messages
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import { Expectation } from './expectation';
 import { PendingExpectation } from './pending-expectation';
@@ -10,13 +9,16 @@ export class UnfinishedExpectation extends Error {
 
 ${pendingExpectation.toString()}
 
-Please finish it by chaining the expectation with a returns call.`);
+Please finish it by setting a return value.`);
   }
 }
 
 export class MissingWhen extends Error {
   constructor() {
-    super(`You didn't set an expectation first`);
+    super(`You tried setting a return value without an expectation.
+
+Every call to set a return value must be preceded by an expectation.
+    `);
   }
 }
 
@@ -42,7 +44,9 @@ ${printRemainingExpectations(expectations)}`);
 
 export class NotAMock extends Error {
   constructor() {
-    super(`This is not a mock`);
+    super(`We couldn't find the mock.
+
+Make sure you're passing in an actual mock.`);
   }
 }
 

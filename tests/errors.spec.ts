@@ -58,7 +58,7 @@ describe('errors', () => {
 
 foobar
 
-Please finish it by chaining the expectation with a returns call.`
+Please finish it by setting a return value.`
       );
     });
   });
