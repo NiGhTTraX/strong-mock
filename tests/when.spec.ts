@@ -1,11 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
-import {
-  UnfinishedExpectation,
-  MissingWhen,
-  UnexpectedAccess
-} from '../src/errors';
+import { MissingWhen, UnfinishedExpectation } from '../src/errors';
 import { instance } from '../src/instance';
 import { mock } from '../src/mock';
 import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
@@ -80,22 +76,6 @@ describe('when', () => {
     // Call in reverse order.
     expect(instance(fn2)()).toEqual(2);
     expect(instance(fn1)()).toEqual(1);
-  });
-
-  it('should throw when no matching expectations', () => {
-    const fn = mock<() => void>();
-
-    expect(() => instance(fn)()).toThrow(UnexpectedAccess);
-  });
-
-  it('should throw after all expectations are met', () => {
-    const fn = mock<() => void>();
-
-    when(fn()).returns(undefined);
-
-    instance(fn)();
-
-    expect(() => instance(fn)()).toThrow(UnexpectedAccess);
   });
 
   it('should set expectation to throw', () => {

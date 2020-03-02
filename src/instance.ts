@@ -1,4 +1,4 @@
-import { UnexpectedAccess } from './errors';
+import { UnexpectedAccess, UnexpectedCall } from './errors';
 import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { ApplyProp, getRepoForMock, Mock } from './mock';
@@ -16,13 +16,13 @@ const returnOrThrow = (expectation: Expectation) => {
 
 const findAndReturn = (
   repo: ExpectationRepository,
-  args: any[] | undefined,
+  args: any[],
   property: PropertyKey
 ) => {
   const expectation = repo.findAndConsume(property, args);
 
   if (!expectation) {
-    throw new UnexpectedAccess(property, repo.getUnmet());
+    throw new UnexpectedCall(property, args, repo.getUnmet());
   }
 
   return returnOrThrow(expectation);
@@ -45,8 +45,8 @@ export const instance = <T>(mock: Mock<T>): T => {
 
       return (...args: any[]) => findAndReturn(repo, args, property);
     },
-    apply: (argArray: any | undefined) => {
-      return findAndReturn(repo, argArray, ApplyProp);
+    apply: (args: any[]) => {
+      return findAndReturn(repo, args, ApplyProp);
     }
   });
 };

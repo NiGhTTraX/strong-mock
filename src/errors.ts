@@ -2,7 +2,7 @@
 import { RECEIVED_COLOR } from 'jest-matcher-utils';
 import { Expectation } from './expectation';
 import { PendingExpectation } from './pending-expectation';
-import { printProperty } from './print';
+import { printCall, printProperty } from './print';
 
 export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
@@ -25,6 +25,15 @@ export class UnexpectedAccess extends Error {
     super(`Didn't expect mock${RECEIVED_COLOR(
       printProperty(property)
     )} to be accessed.
+
+Remaining expectations:
+ - ${expectations.map(e => e.toString()).join('\n - ')}`);
+  }
+}
+
+export class UnexpectedCall extends Error {
+  constructor(property: PropertyKey, args: any[], expectations: Expectation[]) {
+    super(`Didn't expect mock${printCall(property, args)} to be called.
 
 Remaining expectations:
  - ${expectations.map(e => e.toString()).join('\n - ')}`);

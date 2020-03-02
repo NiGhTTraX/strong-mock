@@ -2,6 +2,7 @@
 import { describe, it } from 'tdd-buffet/suite/node';
 import {
   UnexpectedAccess,
+  UnexpectedCall,
   UnfinishedExpectation,
   UnmetExpectations
 } from '../src/errors';
@@ -92,6 +93,25 @@ Please finish it by chaining the expectation with a returns call.`
       expectAnsilessEqual(
         error.message,
         `Didn't expect mock.bar to be accessed.
+
+Remaining expectations:
+ - e1
+ - e2`
+      );
+    });
+  });
+
+  describe('UnexpectedCall', () => {
+    it('should print the property and the existing expectations', () => {
+      const e1 = new NeverMatchingExpectation();
+      const e2 = new NeverMatchingExpectation();
+      e1.toString = () => 'e1';
+      e2.toString = () => 'e2';
+      const error = new UnexpectedCall('bar', [1, 2, 3], [e1, e2]);
+
+      expectAnsilessEqual(
+        error.message,
+        `Didn't expect mock.bar(1, 2, 3) to be called.
 
 Remaining expectations:
  - e1

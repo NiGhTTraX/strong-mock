@@ -1,4 +1,4 @@
-import { InvocationCount, createInvocationCount } from './invocation-count';
+import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from './pending-expectation';
 
 type PromiseStub<R> = {

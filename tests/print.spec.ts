@@ -34,5 +34,12 @@ describe('print', () => {
         `[Symbol(bar)](1, 2, 3)`
       );
     });
+
+    it('should deep print args', () => {
+      expectAnsilessEqual(
+        printCall('bar', [1, 2, { foo: 'bar' }]),
+        `.bar(1, 2, {"foo": "bar"})`
+      );
+    });
   });
 });

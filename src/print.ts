@@ -1,4 +1,4 @@
-import { EXPECTED_COLOR } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, printReceived } from 'jest-matcher-utils';
 import { ApplyProp } from './mock';
 
 export const printProperty = (property: PropertyKey) => {
@@ -14,7 +14,7 @@ export const printProperty = (property: PropertyKey) => {
 };
 
 export const printCall = (property: PropertyKey, args: any[]) => {
-  const prettyArgs = args.join(', ');
+  const prettyArgs = args.map(printReceived).join(', ');
   const prettyProperty = printProperty(property);
 
   return `${prettyProperty}(${prettyArgs})`;
