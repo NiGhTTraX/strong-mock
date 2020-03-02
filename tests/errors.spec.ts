@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
-import { UnfinishedExpectation, UnmetExpectation } from '../src/errors';
+import { UnfinishedExpectation, UnmetExpectations } from '../src/errors';
 import { SingletonPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
@@ -65,7 +65,7 @@ Please finish it by chaining the expectation with a returns call.`
       const expectation2 = new NeverMatchingExpectation();
       expectation2.toString = () => 'e2';
 
-      const error = new UnmetExpectation([expectation1, expectation2]);
+      const error = new UnmetExpectations([expectation1, expectation2]);
 
       expectAnsilessEqual(
         error.message,

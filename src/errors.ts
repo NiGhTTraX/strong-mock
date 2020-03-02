@@ -30,7 +30,7 @@ export class NotAMock extends Error {
   }
 }
 
-export class UnmetExpectation extends Error {
+export class UnmetExpectations extends Error {
   constructor(expectations: Expectation[]) {
     super(`There are unmet expectations:
 
