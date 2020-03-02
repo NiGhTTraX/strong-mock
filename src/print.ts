@@ -1,4 +1,5 @@
 import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
+import { Expectation } from './expectation';
 import { ApplyProp } from './mock';
 
 export const printProperty = (property: PropertyKey) => {
@@ -40,3 +41,9 @@ export const printExpectation = (
 ) => {
   return `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;
 };
+
+export const printRemainingExpectations = (expectations: Expectation[]) =>
+  expectations.length
+    ? `Remaining unmet expectations:
+ - ${expectations.map(e => e.toString()).join('\n - ')}`
+    : 'There are no remaining unmet expectations.';

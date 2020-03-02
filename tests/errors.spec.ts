@@ -94,7 +94,7 @@ Please finish it by chaining the expectation with a returns call.`
         error.message,
         `Didn't expect mock.bar to be accessed.
 
-Remaining expectations:
+Remaining unmet expectations:
  - e1
  - e2`
       );
@@ -113,7 +113,7 @@ Remaining expectations:
         error.message,
         `Didn't expect mock.bar(1, 2, 3) to be called.
 
-Remaining expectations:
+Remaining unmet expectations:
  - e1
  - e2`
       );
