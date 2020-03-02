@@ -1,4 +1,6 @@
+import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import isEqual from 'lodash/isEqual';
+import { printCall, printProperty } from './print';
 
 export interface Expectation {
   property: PropertyKey;
@@ -34,5 +36,17 @@ export class DeepComparisonExpectation implements Expectation {
     }
 
     return this.args.every((arg, i) => isEqual(arg, args[i]));
+  }
+
+  toString() {
+    if (this.args) {
+      return `when(mock${EXPECTED_COLOR(
+        printCall(this.property, this.args)
+      )}).returns(${this.returnValue}).between(${this.min}, ${this.max})`;
+    }
+
+    return `when(mock${EXPECTED_COLOR(printProperty(this.property))}).returns(${
+      this.returnValue
+    }).between(${this.min}, ${this.max})`;
   }
 }

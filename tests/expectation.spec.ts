@@ -1,6 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { DeepComparisonExpectation } from '../src/expectation';
+import { expectAnsilessEqual } from './ansiless';
 
 describe('Expectation', () => {
   it('should match same prop', () => {
@@ -129,5 +130,16 @@ describe('Expectation', () => {
     const expectation = new DeepComparisonExpectation('bar', [undefined], 23);
 
     expect(expectation.matches('bar', [42])).toBeFalsy();
+  });
+
+  it('should print when, returns and invocation count', () => {
+    const expectation = new DeepComparisonExpectation('baz', [4, 5, 6], 42);
+    expectation.min = 2;
+    expectation.max = 3;
+
+    expectAnsilessEqual(
+      expectation.toString(),
+      `when(mock.baz(4, 5, 6)).returns(42).between(2, 3)`
+    );
   });
 });

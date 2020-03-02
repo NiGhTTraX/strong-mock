@@ -1,4 +1,5 @@
 // TODO: improve all error messages
+import { Expectation } from './expectation';
 import { PendingExpectation } from './pending-expectation';
 
 export class UnfinishedExpectation extends Error {
@@ -29,4 +30,10 @@ export class NotAMock extends Error {
   }
 }
 
-export class UnmetExpectation extends Error {}
+export class UnmetExpectation extends Error {
+  constructor(expectations: Expectation[]) {
+    super(`There are unmet expectations:
+
+ - ${expectations.map(e => e.toString()).join('\n - ')}`);
+  }
+}

@@ -1,10 +1,14 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
-import { UnfinishedExpectation } from '../src/errors';
+import { UnfinishedExpectation, UnmetExpectation } from '../src/errors';
 import { SingletonPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
-import { spyExpectationFactory, SpyPendingExpectation } from './expectations';
+import {
+  NeverMatchingExpectation,
+  spyExpectationFactory,
+  SpyPendingExpectation
+} from './expectations';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {
@@ -50,6 +54,25 @@ describe('errors', () => {
 foobar
 
 Please finish it by chaining the expectation with a returns call.`
+      );
+    });
+  });
+
+  describe('UnmetExpectations', () => {
+    it('should print all expectations', () => {
+      const expectation1 = new NeverMatchingExpectation();
+      expectation1.toString = () => 'e1';
+      const expectation2 = new NeverMatchingExpectation();
+      expectation2.toString = () => 'e2';
+
+      const error = new UnmetExpectation([expectation1, expectation2]);
+
+      expectAnsilessEqual(
+        error.message,
+        `There are unmet expectations:
+
+ - e1
+ - e2`
       );
     });
   });

@@ -5,7 +5,9 @@ import { getRepoForMock, Mock } from './mock';
 export const verify = <T>(mock: Mock<T>): void => {
   const repo = getRepoForMock(mock);
 
-  if (repo.getUnmet().length) {
-    throw new UnmetExpectation();
+  const unmetExpectations = repo.getUnmet();
+
+  if (unmetExpectations.length) {
+    throw new UnmetExpectation(unmetExpectations);
   }
 };
