@@ -1,8 +1,7 @@
-import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import { MissingWhen, UnfinishedExpectation } from './errors';
 import { DeepComparisonExpectation, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { printCall, printProperty } from './print';
+import { printWhen } from './print';
 
 export type ExpectationFactory = (
   property: PropertyKey,
@@ -73,17 +72,7 @@ export class SingletonPendingExpectation implements PendingExpectation {
   }
 
   toString() {
-    if (this._args && this._property) {
-      return `when(mock${EXPECTED_COLOR(
-        printCall(this._property, this._args)
-      )})`;
-    }
-
-    if (!this._args && this._property) {
-      return `when(mock${EXPECTED_COLOR(printProperty(this._property))})`;
-    }
-
-    return `when(mock${EXPECTED_COLOR(this._args)})`;
+    return printWhen(this._property, this._args);
   }
 }
 
