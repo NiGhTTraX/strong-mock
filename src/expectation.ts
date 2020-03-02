@@ -10,6 +10,8 @@ export interface Expectation {
   max: number;
 
   matches(property: PropertyKey, args: any[] | undefined): boolean;
+
+  toJSON(): string;
 }
 
 export class StrongExpectation implements Expectation {
@@ -43,7 +45,7 @@ export class StrongExpectation implements Expectation {
     });
   }
 
-  toString() {
+  toJSON() {
     return printExpectation(
       this.property,
       this.args,

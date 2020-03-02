@@ -49,5 +49,5 @@ export const printExpectation = (
 export const printRemainingExpectations = (expectations: Expectation[]) =>
   expectations.length
     ? `Remaining unmet expectations:
- - ${expectations.map(e => e.toString()).join('\n - ')}`
+ - ${expectations.map(e => e.toJSON()).join('\n - ')}`
     : 'There are no remaining unmet expectations.';

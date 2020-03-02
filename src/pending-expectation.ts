@@ -19,6 +19,8 @@ export interface PendingExpectation {
   property: PropertyKey;
 
   args: any[] | undefined;
+
+  toJSON(): string;
 }
 
 export class SingletonPendingExpectation implements PendingExpectation {
@@ -71,7 +73,7 @@ export class SingletonPendingExpectation implements PendingExpectation {
     this._property = '';
   }
 
-  toString() {
+  toJSON() {
     return printWhen(this._property, this._args);
   }
 }

@@ -7,7 +7,7 @@ export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
     super(`There is an unfinished pending expectation:
 
-${pendingExpectation.toString()}
+${pendingExpectation.toJSON()}
 
 Please finish it by setting a return value.`);
   }
@@ -54,6 +54,6 @@ export class UnmetExpectations extends Error {
   constructor(expectations: Expectation[]) {
     super(`There are unmet expectations:
 
- - ${expectations.map(e => e.toString()).join('\n - ')}`);
+ - ${expectations.map(e => e.toJSON()).join('\n - ')}`);
   }
 }

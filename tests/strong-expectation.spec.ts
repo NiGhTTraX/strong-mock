@@ -140,7 +140,7 @@ describe('DeepComparisonExpectation', () => {
     expectation.max = 3;
 
     expectAnsilessEqual(
-      expectation.toString(),
+      expectation.toJSON(),
       `when(mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
     );
   });

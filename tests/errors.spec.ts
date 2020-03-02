@@ -27,7 +27,7 @@ describe('errors', () => {
       pendingExpectation.property = 'bar';
 
       expectAnsilessEqual(
-        pendingExpectation.toString(),
+        pendingExpectation.toJSON(),
         `when(mock.bar(1, 2, 3))`
       );
     });
@@ -41,7 +41,7 @@ describe('errors', () => {
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 
-      expectAnsilessEqual(pendingExpectation.toString(), `when(mock.bar)`);
+      expectAnsilessEqual(pendingExpectation.toJSON(), `when(mock.bar)`);
     });
   });
 
@@ -50,7 +50,7 @@ describe('errors', () => {
       const pendingExpectation = new SpyPendingExpectation();
       pendingExpectation.args = [1, 2, 3];
       pendingExpectation.property = 'bar';
-      pendingExpectation.toString = () => 'foobar';
+      pendingExpectation.toJSON = () => 'foobar';
 
       expectAnsilessEqual(
         new UnfinishedExpectation(pendingExpectation).message,
@@ -66,9 +66,9 @@ Please finish it by setting a return value.`
   describe('UnmetExpectations', () => {
     it('should print all expectations', () => {
       const expectation1 = new NeverMatchingExpectation();
-      expectation1.toString = () => 'e1';
+      expectation1.toJSON = () => 'e1';
       const expectation2 = new NeverMatchingExpectation();
-      expectation2.toString = () => 'e2';
+      expectation2.toJSON = () => 'e2';
 
       const error = new UnmetExpectations([expectation1, expectation2]);
 
@@ -86,8 +86,8 @@ Please finish it by setting a return value.`
     it('should print the property and the existing expectations', () => {
       const e1 = new NeverMatchingExpectation();
       const e2 = new NeverMatchingExpectation();
-      e1.toString = () => 'e1';
-      e2.toString = () => 'e2';
+      e1.toJSON = () => 'e1';
+      e2.toJSON = () => 'e2';
       const error = new UnexpectedAccess('bar', [e1, e2]);
 
       expectAnsilessEqual(
@@ -105,8 +105,8 @@ Remaining unmet expectations:
     it('should print the property and the existing expectations', () => {
       const e1 = new NeverMatchingExpectation();
       const e2 = new NeverMatchingExpectation();
-      e1.toString = () => 'e1';
-      e2.toString = () => 'e2';
+      e1.toJSON = () => 'e1';
+      e2.toJSON = () => 'e2';
       const error = new UnexpectedCall('bar', [1, 2, 3], [e1, e2]);
 
       expectAnsilessEqual(

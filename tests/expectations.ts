@@ -6,6 +6,8 @@ import {
 } from '../src/pending-expectation';
 
 export class NeverMatchingExpectation implements Expectation {
+  toJSON = () => 'never matching';
+
   args = undefined;
 
   max = 1;
@@ -20,6 +22,8 @@ export class NeverMatchingExpectation implements Expectation {
 }
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
+  toJSON = () => 'always matching';
+
   args = undefined;
 
   max = 1;
@@ -40,6 +44,8 @@ export class NeverEndingAlwaysMatchingExpectation extends OneUseAlwaysMatchingEx
 }
 
 export class SpyExpectation implements Expectation {
+  toJSON = () => 'spy expectation';
+
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
@@ -72,6 +78,8 @@ export const spyExpectationFactory: ExpectationFactory = (
 ) => new SpyExpectation(property, args, returnValue);
 
 export class SpyPendingExpectation implements PendingExpectation {
+  toJSON = () => 'spy pending expectation';
+
   public argsCalledWith: any[] | undefined;
 
   public clearCalled = false;
