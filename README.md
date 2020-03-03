@@ -11,11 +11,21 @@
 
 ## Features
 
-- Create _strongly_ typed mocks from types and interfaces.
-- Mocks are [always strict](#why-do-i-have-to-set-all-expectations-first).
-- Useful [error messages](#error-messages).
-- Simple and expressive API.
-- Type safe [argument matchers](#argument-matchers).
+### Type safety
+
+The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
+
+![rename-interface](media/rename-interface.gif)
+
+### Useful error messages
+
+Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
+
+![error messages](media/error-messages.png)
+
+### Type safe [argument matchers](#argument-matchers)
+
+![type safe matchers](./media/type-safe-matchers.png)
 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -27,16 +37,14 @@
 - [Usage](#usage)
   - [Setting expectations](#setting-expectations)
   - [Setting multiple expectations](#setting-multiple-expectations)
-  - [Type checking](#type-checking)
+  - [Setting invocation count expectations](#setting-invocation-count-expectations)
   - [Mocking interfaces](#mocking-interfaces)
   - [Mocking functions](#mocking-functions)
   - [Mocking promises](#mocking-promises)
   - [Throwing errors](#throwing-errors)
-  - [Invocation count](#invocation-count)
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
   - [Argument matchers](#argument-matchers)
-  - [Error messages](#error-messages)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Can I mock an existing object/function?](#can-i-mock-an-existing-objectfunction)
@@ -58,7 +66,7 @@ yarn add -D strong-mock
 
 ## Requirements
 
-strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection e.g. exposing the type info at runtime.
+strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
 
 ## Usage
 
@@ -92,7 +100,7 @@ instance(foo)
 
 ### Setting multiple expectations
 
-You can set as many expectations as you want by calling `when()` multiple times.
+You can set as many expectations as you want by calling `when()` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
 
 ```typescript
 when(foo.bar(23)).thenReturn('awesome');
@@ -102,13 +110,22 @@ console.log(instance(foo).bar(23)); // awesome
 console.log(instance(foo).bar(23)); // even more awesome
 ```
 
-By default, each call is expected to be called only once. Expectations will be consumed in the order they were created. You can expect a call to be made multiple times using the [invocation count](#invocation-count) helpers.
+By default, each call is expected to be called only once. You can expect a call to be made multiple times using the [invocation count](#setting-invocation-count-expectations) helpers.
 
-### Type checking
+### Setting invocation count expectations
 
-The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
+You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
 
-![rename-interface](media/rename-interface.gif)
+```typescript
+const fn = mock<(x: number) => number>();
+
+when(fn(1)).thenReturn(1).between(2, 3);
+
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // throws because the expectation is finished
+```
 
 ### Mocking interfaces
 
@@ -141,6 +158,8 @@ type Fn = (x: number) => number;
 const fn = mock<Fn>();
 
 when(fn(1)).thenReturn(2);
+
+console.log(instance(fn)(1)); // 2
 ```
 
 ### Mocking promises
@@ -153,6 +172,8 @@ type Fn = (x: number) => Promise<number>;
 const fn = mock<Fn>();
 
 when(fn(1)).thenResolve(2);
+
+console.log(await instance(fn)()); // 2
 ```
 
 ### Throwing errors
@@ -168,22 +189,7 @@ when(fn(1)).thenThrow();
 when(fnWithPromise(1)).thenReject();
 ```
 
-### Invocation count
-
-You can expect a call to be made any number of times using the invocation count helpers `between`, `atLeast`, `times` etc.:
-
-```typescript
-const fn = mock<(x: number) => number>();
-
-when(fn(1)).thenReturn(1).between(2, 3);
-
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // throws because the expectation is finished
-```
-
-You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation it and the mock will throw if the call happens.
+You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
 
 ### Verifying expectations
 
@@ -231,19 +237,13 @@ console.log(instance(fn)(-1)); // throws
 console.log(instance(fn)(1)); // 'greater than zero'
 ```
 
-### Error messages
-
-Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
-
-![error messages](media/error-messages.png)
-
 ## FAQ
 
 ### Why do I have to set all expectations first?
 
 This library is different from other mocking/spying libraries you might have used before such as [sinon](https://sinonjs.org) or [jest](https://jestjs.io/docs/en/mock-functions). Whereas those libraries are focused on recording calls to the mocks and always returning something, strong-mock requires you to set your expectations upfront. If a call happens that is not expected the mock will throw an error.
 
-This design decision has a few reasons behind it. First of all, it forces you to be aware of what your code needs from its dependencies. Spying library encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
+This design decision has a few reasons behind it. First of all, it forces you to be aware of what your code needs from its dependencies. Spying libraries encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
 
 Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them then you might want to look into splitting the code to only depend on things it really needs.
 
