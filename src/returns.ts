@@ -59,7 +59,8 @@ type NonPromiseStub<R> = {
   thenThrow(): InvocationCount;
 };
 
-export type Stub<T> = T extends Promise<infer U>
+// Wrap T in a tuple to prevent distribution in case it's a union.
+export type Stub<T> = [T] extends [Promise<infer U>]
   ? PromiseStub<U>
   : NonPromiseStub<T>;
 
