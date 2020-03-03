@@ -38,6 +38,23 @@ describe('proxy', () => {
     expect(args).toEqual([1, 2, 3]);
   });
 
+  it('should trap fn.call(this)', () => {
+    let args: number[] = [];
+
+    const proxy = createProxy<() => void>({
+      property: () => {
+        throw new Error('should not be called');
+      },
+      apply: argArray => {
+        args = argArray;
+      }
+    });
+
+    proxy.call(null);
+
+    expect(args).toEqual([]);
+  });
+
   it('should trap fn.apply(this, [...args])', () => {
     let args: number[] = [];
 
@@ -53,6 +70,23 @@ describe('proxy', () => {
     proxy.apply(null, [1, 2, 3]);
 
     expect(args).toEqual([1, 2, 3]);
+  });
+
+  it('should trap fn.apply(this)', () => {
+    let args: number[] = [];
+
+    const proxy = createProxy<() => void>({
+      property: () => {
+        throw new Error('should not be called');
+      },
+      apply: argArray => {
+        args = argArray;
+      }
+    });
+
+    proxy.apply(null);
+
+    expect(args).toEqual([]);
   });
 
   it('should trap Reflect.apply(fn, this, [...args])', () => {
