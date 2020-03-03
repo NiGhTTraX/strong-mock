@@ -15,15 +15,15 @@
   },
   "author": "Andrei Picus",
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rm -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "compile": "rollup -c",
     "prepublishOnly": "npm run build",
     "lint": "eslint --ext ts,tsx,js .",
     "test": "tdd-buffet test",
@@ -55,6 +55,8 @@
     "husky": "~4.2.0",
     "lint-staged": "~10.0.0",
     "prettier": "~1.19.1",
+    "rollup": "~1.32.0",
+    "rollup-plugin-typescript2": "~0.26.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~0.15.0",
     "typescript": "~3.7.0"
