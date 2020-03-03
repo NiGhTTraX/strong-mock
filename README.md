@@ -183,6 +183,8 @@ console.log(instance(fn)(1)); // 1
 console.log(instance(fn)(1)); // throws because the expectation is finished
 ```
 
+You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation it and the mock will throw if the call happens.
+
 ### Verifying expectations
 
 Since all mocks are strict, meaning that an unexpected call will throw, you probably want, at the end of your test, to verify that all expectations have been met. You can do that by simply calling the `verify` function.
