@@ -2,19 +2,60 @@ import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from './pending-expectation';
 
 type PromiseStub<R> = {
+  /**
+   * Set the return value for the current call.
+   *
+   * @param promise This needs to be a Promise wrapping the same type
+   *   as the value returned by the call inside `when()`.
+   */
   thenReturn(promise: Promise<R>): InvocationCount;
-  thenResolve(returnValue: R): InvocationCount;
 
+  /**
+   * Set the return value for the current call.
+   *
+   * @param promiseValue This needs to be of the same type as the value inside
+   *   the promise returned by the call inside `when()`.
+   */
+  thenResolve(promiseValue: R): InvocationCount;
+
+  /**
+   * Make the current call reject with the given error.
+   */
   thenReject(error: Error): InvocationCount;
+
+  /**
+   * Make the current call reject with an error with the given message.
+   */
   thenReject(message: string): InvocationCount;
+
+  /**
+   * Make the current call reject with `new Error()`.
+   */
   thenReject(): InvocationCount;
 };
 
 type NonPromiseStub<R> = {
+  /**
+   * Set the return value for the current call.
+   *
+   * @param returnValue This needs to be of the same type as the value returned
+   *   by the call inside `when()`.
+   */
   thenReturn(returnValue: R): InvocationCount;
 
+  /**
+   * Make the current call throw the given error.
+   */
   thenThrow(error: Error): InvocationCount;
+
+  /**
+   * Make the current call throw an error with the given message.
+   */
   thenThrow(message: string): InvocationCount;
+
+  /**
+   * Make the current call throw `new Error()`.
+   */
   thenThrow(): InvocationCount;
 };
 
@@ -22,6 +63,9 @@ export type Stub<T> = T extends Promise<infer U>
   ? PromiseStub<U>
   : NonPromiseStub<T>;
 
+/**
+ * Set a return value for the currently pending expectation.
+ */
 export const finishPendingExpectation = (
   returnValue: any,
   pendingExpectation: PendingExpectation
@@ -32,7 +76,7 @@ export const finishPendingExpectation = (
   return createInvocationCount(finishedExpectation);
 };
 
-const getError = (errorOrMessage: Error | string | undefined) => {
+const getError = (errorOrMessage: Error | string | undefined): Error => {
   if (typeof errorOrMessage === 'string') {
     return new Error(errorOrMessage);
   }
@@ -63,9 +107,9 @@ export const createReturns = <R>(
     thenReturn: (promise: Promise<any>): InvocationCount =>
       finishPendingExpectation(promise, pendingExpectation),
 
-    thenResolve: (returnValue: any): InvocationCount =>
+    thenResolve: (promiseValue: any): InvocationCount =>
       finishPendingExpectation(
-        Promise.resolve(returnValue),
+        Promise.resolve(promiseValue),
         pendingExpectation
       ),
 

@@ -14,6 +14,12 @@ import { createProxy } from './proxy';
 // but still has the same properties as T?
 export type Mock<T> = T;
 
+/**
+ * Store a global map of all mocks created and their expectation repositories.
+ *
+ * This is needed because we can't reliably pass the repository between `when`,
+ * `thenReturn` and `instance`.
+ */
 export const mockMap = new Map<Mock<any>, ExpectationRepository>();
 
 export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
@@ -26,6 +32,9 @@ export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
 
 export const createStub = <T>(
   repo: ExpectationRepository,
+  // TODO: create a factory for pending expectations and a getter from mock
+  // to a pending expectation; then push this dependency up the call stack
+  // so that consumers of `mock()` can supply their own type of expectation
   pendingExpectation: PendingExpectation = SINGLETON_PENDING_EXPECTATION
 ): Mock<T> => {
   return createProxy<T>({
@@ -49,6 +58,19 @@ export const createStub = <T>(
   });
 };
 
+/**
+ * Create a type safe mock.
+ *
+ * Set expectations on the mock using `when` and `thenReturn` and get an
+ * instance from the mock using `instance`.
+ *
+ * @example
+ * const fn = mock<() => number>();
+ *
+ * when(fn()).thenReturn(23);
+ *
+ * instance(fn) === 23;
+ */
 export const mock = <T>(
   repository: ExpectationRepository = new FIFORepository()
 ): Mock<T> => {

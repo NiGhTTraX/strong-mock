@@ -21,6 +21,9 @@ export interface PendingExpectation {
 
   args: any[] | undefined;
 
+  /**
+   * Used by `pretty-format`.
+   */
   toJSON(): string;
 }
 

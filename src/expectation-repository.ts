@@ -2,12 +2,14 @@ import { Expectation } from './expectation';
 
 export interface ExpectationRepository {
   /**
-   * Add expectation to the repo.
+   * Add an expectation to the repo.
    */
   add(expectation: Expectation): void;
 
   /**
    * Find a matching expectation and consume it.
+   *
+   * The order in which expectations are returned depends on the implementation.
    */
   findAndConsume(
     property: PropertyKey,
@@ -24,6 +26,9 @@ export interface ExpectationRepository {
    */
   getUnmet(): Expectation[];
 
+  /**
+   * Remove all expectations.
+   */
   clear(): void;
 }
 

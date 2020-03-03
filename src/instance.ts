@@ -4,6 +4,10 @@ import { ExpectationRepository } from './expectation-repository';
 import { getRepoForMock, Mock } from './mock';
 import { createProxy } from './proxy';
 
+/**
+ * Return the expectation's return value. If the value is an error then
+ * throw it.
+ */
 const returnOrThrow = (expectation: Expectation) => {
   const { returnValue } = expectation;
 
@@ -14,6 +18,9 @@ const returnOrThrow = (expectation: Expectation) => {
   return returnValue;
 };
 
+/**
+ * Find a matching expectation and return its return value.
+ */
 const findAndReturn = (
   repo: ExpectationRepository,
   args: any[],
@@ -28,6 +35,9 @@ const findAndReturn = (
   return returnOrThrow(expectation);
 };
 
+/**
+ * Get a real instance from the mock that you can pass to your code under test.
+ */
 export const instance = <T>(mock: Mock<T>): T => {
   const repo = getRepoForMock(mock);
 

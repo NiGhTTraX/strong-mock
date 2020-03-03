@@ -3,6 +3,18 @@ import { Expectation } from './expectation';
 import { isMatcher } from './matcher';
 import { printExpectation } from './print';
 
+/**
+ * Deeply compare actual arguments against expected ones.
+ *
+ * Supports argument matchers. Matches a call with more parameters
+ * than expected because it is assumed the compiler will check that those
+ * parameters are optional.
+ *
+ * @example
+ * new Expectation('bar', [1, 2, 3], 23).matches('bar', [1, 2, 3]) === true;
+ * new Expectation('bar', [1, 2, 3], 23).matches('bar', [1, 2]) === false;
+ * new Expectation('bar', [1, 2], 23).matches('bar', [1, 2, 3]) === true;
+ */
 export class StrongExpectation implements Expectation {
   constructor(
     public property: PropertyKey,

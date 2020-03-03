@@ -1,32 +1,42 @@
 export type Matcher<T> = T & {
+  /**
+   * Will be called with a value to match against.
+   */
   matches: (arg: any) => boolean;
-  toJSON(): string;
+
+  /**
+   * TODO: turn into a symbol
+   */
   __isMatcher: boolean;
+
+  /**
+   * Used by `pretty-format`.
+   */
+  toJSON(): string;
 };
 
+/**
+ * Use to test if an expectation on an argument is a custom matcher.
+ */
 export function isMatcher(f: any): f is Matcher<any> {
   return (<Matcher<any>>f).__isMatcher;
 }
 
 /**
- * Match any value.
- *
- * The compiler will make sure the type is correct and the matcher
- * will permit any value.
+ * Match any value, including `undefined` and `null`.
  *
  * @example
- * ```
- * const mock = new Mock<(x: number, y: string) => number>();
- * mock.when(f => f(It.isAny(), It.isAny())).returns(1);
- *
- * mock.stub(23, 'foobar') === 1
- * mock.stub(23, true) // compiler error
- * ```
+ * const fn = mock<(x: number, y: string) => number>();
+ * when(fn(It.isAny(), It.isAny()).thenReturn(1);
+ * instance(fn)(23, 'foobar') === 1
  */
 const isAny = (): Matcher<any> => ({
   matches: () => true,
   __isMatcher: true,
 
+  /**
+   * Used by `pretty-format`.
+   */
   toJSON() {
     return 'anything';
   }
@@ -38,16 +48,11 @@ const isAny = (): Matcher<any> => ({
  * @param cb Will receive the value and returns whether it matches.
  *
  * @example
- * ```
- * type Foobar = { foo: 'string', bar: number };
+ * const fn = mock<(x: number) => number>();
+ * when(fn(It.matches(x => x >= 0)).returns(42);
+ * instance(fn)(-1) // throws
  *
- * const mock = new Mock<(x: Foobar) => number>();
- * mock.when(f => f(It.matches(x => x.foo === 'bar')).returns(1);
- * mock.when(f => f(It.matches(x => x.bar >= 3)).returns(2);
- *
- * mock.stub({foo: 'bar', bar: 0 }) === 1
- * mock.stub({foo: 'baz', bar: 0 }) // throws
- * ```
+ * @param cb
  */
 const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
   ({
@@ -59,6 +64,10 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
     }
   } as any);
 
+/**
+ * Contains argument matchers that can be used to ignore arguments in an
+ * expectation or to match complex arguments.
+ */
 // TODO: add matchesObject, matchesString
 export const It = {
   isAny,

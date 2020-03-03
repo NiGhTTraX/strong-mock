@@ -7,7 +7,13 @@ export interface Expectation {
 
   matches(property: PropertyKey, args: any[] | undefined): boolean;
 
+  /**
+   * Used by `pretty-format`.
+   */
   toJSON(): string;
 }
 
+/**
+ * Special symbol denoting the call of a function.
+ */
 export const ApplyProp = Symbol('apply');

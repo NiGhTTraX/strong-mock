@@ -2,7 +2,7 @@ import { Expectation } from './expectation';
 
 export interface InvocationCount {
   /**
-   * `min` and `max` are inclusive.
+   * Expect a call to be made at least `min` times and at most `max` times.
    */
   between(min: number, max: number): void;
 
