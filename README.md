@@ -1,5 +1,5 @@
 <div align="center">
-💪 strong-mock
+<h1>💪 strong-mock</h1>
 
 <p>Simple type safe mocking library</p>
 </div>
