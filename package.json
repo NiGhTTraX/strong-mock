@@ -1,6 +1,6 @@
 {
   "name": "strong-mock",
-  "version": "3.2.4",
+  "version": "4.0.0-alpha.2",
   "description": "Simple type safe mocking library",
   "keywords": [
     "tdd",
@@ -15,15 +15,16 @@
   },
   "author": "Andrei Picus",
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
+    "docs": "doctoc --title '**Table of Contents**' README.md",
     "build": "npm run clean && npm run compile",
     "clean": "rm -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "compile": "rollup -c",
     "prepublishOnly": "npm run build",
     "lint": "eslint --ext ts,tsx,js .",
     "test": "tdd-buffet test",
@@ -40,18 +41,24 @@
     "*.js": "eslint"
   },
   "dependencies": {
-    "@types/node": "~12.12.0"
+    "jest-matcher-utils": "~25.1.0",
+    "lodash": "~4.17.15"
   },
   "devDependencies": {
     "@nighttrax/eslint-config-ts": "~3.0.0",
     "@typescript-eslint/eslint-plugin": "~2.22.0",
+    "@types/lodash": "~4.14.149",
     "codecov": "~3.6.0",
+    "doctoc": "~1.4.0",
     "eslint": "~6.8.0",
     "eslint-config-prettier": "~6.10.0",
     "eslint-plugin-prettier": "~3.1.1",
     "husky": "~4.2.0",
     "lint-staged": "~10.0.0",
     "prettier": "~1.19.1",
+    "rollup": "~1.32.0",
+    "rollup-plugin-typescript2": "~0.26.0",
+    "strip-ansi": "~6.0.0",
     "tdd-buffet": "~0.15.0",
     "typescript": "~3.8.0"
   }

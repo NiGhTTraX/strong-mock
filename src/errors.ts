@@ -1,108 +1,59 @@
-import { inspect } from 'util';
-import {
-  Expectation,
-  MethodExpectation,
-  PropertyExpectation
-} from './expectations';
+import { EXPECTED_COLOR } from 'jest-matcher-utils';
+import { Expectation } from './expectation';
+import { PendingExpectation } from './pending-expectation';
+import { printCall, printProperty, printRemainingExpectations } from './print';
 
-const formatExpectationList = (expectations: Expectation[]) =>
-  ` - ${expectations.join('\n - ')}`;
+export class UnfinishedExpectation extends Error {
+  constructor(pendingExpectation: PendingExpectation) {
+    super(`There is an unfinished pending expectation:
 
-export class UnmetMethodExpectationError extends Error {
-  constructor(
-    method: string,
-    unmetExpectation: MethodExpectation,
-    expectations: MethodExpectation[]
-  ) {
-    super(`Expected ${method} to have been called with ${unmetExpectation.toString(
-      false
-    )}
+${pendingExpectation.toJSON()}
 
-Existing expectations:
-${formatExpectationList(expectations)}`);
-
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnmetMethodExpectationError.prototype);
+Please finish it by setting a return value.`);
   }
 }
 
-export class UnmetApplyExpectationError extends Error {
-  constructor(
-    unmetExpectation: MethodExpectation,
-    expectations: MethodExpectation[]
-  ) {
-    super(`Expected function to have been called with ${unmetExpectation.toString(
-      false
-    )}
-
-Existing expectations:
-${formatExpectationList(expectations)}`);
-
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnmetApplyExpectationError.prototype);
-  }
-}
-
-export class UnmetPropertyExpectationError extends Error {
-  constructor(
-    property: string,
-    unmetExpectation: PropertyExpectation,
-    expectations: PropertyExpectation[]
-  ) {
-    super(`Expected ${property} to have been accessed ${unmetExpectation.toString(
-      false
-    )}
-
-Existing expectations:
-${formatExpectationList(expectations)}`);
-
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnmetPropertyExpectationError.prototype);
-  }
-}
-
-export class WrongMethodArgsError extends Error {
-  constructor(
-    property: string,
-    args: any[],
-    expectations: MethodExpectation[]
-  ) {
-    super(`${property} not expected to have been called with ${inspect(args)}!
-
-Existing expectations:
-${formatExpectationList(expectations)}`);
-
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, WrongMethodArgsError.prototype);
-  }
-}
-
-export class WrongApplyArgsError extends Error {
-  constructor(args: any[], expectations: MethodExpectation[]) {
-    super(`Function not expected to have been called with ${inspect(args)}!
-
-Existing expectations:
-${formatExpectationList(expectations)}`);
-
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, WrongApplyArgsError.prototype);
-  }
-}
-
-export class UnexpectedApplyError extends Error {
+export class MissingWhen extends Error {
   constructor() {
-    super('Function not expected to have been called!');
+    super(`You tried setting a return value without an expectation.
 
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnexpectedApplyError.prototype);
+Every call to set a return value must be preceded by an expectation.
+    `);
   }
 }
 
-export class UnexpectedAccessError extends Error {
-  constructor(property: string) {
-    super(`${property} not expected to have been accessed`);
+export class UnexpectedAccess extends Error {
+  constructor(property: PropertyKey, expectations: Expectation[]) {
+    super(`Didn't expect ${EXPECTED_COLOR(
+      `mock${printProperty(property)}`
+    )} to be accessed.
 
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, UnexpectedAccessError.prototype);
+${printRemainingExpectations(expectations)}`);
+  }
+}
+
+export class UnexpectedCall extends Error {
+  constructor(property: PropertyKey, args: any[], expectations: Expectation[]) {
+    super(`Didn't expect ${EXPECTED_COLOR(
+      `mock${printCall(property, args)}`
+    )} to be called.
+
+${printRemainingExpectations(expectations)}`);
+  }
+}
+
+export class NotAMock extends Error {
+  constructor() {
+    super(`We couldn't find the mock.
+
+Make sure you're passing in an actual mock.`);
+  }
+}
+
+export class UnmetExpectations extends Error {
+  constructor(expectations: Expectation[]) {
+    super(`There are unmet expectations:
+
+ - ${expectations.map(e => e.toJSON()).join('\n - ')}`);
   }
 }

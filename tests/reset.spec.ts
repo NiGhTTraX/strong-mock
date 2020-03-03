@@ -1,40 +1,19 @@
-import { expect } from 'tdd-buffet/expect/chai';
+/* eslint-disable class-methods-use-this */
+import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import Mock from '../src/mock';
+import { when } from '../src';
+import { FIFORepository } from '../src/expectation-repository';
+import { mock } from '../src/mock';
+import { reset } from '../src/reset';
 
-describe('Mock', () => {
-  describe('reset', () => {
-    it('methods', () => {
-      interface Foo {
-        bar(x: number): number;
-      }
-      const mock = new Mock<Foo>();
+describe('reset', () => {
+  it('should clear the expectation repo', () => {
+    const repo = new FIFORepository();
+    const fn = mock<() => void>(repo);
 
-      mock.when(f => f.bar(1)).returns(2);
-      mock.reset();
+    when(fn()).thenReturn(undefined);
+    reset(fn);
 
-      expect(() => mock.verifyAll()).to.not.throw();
-
-      mock.when(f => f.bar(3)).returns(4);
-
-      expect(mock.stub.bar(3)).to.equal(4);
-      expect(() => mock.stub.bar(1)).to.throw();
-    });
-
-    it('properties', () => {
-      interface Foo {
-        bar: number;
-      }
-      const mock = new Mock<Foo>();
-
-      mock.when(f => f.bar).returns(2);
-      mock.reset();
-
-      expect(() => mock.verifyAll()).to.not.throw();
-
-      mock.when(f => f.bar).returns(4);
-
-      expect(mock.stub.bar).to.equal(4);
-    });
+    expect(repo.getUnmet()).toHaveLength(0);
   });
 });

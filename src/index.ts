@@ -1,7 +1,9 @@
 /* istanbul ignore file */
+import { instance } from './instance';
+import { mock } from './mock';
+import { reset } from './reset';
+import { verify } from './verify';
+import { when } from './when';
 import { It } from './matcher';
-import Mock from './mock';
 
-export default Mock;
-
-export { It };
+export { mock, when, instance, verify, reset, It };

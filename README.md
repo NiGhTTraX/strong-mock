@@ -1,297 +1,280 @@
-> Simple type safe mocking library
+<div align="center">
+<h1>💪 strong-mock</h1>
+
+<p>Simple type safe mocking library</p>
+</div>
+
+----
 
 [![Build Status](https://travis-ci.com/NiGhTTraX/strong-mock.svg?branch=master)](https://travis-ci.com/NiGhTTraX/strong-mock) [![codecov](https://codecov.io/gh/NiGhTTraX/strong-mock/branch/master/graph/badge.svg)](https://codecov.io/gh/NiGhTTraX/strong-mock) ![npm type definitions](https://img.shields.io/npm/types/strong-mock.svg)
 ----
 
 ## Features
 
-- _Strongly_ typed mocks from interfaces.
-- Mocks are always strict.
-- Useful error messages.
+- Create _strongly_ typed mocks from types and interfaces.
+- Mocks are [always strict](#why-do-i-have-to-set-all-expectations-first).
+- Useful [error messages](#error-messages).
 - Simple and expressive API.
-- Type safe argument matchers.
+- Type safe [argument matchers](#argument-matchers).
 
 
-## Limitations
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
 
-- No call forwarding support.
-- No setter mocking support.
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Setting expectations](#setting-expectations)
+  - [Setting multiple expectations](#setting-multiple-expectations)
+  - [Type checking](#type-checking)
+  - [Mocking interfaces](#mocking-interfaces)
+  - [Mocking functions](#mocking-functions)
+  - [Mocking promises](#mocking-promises)
+  - [Throwing errors](#throwing-errors)
+  - [Invocation count](#invocation-count)
+  - [Verifying expectations](#verifying-expectations)
+  - [Resetting expectations](#resetting-expectations)
+  - [Argument matchers](#argument-matchers)
+  - [Error messages](#error-messages)
+- [FAQ](#faq)
+  - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
+  - [Can I mock an existing object/function?](#can-i-mock-an-existing-objectfunction)
+  - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
+  - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
+  - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
 
-If you need any of the above check other libraries like [typemoq](https://github.com/florinn/typemoq) or [ts-mockito](https://github.com/NagRock/ts-mockito).
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Installation
+
+```
+npm i -D strong-mock
+```
+
+```
+yarn add -D strong-mock
+```
 
 ## Requirements
 
-strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from interfaces because TypeScript does not support reflection e.g. exposing the type info at runtime.
-
+strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection e.g. exposing the type info at runtime.
 
 ## Usage
 
+```typescript
+import { mock, when, instance } from 'strong-mock';
+
+interface Foo {
+  bar: (x: number) => string;
+}
+
+const foo = mock<Foo>();
+
+when(foo.bar(23)).thenReturn('awesome');
+
+console.log(instance(foo).bar(23)); // 'awesome'
+```
+
 ### Setting expectations
 
-Expectations are set by chaining a `.when()` call with a `.returns()` call. The `.returns()` part is **mandatory** and omitting it will **not** set an expectation, even if the return value should be `undefined`. This is 
-1. to prevent runtime errors where the unit under test expects a return value from the mock stub and
-2. discourage side effects or at least make them explicit.
+Expectations are set by calling the mock inside a `when()` call and finishing it by setting a return value.
 
 ```typescript
-import Mock from 'strong-mock';
-import { expect } from 'chai';
-
-type Foo = (x: number) => string;
-
-function bar(foo: Foo): boolean {
-  return foo(23) === 'foobar';
-}
-
-const foo = Mock<Foo>();
-foo.when(f => f(23)); // does nothing
-
-// Other libraries might cause this test to pass.
-// strong-mock will throw instead because the
-// `f(23)` expectation is not actually set.
-expect(bar(foo.stub)).to.be.false;
+when(foo.bar(23)).thenReturn('awesome');
 ```
 
-
-#### Type checking
-
-Since the callback in `.when()` receives a stub that is the same type you're mocking, this means that the compiler will make sure you're setting valid expectations.
-
-However, the required type for the value in `.returns()` is inferred from the callback passed to `.when()`.
+After expectations have been set you need to get an instance of the mock by calling `instance()`.
 
 ```typescript
-import Mock from 'strong-mock';
-
-type Foo = (x: number) => string;
-
-const foo = Mock<Foo>();
-foo
-  .when(f => { f(23); })
-  .returns(/* undefined is inferred here */);
+instance(foo)
 ```
 
-Unfortunately there is no way to infer the key being accessed in `.when()` (if you do know of a way, please open an issue or a PR). This means that you should always return the value of the call you're making when setting expectations.
+### Setting multiple expectations
 
-
-#### Multiple expectations
-
-You can set multiple expectations, even with the same arguments, and they will be fulfilled in the order they were set. Once all expectations are met further calls will throw.
+You can set as many expectations as you want by calling `when()` multiple times.
 
 ```typescript
-import Mock from 'strong-mock';
+when(foo.bar(23)).thenReturn('awesome');
+when(foo.bar(23)).thenReturn('even more awesome');
 
-const mock = Mock<(x: number) => string>();
-
-mock.when(f => f(1)).returns('bar');
-mock.when(f => f(1)).returns('baz');
-
-console.log(mock.stub(1)); // 'bar'
-console.log(mock.stub(1)); // 'baz'
-console.log(mock.stub(1)); // throws
+console.log(instance(foo).bar(23)); // awesome
+console.log(instance(foo).bar(23)); // even more awesome
 ```
 
+By default, each call is expected to be called only once. Expectations will be consumed in the order they were created. You can expect a call to be made multiple times using the [invocation count](#invocation-count) helpers.
 
-### Mocking interface methods
+### Type checking
 
-Passing an object/class interface will create a stub that mimics the properties on the interface. Since reflection is not supported in TypeScript, meaning the type information can't be read, the stub is actually an ES6 Proxy that intercepts property accesses and returns appropriate things based on the expectations that were set.
+The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
+
+![rename-interface](media/rename-interface.gif)
+
+### Mocking interfaces
+
+Pass in the interface to the generic argument of `mock`:
 
 ```typescript
-import Mock from 'strong-mock';
-
 interface Foo {
-  bar(x: number): string;
-  baz(): void;
+  bar: (x: number) => string;
+  baz: number;
 }
 
-const mock = new Mock<Foo>();
+const foo = mock<Foo>();
 
-mock.when(f => f.bar(23)).returns('bar');
+when(foo.bar(23)).thenReturn('awesome');
+when(foo.baz).thenReturn(100);
 
-console.log(mock.stub.bar(23)); // 'bar'
-
-// The following will throw because `baz()` is not expected
-// to be called.
-console.log(mock.stub.baz());
+console.log(instance(foo).bar(23)); // 'awesome'
+console.log(instance(foo).baz); // 100
 ```
 
-There's no difference in passing an interface vs passing a concrete class - the mock will use a Proxy in both cases and unexpected property access will still throw. Moreover, there is no support for forwarding calls to the concrete class.
-
-
-### Mocking getters
-
-You can mock properties/getters the same way as you would mock methods.
-
-```typescript
-import Mock from 'strong-mock';
-
-interface Foo {
-  bar: string;
-}
-
-const mock = new Mock<Foo>();
-
-mock.when(f => f.bar).returns('bar');
-mock.when(f => f.bar).returns('baz');
-
-console.log(mock.stub.bar); // 'bar'
-console.log(mock.stub.bar); // 'baz'
-```
-
-Note that you can't mock both a property access and a call for the same property name. **Property expectations will always have priority**.
-
-```typescript
-import Mock from 'strong-mock';
-
-interface Foo {
-  bar(): string;
-}
-
-const mock = new Mock<Foo>();
-
-mock.when(f => f.bar).returns(() => 'bar');
-mock.when(f => f.bar()).returns('baz');
-
-console.log(mock.stub.bar()); // 'bar'
-console.log(mock.stub.bar()); // throws
-```
-
+Since the mock is type safe the compiler will guarantee that you're only mocking things that actually exist on the interface.
 
 ### Mocking functions
 
-Mocking functions is similar to mocking interfaces. You can also mock properties on the function, even inherited ones.
+You can also mock functions similarly to interfaces:
 
 ```typescript
-import Mock from 'strong-mock';
+type Fn = (x: number) => number;
 
-type Foo = () => number;
+const fn = mock<Fn>();
 
-const mock = new Mock<Foo>();
-
-mock.when(f => f()).returns(23);
-mock.when(f => f.toString()).returns('foobar');
-
-console.log(mock.stub()); // 23
-console.log(mock.stub); // 'foobar'
+when(fn(1)).thenReturn(2);
 ```
-
 
 ### Mocking promises
 
+If you're mocking something that returns a promise then you'll be able to use the promise helpers to set the return value.
+
 ```typescript
-import Mock from 'strong-mock';
+type Fn = (x: number) => Promise<number>;
 
-type Foo = () => Promise<number>;
+const fn = mock<Fn>();
 
-const mock = new Mock<Foo>();
-
-mock.when(f => f()).resolves(23);
-mock.when(f => f()).returns(Promise.resolve(42));
-
-console.log(await mock.stub()); // 23
-console.log(await mock.stub()); // 42
+when(fn(1)).thenResolve(2);
 ```
-
 
 ### Throwing errors
 
-You can make any expectation result in an error.
-
 ```typescript
-import Mock from 'strong-mock';
+type Fn = (x: number) => void;
+type FnWithPromise = (x: number) => Promise<void>;
 
-type Foo = () => void;
+const fn = mock<Fn>();
+const fnWithPromise = mock<FnWithPromise>();
 
-const mock = new Mock<Foo>();
-
-mock.when(f => f()).throws(new Error('oops'))
-mock.when(f => f()).throws('oh no');
-
-mock.stub(); // throws 'oops'
-mock.stub(); // throws 'oh no'
+when(fn(1)).thenThrow();
+when(fnWithPromise(1)).thenReject();
 ```
-
-You can also make promises reject in a similar way.
-
-```typescript
-import Mock from 'strong-mock';
-
-type Foo = () => Promise<number>;
-
-const mock = new Mock<Foo>();
-
-mock.when(f => f()).rejects(new Error('oops'))
-
-mock.stub(); // rejects with 'oops'
-```
-
 
 ### Invocation count
 
+You can expect a call to be made any number of times using the invocation count helpers `between`, `atLeast`, `times` etc.:
+
 ```typescript
-import Mock from 'strong-mock';
+const fn = mock<(x: number) => number>();
 
-type Foo = () => number;
+when(fn(1)).thenReturn(1).between(2, 3);
 
-const mock = new Mock<Foo>();
-
-mock.when(f => f()).returns(1).times(2);
-mock.when(f => f()).returns(2).always();
-
-mock.stub(); // 1
-mock.stub(); // 1
-mock.stub(); // 2
-mock.stub(); // 2
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // 1
+console.log(instance(fn)(1)); // throws because the expectation is finished
 ```
 
+You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation it and the mock will throw if the call happens.
 
 ### Verifying expectations
 
-You can verify that all expectations have been met by calling `.verifyAll()` on the mock object. The call will throw with the first unmet expectation if there is any.
+Since all mocks are strict, meaning that an unexpected call will throw, you probably want, at the end of your test, to verify that all expectations have been met. You can do that by simply calling the `verify` function.
 
 ```typescript
-import Mock from 'strong-mock';
+const fn = mock<(x: number) => number>();
 
-const mock = Mock<(x: number) => string>();
+when(fn(1)).thenReturn(1).between(2, 10);
 
-mock.when(f => f(1)).returns('bar');
-mock.when(f => f(2)).returns('baz');
+verify(fn); // throws
 
-mock.stub(1);
+instance(fn)(1);
+instance(fn)(1);
 
-mock.verifyAll(); // will throw because `bar(2)` hasn't been called
+verify(fn); // doesn't throw, even though there can be more calls
 ```
-
 
 ### Resetting expectations
 
-By calling `.reset()` on the mock you can clear all expectations and start from the beginning. This is useful for test setup/teardown hooks.
-
+You can remove all expectations from a mock by using the `reset()` method:
+                                                                        
 ```typescript
-import Mock from 'strong-mock';
+const fn = mock<(x: number) => number>();
 
-const mock = Mock<(x: number) => string>();
+when(fn(1)).thenReturn(1);
 
-mock.when(f => f(1)).returns('bar');
-mock.reset();
-mock.when(f => f(1)).returns('baz');
+reset(fn);
 
-console.log(mock.stub(1)); // baz
+instance(fn)(1); // throws
 ```
-
 
 ### Argument matchers
 
-When setting up the mock expectations you can ignore arguments or you can use custom matchers for them.
+Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks. In those cases you can use argument matchers to either ignore some arguments or use custom matchers to check them.
 
 ```typescript
-import Mock, { It } from 'strong-mock';
+const fn = mock<(x: number) => string>();
 
-const mock = new Mock<(x: number, y: string) => boolean>();
+when(fn(It.isAny())).thenReturn('matched!');
+when(fn(It.matches(x => x > 0))).thenReturn('greater than zero');
 
-mock.when(f => f(It.isAny, 'foobar')).returns(true);
-mock.when(f => f(It.matches(x => x > 0), It.matches(y => y))).returns(true);
-
-mock.stub(1, 'foobar'); // true
-mock.stub(-1, 'foobar'); // throws
-mock.stub(2, ''); // throws
+console.log(instance(fn)(123)); // 'matched!'
+console.log(instance(fn)(-1)); // throws
+console.log(instance(fn)(1)); // 'greater than zero'
 ```
+
+### Error messages
+
+Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
+
+![error messages](media/error-messages.png)
+
+## FAQ
+
+### Why do I have to set all expectations first?
+
+This library is different from other mocking/spying libraries you might have used before such as [sinon](https://sinonjs.org) or [jest](https://jestjs.io/docs/en/mock-functions). Whereas those libraries are focused on recording calls to the mocks and always returning something, strong-mock requires you to set your expectations upfront. If a call happens that is not expected the mock will throw an error.
+
+This design decision has a few reasons behind it. First of all, it forces you to be aware of what your code needs from its dependencies. Spying library encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
+
+Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them then you might want to look into splitting the code to only depend on things it really needs.
+
+### Can I mock an existing object/function?
+
+No, although you can pass its type to `mock()` and set expectations on it as you would with a type.
+
+### How do I set expectations on setters?
+
+You currently can't do that. Please use a normal method instead e.g. `setFoo()` vs `set foo()`.
+
+### Why do I have to set a return value even if it's `undefined`?
+
+To make side effects explicit and to prevent future refactoring headaches. If you would have just `when(fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
+
+### How do I provide a function for the mock to call?
+
+There is no `thenCall()` method because it can't be safely typed - the type for `thenReturn()` is inferred from the return type in `when()`, meaning that the required type would be the return value for the function, not the function itself. However, we can leverage this by setting an expectation on the function property instead:
+
+```typescript
+interface Foo {
+  bar: (x: number) => string;
+}
+
+const foo = mock<Foo>();
+
+when(foo.bar).thenReturn(x => `called ${x}`);
+
+console.log(instance(foo).bar(23)); // 'called 23'
+```
+
+The function in `thenReturn()` will be type checked against the actual interface so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
+
+![call-rename](media/rename-args.gif)
