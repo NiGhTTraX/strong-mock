@@ -26,8 +26,8 @@
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Setting expectations](#setting-expectations)
-    - [Type checking](#type-checking)
-    - [Multiple expectations](#multiple-expectations)
+  - [Setting multiple expectations](#setting-multiple-expectations)
+  - [Type checking](#type-checking)
   - [Mocking interfaces](#mocking-interfaces)
   - [Mocking functions](#mocking-functions)
   - [Mocking promises](#mocking-promises)
@@ -58,7 +58,7 @@ yarn add -D strong-mock
 
 ## Requirements
 
-strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from interfaces because TypeScript does not support reflection e.g. exposing the type info at runtime.
+strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection e.g. exposing the type info at runtime.
 
 ## Usage
 
@@ -90,13 +90,7 @@ After expectations have been set you need to get an instance of the mock by call
 instance(foo)
 ```
 
-#### Type checking
-
-The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also touch your expectations.
-
-![rename-interface](media/rename-interface.gif)
-
-#### Multiple expectations
+### Setting multiple expectations
 
 You can set as many expectations as you want by calling `when()` multiple times.
 
@@ -109,6 +103,12 @@ console.log(instance(foo).bar(23)); // even more awesome
 ```
 
 By default, each call is expected to be called only once. Expectations will be consumed in the order they were created. You can expect a call to be made multiple times using the [invocation count](#invocation-count) helpers.
+
+### Type checking
+
+The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
+
+![rename-interface](media/rename-interface.gif)
 
 ### Mocking interfaces
 
