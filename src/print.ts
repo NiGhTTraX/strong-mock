@@ -1,6 +1,5 @@
 import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
-import { Expectation } from './expectation';
-import { ApplyProp } from './mock';
+import { ApplyProp, Expectation } from './expectation';
 
 export const printProperty = (property: PropertyKey) => {
   if (property === ApplyProp) {

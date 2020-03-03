@@ -1,4 +1,5 @@
 import { NotAMock } from './errors';
+import { ApplyProp } from './expectation';
 import {
   ExpectationRepository,
   FIFORepository
@@ -22,8 +23,6 @@ export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
 
   throw new NotAMock();
 };
-
-export const ApplyProp = Symbol('apply');
 
 export const createStub = <T>(
   repo: ExpectationRepository,

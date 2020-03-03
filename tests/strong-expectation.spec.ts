@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { StrongExpectation } from '../src/expectation';
 import { Matcher } from '../src/matcher';
+import { StrongExpectation } from '../src/strong-expectation';
 import { expectAnsilessEqual } from './ansiless';
 
 describe('DeepComparisonExpectation', () => {

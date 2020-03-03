@@ -2,7 +2,8 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { UnexpectedAccess, UnexpectedCall } from '../src/errors';
-import { ApplyProp, mock } from '../src/mock';
+import { ApplyProp } from '../src/expectation';
+import { mock } from '../src/mock';
 import { EmptyRepository, SpyRepository } from './expectation-repository';
 import {
   OneUseAlwaysMatchingExpectation,

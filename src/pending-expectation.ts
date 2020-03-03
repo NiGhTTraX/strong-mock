@@ -1,7 +1,8 @@
 import { MissingWhen, UnfinishedExpectation } from './errors';
-import { StrongExpectation, Expectation } from './expectation';
+import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { printWhen } from './print';
+import { StrongExpectation } from './strong-expectation';
 
 export type ExpectationFactory = (
   property: PropertyKey,

@@ -1,7 +1,7 @@
 import { UnexpectedAccess, UnexpectedCall } from './errors';
-import { Expectation } from './expectation';
+import { ApplyProp, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { ApplyProp, getRepoForMock, Mock } from './mock';
+import { getRepoForMock, Mock } from './mock';
 import { createProxy } from './proxy';
 
 const returnOrThrow = (expectation: Expectation) => {
