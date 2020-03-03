@@ -4,29 +4,23 @@
 <p>Simple type safe mocking library</p>
 </div>
 
+```typescript
+import { mock, when, instance } from 'strong-mock';
+
+interface Foo {
+  bar: (x: number) => string;
+}
+
+const foo = mock<Foo>();
+
+when(foo.bar(23)).thenReturn('I am strong!');
+
+console.log(instance(foo).bar(23)); // 'I am strong!'
+```
+
 ----
 
 [![Build Status](https://travis-ci.com/NiGhTTraX/strong-mock.svg?branch=master)](https://travis-ci.com/NiGhTTraX/strong-mock) [![codecov](https://codecov.io/gh/NiGhTTraX/strong-mock/branch/master/graph/badge.svg)](https://codecov.io/gh/NiGhTTraX/strong-mock) ![npm type definitions](https://img.shields.io/npm/types/strong-mock.svg)
-----
-
-## Features
-
-### Type safety
-
-The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
-
-![rename-interface](media/rename-interface.gif)
-
-### Useful error messages
-
-Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
-
-![error messages](media/error-messages.png)
-
-### Type safe [argument matchers](#argument-matchers)
-
-![type safe matchers](./media/type-safe-matchers.png)
-
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -34,7 +28,11 @@ Error messages include the property that has been accessed, any arguments passed
 
 - [Installation](#installation)
 - [Requirements](#requirements)
-- [Usage](#usage)
+- [Features](#features)
+  - [Type safety](#type-safety)
+  - [Useful error messages](#useful-error-messages)
+  - [Type safe argument matchers](#type-safe-argument-matchers)
+- [API](#api)
   - [Setting expectations](#setting-expectations)
   - [Setting multiple expectations](#setting-multiple-expectations)
   - [Setting invocation count expectations](#setting-invocation-count-expectations)
@@ -68,21 +66,25 @@ yarn add -D strong-mock
 
 strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
 
-## Usage
+## Features
 
-```typescript
-import { mock, when, instance } from 'strong-mock';
+### Type safety
 
-interface Foo {
-  bar: (x: number) => string;
-}
+The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
 
-const foo = mock<Foo>();
+![rename-interface](media/rename-interface.gif)
 
-when(foo.bar(23)).thenReturn('awesome');
+### Useful error messages
 
-console.log(instance(foo).bar(23)); // 'awesome'
-```
+Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
+
+![error messages](media/error-messages.png)
+
+### Type safe argument matchers
+
+![type safe matchers](./media/type-safe-matchers.png)
+
+## API
 
 ### Setting expectations
 
