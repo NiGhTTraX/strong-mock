@@ -12,6 +12,11 @@ export interface InvocationCount {
   times(exact: number): void;
 
   /**
+   * Shortcut for `between(0, Infinity)`.
+   */
+  anyTimes(): void;
+
+  /**
    * Shortcut for `between(min, Infinity)`.
    */
   atLeast(min: number): void;
@@ -44,6 +49,12 @@ export const createInvocationCount = (
   /* istanbul ignore next */
   times(exact: number) {
     expectation.min = expectation.max = exact;
+  },
+
+  /* istanbul ignore next */
+  anyTimes(): void {
+    expectation.min = 0;
+    expectation.max = 0;
   },
 
   /* istanbul ignore next */
