@@ -193,7 +193,7 @@ You'll notice there is no `never()` helper - if you expect a call to not be made
 
 ### Verifying expectations
 
-Since all mocks are strict, meaning that an unexpected call will throw, you probably want, at the end of your test, to verify that all expectations have been met. You can do that by simply calling the `verify` function.
+Calling `verify(mock)` will make sure that all expectations set on `mock` have been met. If not, the function will throw an error and print the unmet expectations.
 
 ```typescript
 const fn = mock<(x: number) => number>();
@@ -201,12 +201,9 @@ const fn = mock<(x: number) => number>();
 when(fn(1)).thenReturn(1).between(2, 10);
 
 verify(fn); // throws
-
-instance(fn)(1);
-instance(fn)(1);
-
-verify(fn); // doesn't throw, even though there can be more calls
 ```
+
+![verify error](./media/verify.png)
 
 ### Resetting expectations
 

@@ -68,6 +68,8 @@ export class FIFORepository implements ExpectationRepository {
   }
 
   private consume(expectation: Expectation) {
+    // TODO: maybe keep an internal counter because `min` and `max` are part
+    // of the error message and we don't want to alter the original values?
     // eslint-disable-next-line no-param-reassign
     expectation.min--;
     // eslint-disable-next-line no-param-reassign
