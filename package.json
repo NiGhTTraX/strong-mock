@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@nighttrax/eslint-config-ts": "~3.0.0",
-    "@typescript-eslint/eslint-plugin": "~2.20.0",
+    "@typescript-eslint/eslint-plugin": "~2.22.0",
     "@types/lodash": "~4.14.149",
     "codecov": "~3.6.0",
     "doctoc": "~1.4.0",
@@ -61,6 +61,6 @@
     "rollup-plugin-typescript2": "~0.26.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~0.15.0",
-    "typescript": "~3.7.0"
+    "typescript": "~3.8.0"
   }
 }
