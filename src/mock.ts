@@ -1,6 +1,9 @@
 import { ExpectationRepository } from './expectation-repository';
 import { mockMap } from './map';
-import { RepoSideEffectPendingExpectation } from './pending-expectation';
+import {
+  ExpectationFactory,
+  RepoSideEffectPendingExpectation
+} from './pending-expectation';
 import { StrongExpectation } from './strong-expectation';
 import { StrongRepository } from './strong-repository';
 import { createStub } from './stub';
@@ -8,6 +11,12 @@ import { createStub } from './stub';
 // TODO: is it possible to return a type here that won't be assignable to T,
 // but still has the same properties as T?
 export type Mock<T> = T;
+
+const strongExpectationFactory: ExpectationFactory = (
+  property,
+  args,
+  returnValue
+) => new StrongExpectation(property, args, returnValue);
 
 /**
  * Create a type safe mock.
@@ -23,11 +32,11 @@ export type Mock<T> = T;
  * instance(fn) === 23;
  */
 export const mock = <T>(
-  repository: ExpectationRepository = new StrongRepository()
+  repository: ExpectationRepository = new StrongRepository(),
+  expectationFactory: ExpectationFactory = strongExpectationFactory
 ): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
-    (property, args, returnValue) =>
-      new StrongExpectation(property, args, returnValue)
+    expectationFactory
   );
 
   const stub = createStub<T>(repository, pendingExpectation);
