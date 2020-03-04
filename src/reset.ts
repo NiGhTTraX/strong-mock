@@ -1,4 +1,4 @@
-import { getRepoForMock, Mock } from './mock';
+import { getMockState, Mock } from './mock';
 
 /**
  * Remove any remaining expectations on the given mock.
@@ -15,5 +15,5 @@ import { getRepoForMock, Mock } from './mock';
  */
 // TODO: add resetAll
 export const reset = (mock: Mock<any>): void => {
-  getRepoForMock(mock).clear();
+  getMockState(mock).repository.clear();
 };

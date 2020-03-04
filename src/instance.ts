@@ -1,7 +1,7 @@
 import { UnexpectedAccess, UnexpectedCall } from './errors';
 import { ApplyProp, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { getRepoForMock, Mock } from './mock';
+import { getMockState, Mock } from './mock';
 import { createProxy } from './proxy';
 
 /**
@@ -39,24 +39,27 @@ const findAndReturn = (
  * Get a real instance from the mock that you can pass to your code under test.
  */
 export const instance = <T>(mock: Mock<T>): T => {
-  const repo = getRepoForMock(mock);
+  const { repository } = getMockState(mock);
 
   return createProxy<T>({
     property: property => {
-      if (!repo.hasFor(property)) {
-        throw new UnexpectedAccess(property, repo.getUnmet());
+      if (!repository.hasFor(property)) {
+        throw new UnexpectedAccess(property, repository.getUnmet());
       }
 
-      const propertyExpectation = repo.findAndConsume(property, undefined);
+      const propertyExpectation = repository.findAndConsume(
+        property,
+        undefined
+      );
 
       if (propertyExpectation) {
         return returnOrThrow(propertyExpectation);
       }
 
-      return (...args: any[]) => findAndReturn(repo, args, property);
+      return (...args: any[]) => findAndReturn(repository, args, property);
     },
     apply: (args: any[]) => {
-      return findAndReturn(repo, args, ApplyProp);
+      return findAndReturn(repository, args, ApplyProp);
     }
   });
 };

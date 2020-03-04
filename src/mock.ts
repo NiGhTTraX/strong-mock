@@ -1,5 +1,10 @@
 import { NotAMock } from './errors';
 import { ExpectationRepository } from './expectation-repository';
+import {
+  PendingExpectation,
+  RepoSideEffectPendingExpectation
+} from './pending-expectation';
+import { StrongExpectation } from './strong-expectation';
 import { StrongRepository } from './strong-repository';
 import { createStub } from './stub';
 
@@ -8,14 +13,49 @@ import { createStub } from './stub';
 export type Mock<T> = T;
 
 /**
- * Store a global map of all mocks created and their expectation repositories.
+ * Since `when()` doesn't receive the mock subject (because we can't make it
+ * consistently return it from `mock()`, `mock.bar` and `mock.ba()`) we need
+ * to store a global state for the currently active mock.
  *
- * This is needed because we can't reliably pass the repository between `when`,
+ * We also want to throw in the following case:
+ *
+ * ```
+ * when(mock()) // forgot returns here
+ * when(mock()) // should throw
+ * ```
+ *
+ * For that reason we can't just store the currently active mock, but also
+ * whether we finished the expectation or not. We encode those 2 pieces of info
+ * in one variable - "pending expectation".
+ */
+let activeMock: Mock<any> | undefined;
+
+export const setActiveMock = (mock: Mock<any>) => {
+  activeMock = mock;
+};
+
+export const clearActiveMock = () => {
+  activeMock = undefined;
+};
+
+export const getActiveMock = (): Mock<any> => {
+  return activeMock;
+};
+
+type MockState = {
+  repository: ExpectationRepository;
+  pendingExpectation: PendingExpectation;
+};
+
+/**
+ * Store a global map of all mocks created and their state.
+ *
+ * This is needed because we can't reliably pass the state between `when`,
  * `thenReturn` and `instance`.
  */
-export const mockMap = new Map<Mock<any>, ExpectationRepository>();
+export const mockMap = new Map<Mock<any>, MockState>();
 
-export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
+export const getMockState = (mock: Mock<any>): MockState => {
   if (mockMap.has(mock)) {
     return mockMap.get(mock)!;
   }
@@ -39,9 +79,14 @@ export const getRepoForMock = (mock: Mock<any>): ExpectationRepository => {
 export const mock = <T>(
   repository: ExpectationRepository = new StrongRepository()
 ): Mock<T> => {
-  const stub = createStub<T>(repository);
+  const pendingExpectation = new RepoSideEffectPendingExpectation(
+    (property, args, returnValue) =>
+      new StrongExpectation(property, args, returnValue)
+  );
 
-  mockMap.set(stub, repository);
+  const stub = createStub<T>(repository, pendingExpectation);
+
+  mockMap.set(stub, { repository, pendingExpectation });
 
   return stub;
 };

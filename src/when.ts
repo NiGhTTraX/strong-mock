@@ -1,4 +1,4 @@
-import { SINGLETON_PENDING_EXPECTATION } from './pending-expectation';
+import { getActiveMock, getMockState } from './mock';
 import { createReturns, Stub } from './returns';
 
 /**
@@ -23,5 +23,5 @@ import { createReturns, Stub } from './returns';
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: R): Stub<R> => {
-  return createReturns<R>(SINGLETON_PENDING_EXPECTATION);
+  return createReturns<R>(getMockState(getActiveMock()).pendingExpectation);
 };

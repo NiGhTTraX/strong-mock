@@ -6,7 +6,7 @@ import {
   UnfinishedExpectation,
   UnmetExpectations
 } from '../src/errors';
-import { SingletonPendingExpectation } from '../src/pending-expectation';
+import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
 import {
@@ -18,7 +18,7 @@ import {
 describe('errors', () => {
   describe('PendingExpectation', () => {
     it('should print call', () => {
-      const pendingExpectation = new SingletonPendingExpectation(
+      const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 
@@ -33,7 +33,7 @@ describe('errors', () => {
     });
 
     it('should print property access', () => {
-      const pendingExpectation = new SingletonPendingExpectation(
+      const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 

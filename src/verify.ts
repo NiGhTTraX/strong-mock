@@ -1,5 +1,5 @@
 import { UnmetExpectations } from './errors';
-import { getRepoForMock, Mock } from './mock';
+import { getMockState, Mock } from './mock';
 
 /**
  * Verify that all expectations on the given mock have been met.
@@ -13,9 +13,9 @@ import { getRepoForMock, Mock } from './mock';
  */
 // TODO: add verifyAll
 export const verify = <T>(mock: Mock<T>): void => {
-  const repo = getRepoForMock(mock);
+  const { repository } = getMockState(mock);
 
-  const unmetExpectations = repo.getUnmet();
+  const unmetExpectations = repository.getUnmet();
 
   if (unmetExpectations.length) {
     throw new UnmetExpectations(unmetExpectations);

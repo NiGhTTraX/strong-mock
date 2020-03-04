@@ -4,13 +4,12 @@ import { when } from '../src';
 import { MissingWhen, UnfinishedExpectation } from '../src/errors';
 import { instance } from '../src/instance';
 import { It } from '../src/matcher';
-import { mock } from '../src/mock';
-import { SINGLETON_PENDING_EXPECTATION } from '../src/pending-expectation';
+import { clearActiveMock, mock } from '../src/mock';
 import { Fn } from './fixtures';
 
 describe('when', () => {
   beforeEach(() => {
-    SINGLETON_PENDING_EXPECTATION.clear();
+    clearActiveMock();
   });
 
   it('should do nothing without a chained return', () => {

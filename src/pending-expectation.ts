@@ -2,7 +2,6 @@ import { MissingWhen, UnfinishedExpectation } from './errors';
 import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { printWhen } from './print';
-import { StrongExpectation } from './strong-expectation';
 
 export type ExpectationFactory = (
   property: PropertyKey,
@@ -11,6 +10,7 @@ export type ExpectationFactory = (
 ) => Expectation;
 
 export interface PendingExpectation {
+  // TODO: get rid of repo
   start(repo: ExpectationRepository): void;
 
   finish(returnValue: any): Expectation;
@@ -27,7 +27,7 @@ export interface PendingExpectation {
   toJSON(): string;
 }
 
-export class SingletonPendingExpectation implements PendingExpectation {
+export class RepoSideEffectPendingExpectation implements PendingExpectation {
   private _repo: ExpectationRepository | undefined;
 
   private _args: any[] | undefined;
@@ -81,24 +81,3 @@ export class SingletonPendingExpectation implements PendingExpectation {
     return printWhen(this._property, this._args);
   }
 }
-
-/**
- * Since `when()` doesn't receive the mock subject (because we can't make it
- * consistently return it from `mock()`, `mock.bar` and `mock.ba()`) we need
- * to store a global state for the currently active mock.
- *
- * We also want to throw in the following case:
- *
- * ```
- * when(mock()) // forgot returns here
- * when(mock()) // should throw
- * ```
- *
- * For that reason we can't just store the currently active mock, but also
- * whether we finished the expectation or not. We encode those 2 pieces of info
- * in one variable - "pending expectation".
- */
-export const SINGLETON_PENDING_EXPECTATION = new SingletonPendingExpectation(
-  (property, args, returnValue) =>
-    new StrongExpectation(property, args, returnValue)
-);
