@@ -1,15 +1,15 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { FIFORepository } from '../src/expectation-repository';
+import { StrongRepository } from '../src/strong-repository';
 import {
   NeverEndingAlwaysMatchingExpectation,
   NeverMatchingExpectation,
   OneUseAlwaysMatchingExpectation
 } from './expectations';
 
-describe('FIFORepository', () => {
+describe('StrongRepository', () => {
   it('should return the first matching expectation with no args', () => {
-    const repository = new FIFORepository();
+    const repository = new StrongRepository();
 
     const expectation1 = new NeverMatchingExpectation();
     const expectation2 = new OneUseAlwaysMatchingExpectation();
@@ -23,7 +23,7 @@ describe('FIFORepository', () => {
   });
 
   it('should completely consume an expectation', () => {
-    const repository = new FIFORepository();
+    const repository = new StrongRepository();
 
     const expectation = new OneUseAlwaysMatchingExpectation();
 
@@ -35,14 +35,14 @@ describe('FIFORepository', () => {
   });
 
   it('should not return any unmet expectations when empty', () => {
-    const repository = new FIFORepository();
+    const repository = new StrongRepository();
 
     expect(repository.findAndConsume('bar', undefined)).toEqual(undefined);
     expect(repository.getUnmet()).toHaveLength(0);
   });
 
   it('should not return any unmet expectations when min has been satisfied', () => {
-    const repository = new FIFORepository();
+    const repository = new StrongRepository();
 
     const expectation = new NeverEndingAlwaysMatchingExpectation();
 
@@ -52,7 +52,7 @@ describe('FIFORepository', () => {
   });
 
   it('should keep consuming an expectation', () => {
-    const repository = new FIFORepository();
+    const repository = new StrongRepository();
 
     const expectation = new NeverEndingAlwaysMatchingExpectation();
     repository.add(expectation);

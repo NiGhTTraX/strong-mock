@@ -1,14 +1,12 @@
 import { NotAMock } from './errors';
 import { ApplyProp } from './expectation';
-import {
-  ExpectationRepository,
-  FIFORepository
-} from './expectation-repository';
+import { ExpectationRepository } from './expectation-repository';
 import {
   PendingExpectation,
   SINGLETON_PENDING_EXPECTATION
 } from './pending-expectation';
 import { createProxy } from './proxy';
+import { StrongRepository } from './strong-repository';
 
 // TODO: is it possible to return a type here that won't be assignable to T,
 // but still has the same properties as T?
@@ -72,7 +70,7 @@ export const createStub = <T>(
  * instance(fn) === 23;
  */
 export const mock = <T>(
-  repository: ExpectationRepository = new FIFORepository()
+  repository: ExpectationRepository = new StrongRepository()
 ): Mock<T> => {
   const stub = createStub<T>(repository);
 
