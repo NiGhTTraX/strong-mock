@@ -14,14 +14,14 @@ describe('verifyAll', () => {
     const repo = new OneExistingExpectationRepository(
       new OneUseAlwaysMatchingExpectation()
     );
-    const fn = mock<() => number>(repo);
+    const fn = mock<() => number>({ repository: repo });
 
     expect(() => verify(fn)).toThrow(UnmetExpectations);
   });
 
   it('should not throw if all expectations met', () => {
     const repo = new EmptyRepository();
-    const fn = mock<() => number>(repo);
+    const fn = mock<() => number>({ repository: repo });
 
     expect(() => verify(fn)).not.toThrow();
   });

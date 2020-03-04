@@ -9,7 +9,7 @@ describe('mock', () => {
   it('should set repo on mock', () => {
     const repository = new EmptyRepository();
 
-    expect(getMockState(mock(repository)).repository).toEqual(repository);
+    expect(getMockState(mock({ repository })).repository).toEqual(repository);
   });
 
   it('should throw for missing repo', () => {

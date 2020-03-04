@@ -9,7 +9,7 @@ import { StrongRepository } from '../src/strong-repository';
 describe('reset', () => {
   it('should clear the expectation repo', () => {
     const repo = new StrongRepository();
-    const fn = mock<() => void>(repo);
+    const fn = mock<() => void>({ repository: repo });
 
     when(fn()).thenReturn(undefined);
     reset(fn);

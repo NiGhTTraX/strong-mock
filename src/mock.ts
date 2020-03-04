@@ -18,6 +18,18 @@ const strongExpectationFactory: ExpectationFactory = (
   returnValue
 ) => new StrongExpectation(property, args, returnValue);
 
+interface MockOptions {
+  /**
+   * You can provide your own repository to store and find expectations.
+   */
+  repository?: ExpectationRepository;
+
+  /**
+   * You can provide your own way of creating expectations.
+   */
+  expectationFactory?: ExpectationFactory;
+}
+
 /**
  * Create a type safe mock.
  *
@@ -31,10 +43,10 @@ const strongExpectationFactory: ExpectationFactory = (
  *
  * instance(fn) === 23;
  */
-export const mock = <T>(
-  repository: ExpectationRepository = new StrongRepository(),
-  expectationFactory: ExpectationFactory = strongExpectationFactory
-): Mock<T> => {
+export const mock = <T>({
+  repository = new StrongRepository(),
+  expectationFactory = strongExpectationFactory
+}: MockOptions = {}): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
     expectationFactory
   );
