@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
+import { createStub } from '../src/stub';
 import { ApplyProp } from '../src/expectation';
-import { createStub } from '../src/mock';
 import { SingletonPendingExpectation } from '../src/pending-expectation';
 import { OneIncomingExpectationRepository } from './expectation-repository';
 import { spyExpectationFactory } from './expectations';
