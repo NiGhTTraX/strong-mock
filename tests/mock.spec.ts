@@ -1,7 +1,8 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { NotAMock } from '../src/errors';
-import { getMockState, mock } from '../src/mock';
+import { getMockState } from '../src/map';
+import { mock } from '../src/mock';
 import { EmptyRepository } from './expectation-repository';
 
 describe('mock', () => {

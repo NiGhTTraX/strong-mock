@@ -1,7 +1,8 @@
 import { UnexpectedAccess, UnexpectedCall } from './errors';
 import { ApplyProp, Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { getMockState, Mock } from './mock';
+import { getMockState } from './map';
+import { Mock } from './mock';
 import { createProxy } from './proxy';
 
 /**

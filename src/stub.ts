@@ -1,6 +1,7 @@
 import { ApplyProp } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { Mock, setActiveMock } from './mock';
+import { setActiveMock } from './map';
+import { Mock } from './mock';
 import { PendingExpectation } from './pending-expectation';
 import { createProxy } from './proxy';
 

@@ -1,4 +1,4 @@
-import { getActiveMock, getMockState } from './mock';
+import { getActiveMock, getMockState } from './map';
 import { createReturns, Stub } from './returns';
 
 /**

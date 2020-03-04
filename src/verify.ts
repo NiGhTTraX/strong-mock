@@ -1,5 +1,6 @@
 import { UnmetExpectations } from './errors';
-import { getMockState, Mock } from './mock';
+import { getMockState } from './map';
+import { Mock } from './mock';
 
 /**
  * Verify that all expectations on the given mock have been met.

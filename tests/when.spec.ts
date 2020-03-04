@@ -3,8 +3,9 @@ import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
 import { MissingWhen, UnfinishedExpectation } from '../src/errors';
 import { instance } from '../src/instance';
+import { clearActiveMock } from '../src/map';
 import { It } from '../src/matcher';
-import { clearActiveMock, mock } from '../src/mock';
+import { mock } from '../src/mock';
 import { Fn } from './fixtures';
 
 describe('when', () => {
