@@ -226,14 +226,30 @@ instance(fn)(1); // throws
 Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks. In those cases you can use argument matchers to either ignore some arguments or use custom matchers to check them.
 
 ```typescript
-const fn = mock<(x: number) => string>();
+const fn = mock<
+  (x: number, data: { values: number[]; labels: string[] }) => string
+>();
 
-when(fn(It.isAny())).thenReturn('matched!');
-when(fn(It.matches(x => x > 0))).thenReturn('greater than zero');
+when(fn(
+  It.isAny(),
+  It.isObjectContaining({ values: [1, 2, 3] })
+)).thenReturn('matched!');
 
-console.log(instance(fn)(123)); // 'matched!'
-console.log(instance(fn)(-1)); // throws
-console.log(instance(fn)(1)); // 'greater than zero'
+console.log(instance(fn)(
+  123, 
+  { values: [1, 2, 3], labels: ['a', 'b', 'c'] })
+); // 'matched!'
+```
+
+You can create arbitrarily complex and type safe matchers with `It.matches(cb)`:
+
+```typescript
+const fn = mock<(x: number, y: number[]) => string>();
+
+when(fn(
+  It.matches(x => x > 0),
+  It.matches(y => y.values.includes(42))
+)).thenReturn('matched');
 ```
 
 ## FAQ

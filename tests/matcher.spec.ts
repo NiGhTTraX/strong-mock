@@ -1,6 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from '../src/matcher';
+import { expectAnsilessEqual } from './ansiless';
 
 describe('It', () => {
   describe('isAny', () => {
@@ -47,6 +48,37 @@ describe('It', () => {
 
     it('should pretty print', () => {
       expect(It.matches(() => true).toJSON()).toEqual('matches(() => true)');
+    });
+  });
+
+  describe('isObjectContaining', () => {
+    it('should match any object with empty object', () => {
+      expect(
+        It.isObjectContaining({}).matches({
+          foo: 'bar'
+        })
+      ).toBeTruthy();
+    });
+
+    it('should deep match nested objects', () => {
+      expect(
+        It.isObjectContaining({ foo: { bar: { baz: 42 } } }).matches({
+          foo: { bar: { baz: 42, bazzz: 23 } }
+        })
+      ).toBeTruthy();
+
+      expect(
+        It.isObjectContaining({ foo: { bar: { baz: 43 } } }).matches({
+          foo: { bar: { baz: 42, bazzz: 23 } }
+        })
+      ).toBeFalsy();
+    });
+
+    it('should pretty print', () => {
+      expectAnsilessEqual(
+        It.isObjectContaining({ foo: 'bar' }).toJSON(),
+        `objectContaining({"foo": "bar"})`
+      );
     });
   });
 });

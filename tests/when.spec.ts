@@ -1,7 +1,11 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../src';
-import { MissingWhen, UnfinishedExpectation } from '../src/errors';
+import {
+  MissingWhen,
+  UnexpectedCall,
+  UnfinishedExpectation
+} from '../src/errors';
 import { instance } from '../src/instance';
 import { clearActiveMock } from '../src/map';
 import { It } from '../src/matcher';
@@ -97,18 +101,39 @@ describe('when', () => {
     await expect(instance(fn)()).resolves.toEqual(23);
   });
 
-  it('should support ignoring arguments', () => {
-    const fn = mock<Fn>();
+  describe('ignoring arguments', () => {
+    it('should support matching anything', () => {
+      const fn = mock<Fn>();
 
-    when(
-      fn(
-        1,
-        It.isAny(),
-        It.matches(z => z === 3)
-      )
-    ).thenReturn(23);
+      when(fn(1, It.isAny(), It.isAny())).thenReturn(23);
 
-    expect(instance(fn)(1, 2, 3)).toEqual(23);
+      expect(instance(fn)(1, 2, 3)).toEqual(23);
+    });
+
+    it('should support matching custom predicates', () => {
+      const fn = mock<Fn>();
+
+      when(
+        fn(
+          1,
+          It.matches(y => y === 2),
+          It.matches(z => z === 3)
+        )
+      ).thenReturn(23);
+
+      expect(instance(fn)(1, 2, 3)).toEqual(23);
+    });
+
+    it('should support deep matching objects', () => {
+      const fn = mock<(x: { foo: { bar: string; baz: number } }) => number>();
+
+      when(fn(It.isObjectContaining({ foo: { bar: 'bar' } }))).thenReturn(23);
+
+      expect(() => instance(fn)({ foo: { bar: 'baz', baz: 42 } })).toThrow(
+        UnexpectedCall
+      );
+      expect(instance(fn)({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
+    });
   });
 
   describe('interface', () => {
