@@ -1,5 +1,6 @@
 import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
 import { ApplyProp, Expectation } from './expectation';
+import { isMatcher } from './matcher';
 
 export const printProperty = (property: PropertyKey) => {
   if (property === ApplyProp) {
@@ -14,7 +15,10 @@ export const printProperty = (property: PropertyKey) => {
 };
 
 export const printCall = (property: PropertyKey, args: any[]) => {
-  const prettyArgs = args.map(printExpected).join(', ');
+  // TODO: don't leak the matcher concept here
+  const prettyArgs = args
+    .map(a => (isMatcher(a) ? a.toJSON() : printExpected(a)))
+    .join(', ');
   const prettyProperty = printProperty(property);
 
   return `${prettyProperty}(${prettyArgs})`;

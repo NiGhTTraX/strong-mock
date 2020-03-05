@@ -1,3 +1,10 @@
+import { printExpected } from 'jest-matcher-utils';
+import isMatch from 'lodash/isMatch';
+
+type DeepPartial<T> = T extends object
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : T;
+
 export type Matcher<T> = T & {
   /**
    * Will be called with a value to match against.
@@ -51,8 +58,6 @@ const isAny = (): Matcher<any> => ({
  * const fn = mock<(x: number) => number>();
  * when(fn(It.matches(x => x >= 0)).returns(42);
  * instance(fn)(-1) // throws
- *
- * @param cb
  */
 const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
   ({
@@ -65,11 +70,34 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
   } as any);
 
 /**
+ * Recursively match an object.
+ *
+ * @param partial A subset of the expected objected.
+ *
+ * @example
+ * const fn = mock<(foo: { x: number, y: number }) => number>();
+ * when(fn(It.isObjectContaining({ x: 23 }).returns(42);
+ * instance(fn)({ x: 100, y: 200 }) // throws
+ * instance(fn)({ x: 23, y: 200 }) // returns 42
+ */
+const isObjectContaining = <T extends object, K extends DeepPartial<T>>(
+  partial: K
+): Matcher<T> => // matches(arg => isMatch(arg, partial));
+  ({
+    __isMatcher: true,
+    matches: (arg: any) => isMatch(arg, partial),
+    toJSON() {
+      return `objectContaining(${printExpected(partial)})`;
+    }
+  } as any);
+
+/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
-// TODO: add matchesObject, matchesString
+// TODO: add isStringContaining
 export const It = {
   isAny,
-  matches
+  matches,
+  isObjectContaining
 };

@@ -46,7 +46,7 @@ describe('print', () => {
     it('should print arg matchers', () => {
       expectAnsilessEqual(
         printCall('bar', [It.isAny(), It.matches(() => true)]),
-        `.bar("anything", "matches(() => true)")`
+        `.bar(anything, matches(() => true))`
       );
     });
   });
