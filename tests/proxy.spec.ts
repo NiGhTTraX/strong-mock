@@ -175,4 +175,26 @@ describe('proxy', () => {
     // TODO: the returned key is a string, but the original is a number
     expect(prop).toEqual('0');
   });
+
+  it('should trap toString', () => {
+    let prop;
+
+    const proxy = createProxy<() => void>({
+      property: property => {
+        prop = property;
+      },
+      apply: () => {
+        throw new Error('should not be called');
+      }
+    });
+
+    proxy.toString;
+    expect(prop).toEqual('toString');
+    // @ts-ignore
+    proxy[Symbol.toStringTag];
+    expect(prop).toEqual(Symbol.toStringTag);
+    // @ts-ignore
+    proxy['@@toStringTag'];
+    expect(prop).toEqual('@@toStringTag');
+  });
 });

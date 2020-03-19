@@ -11,6 +11,7 @@ export interface ExpectationRepository {
    *
    * The order in which expectations are returned depends on the implementation.
    */
+  // TODO: return just the expectation's returnValue
   findAndConsume(
     property: PropertyKey,
     args: any[] | undefined

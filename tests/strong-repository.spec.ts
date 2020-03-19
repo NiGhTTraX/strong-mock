@@ -60,4 +60,22 @@ describe('StrongRepository', () => {
     expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
     expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
   });
+
+  it('should have defaults for toString', () => {
+    const repository = new StrongRepository();
+
+    expect(repository.hasFor('toString')).toBeTruthy();
+    expect(repository.hasFor(Symbol.toStringTag)).toBeTruthy();
+    expect(repository.hasFor('@@toStringTag')).toBeTruthy();
+
+    expect(
+      repository.findAndConsume('toString', undefined)?.returnValue()
+    ).toEqual('mock');
+    expect(
+      repository.findAndConsume(Symbol.toStringTag, undefined)?.returnValue
+    ).toEqual('mock');
+    expect(
+      repository.findAndConsume('@@toStringTag', undefined)?.returnValue
+    ).toEqual('mock');
+  });
 });

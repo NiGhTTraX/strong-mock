@@ -24,6 +24,7 @@ Every call to set a return value must be preceded by an expectation.
 
 export class UnexpectedAccess extends Error {
   constructor(property: PropertyKey, expectations: Expectation[]) {
+    // TODO: clarify
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printProperty(property)}`
     )} to be accessed.

@@ -64,7 +64,7 @@ describe('instance', () => {
     expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
   });
 
-  it('get matching expectation for property before method', () => {
+  it('should get matching expectation for property before method', () => {
     const repo = new SpyRepository(true, [
       // First call fins a property expectation.
       new SingleUseExpectationWithReturn(() => 1),

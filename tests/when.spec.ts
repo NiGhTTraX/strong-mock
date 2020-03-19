@@ -101,6 +101,10 @@ describe('when', () => {
     await expect(instance(fn)()).resolves.toEqual(23);
   });
 
+  it('should be stringifiable', () => {
+    expect(instance(mock<() => void>()).toString()).toEqual('mock');
+  });
+
   describe('ignoring arguments', () => {
     it('should support matching anything', () => {
       const fn = mock<Fn>();
