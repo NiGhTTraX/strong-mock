@@ -144,4 +144,52 @@ describe('StrongExpectation', () => {
       `when(mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
     );
   });
+
+  it('should by default match only once', () => {
+    const expectation = new StrongExpectation('bar', [], undefined);
+
+    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches('bar', [])).toBeFalsy();
+  });
+
+  it('should match at most max times', () => {
+    const expectation = new StrongExpectation('bar', [], undefined, 1, 2);
+
+    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches('bar', [])).toBeFalsy();
+  });
+
+  it('should match forever', () => {
+    const expectation = new StrongExpectation('bar', [], undefined, 0, 0);
+
+    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches('bar', [])).toBeTruthy();
+  });
+
+  it('should by default be unmet', () => {
+    const expectation = new StrongExpectation('bar', [], undefined);
+
+    expect(expectation.isUnmet()).toBeTruthy();
+  });
+
+  it('should by met if min is 0', () => {
+    const expectation = new StrongExpectation('bar', [], undefined, 0);
+
+    expect(expectation.isUnmet()).toBeFalsy();
+  });
+
+  it('should become met if min is satisfied', () => {
+    const expectation = new StrongExpectation('bar', [], undefined, 1);
+
+    expectation.matches('bar', []);
+    expect(expectation.isUnmet()).toBeFalsy();
+  });
+
+  it('should remain unmet until min is satisfied', () => {
+    const expectation = new StrongExpectation('bar', [], undefined, 2);
+
+    expectation.matches('bar', []);
+    expect(expectation.isUnmet()).toBeTruthy();
+  });
 });

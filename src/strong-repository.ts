@@ -23,11 +23,10 @@ export class StrongRepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  findAndConsume(property: PropertyKey, args: any[] | undefined) {
+  find(property: PropertyKey, args: any[] | undefined) {
     const expectation = this.repo.find(e => e.matches(property, args));
 
     if (expectation) {
-      this.consume(expectation);
       return expectation;
     }
 
@@ -50,23 +49,10 @@ export class StrongRepository implements ExpectationRepository {
   }
 
   getUnmet() {
-    return this.repo.filter(e => e.min > 0);
+    return this.repo.filter(e => e.isUnmet());
   }
 
   clear(): void {
     this.repo = [];
-  }
-
-  private consume(expectation: Expectation) {
-    // TODO: maybe keep an internal counter because `min` and `max` are part
-    // of the error message and we don't want to alter the original values?
-    // eslint-disable-next-line no-param-reassign
-    expectation.min--;
-    // eslint-disable-next-line no-param-reassign
-    expectation.max--;
-
-    if (expectation.max === 0) {
-      this.repo = this.repo.filter(e => e !== expectation);
-    }
   }
 }

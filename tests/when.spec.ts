@@ -1,10 +1,11 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { when } from '../src';
+import { verify, when } from '../src';
 import {
   MissingWhen,
   UnexpectedCall,
-  UnfinishedExpectation
+  UnfinishedExpectation,
+  UnmetExpectations
 } from '../src/errors';
 import { instance } from '../src/instance';
 import { clearActiveMock } from '../src/map';
@@ -99,6 +100,20 @@ describe('when', () => {
     when(fn()).thenResolve(23);
 
     await expect(instance(fn)()).resolves.toEqual(23);
+  });
+
+  it('should set expectation with invocation count', async () => {
+    const fn = mock<() => void>();
+    when(fn())
+      .thenReturn(undefined)
+      .between(2, 3);
+
+    expect(instance(fn)()).toEqual(undefined);
+    expect(() => verify(fn)).toThrow(UnmetExpectations);
+    expect(instance(fn)()).toEqual(undefined);
+    expect(() => verify(fn)).not.toThrow();
+    expect(instance(fn)()).toEqual(undefined);
+    expect(() => instance(fn)()).toThrow(UnexpectedCall);
   });
 
   it('should be stringifiable', () => {

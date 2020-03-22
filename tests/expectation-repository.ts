@@ -9,7 +9,7 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     this.expectation = expectation;
   }
 
-  findAndConsume() {
+  find() {
     return this.expectation;
   }
 
@@ -33,7 +33,7 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
     throw new Error('not supported');
   }
 
-  findAndConsume() {
+  find() {
     return this.expectation;
   }
 
@@ -53,7 +53,7 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
 export class EmptyRepository implements ExpectationRepository {
   add() {}
 
-  findAndConsume() {
+  find() {
     return undefined;
   }
 
@@ -89,7 +89,7 @@ export class SpyRepository implements ExpectationRepository {
 
   clear() {}
 
-  findAndConsume(property: PropertyKey, args: any[] | undefined) {
+  find(property: PropertyKey, args: any[] | undefined) {
     this.findAndConsumeCalledWith = [property, args];
 
     return this.findAndConsumeReturn[this.findAndConsumeCounter++];

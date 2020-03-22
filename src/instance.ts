@@ -27,7 +27,7 @@ const findAndReturn = (
   args: any[],
   property: PropertyKey
 ) => {
-  const expectation = repo.findAndConsume(property, args);
+  const expectation = repo.find(property, args);
 
   if (!expectation) {
     throw new UnexpectedCall(property, args, repo.getUnmet());
@@ -48,10 +48,7 @@ export const instance = <T>(mock: Mock<T>): T => {
         throw new UnexpectedAccess(property, repository.getUnmet());
       }
 
-      const propertyExpectation = repository.findAndConsume(
-        property,
-        undefined
-      );
+      const propertyExpectation = repository.find(property, undefined);
 
       if (propertyExpectation) {
         return returnOrThrow(propertyExpectation);

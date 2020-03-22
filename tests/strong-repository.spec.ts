@@ -19,26 +19,35 @@ describe('StrongRepository', () => {
     repository.add(expectation2);
     repository.add(expectation3);
 
-    expect(repository.findAndConsume('bar', undefined)).toEqual(expectation2);
-  });
-
-  it('should completely consume an expectation', () => {
-    const repository = new StrongRepository();
-
-    const expectation = new OneUseAlwaysMatchingExpectation();
-
-    repository.add(expectation);
-
-    expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
-    expect(repository.findAndConsume('bar', undefined)).toEqual(undefined);
-    expect(repository.getUnmet()).toHaveLength(0);
+    expect(repository.find('bar', undefined)).toEqual(expectation2);
   });
 
   it('should not return any unmet expectations when empty', () => {
     const repository = new StrongRepository();
 
-    expect(repository.findAndConsume('bar', undefined)).toEqual(undefined);
     expect(repository.getUnmet()).toHaveLength(0);
+  });
+
+  it('should return unmet expectations', () => {
+    const repository = new StrongRepository();
+
+    const e1 = new NeverMatchingExpectation();
+    const e2 = new NeverMatchingExpectation();
+    repository.add(e1);
+    repository.add(e2);
+
+    expect(repository.getUnmet()).toEqual([e1, e2]);
+  });
+
+  it('should filter met expectations', () => {
+    const repository = new StrongRepository();
+
+    const e1 = new NeverEndingAlwaysMatchingExpectation();
+    const e2 = new NeverEndingAlwaysMatchingExpectation();
+    repository.add(e1);
+    repository.add(e2);
+
+    expect(repository.getUnmet()).toEqual([]);
   });
 
   it('should not return any unmet expectations when min has been satisfied', () => {
@@ -51,14 +60,14 @@ describe('StrongRepository', () => {
     expect(repository.getUnmet()).toHaveLength(0);
   });
 
-  it('should keep consuming an expectation', () => {
+  it('should keep matching an expectation', () => {
     const repository = new StrongRepository();
 
     const expectation = new NeverEndingAlwaysMatchingExpectation();
     repository.add(expectation);
 
-    expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
-    expect(repository.findAndConsume('bar', undefined)).toEqual(expectation);
+    expect(repository.find('bar', undefined)).toEqual(expectation);
+    expect(repository.find('bar', undefined)).toEqual(expectation);
   });
 
   it('should have defaults for toString', () => {
@@ -68,14 +77,14 @@ describe('StrongRepository', () => {
     expect(repository.hasFor(Symbol.toStringTag)).toBeTruthy();
     expect(repository.hasFor('@@toStringTag')).toBeTruthy();
 
-    expect(
-      repository.findAndConsume('toString', undefined)?.returnValue()
-    ).toEqual('mock');
-    expect(
-      repository.findAndConsume(Symbol.toStringTag, undefined)?.returnValue
-    ).toEqual('mock');
-    expect(
-      repository.findAndConsume('@@toStringTag', undefined)?.returnValue
-    ).toEqual('mock');
+    expect(repository.find('toString', undefined)?.returnValue()).toEqual(
+      'mock'
+    );
+    expect(repository.find(Symbol.toStringTag, undefined)?.returnValue).toEqual(
+      'mock'
+    );
+    expect(repository.find('@@toStringTag', undefined)?.returnValue).toEqual(
+      'mock'
+    );
   });
 });

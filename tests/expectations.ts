@@ -6,6 +6,8 @@ import {
 } from '../src/pending-expectation';
 
 export class NeverMatchingExpectation implements Expectation {
+  isUnmet = () => true;
+
   toJSON = () => 'never matching';
 
   args = undefined;
@@ -22,6 +24,8 @@ export class NeverMatchingExpectation implements Expectation {
 }
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
+  isUnmet = () => true;
+
   toJSON = () => 'always matching';
 
   args = undefined;
@@ -38,12 +42,16 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
 }
 
 export class NeverEndingAlwaysMatchingExpectation extends OneUseAlwaysMatchingExpectation {
+  isUnmet = () => false;
+
   min = 0;
 
   max = Infinity;
 }
 
 export class SpyExpectation implements Expectation {
+  isUnmet = () => true;
+
   toJSON = () => 'spy expectation';
 
   constructor(
@@ -60,6 +68,8 @@ export class SpyExpectation implements Expectation {
 }
 
 export class SingleUseExpectationWithReturn extends SpyExpectation {
+  isUnmet = () => true;
+
   constructor(public returnValue: any) {
     super(':irrelevant:', undefined, returnValue);
   }

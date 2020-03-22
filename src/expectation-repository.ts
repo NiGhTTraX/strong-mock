@@ -7,15 +7,12 @@ export interface ExpectationRepository {
   add(expectation: Expectation): void;
 
   /**
-   * Find a matching expectation and consume it.
+   * Find a matching expectation.
    *
    * The order in which expectations are returned depends on the implementation.
    */
   // TODO: return just the expectation's returnValue
-  findAndConsume(
-    property: PropertyKey,
-    args: any[] | undefined
-  ): Expectation | undefined;
+  find(property: PropertyKey, args: any[] | undefined): Expectation | undefined;
 
   /**
    * Does any expectation exist for the given property?

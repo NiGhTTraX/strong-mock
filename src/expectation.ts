@@ -7,6 +7,8 @@ export interface Expectation {
 
   matches(property: PropertyKey, args: any[] | undefined): boolean;
 
+  isUnmet(): boolean;
+
   /**
    * Used by `pretty-format`.
    */

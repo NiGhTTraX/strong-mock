@@ -16,6 +16,8 @@ import { printExpectation } from './print';
  * new Expectation('bar', [1, 2], 23).matches('bar', [1, 2, 3]) === true;
  */
 export class StrongExpectation implements Expectation {
+  private matched = 0;
+
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
@@ -29,6 +31,20 @@ export class StrongExpectation implements Expectation {
       return false;
     }
 
+    if (!this.matchesArgs(args)) {
+      return false;
+    }
+
+    this.matched++;
+
+    return this.max === 0 || this.matched <= this.max;
+  }
+
+  isUnmet(): boolean {
+    return this.matched < this.min;
+  }
+
+  private matchesArgs(args: any[] | undefined) {
     if (this.args === undefined) {
       return !args;
     }
