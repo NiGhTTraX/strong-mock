@@ -29,6 +29,7 @@ export class StrongRepository implements ExpectationRepository {
       return { returnValue: expectation.returnValue };
     }
 
+    // TODO: move the return values to `toStringKeys`
     switch (property) {
       case 'toString':
         return { returnValue: () => 'mock' };
