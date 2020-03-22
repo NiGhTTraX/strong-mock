@@ -6,15 +6,13 @@ import {
 } from '../src/pending-expectation';
 
 export class NeverMatchingExpectation implements Expectation {
+  setInvocationCount = () => {};
+
   isUnmet = () => true;
 
   toJSON = () => 'never matching';
 
   args = undefined;
-
-  max = 1;
-
-  min = 1;
 
   property = 'bar';
 
@@ -24,15 +22,13 @@ export class NeverMatchingExpectation implements Expectation {
 }
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
+  setInvocationCount = () => {};
+
   isUnmet = () => true;
 
   toJSON = () => 'always matching';
 
   args = undefined;
-
-  max = 1;
-
-  min = 1;
 
   property = 'bar';
 
@@ -43,13 +39,18 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
 
 export class NeverEndingAlwaysMatchingExpectation extends OneUseAlwaysMatchingExpectation {
   isUnmet = () => false;
-
-  min = 0;
-
-  max = Infinity;
 }
 
 export class SpyExpectation implements Expectation {
+  max = -1;
+
+  min = -1;
+
+  setInvocationCount = (min: number, max: number) => {
+    this.min = min;
+    this.max = max;
+  };
+
   isUnmet = () => true;
 
   toJSON = () => 'spy expectation';
@@ -59,10 +60,6 @@ export class SpyExpectation implements Expectation {
     public args: any[] | undefined,
     public returnValue: any
   ) {}
-
-  max = 1;
-
-  min = 1;
 
   matches = () => false;
 }

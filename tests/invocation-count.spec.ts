@@ -3,7 +3,7 @@ import { createInvocationCount } from '../src/invocation-count';
 import { SpyExpectation } from './expectations';
 
 describe('invocation count', () => {
-  it('should set the min and max', () => {
+  it('between should set the min and max', () => {
     const expectation = new SpyExpectation('bar', undefined, undefined);
 
     const invocationCount = createInvocationCount(expectation);

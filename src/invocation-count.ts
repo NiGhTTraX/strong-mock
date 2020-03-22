@@ -7,31 +7,43 @@ export interface InvocationCount {
   between(min: number, max: number): void;
 
   /**
+   * Expect a call to be made exactly `exact` times.
+   *
    * Shortcut for `between(exact, exact)`.
    */
   times(exact: number): void;
 
   /**
+   * Expect a call to be made any number of times, including never.
+   *
    * Shortcut for `between(0, Infinity)`.
    */
   anyTimes(): void;
 
   /**
+   * Expect a call to be made at least `min` times.
+   *
    * Shortcut for `between(min, Infinity)`.
    */
   atLeast(min: number): void;
 
   /**
+   * Expect a call to be made at most `max` times.
+   *
    * Shortcut for `between(0, max)`.
    */
   atMost(max: number): void;
 
   /**
+   * Expect a call to be made exactly once.
+   *
    * Shortcut for `times(1)`.
    */
   once(): void;
 
   /**
+   * Expect a call to be made exactly twice.
+   *
    * Shortcut for `times(2)`.
    */
   twice(): void;
@@ -40,43 +52,38 @@ export interface InvocationCount {
 export const createInvocationCount = (
   expectation: Expectation
 ): InvocationCount => ({
-  /* eslint-disable no-param-reassign, no-multi-assign */
   between(min: number, max: number) {
-    expectation.min = min;
-    expectation.max = max;
+    expectation.setInvocationCount(min, max);
   },
 
   /* istanbul ignore next */
   times(exact: number) {
-    expectation.min = expectation.max = exact;
+    expectation.setInvocationCount(exact, exact);
   },
 
   /* istanbul ignore next */
   anyTimes(): void {
-    expectation.min = 0;
-    expectation.max = 0;
+    expectation.setInvocationCount(0, 0);
   },
 
   /* istanbul ignore next */
   atLeast(min: number) {
-    expectation.min = min;
-    expectation.max = Infinity;
+    expectation.setInvocationCount(min, Infinity);
   },
 
   /* istanbul ignore next */
   atMost(max: number) {
-    expectation.min = 0;
-    expectation.max = max;
+    expectation.setInvocationCount(0, max);
   },
 
   /* istanbul ignore next */
   once() {
-    expectation.min = expectation.max = 1;
+    expectation.setInvocationCount(1, 1);
   },
 
   /* istanbul ignore next */
   twice() {
-    expectation.min = expectation.max = 2;
+    expectation.setInvocationCount(2, 2);
   }
   /* eslint-enable no-param-reassign, no-multi-assign */
 });

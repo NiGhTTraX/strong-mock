@@ -18,13 +18,20 @@ import { printExpectation } from './print';
 export class StrongExpectation implements Expectation {
   private matched = 0;
 
+  private min: number = 1;
+
+  private max: number = 1;
+
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
-    public returnValue: any,
-    public min: number = 1,
-    public max: number = 1
+    public returnValue: any
   ) {}
+
+  setInvocationCount(min = 1, max = 1) {
+    this.min = min;
+    this.max = max;
+  }
 
   matches(property: PropertyKey, args: any[] | undefined): boolean {
     if (property !== this.property) {

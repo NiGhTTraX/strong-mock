@@ -136,8 +136,7 @@ describe('StrongExpectation', () => {
 
   it('should print when, returns and invocation count', () => {
     const expectation = new StrongExpectation('baz', [4, 5, 6], 42);
-    expectation.min = 2;
-    expectation.max = 3;
+    expectation.setInvocationCount(2, 3);
 
     expectAnsilessEqual(
       expectation.toJSON(),
@@ -153,7 +152,8 @@ describe('StrongExpectation', () => {
   });
 
   it('should match at most max times', () => {
-    const expectation = new StrongExpectation('bar', [], undefined, 1, 2);
+    const expectation = new StrongExpectation('bar', [], undefined);
+    expectation.setInvocationCount(1, 2);
 
     expect(expectation.matches('bar', [])).toBeTruthy();
     expect(expectation.matches('bar', [])).toBeTruthy();
@@ -161,7 +161,8 @@ describe('StrongExpectation', () => {
   });
 
   it('should match forever', () => {
-    const expectation = new StrongExpectation('bar', [], undefined, 0, 0);
+    const expectation = new StrongExpectation('bar', [], undefined);
+    expectation.setInvocationCount(0, 0);
 
     expect(expectation.matches('bar', [])).toBeTruthy();
     expect(expectation.matches('bar', [])).toBeTruthy();
@@ -174,20 +175,23 @@ describe('StrongExpectation', () => {
   });
 
   it('should by met if min is 0', () => {
-    const expectation = new StrongExpectation('bar', [], undefined, 0);
+    const expectation = new StrongExpectation('bar', [], undefined);
+    expectation.setInvocationCount(0);
 
     expect(expectation.isUnmet()).toBeFalsy();
   });
 
   it('should become met if min is satisfied', () => {
-    const expectation = new StrongExpectation('bar', [], undefined, 1);
+    const expectation = new StrongExpectation('bar', [], undefined);
+    expectation.setInvocationCount(1);
 
     expectation.matches('bar', []);
     expect(expectation.isUnmet()).toBeFalsy();
   });
 
   it('should remain unmet until min is satisfied', () => {
-    const expectation = new StrongExpectation('bar', [], undefined, 2);
+    const expectation = new StrongExpectation('bar', [], undefined);
+    expectation.setInvocationCount(2);
 
     expectation.matches('bar', []);
     expect(expectation.isUnmet()).toBeTruthy();
