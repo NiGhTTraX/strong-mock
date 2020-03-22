@@ -7,7 +7,7 @@ import {
   UnmetExpectations
 } from '../src/errors';
 import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
-import { expectAnsilessEqual } from './ansiless';
+import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
 import {
   NeverMatchingExpectation,
@@ -52,13 +52,11 @@ describe('errors', () => {
       pendingExpectation.property = 'bar';
       pendingExpectation.toJSON = () => 'foobar';
 
-      expectAnsilessEqual(
+      expectAnsilessContain(
         new UnfinishedExpectation(pendingExpectation).message,
         `There is an unfinished pending expectation:
 
-foobar
-
-Please finish it by setting a return value.`
+foobar`
       );
     });
   });
@@ -90,11 +88,14 @@ Please finish it by setting a return value.`
       e2.toJSON = () => 'e2';
       const error = new UnexpectedAccess('bar', [e1, e2]);
 
-      expectAnsilessEqual(
+      expectAnsilessContain(
         error.message,
-        `Didn't expect mock.bar to be accessed.
+        `Didn't expect mock.bar to be accessed.`
+      );
 
-Remaining unmet expectations:
+      expectAnsilessContain(
+        error.message,
+        `Remaining unmet expectations:
  - e1
  - e2`
       );
@@ -109,11 +110,14 @@ Remaining unmet expectations:
       e2.toJSON = () => 'e2';
       const error = new UnexpectedCall('bar', [1, 2, 3], [e1, e2]);
 
-      expectAnsilessEqual(
+      expectAnsilessContain(
         error.message,
-        `Didn't expect mock.bar(1, 2, 3) to be called.
+        `Didn't expect mock.bar(1, 2, 3) to be called.`
+      );
 
-Remaining unmet expectations:
+      expectAnsilessContain(
+        error.message,
+        `Remaining unmet expectations:
  - e1
  - e2`
       );

@@ -9,7 +9,12 @@ export class UnfinishedExpectation extends Error {
 
 ${pendingExpectation.toJSON()}
 
-Please finish it by setting a return value.`);
+Please finish it by setting a return value even if the value
+is undefined.
+
+This may have been caused by using the mock without getting
+an instance from it first. Please use instance(mock) and use
+that value in the code you're testing.`);
   }
 }
 
@@ -17,17 +22,18 @@ export class MissingWhen extends Error {
   constructor() {
     super(`You tried setting a return value without an expectation.
 
-Every call to set a return value must be preceded by an expectation.
-    `);
+Every call to set a return value must be preceded by an expectation.`);
   }
 }
 
 export class UnexpectedAccess extends Error {
   constructor(property: PropertyKey, expectations: Expectation[]) {
-    // TODO: clarify
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printProperty(property)}`
     )} to be accessed.
+
+If you expect this property to be accessed then please
+set an expectation for it.
 
 ${printRemainingExpectations(expectations)}`);
   }
