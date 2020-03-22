@@ -1,6 +1,5 @@
 import { Expectation } from './expectation';
-import { ExpectationRepository } from './expectation-repository';
-import { StrongExpectation } from './strong-expectation';
+import { ExpectationRepository, ReturnValue } from './expectation-repository';
 
 const toStringKeys: PropertyKey[] = [
   'toString',
@@ -14,28 +13,28 @@ const toStringKeys: PropertyKey[] = [
  * - If there are no matching expectations `undefined` will be returned.
  */
 export class StrongRepository implements ExpectationRepository {
-  private repo: Expectation[] = [];
+  private expectations: Expectation[] = [];
 
   add(expectation: Expectation) {
-    this.repo.push(expectation);
+    this.expectations.push(expectation);
   }
 
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  get(property: PropertyKey, args: any[] | undefined) {
-    const expectation = this.repo.find(e => e.matches(property, args));
+  get(property: PropertyKey, args: any[] | undefined): ReturnValue | undefined {
+    const expectation = this.expectations.find(e => e.matches(property, args));
 
     if (expectation) {
-      return expectation;
+      return { returnValue: expectation.returnValue };
     }
 
     switch (property) {
       case 'toString':
-        return new StrongExpectation(property, undefined, () => 'mock');
+        return { returnValue: () => 'mock' };
       case Symbol.toStringTag:
       case '@@toStringTag':
-        return new StrongExpectation(property, undefined, 'mock');
+        return { returnValue: 'mock' };
       default:
         return undefined;
     }
@@ -43,16 +42,16 @@ export class StrongRepository implements ExpectationRepository {
 
   hasKey(property: PropertyKey) {
     return (
-      !!this.repo.find(e => e.property === property) ||
+      !!this.expectations.find(e => e.property === property) ||
       toStringKeys.includes(property)
     );
   }
 
   getUnmet() {
-    return this.repo.filter(e => e.isUnmet());
+    return this.expectations.filter(e => e.isUnmet());
   }
 
   clear(): void {
-    this.repo = [];
+    this.expectations = [];
   }
 }

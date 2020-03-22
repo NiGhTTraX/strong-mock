@@ -18,7 +18,7 @@ describe('instance', () => {
     const fn = mock<(x: number) => number>({ repository: repo });
 
     expect(instance(fn)(1)).toEqual(42);
-    expect(repo.findAndConsumeCalledWith).toEqual([ApplyProp, [1]]);
+    expect(repo.getCalledWith).toEqual([ApplyProp, [1]]);
   });
 
   it('should get matching expectation for method', () => {
@@ -29,7 +29,7 @@ describe('instance', () => {
     const foo = mock<{ bar: (x: number) => number }>({ repository: repo });
 
     expect(instance(foo).bar(1)).toEqual(42);
-    expect(repo.findAndConsumeCalledWith).toEqual(['bar', [1]]);
+    expect(repo.getCalledWith).toEqual(['bar', [1]]);
   });
 
   it('should get matching expectation for property', () => {
@@ -39,7 +39,7 @@ describe('instance', () => {
     const foo = mock<{ bar: number }>({ repository: repo });
 
     expect(instance(foo).bar).toEqual(42);
-    expect(repo.findAndConsumeCalledWith).toEqual(['bar', undefined]);
+    expect(repo.getCalledWith).toEqual(['bar', undefined]);
   });
 
   it('should throw if no expectation for property', () => {

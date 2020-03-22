@@ -19,7 +19,9 @@ describe('StrongRepository', () => {
     repository.add(expectation2);
     repository.add(expectation3);
 
-    expect(repository.get('bar', undefined)).toEqual(expectation2);
+    expect(repository.get('bar', undefined)?.returnValue).toEqual(
+      expectation2.returnValue
+    );
   });
 
   it('should return that it has unmet expectations for property', () => {
@@ -86,8 +88,12 @@ describe('StrongRepository', () => {
     const expectation = new NeverEndingAlwaysMatchingExpectation();
     repository.add(expectation);
 
-    expect(repository.get('bar', undefined)).toEqual(expectation);
-    expect(repository.get('bar', undefined)).toEqual(expectation);
+    expect(repository.get('bar', undefined)?.returnValue).toEqual(
+      expectation.returnValue
+    );
+    expect(repository.get('bar', undefined)?.returnValue).toEqual(
+      expectation.returnValue
+    );
   });
 
   it('should have defaults for toString', () => {

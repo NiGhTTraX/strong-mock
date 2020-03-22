@@ -1,5 +1,5 @@
 import { UnexpectedAccess, UnexpectedCall } from './errors';
-import { ApplyProp, Expectation } from './expectation';
+import { ApplyProp } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { getMockState } from './map';
 import { Mock } from './mock';
@@ -9,9 +9,7 @@ import { createProxy } from './proxy';
  * Return the expectation's return value. If the value is an error then
  * throw it.
  */
-const returnOrThrow = (expectation: Expectation) => {
-  const { returnValue } = expectation;
-
+const returnOrThrow = (returnValue: any) => {
   if (returnValue instanceof Error) {
     throw returnValue;
   }
@@ -27,13 +25,13 @@ const getAndReturn = (
   args: any[],
   property: PropertyKey
 ) => {
-  const expectation = repo.get(property, args);
+  const match = repo.get(property, args);
 
-  if (!expectation) {
+  if (!match) {
     throw new UnexpectedCall(property, args, repo.getUnmet());
   }
 
-  return returnOrThrow(expectation);
+  return returnOrThrow(match.returnValue);
 };
 
 /**
@@ -48,10 +46,10 @@ export const instance = <T>(mock: Mock<T>): T => {
         throw new UnexpectedAccess(property, repository.getUnmet());
       }
 
-      const propertyExpectation = repository.get(property, undefined);
+      const propertyMatch = repository.get(property, undefined);
 
-      if (propertyExpectation) {
-        return returnOrThrow(propertyExpectation);
+      if (propertyMatch) {
+        return returnOrThrow(propertyMatch.returnValue);
       }
 
       return (...args: any[]) => getAndReturn(repository, args, property);
