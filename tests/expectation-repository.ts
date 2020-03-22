@@ -9,11 +9,11 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     this.expectation = expectation;
   }
 
-  find() {
+  get() {
     return this.expectation;
   }
 
-  hasFor() {
+  hasKey() {
     return !!this.expectation;
   }
 
@@ -33,11 +33,11 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
     throw new Error('not supported');
   }
 
-  find() {
+  get() {
     return this.expectation;
   }
 
-  hasFor() {
+  hasKey() {
     return true;
   }
 
@@ -53,11 +53,11 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
 export class EmptyRepository implements ExpectationRepository {
   add() {}
 
-  find() {
+  get() {
     return undefined;
   }
 
-  hasFor() {
+  hasKey() {
     return false;
   }
 
@@ -89,7 +89,7 @@ export class SpyRepository implements ExpectationRepository {
 
   clear() {}
 
-  find(property: PropertyKey, args: any[] | undefined) {
+  get(property: PropertyKey, args: any[] | undefined) {
     this.findAndConsumeCalledWith = [property, args];
 
     return this.findAndConsumeReturn[this.findAndConsumeCounter++];
@@ -99,7 +99,7 @@ export class SpyRepository implements ExpectationRepository {
     return [];
   }
 
-  hasFor(property: PropertyKey) {
+  hasKey(property: PropertyKey) {
     this.hasForCalledWith = property;
     return this.hasForReturn;
   }

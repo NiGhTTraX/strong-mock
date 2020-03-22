@@ -19,13 +19,33 @@ describe('StrongRepository', () => {
     repository.add(expectation2);
     repository.add(expectation3);
 
-    expect(repository.find('bar', undefined)).toEqual(expectation2);
+    expect(repository.get('bar', undefined)).toEqual(expectation2);
+  });
+
+  it('should return that it has unmet expectations for property', () => {
+    const repository = new StrongRepository();
+
+    repository.add(new OneUseAlwaysMatchingExpectation());
+
+    expect(repository.hasKey('bar')).toBeTruthy();
+  });
+
+  it("should return that it doesn't have any unmet expectations for property", () => {
+    const repository = new StrongRepository();
+
+    expect(repository.hasKey('bar')).toBeFalsy();
   });
 
   it('should not return any unmet expectations when empty', () => {
     const repository = new StrongRepository();
 
     expect(repository.getUnmet()).toHaveLength(0);
+  });
+
+  it('should not return anything if no matching expectations', () => {
+    const repository = new StrongRepository();
+
+    expect(repository.get('bar', [])).toBeUndefined();
   });
 
   it('should return unmet expectations', () => {
@@ -66,24 +86,24 @@ describe('StrongRepository', () => {
     const expectation = new NeverEndingAlwaysMatchingExpectation();
     repository.add(expectation);
 
-    expect(repository.find('bar', undefined)).toEqual(expectation);
-    expect(repository.find('bar', undefined)).toEqual(expectation);
+    expect(repository.get('bar', undefined)).toEqual(expectation);
+    expect(repository.get('bar', undefined)).toEqual(expectation);
   });
 
   it('should have defaults for toString', () => {
     const repository = new StrongRepository();
 
-    expect(repository.hasFor('toString')).toBeTruthy();
-    expect(repository.hasFor(Symbol.toStringTag)).toBeTruthy();
-    expect(repository.hasFor('@@toStringTag')).toBeTruthy();
+    expect(repository.hasKey('toString')).toBeTruthy();
+    expect(repository.hasKey(Symbol.toStringTag)).toBeTruthy();
+    expect(repository.hasKey('@@toStringTag')).toBeTruthy();
 
-    expect(repository.find('toString', undefined)?.returnValue()).toEqual(
+    expect(repository.get('toString', undefined)?.returnValue()).toEqual(
       'mock'
     );
-    expect(repository.find(Symbol.toStringTag, undefined)?.returnValue).toEqual(
+    expect(repository.get(Symbol.toStringTag, undefined)?.returnValue).toEqual(
       'mock'
     );
-    expect(repository.find('@@toStringTag', undefined)?.returnValue).toEqual(
+    expect(repository.get('@@toStringTag', undefined)?.returnValue).toEqual(
       'mock'
     );
   });

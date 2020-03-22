@@ -7,16 +7,17 @@ export interface ExpectationRepository {
   add(expectation: Expectation): void;
 
   /**
-   * Find a matching expectation.
+   * Get a matching expectation.
    *
    * The order in which expectations are returned depends on the implementation.
+   * Returning `undefined` means that no expectations match.
    */
-  find(property: PropertyKey, args: any[] | undefined): Expectation | undefined;
+  get(property: PropertyKey, args: any[] | undefined): Expectation | undefined;
 
   /**
-   * Does any expectation exist for the given property?
+   * Does any _unmet_ expectation match the given key?
    */
-  hasFor(property: PropertyKey): boolean;
+  hasKey(property: PropertyKey): boolean;
 
   /**
    * Get all remaining unmet expectations.

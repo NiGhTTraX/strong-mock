@@ -1,6 +1,12 @@
 export interface Expectation {
   property: PropertyKey;
+
+  /**
+   * `undefined` means this is a property expectation.
+   * `[]` means this is a function call with no arguments.
+   */
   args: any[] | undefined;
+
   returnValue: any;
 
   /**

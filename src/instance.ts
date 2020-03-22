@@ -22,12 +22,12 @@ const returnOrThrow = (expectation: Expectation) => {
 /**
  * Find a matching expectation and return its return value.
  */
-const findAndReturn = (
+const getAndReturn = (
   repo: ExpectationRepository,
   args: any[],
   property: PropertyKey
 ) => {
-  const expectation = repo.find(property, args);
+  const expectation = repo.get(property, args);
 
   if (!expectation) {
     throw new UnexpectedCall(property, args, repo.getUnmet());
@@ -44,20 +44,20 @@ export const instance = <T>(mock: Mock<T>): T => {
 
   return createProxy<T>({
     property: property => {
-      if (!repository.hasFor(property)) {
+      if (!repository.hasKey(property)) {
         throw new UnexpectedAccess(property, repository.getUnmet());
       }
 
-      const propertyExpectation = repository.find(property, undefined);
+      const propertyExpectation = repository.get(property, undefined);
 
       if (propertyExpectation) {
         return returnOrThrow(propertyExpectation);
       }
 
-      return (...args: any[]) => findAndReturn(repository, args, property);
+      return (...args: any[]) => getAndReturn(repository, args, property);
     },
     apply: (args: any[]) => {
-      return findAndReturn(repository, args, ApplyProp);
+      return getAndReturn(repository, args, ApplyProp);
     }
   });
 };

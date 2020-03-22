@@ -23,7 +23,7 @@ export class StrongRepository implements ExpectationRepository {
   /**
    * @returns If nothing matches will return `undefined`.
    */
-  find(property: PropertyKey, args: any[] | undefined) {
+  get(property: PropertyKey, args: any[] | undefined) {
     const expectation = this.repo.find(e => e.matches(property, args));
 
     if (expectation) {
@@ -41,7 +41,7 @@ export class StrongRepository implements ExpectationRepository {
     }
   }
 
-  hasFor(property: PropertyKey) {
+  hasKey(property: PropertyKey) {
     return (
       !!this.repo.find(e => e.property === property) ||
       toStringKeys.includes(property)
