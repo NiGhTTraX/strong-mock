@@ -4,7 +4,7 @@ import { Matcher } from '../src/matcher';
 import { StrongExpectation } from '../src/strong-expectation';
 import { expectAnsilessEqual } from './ansiless';
 
-describe('DeepComparisonExpectation', () => {
+describe('StrongExpectation', () => {
   it('should match same prop', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
 
