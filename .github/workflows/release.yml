@@ -24,6 +24,6 @@ jobs:
         run: yarn
 
       - name: Publish
-        run: yarn publish
+        run: yarn publish --tag beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
