@@ -10,7 +10,7 @@ export const createStub = <T>(
   pendingExpectation: PendingExpectation
 ): Mock<T> => {
   const stub = createProxy<T>({
-    property: property => {
+    property: (property) => {
       setActiveMock(stub);
 
       pendingExpectation.start(repo);
@@ -30,7 +30,7 @@ export const createStub = <T>(
       pendingExpectation.property = ApplyProp;
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.args = args;
-    }
+    },
   });
   return stub;
 };

@@ -2,7 +2,7 @@ import { Expectation } from '../src/expectation';
 import { ExpectationRepository } from '../src/expectation-repository';
 import {
   ExpectationFactory,
-  PendingExpectation
+  PendingExpectation,
 } from '../src/pending-expectation';
 
 export class NeverMatchingExpectation implements Expectation {

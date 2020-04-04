@@ -38,8 +38,8 @@ describe('StrongExpectation', () => {
       'bar',
       [
         {
-          bar: { baz: 42 }
-        }
+          bar: { baz: 42 },
+        },
       ],
       undefined
     );
@@ -47,8 +47,8 @@ describe('StrongExpectation', () => {
     expect(
       expectation.matches('bar', [
         {
-          bar: { baz: 42 }
-        }
+          bar: { baz: 42 },
+        },
       ])
     ).toBeTruthy();
   });
@@ -77,8 +77,8 @@ describe('StrongExpectation', () => {
       [
         new Map([
           [1, true],
-          [2, false]
-        ])
+          [2, false],
+        ]),
       ],
       23
     );
@@ -87,8 +87,8 @@ describe('StrongExpectation', () => {
       expectation.matches('bar', [
         new Map([
           [1, true],
-          [2, false]
-        ])
+          [2, false],
+        ]),
       ])
     ).toBeTruthy();
   });
@@ -125,7 +125,7 @@ describe('StrongExpectation', () => {
       matches: (arg: any) => {
         matchesCalledWith = arg;
         return true;
-      }
+      },
     };
 
     const expectation = new StrongExpectation('bar', [spyMatcher], 23);

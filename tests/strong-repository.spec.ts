@@ -4,7 +4,7 @@ import { StrongRepository } from '../src/strong-repository';
 import {
   NeverEndingAlwaysMatchingExpectation,
   NeverMatchingExpectation,
-  OneUseAlwaysMatchingExpectation
+  OneUseAlwaysMatchingExpectation,
 } from './expectations';
 
 describe('StrongRepository', () => {

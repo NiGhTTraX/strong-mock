@@ -2,7 +2,7 @@ import { ExpectationRepository } from './expectation-repository';
 import { mockMap } from './map';
 import {
   ExpectationFactory,
-  RepoSideEffectPendingExpectation
+  RepoSideEffectPendingExpectation,
 } from './pending-expectation';
 import { StrongExpectation } from './strong-expectation';
 import { StrongRepository } from './strong-repository';
@@ -45,7 +45,7 @@ interface MockOptions {
  */
 export const mock = <T>({
   repository = new StrongRepository(),
-  expectationFactory = strongExpectationFactory
+  expectationFactory = strongExpectationFactory,
 }: MockOptions = {}): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
     expectationFactory

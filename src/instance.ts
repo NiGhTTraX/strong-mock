@@ -41,7 +41,7 @@ export const instance = <T>(mock: Mock<T>): T => {
   const { repository } = getMockState(mock);
 
   return createProxy<T>({
-    property: property => {
+    property: (property) => {
       if (!repository.hasKey(property)) {
         throw new UnexpectedAccess(property, repository.getUnmet());
       }
@@ -56,6 +56,6 @@ export const instance = <T>(mock: Mock<T>): T => {
     },
     apply: (args: any[]) => {
       return getAndReturn(repository, args, ApplyProp);
-    }
+    },
   });
 };

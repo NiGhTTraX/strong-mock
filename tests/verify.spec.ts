@@ -5,7 +5,7 @@ import { UnmetExpectations } from '../src/errors';
 import { verify } from '../src/verify';
 import {
   EmptyRepository,
-  OneExistingExpectationRepository
+  OneExistingExpectationRepository,
 } from './expectation-repository';
 import { OneUseAlwaysMatchingExpectation } from './expectations';
 

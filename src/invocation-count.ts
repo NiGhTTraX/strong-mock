@@ -84,6 +84,6 @@ export const createInvocationCount = (
   /* istanbul ignore next */
   twice() {
     expectation.setInvocationCount(2, 2);
-  }
+  },
   /* eslint-enable no-param-reassign, no-multi-assign */
 });

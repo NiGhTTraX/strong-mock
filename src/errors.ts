@@ -61,6 +61,6 @@ export class UnmetExpectations extends Error {
   constructor(expectations: Expectation[]) {
     super(`There are unmet expectations:
 
- - ${expectations.map(e => e.toJSON()).join('\n - ')}`);
+ - ${expectations.map((e) => e.toJSON()).join('\n - ')}`);
   }
 }
