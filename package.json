@@ -45,13 +45,14 @@
     "lodash": "~4.17.15"
   },
   "devDependencies": {
-    "@nighttrax/eslint-config-ts": "~3.0.0",
+    "@nighttrax/eslint-config-ts": "~5.0.0-beta.1",
     "@typescript-eslint/eslint-plugin": "~2.25.0",
     "@types/lodash": "~4.14.149",
     "codecov": "~3.6.0",
     "doctoc": "~1.4.0",
     "eslint": "~6.8.0",
-    "eslint-config-prettier": "~6.10.0",
+    "eslint-import-resolver-typescript": "~2.0.0",
+    "eslint-plugin-import": "~2.20.2",
     "eslint-plugin-prettier": "~3.1.1",
     "husky": "~4.2.0",
     "lint-staged": "~10.1.0",
