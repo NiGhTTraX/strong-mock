@@ -4,7 +4,7 @@ import {
   UnexpectedAccess,
   UnexpectedCall,
   UnfinishedExpectation,
-  UnmetExpectations
+  UnmetExpectations,
 } from '../src/errors';
 import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
@@ -12,7 +12,7 @@ import { EmptyRepository } from './expectation-repository';
 import {
   NeverMatchingExpectation,
   spyExpectationFactory,
-  SpyPendingExpectation
+  SpyPendingExpectation,
 } from './expectations';
 
 describe('errors', () => {

@@ -11,9 +11,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     proxy(1, 2, 3);
@@ -28,9 +28,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     proxy.call(null, 1, 2, 3);
@@ -45,9 +45,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     proxy.call(null);
@@ -62,9 +62,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     proxy.apply(null, [1, 2, 3]);
@@ -79,9 +79,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     proxy.apply(null);
@@ -96,9 +96,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     Reflect.apply(proxy, null, [1, 2, 3]);
@@ -113,9 +113,9 @@ describe('proxy', () => {
       property: () => {
         throw new Error('should not be called');
       },
-      apply: argArray => {
+      apply: (argArray) => {
         args = argArray;
-      }
+      },
     });
 
     const bound = proxy.bind(null, 1, 2);
@@ -128,12 +128,12 @@ describe('proxy', () => {
     let prop;
 
     const proxy = createProxy<Foo>({
-      property: property => {
+      property: (property) => {
         prop = property;
       },
       apply: () => {
         throw new Error('should not be called');
-      }
+      },
     });
 
     proxy.bar;
@@ -145,12 +145,12 @@ describe('proxy', () => {
     let prop;
 
     const proxy = createProxy<Bar>({
-      property: property => {
+      property: (property) => {
         prop = property;
       },
       apply: () => {
         throw new Error('should not be called');
-      }
+      },
     });
 
     proxy[uniqueSymbol]++;
@@ -162,12 +162,12 @@ describe('proxy', () => {
     let prop;
 
     const proxy = createProxy<[1, 2, 3]>({
-      property: property => {
+      property: (property) => {
         prop = property;
       },
       apply: () => {
         throw new Error('should not be called');
-      }
+      },
     });
 
     proxy[0]++;
@@ -180,12 +180,12 @@ describe('proxy', () => {
     let prop;
 
     const proxy = createProxy<() => void>({
-      property: property => {
+      property: (property) => {
         prop = property;
       },
       apply: () => {
         throw new Error('should not be called');
-      }
+      },
     });
 
     proxy.toString;

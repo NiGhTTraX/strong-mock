@@ -46,7 +46,7 @@ const isAny = (): Matcher<any> => ({
    */
   toJSON() {
     return 'anything';
-  }
+  },
 });
 
 /**
@@ -66,7 +66,7 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
 
     toJSON() {
       return `matches(${cb.toString()})`;
-    }
+    },
   } as any);
 
 /**
@@ -88,7 +88,7 @@ const isObjectContaining = <T extends object, K extends DeepPartial<T>>(
     matches: (arg: any) => isMatch(arg, partial),
     toJSON() {
       return `objectContaining(${printExpected(partial)})`;
-    }
+    },
   } as any);
 
 /**
@@ -99,5 +99,5 @@ const isObjectContaining = <T extends object, K extends DeepPartial<T>>(
 export const It = {
   isAny,
   matches,
-  isObjectContaining
+  isObjectContaining,
 };

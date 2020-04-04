@@ -4,7 +4,7 @@ import { ExpectationRepository, ReturnValue } from './expectation-repository';
 const toStringKeys: PropertyKey[] = [
   'toString',
   Symbol.toStringTag,
-  '@@toStringTag'
+  '@@toStringTag',
 ];
 
 /**
@@ -23,7 +23,9 @@ export class StrongRepository implements ExpectationRepository {
    * @returns If nothing matches will return `undefined`.
    */
   get(property: PropertyKey, args: any[] | undefined): ReturnValue | undefined {
-    const expectation = this.expectations.find(e => e.matches(property, args));
+    const expectation = this.expectations.find((e) =>
+      e.matches(property, args)
+    );
 
     if (expectation) {
       return { returnValue: expectation.returnValue };
@@ -43,13 +45,13 @@ export class StrongRepository implements ExpectationRepository {
 
   hasKey(property: PropertyKey) {
     return (
-      !!this.expectations.find(e => e.property === property) ||
+      !!this.expectations.find((e) => e.property === property) ||
       toStringKeys.includes(property)
     );
   }
 
   getUnmet() {
-    return this.expectations.filter(e => e.isUnmet());
+    return this.expectations.filter((e) => e.isUnmet());
   }
 
   clear(): void {

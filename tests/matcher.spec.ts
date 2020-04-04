@@ -42,8 +42,8 @@ describe('It', () => {
     it('should support custom predicates', () => {
       expect(It.matches(() => true).matches(':irrelevant:')).toBeTruthy();
       expect(It.matches(() => false).matches(':irrelevant:')).toBeFalsy();
-      expect(It.matches(arg => !!arg).matches(true)).toBeTruthy();
-      expect(It.matches(arg => !!arg).matches(false)).toBeFalsy();
+      expect(It.matches((arg) => !!arg).matches(true)).toBeTruthy();
+      expect(It.matches((arg) => !!arg).matches(false)).toBeFalsy();
     });
 
     it('should pretty print', () => {
@@ -55,7 +55,7 @@ describe('It', () => {
     it('should match any object with empty object', () => {
       expect(
         It.isObjectContaining({}).matches({
-          foo: 'bar'
+          foo: 'bar',
         })
       ).toBeTruthy();
     });
@@ -63,13 +63,13 @@ describe('It', () => {
     it('should deep match nested objects', () => {
       expect(
         It.isObjectContaining({ foo: { bar: { baz: 42 } } }).matches({
-          foo: { bar: { baz: 42, bazzz: 23 } }
+          foo: { bar: { baz: 42, bazzz: 23 } },
         })
       ).toBeTruthy();
 
       expect(
         It.isObjectContaining({ foo: { bar: { baz: 43 } } }).matches({
-          foo: { bar: { baz: 42, bazzz: 23 } }
+          foo: { bar: { baz: 42, bazzz: 23 } },
         })
       ).toBeFalsy();
     });

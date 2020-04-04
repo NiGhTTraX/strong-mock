@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 
@@ -8,13 +9,13 @@ export default [
     external: [
       ...Object.keys(pkg.dependencies),
       'lodash/isEqual',
-      'lodash/isMatch'
+      'lodash/isMatch',
     ],
     plugins: [
       typescript({
-        tsconfig: './tsconfig.build.json'
-      })
+        tsconfig: './tsconfig.build.json',
+      }),
     ],
-    output: [{ file: pkg.main, format: 'cjs' }]
-  }
+    output: [{ file: pkg.main, format: 'cjs' }],
+  },
 ];

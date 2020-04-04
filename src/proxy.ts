@@ -34,6 +34,7 @@ interface ProxyTraps<T> {
 }
 
 export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
+  // eslint-disable-next-line no-empty-function
   (new Proxy(() => {}, {
     get: (target, prop: keyof T) => {
       if (prop === 'bind') {
@@ -55,5 +56,5 @@ export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
 
     apply: (target, thisArg: any, args: any[] | undefined) => {
       return apply(args || []);
-    }
+    },
   }) as unknown) as Mock<T>;

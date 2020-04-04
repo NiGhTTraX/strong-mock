@@ -7,13 +7,13 @@ import { mock } from '../src/mock';
 import { EmptyRepository, SpyRepository } from './expectation-repository';
 import {
   OneUseAlwaysMatchingExpectation,
-  SingleUseExpectationWithReturn
+  SingleUseExpectationWithReturn,
 } from './expectations';
 
 describe('instance', () => {
   it('should get matching expectation for apply', () => {
     const repo = new SpyRepository(true, [
-      new OneUseAlwaysMatchingExpectation()
+      new OneUseAlwaysMatchingExpectation(),
     ]);
     const fn = mock<(x: number) => number>({ repository: repo });
 
@@ -24,7 +24,7 @@ describe('instance', () => {
   it('should get matching expectation for method', () => {
     const repo = new SpyRepository(true, [
       undefined,
-      new SingleUseExpectationWithReturn(42)
+      new SingleUseExpectationWithReturn(42),
     ]);
     const foo = mock<{ bar: (x: number) => number }>({ repository: repo });
 
@@ -34,7 +34,7 @@ describe('instance', () => {
 
   it('should get matching expectation for property', () => {
     const repo = new SpyRepository(true, [
-      new SingleUseExpectationWithReturn(42)
+      new SingleUseExpectationWithReturn(42),
     ]);
     const foo = mock<{ bar: number }>({ repository: repo });
 
@@ -50,7 +50,7 @@ describe('instance', () => {
 
   it('should throw if no expectation for method', () => {
     const foo = mock<{ bar: () => void }>({
-      repository: new EmptyRepository()
+      repository: new EmptyRepository(),
     });
 
     expect(() => instance(foo).bar()).toThrow(UnexpectedAccess);
@@ -58,7 +58,7 @@ describe('instance', () => {
 
   it('should throw if no matching expectations', () => {
     const foo = mock<{ bar: () => void }>({
-      repository: new SpyRepository(true, [undefined, undefined])
+      repository: new SpyRepository(true, [undefined, undefined]),
     });
 
     expect(() => instance(foo).bar()).toThrow(UnexpectedCall);
@@ -71,7 +71,7 @@ describe('instance', () => {
       // Second call doesn't find a property expectation.
       undefined,
       // Third call finds a method expectation.
-      new SingleUseExpectationWithReturn(2)
+      new SingleUseExpectationWithReturn(2),
     ]);
     const foo = mock<{ bar: (x: string) => number }>({ repository: repo });
 

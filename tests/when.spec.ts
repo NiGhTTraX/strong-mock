@@ -5,7 +5,7 @@ import {
   MissingWhen,
   UnexpectedCall,
   UnfinishedExpectation,
-  UnmetExpectations
+  UnmetExpectations,
 } from '../src/errors';
 import { instance } from '../src/instance';
 import { clearActiveMock } from '../src/map';
@@ -104,9 +104,7 @@ describe('when', () => {
 
   it('should set expectation with invocation count', async () => {
     const fn = mock<() => void>();
-    when(fn())
-      .thenReturn(undefined)
-      .between(2, 3);
+    when(fn()).thenReturn(undefined).between(2, 3);
 
     expect(instance(fn)()).toEqual(undefined);
     expect(() => verify(fn)).toThrow(UnmetExpectations);
@@ -135,8 +133,8 @@ describe('when', () => {
       when(
         fn(
           1,
-          It.matches(y => y === 2),
-          It.matches(z => z === 3)
+          It.matches((y) => y === 2),
+          It.matches((z) => z === 3)
         )
       ).thenReturn(23);
 

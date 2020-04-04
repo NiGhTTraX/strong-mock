@@ -2,7 +2,7 @@
 import { Expectation } from '../src/expectation';
 import {
   ExpectationRepository,
-  ReturnValue
+  ReturnValue,
 } from '../src/expectation-repository';
 
 export class OneIncomingExpectationRepository implements ExpectationRepository {
@@ -100,7 +100,7 @@ export class SpyRepository implements ExpectationRepository {
 
     return (
       expectation && {
-        returnValue: expectation.returnValue
+        returnValue: expectation.returnValue,
       }
     );
   }

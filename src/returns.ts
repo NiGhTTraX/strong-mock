@@ -101,7 +101,7 @@ export const createReturns = <R>(
     },
 
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(getError(errorOrMessage), pendingExpectation)
+      finishPendingExpectation(getError(errorOrMessage), pendingExpectation),
   };
 
   const promiseStub: PromiseStub<any> = {
@@ -118,7 +118,7 @@ export const createReturns = <R>(
       finishPendingExpectation(
         Promise.reject(getError(errorOrMessage)),
         pendingExpectation
-      )
+      ),
   };
 
   // @ts-ignore TODO: because the return type is a conditional and
