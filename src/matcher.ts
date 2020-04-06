@@ -26,7 +26,7 @@ export type Matcher<T> = T & {
  * Use to test if an expectation on an argument is a custom matcher.
  */
 export function isMatcher(f: any): f is Matcher<any> {
-  return (<Matcher<any>>f).__isMatcher;
+  return f && (<Matcher<any>>f).__isMatcher;
 }
 
 /**

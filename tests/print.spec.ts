@@ -49,6 +49,10 @@ describe('print', () => {
         `.bar(anything, matches(() => true))`
       );
     });
+
+    it('should print undefined args', () => {
+      expectAnsilessEqual(printCall('bar', [undefined]), `.bar(undefined)`);
+    });
   });
 
   describe('printReturn', () => {
