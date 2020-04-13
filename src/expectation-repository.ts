@@ -1,4 +1,4 @@
-import { Expectation } from './expectation';
+import { Expectation, Expectation2 } from './expectation';
 
 export type ReturnValue = { returnValue: any };
 
@@ -34,4 +34,54 @@ export interface ExpectationRepository {
    * Remove all expectations.
    */
   clear(): void;
+}
+
+export type Call = {
+  arguments: any[] | undefined;
+};
+
+export type CallStats = Map<PropertyKey, Call[]>;
+
+export interface ExpectationRepository2 {
+  add(expectation: Expectation2): void;
+
+  /**
+   * Get a return value for the given property.
+   *
+   * The value might be a non-callable e.g. a number or a string or it might
+   * be a function that, upon receiving arguments, will start a new search and
+   * return a value again.
+   *
+   * The list of expectations should be consulted from first to last when
+   * getting a return value. If none of them match it is up to the
+   * implementation to decide what to do.
+   *
+   * @example
+   * add(new Expectation('getData', [1, 2], 23);
+   * get('getData')(1, 2) === 23
+   *
+   * @example
+   * add(new Expectation('hasData', undefined, true);
+   * get('hasData') === true
+   *
+   * @example
+   * add(new Expectation('getData', undefined, () => 42);
+   * get('getData')(1, 2, '3', false, NaN) === 42
+   */
+  get(property: PropertyKey): any;
+
+  /**
+   * Remove any expectations and clear the call stats.
+   */
+  clear(): void;
+
+  /**
+   * Return all unmet expectations.
+   */
+  getUnmet(): Expectation2[];
+
+  /**
+   * Return all the calls that successfully returned a value so far.
+   */
+  getCallStats(): CallStats;
 }

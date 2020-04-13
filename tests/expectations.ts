@@ -1,4 +1,4 @@
-import { Expectation } from '../src/expectation';
+import { Expectation, Expectation2 } from '../src/expectation';
 import { ExpectationRepository } from '../src/expectation-repository';
 import {
   ExpectationFactory,
@@ -117,4 +117,48 @@ export class SpyPendingExpectation implements PendingExpectation {
   start(repo: ExpectationRepository) {
     this.startCalledWith = repo;
   }
+}
+
+export class MatchingPropertyExpectation implements Expectation2 {
+  constructor(public property: PropertyKey, public returnValue: any) {}
+
+  args = undefined;
+
+  max = 1;
+
+  min = 1;
+
+  matches = (args: any[] | undefined) => args === undefined;
+
+  setInvocationCount(min: number, max: number) {
+    this.min = min;
+    this.max = max;
+  }
+
+  toJSON = () => 'matching property';
+}
+
+export class MatchingCallExpectation implements Expectation2 {
+  constructor(public property: PropertyKey, public returnValue: any) {}
+
+  args = [];
+
+  max = 1;
+
+  min = 1;
+
+  setInvocationCount(min: number, max: number) {
+    this.min = min;
+    this.max = max;
+  }
+
+  matches = (args: any[] | undefined) => !!args;
+
+  toJSON = () => 'matching call';
+}
+
+export class NotMatchingExpectation extends MatchingCallExpectation {
+  matches = () => false;
+
+  toJSON = () => 'not matching';
 }

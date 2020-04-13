@@ -1,3 +1,5 @@
+import { BaseRepository, CountableExpectation } from './base-repository';
+import { UnexpectedAccess, UnexpectedCall } from './errors';
 import { Expectation } from './expectation';
 import { ExpectationRepository, ReturnValue } from './expectation-repository';
 
@@ -56,5 +58,38 @@ export class StrongRepository implements ExpectationRepository {
 
   clear(): void {
     this.expectations = [];
+  }
+}
+
+export class StrongRepository2 extends BaseRepository {
+  protected consumeExpectation(expectation: CountableExpectation): void {
+    const { property, max } = expectation.expectation;
+
+    const expectations = this.expectations.get(property)!;
+
+    if (expectation.matchCount === max) {
+      this.expectations.set(
+        property,
+        expectations.filter((e) => e !== expectation)
+      );
+    }
+  }
+
+  private static readonly TO_STRING_VALUE = 'strong-mock';
+
+  protected getValueForUnexpectedCall(property: PropertyKey, args: any[]) {
+    throw new UnexpectedCall(property, args, this.getUnmet());
+  }
+
+  protected getValueForUnexpectedAccess(property: PropertyKey) {
+    switch (property) {
+      case 'toString':
+        return () => StrongRepository2.TO_STRING_VALUE;
+      case '@@toStringTag':
+      case Symbol.toStringTag:
+        return StrongRepository2.TO_STRING_VALUE;
+      default:
+        throw new UnexpectedAccess(property, this.getUnmet());
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
-import { Expectation } from './expectation';
+import { Expectation, Expectation2 } from './expectation';
 import { PendingExpectation } from './pending-expectation';
 import { printCall, printProperty, printRemainingExpectations } from './print';
 
@@ -27,7 +27,10 @@ Every call to set a return value must be preceded by an expectation.`);
 }
 
 export class UnexpectedAccess extends Error {
-  constructor(property: PropertyKey, expectations: Expectation[]) {
+  constructor(
+    property: PropertyKey,
+    expectations: (Expectation | Expectation2)[]
+  ) {
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printProperty(property)}`
     )} to be accessed.
@@ -40,7 +43,11 @@ ${printRemainingExpectations(expectations)}`);
 }
 
 export class UnexpectedCall extends Error {
-  constructor(property: PropertyKey, args: any[], expectations: Expectation[]) {
+  constructor(
+    property: PropertyKey,
+    args: any[],
+    expectations: (Expectation | Expectation2)[]
+  ) {
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printCall(property, args)}`
     )} to be called.
@@ -58,7 +65,7 @@ Make sure you're passing in an actual mock.`);
 }
 
 export class UnmetExpectations extends Error {
-  constructor(expectations: Expectation[]) {
+  constructor(expectations: (Expectation | Expectation2)[]) {
     super(`There are unmet expectations:
 
  - ${expectations.map((e) => e.toJSON()).join('\n - ')}`);
