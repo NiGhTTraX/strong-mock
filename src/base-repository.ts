@@ -1,5 +1,5 @@
 import { Expectation2 } from './expectation';
-import { CallStats, ExpectationRepository2 } from './expectation-repository';
+import { CallMap, ExpectationRepository2 } from './expectation-repository';
 
 export type CountableExpectation = {
   expectation: Expectation2;
@@ -12,7 +12,7 @@ export abstract class BaseRepository implements ExpectationRepository2 {
     CountableExpectation[]
   >();
 
-  private readonly callStats: CallStats = new Map();
+  private readonly callStats: CallMap = new Map();
 
   add(expectation: Expectation2): void {
     const { property } = expectation;
@@ -69,8 +69,8 @@ export abstract class BaseRepository implements ExpectationRepository2 {
     return this.getValueForUnexpectedAccess(property);
   }
 
-  getCallStats(): CallStats {
-    return this.callStats;
+  getCallStats() {
+    return { expected: this.callStats, unexpected: new Map() };
   }
 
   getUnmet(): Expectation2[] {

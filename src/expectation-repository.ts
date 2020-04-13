@@ -40,7 +40,19 @@ export type Call = {
   arguments: any[] | undefined;
 };
 
-export type CallStats = Map<PropertyKey, Call[]>;
+export type CallMap = Map<PropertyKey, Call[]>;
+
+export type CallStats = {
+  /**
+   * Calls that matched existing expectations.
+   */
+  expected: CallMap;
+
+  /**
+   * Calls that didn't match any existing expectation.
+   */
+  unexpected: CallMap;
+};
 
 export interface ExpectationRepository2 {
   add(expectation: Expectation2): void;
