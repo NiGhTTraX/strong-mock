@@ -7,6 +7,12 @@ type PromiseStub<R> = {
    *
    * @param promise This needs to be a Promise wrapping the same type
    *   as the value returned by the call inside `when()`.
+   *
+   * @example
+   * when(fn()).thenReturn(Promise.resolve(23));
+   *
+   * @example
+   * when(fn()).thenReturn(Promise.reject({ foo: 'bar' });
    */
   thenReturn(promise: Promise<R>): InvocationCount;
 
@@ -20,11 +26,18 @@ type PromiseStub<R> = {
 
   /**
    * Make the current call reject with the given error.
+   *
+   * @param error An `Error` instance. If you want to reject with a non error
+   *   then use the `thenReturn` method.
    */
   thenReject(error: Error): InvocationCount;
 
   /**
    * Make the current call reject with an error with the given message.
+   *
+   * @param message Will be wrapped in `new Error()`. If you want to reject
+   *   with a custom error then use `thenReject`. If you want to reject with a
+   *   non error then use `thenReturn`.
    */
   thenReject(message: string): InvocationCount;
 
@@ -50,6 +63,8 @@ type NonPromiseStub<R> = {
 
   /**
    * Make the current call throw an error with the given message.
+   *
+   * @param message Will be wrapped in `new Error()`.
    */
   thenThrow(message: string): InvocationCount;
 
