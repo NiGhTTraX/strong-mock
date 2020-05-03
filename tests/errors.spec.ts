@@ -3,14 +3,17 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import {
   UnexpectedAccess,
   UnexpectedCall,
+  UnexpectedCalls,
   UnfinishedExpectation,
   UnmetExpectations,
 } from '../src/errors';
+import { CallMap } from '../src/expectation-repository';
 import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
 import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
 import {
   NeverMatchingExpectation,
+  NotMatchingExpectation,
   spyExpectationFactory,
   SpyPendingExpectation,
 } from './expectations';
@@ -113,6 +116,39 @@ foobar`
       expectAnsilessContain(
         error.message,
         `Didn't expect mock.bar(1, 2, 3) to be called.`
+      );
+
+      expectAnsilessContain(
+        error.message,
+        `Remaining unmet expectations:
+ - e1
+ - e2`
+      );
+    });
+  });
+
+  describe('UnexpectedCalls', () => {
+    it('should print the unexpected calls and remaining expectations', () => {
+      const e1 = new NotMatchingExpectation(':irrelevant:', undefined);
+      const e2 = new NotMatchingExpectation(':irrelevant:', undefined);
+      e1.toJSON = () => 'e1';
+      e2.toJSON = () => 'e2';
+
+      const error = new UnexpectedCalls(
+        new Map([
+          ['foo', [{ arguments: [1, 2, 3] }, { arguments: [4, 5, 6] }]],
+          ['bar', [{ arguments: undefined }]],
+        ]) as CallMap,
+        [e1, e2]
+      );
+
+      expectAnsilessContain(
+        error.message,
+        `The following calls were unexpected:
+
+ - mock.foo(1, 2, 3)
+ - mock.foo(4, 5, 6)
+ - mock.bar`
       );
 
       expectAnsilessContain(

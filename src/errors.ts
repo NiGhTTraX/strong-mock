@@ -1,5 +1,6 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import { Expectation, Expectation2 } from './expectation';
+import { CallMap } from './expectation-repository';
 import { PendingExpectation } from './pending-expectation';
 import { printCall, printProperty, printRemainingExpectations } from './print';
 
@@ -69,5 +70,27 @@ export class UnmetExpectations extends Error {
     super(`There are unmet expectations:
 
  - ${expectations.map((e) => e.toJSON()).join('\n - ')}`);
+  }
+}
+
+export class UnexpectedCalls extends Error {
+  constructor(unexpectedCalls: CallMap, expectations: Expectation2[]) {
+    const printedCalls = Array.from(unexpectedCalls.entries())
+      .map(([property, calls]) =>
+        calls
+          .map((call) =>
+            call.arguments
+              ? EXPECTED_COLOR(`mock${printCall(property, call.arguments)}`)
+              : EXPECTED_COLOR(`mock${printProperty(property)}`)
+          )
+          .join('\n - ')
+      )
+      .join('\n - ');
+
+    super(`The following calls were unexpected:
+
+ - ${printedCalls}
+
+${printRemainingExpectations(expectations)}`);
   }
 }

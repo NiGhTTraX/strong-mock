@@ -1,5 +1,8 @@
 import { NotAMock } from './errors';
-import { ExpectationRepository } from './expectation-repository';
+import {
+  ExpectationRepository,
+  ExpectationRepository2,
+} from './expectation-repository';
 import { Mock } from './mock';
 import { PendingExpectation } from './pending-expectation';
 
@@ -38,6 +41,11 @@ type MockState = {
   pendingExpectation: PendingExpectation;
 };
 
+type MockState2 = {
+  repository: ExpectationRepository2;
+  pendingExpectation: PendingExpectation;
+};
+
 /**
  * Store a global map of all mocks created and their state.
  *
@@ -45,10 +53,19 @@ type MockState = {
  * `thenReturn` and `instance`.
  */
 export const mockMap = new Map<Mock<any>, MockState>();
+export const mockMap2 = new Map<Mock<any>, MockState2>();
 
 export const getMockState = (mock: Mock<any>): MockState => {
   if (mockMap.has(mock)) {
     return mockMap.get(mock)!;
+  }
+
+  throw new NotAMock();
+};
+
+export const getMockState2 = (mock: Mock<any>): MockState2 => {
+  if (mockMap2.has(mock)) {
+    return mockMap2.get(mock)!;
   }
 
   throw new NotAMock();
