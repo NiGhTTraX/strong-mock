@@ -26,6 +26,7 @@
     "clean": "rm -rf ./dist",
     "compile": "rollup -c",
     "prepublishOnly": "npm run build",
+    "release": "standard-version",
     "lint": "eslint --ext ts,tsx,js .",
     "test": "tdd-buffet test",
     "test:coverage": "tdd-buffet test --coverage",
@@ -59,6 +60,7 @@
     "prettier": "~2.0.0",
     "rollup": "~2.7.0",
     "rollup-plugin-typescript2": "~0.27.0",
+    "standard-version": "~7.1.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~0.16.0",
     "typescript": "~3.9.1-rc"
