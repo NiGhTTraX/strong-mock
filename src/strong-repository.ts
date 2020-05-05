@@ -1,60 +1,44 @@
-import { Expectation } from './expectation';
-import { ExpectationRepository, ReturnValue } from './expectation-repository';
-
-const toStringKeys: PropertyKey[] = [
-  'toString',
-  Symbol.toStringTag,
-  '@@toStringTag',
-];
+import { BaseRepository, CountableExpectation } from './base-repository';
+import { UnexpectedAccess, UnexpectedCall } from './errors';
+import { ApplyProp } from './expectation';
 
 /**
- * - Expectations will be returned in the order they were added.
- * - If there are no matching expectations for 'toString' then a default will be returned.
- * - If there are no matching expectations `undefined` will be returned.
+ * Throw if no expectation matches.
  */
-export class StrongRepository implements ExpectationRepository {
-  private expectations: Expectation[] = [];
+export class StrongRepository extends BaseRepository {
+  protected consumeExpectation(expectation: CountableExpectation): void {
+    const { property, max } = expectation.expectation;
 
-  add(expectation: Expectation) {
-    this.expectations.push(expectation);
+    const expectations = this.expectations.get(property)!;
+
+    if (expectation.matchCount === max) {
+      this.expectations.set(
+        property,
+        expectations.filter((e) => e !== expectation)
+      );
+    }
   }
 
-  /**
-   * @returns If nothing matches will return `undefined`.
-   */
-  get(property: PropertyKey, args: any[] | undefined): ReturnValue | undefined {
-    const expectation = this.expectations.find((e) =>
-      e.matches(property, args)
-    );
+  private static readonly TO_STRING_VALUE = 'strong-mock';
 
-    if (expectation) {
-      return { returnValue: expectation.returnValue };
-    }
+  protected getValueForUnexpectedCall(property: PropertyKey, args: any[]) {
+    throw new UnexpectedCall(property, args, this.getUnmet());
+  }
 
-    // TODO: move the return values to `toStringKeys`
+  protected getValueForUnexpectedAccess(property: PropertyKey) {
+    // TODO: abstract the toString logic away (maybe move it to the base repo)
     switch (property) {
       case 'toString':
-        return { returnValue: () => 'mock' };
-      case Symbol.toStringTag:
+        return () => StrongRepository.TO_STRING_VALUE;
       case '@@toStringTag':
-        return { returnValue: 'mock' };
+      case Symbol.toStringTag:
+        return StrongRepository.TO_STRING_VALUE;
+      case ApplyProp:
+        return (...args: any[]) => {
+          throw new UnexpectedCall(ApplyProp, args, this.getUnmet());
+        };
       default:
-        return undefined;
+        throw new UnexpectedAccess(property, this.getUnmet());
     }
-  }
-
-  hasKey(property: PropertyKey) {
-    return (
-      !!this.expectations.find((e) => e.property === property) ||
-      toStringKeys.includes(property)
-    );
-  }
-
-  getUnmet() {
-    return this.expectations.filter((e) => e.isUnmet());
-  }
-
-  clear(): void {
-    this.expectations = [];
   }
 }

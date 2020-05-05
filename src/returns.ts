@@ -82,7 +82,7 @@ export type Stub<T> = [T] extends [Promise<infer U>]
 /**
  * Set a return value for the currently pending expectation.
  */
-export const finishPendingExpectation = (
+const finishPendingExpectation = (
   returnValue: any,
   pendingExpectation: PendingExpectation
 ) => {

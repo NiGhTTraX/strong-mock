@@ -16,10 +16,6 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     return this.expectation && { returnValue: this.expectation.returnValue };
   }
 
-  hasKey() {
-    return !!this.expectation;
-  }
-
   getUnmet() {
     return this.expectation ? [this.expectation] : [];
   }
@@ -27,6 +23,8 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   clear(): void {
     this.expectation = undefined;
   }
+
+  getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
 }
 
 export class OneExistingExpectationRepository implements ExpectationRepository {
@@ -40,10 +38,6 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
     return { returnValue: this.expectation.returnValue };
   }
 
-  hasKey() {
-    return true;
-  }
-
   getUnmet() {
     return [this.expectation];
   }
@@ -51,40 +45,33 @@ export class OneExistingExpectationRepository implements ExpectationRepository {
   clear(): void {
     throw new Error('not supported');
   }
+
+  getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
 }
 
 export class EmptyRepository implements ExpectationRepository {
   add() {}
 
-  get(): undefined {
-    return undefined;
-  }
-
-  hasKey() {
-    return false;
-  }
+  get = () => undefined;
 
   getUnmet() {
     return [];
   }
 
   clear(): void {}
+
+  getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
 }
 
 // TODO: use this to remove the other mocks
 export class SpyRepository implements ExpectationRepository {
   public addCalledWith: Expectation | undefined;
 
-  public getCalledWith: [PropertyKey, any[] | undefined] | undefined;
-
-  public hasForCalledWith: PropertyKey | undefined;
+  public getCalledWith: [PropertyKey] | undefined;
 
   private getCounter = 0;
 
-  constructor(
-    private hasForReturn: boolean,
-    private getReturns: (Expectation | undefined)[]
-  ) {}
+  constructor(private hasForReturn: boolean, private getReturns: any[]) {}
 
   add(expectation: Expectation) {
     this.addCalledWith = expectation;
@@ -92,25 +79,18 @@ export class SpyRepository implements ExpectationRepository {
 
   clear() {}
 
-  get(property: PropertyKey, args: any[] | undefined): ReturnValue | undefined {
-    this.getCalledWith = [property, args];
+  get(property: PropertyKey) {
+    this.getCalledWith = [property];
 
-    const expectation = this.getReturns[this.getCounter];
+    const returnValue = this.getReturns[this.getCounter];
     this.getCounter++;
 
-    return (
-      expectation && {
-        returnValue: expectation.returnValue,
-      }
-    );
+    return returnValue;
   }
 
   getUnmet() {
     return [];
   }
 
-  hasKey(property: PropertyKey) {
-    this.hasForCalledWith = property;
-    return this.hasForReturn;
-  }
+  getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
 }

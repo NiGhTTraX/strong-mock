@@ -2,36 +2,76 @@ import { Expectation } from './expectation';
 
 export type ReturnValue = { returnValue: any };
 
-export interface ExpectationRepository {
+export type Call = {
+  arguments: any[] | undefined;
+};
+
+/**
+ * Method calls should be recorded both as a property access and a method call.
+ *
+ * @example
+ * // foo.bar(1, 2, 3) should generate
+ * {
+ *   foo: [
+ *     { arguments: undefined },
+ *     { arguments: [1, 2, 3] }
+ *   ]
+ * }
+ */
+export type CallMap = Map<PropertyKey, Call[]>;
+
+export type CallStats = {
   /**
-   * Add an expectation to the repo.
+   * Calls that matched existing expectations.
    */
+  expected: CallMap;
+
+  /**
+   * Calls that didn't match any existing expectation.
+   */
+  unexpected: CallMap;
+};
+
+export interface ExpectationRepository {
   add(expectation: Expectation): void;
 
   /**
-   * Get a return value for the given property/call.
+   * Get a return value for the given property.
    *
-   * If there is an expectation matching the property and the args then its
-   * return value should be chosen. Expectations should be matched in the order
-   * they were added. Returning `undefined` means that no expectations matched.
+   * The value might be a non-callable e.g. a number or a string or it might
+   * be a function that, upon receiving arguments, will start a new search and
+   * return a value again.
    *
-   * A repository implementation could decide to return a value here even if
-   * no expectations matched.
+   * The list of expectations should be consulted from first to last when
+   * getting a return value. If none of them match it is up to the
+   * implementation to decide what to do.
+   *
+   * @example
+   * add(new Expectation('getData', [1, 2], 23);
+   * get('getData')(1, 2) === 23
+   *
+   * @example
+   * add(new Expectation('hasData', undefined, true);
+   * get('hasData') === true
+   *
+   * @example
+   * add(new Expectation('getData', undefined, () => 42);
+   * get('getData')(1, 2, '3', false, NaN) === 42
    */
-  get(property: PropertyKey, args: any[] | undefined): ReturnValue | undefined;
+  get(property: PropertyKey): any;
 
   /**
-   * Does any _unmet_ expectation match the given key?
+   * Remove any expectations and clear the call stats.
    */
-  hasKey(property: PropertyKey): boolean;
+  clear(): void;
 
   /**
-   * Get all remaining unmet expectations.
+   * Return all unmet expectations.
    */
   getUnmet(): Expectation[];
 
   /**
-   * Remove all expectations.
+   * Return all the calls that have been made so far.
    */
-  clear(): void;
+  getCallStats(): CallStats;
 }

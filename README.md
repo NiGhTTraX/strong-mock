@@ -205,6 +205,20 @@ when(fn(1)).thenReturn(1).between(2, 10);
 verify(fn); // throws
 ```
 
+It will also throw if any unexpected calls happened that were maybe caught in the code under test.
+
+```typescript
+const fn = mock<() => void>();
+
+try {
+  instance(fn)(); // throws because the call is unexpected
+} catch(e) {
+  // your code might transition to an error state here
+}
+
+verify(fn); // throws
+```
+
 ![verify error](./media/verify.png)
 
 ### Resetting expectations

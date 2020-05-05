@@ -9,17 +9,16 @@ export interface Expectation {
 
   returnValue: any;
 
+  min: number;
+
+  max: number;
+
   /**
    * How many times should this expectation match?
    */
   setInvocationCount(min: number, max: number): void;
 
-  /**
-   * Should take into account the property, the args and how invocation count.
-   */
-  matches(property: PropertyKey, args: any[] | undefined): boolean;
-
-  isUnmet(): boolean;
+  matches(args: any[] | undefined): boolean;
 
   /**
    * Used by `pretty-format`.
