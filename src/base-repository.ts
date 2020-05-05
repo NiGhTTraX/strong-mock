@@ -148,38 +148,3 @@ export abstract class BaseRepository implements ExpectationRepository {
     this.consumeExpectation(expectation);
   }
 }
-
-/**
- * const strictMock = mock<() => void>();
- * when(strictMock()).thenReturn(undefined);
- *
- * instance(strictMock)();
- *
- * verify(strictMock); // all good
- *
- * instance(strictMock)(); // throws
- * verify(strictMock); // throws
- *
- * callStats = {
- *   expected: [mock()],
- *   unexpected: [mock()]
- * }
- *
- * ------------------------------------------
- *
- * const weakMock = mock<() => void>({ weak: true });
- * when(weakMock()).thenReturn(undefined);
- *
- * instance(weakMock)();
- * instance(weakMock)();
- *
- * verify(weakMock); // all good
- *
- * instance(weakMock)(); // all good
- * verify(weakMock); // all good
- *
- * callStats = {
- *   expected: [mock(), mock(), mock()],
- *   unexpected: []
- * }
- */
