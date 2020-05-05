@@ -126,7 +126,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   /**
    * Record an expected property access/method call.
    */
-  protected recordExpected(property: PropertyKey, args: any[] | undefined) {
+  private recordExpected(property: PropertyKey, args: any[] | undefined) {
     const calls = this.expectedCallStats.get(property) || [];
 
     this.expectedCallStats.set(property, [...calls, { arguments: args }]);
@@ -135,7 +135,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   /**
    * Record an unexpected property access/method call.
    */
-  protected recordUnexpected(property: PropertyKey, args: any[] | undefined) {
+  private recordUnexpected(property: PropertyKey, args: any[] | undefined) {
     const calls = this.unexpectedCallStats.get(property) || [];
 
     this.unexpectedCallStats.set(property, [...calls, { arguments: args }]);
