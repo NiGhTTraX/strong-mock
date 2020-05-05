@@ -5,10 +5,10 @@ import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
 } from './expectations';
-import { repoContractTests2 } from './repo-contract';
+import { repoContractTests } from './repo-contract';
 
 describe('WeakRepository', () => {
-  Object.entries(repoContractTests2).forEach(([suite, tests]) => {
+  Object.entries(repoContractTests).forEach(([suite, tests]) => {
     describe(suite, () => {
       tests.forEach(({ name, test }) => {
         it(name, test(new WeakRepository()));

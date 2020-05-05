@@ -18,9 +18,9 @@ import { printExpectation } from './print';
 export class StrongExpectation implements Expectation {
   private matched = 0;
 
-  private min: number = 1;
+  public min: number = 1;
 
-  private max: number = 1;
+  public max: number = 1;
 
   constructor(
     public property: PropertyKey,
@@ -33,11 +33,7 @@ export class StrongExpectation implements Expectation {
     this.max = max;
   }
 
-  matches(property: PropertyKey, args: any[] | undefined): boolean {
-    if (property !== this.property) {
-      return false;
-    }
-
+  matches(args: any[] | undefined): boolean {
     if (!this.matchesArgs(args)) {
       return false;
     }

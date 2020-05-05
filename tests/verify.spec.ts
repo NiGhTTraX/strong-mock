@@ -1,41 +1,29 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { mock } from '../src';
+import { instance, mock, verify } from '../src';
 import { UnexpectedCalls, UnmetExpectations } from '../src/errors';
-import { Expectation2 } from '../src/expectation';
-import { CallMap, ExpectationRepository2 } from '../src/expectation-repository';
-import { verify, verify3 } from '../src/verify';
-import {
-  EmptyRepository,
-  OneExistingExpectationRepository,
-} from './expectation-repository';
-import {
-  NotMatchingExpectation,
-  OneUseAlwaysMatchingExpectation,
-} from './expectations';
+import { Expectation } from '../src/expectation';
+import { CallMap, ExpectationRepository } from '../src/expectation-repository';
+import { verifyRepo } from '../src/verify';
+import { NotMatchingExpectation } from './expectations';
 
 describe('verify', () => {
-  it('should throw if remaining expectations', () => {
-    const repo = new OneExistingExpectationRepository(
-      new OneUseAlwaysMatchingExpectation()
-    );
-    const fn = mock<() => number>({ repository: repo });
+  it('should throw on unexpected calls', () => {
+    const fn = mock<() => void>();
 
-    expect(() => verify(fn)).toThrow(UnmetExpectations);
-  });
+    try {
+      instance(fn)();
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
-  it('should not throw if all expectations met', () => {
-    const repo = new EmptyRepository();
-    const fn = mock<() => number>({ repository: repo });
-
-    expect(() => verify(fn)).not.toThrow();
+    expect(() => verify(fn)).toThrow(UnexpectedCalls);
   });
 });
 
-describe('verify2', () => {
-  class MockRepo implements ExpectationRepository2 {
-    private readonly unmet: Expectation2[] = [];
+describe('verifyRepo', () => {
+  class MockRepo implements ExpectationRepository {
+    private readonly unmet: Expectation[] = [];
 
     private readonly unexpected: CallMap = new Map();
 
@@ -48,7 +36,7 @@ describe('verify2', () => {
     }: {
       expected?: CallMap;
       unexpected?: CallMap;
-      unmet?: Expectation2[];
+      unmet?: Expectation[];
     } = {}) {
       // noinspection JSPotentiallyInvalidUsageOfThis
       this.expected = expected;
@@ -74,7 +62,7 @@ describe('verify2', () => {
 
   it('should throw if remaining expectations', () => {
     expect(() =>
-      verify3(
+      verifyRepo(
         new MockRepo({
           unmet: [new NotMatchingExpectation(':irrelevant:', undefined)],
         })
@@ -84,7 +72,7 @@ describe('verify2', () => {
 
   it('should throw if unexpected calls', () => {
     expect(() =>
-      verify3(
+      verifyRepo(
         new MockRepo({
           unexpected: new Map([['bar', [{ arguments: [] }]]]) as CallMap,
         })

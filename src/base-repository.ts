@@ -1,12 +1,12 @@
-import { Expectation2 } from './expectation';
-import { CallMap, ExpectationRepository2 } from './expectation-repository';
+import { Expectation } from './expectation';
+import { CallMap, ExpectationRepository } from './expectation-repository';
 
 export type CountableExpectation = {
-  expectation: Expectation2;
+  expectation: Expectation;
   matchCount: number;
 };
 
-export abstract class BaseRepository implements ExpectationRepository2 {
+export abstract class BaseRepository implements ExpectationRepository {
   protected readonly expectations = new Map<
     PropertyKey,
     CountableExpectation[]
@@ -16,7 +16,7 @@ export abstract class BaseRepository implements ExpectationRepository2 {
 
   private readonly unexpectedCallStats: CallMap = new Map();
 
-  add(expectation: Expectation2): void {
+  add(expectation: Expectation): void {
     const { property } = expectation;
 
     const expectations = this.expectations.get(property) || [];
@@ -81,8 +81,8 @@ export abstract class BaseRepository implements ExpectationRepository2 {
     };
   }
 
-  getUnmet(): Expectation2[] {
-    return ([] as Expectation2[]).concat(
+  getUnmet(): Expectation[] {
+    return ([] as Expectation[]).concat(
       ...Array.from(this.expectations.values()).map((expectations) =>
         expectations
           .filter((e) => e.expectation.min > e.matchCount)

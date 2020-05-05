@@ -1,12 +1,14 @@
 import { BaseRepository, CountableExpectation } from './base-repository';
-import { Expectation2 } from './expectation';
-import { ExpectationRepository2 } from './expectation-repository';
+import { Expectation } from './expectation';
+import { ExpectationRepository } from './expectation-repository';
 
 /**
+ * Always return something, even if no expectations match.
+ *
  * WARNING: this is in development, do not use
  */
 export class WeakRepository extends BaseRepository
-  implements ExpectationRepository2 {
+  implements ExpectationRepository {
   private static TO_STRING_VALUE = 'weak-mock';
 
   private repeating = new Map<PropertyKey, boolean>();
@@ -48,7 +50,7 @@ export class WeakRepository extends BaseRepository
     }
   }
 
-  add(expectation: Expectation2): void {
+  add(expectation: Expectation): void {
     const { property } = expectation;
 
     const expectations = this.expectations.get(property);

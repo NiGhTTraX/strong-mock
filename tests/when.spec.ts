@@ -115,7 +115,7 @@ describe('when', () => {
   });
 
   it('should be stringifiable', () => {
-    expect(instance(mock<() => void>()).toString()).toEqual('mock');
+    expect(instance(mock<() => void>()).toString()).toEqual('strong-mock');
   });
 
   describe('ignoring arguments', () => {

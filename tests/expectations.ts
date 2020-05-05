@@ -1,4 +1,4 @@
-import { Expectation, Expectation2 } from '../src/expectation';
+import { Expectation } from '../src/expectation';
 import { ExpectationRepository } from '../src/expectation-repository';
 import {
   ExpectationFactory,
@@ -8,9 +8,11 @@ import {
 export class NeverMatchingExpectation implements Expectation {
   setInvocationCount = () => {};
 
-  isUnmet = () => true;
-
   toJSON = () => 'never matching';
+
+  min = 1;
+
+  max = 1;
 
   args = undefined;
 
@@ -24,21 +26,19 @@ export class NeverMatchingExpectation implements Expectation {
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   setInvocationCount = () => {};
 
-  isUnmet = () => true;
-
   toJSON = () => 'always matching';
 
   args = undefined;
+
+  min = 1;
+
+  max = 1;
 
   property = 'bar';
 
   returnValue = 42;
 
   matches = () => true;
-}
-
-export class NeverEndingAlwaysMatchingExpectation extends OneUseAlwaysMatchingExpectation {
-  isUnmet = () => false;
 }
 
 export class SpyExpectation implements Expectation {
@@ -51,8 +51,6 @@ export class SpyExpectation implements Expectation {
     this.max = max;
   };
 
-  isUnmet = () => true;
-
   toJSON = () => 'spy expectation';
 
   constructor(
@@ -62,20 +60,6 @@ export class SpyExpectation implements Expectation {
   ) {}
 
   matches = () => false;
-}
-
-export class SingleUseExpectationWithReturn extends SpyExpectation {
-  isUnmet = () => true;
-
-  constructor(public returnValue: any) {
-    super(':irrelevant:', undefined, returnValue);
-  }
-
-  min = 1;
-
-  max = 1;
-
-  matches = () => true;
 }
 
 export const spyExpectationFactory: ExpectationFactory = (
@@ -119,7 +103,7 @@ export class SpyPendingExpectation implements PendingExpectation {
   }
 }
 
-export class MatchingPropertyExpectation implements Expectation2 {
+export class MatchingPropertyExpectation implements Expectation {
   constructor(public property: PropertyKey, public returnValue: any) {}
 
   args = undefined;
@@ -138,7 +122,7 @@ export class MatchingPropertyExpectation implements Expectation2 {
   toJSON = () => 'matching property';
 }
 
-export class MatchingCallExpectation implements Expectation2 {
+export class MatchingCallExpectation implements Expectation {
   constructor(public property: PropertyKey, public returnValue: any) {}
 
   args = [];

@@ -5,32 +5,26 @@ import { StrongExpectation } from '../src/strong-expectation';
 import { expectAnsilessEqual } from './ansiless';
 
 describe('StrongExpectation', () => {
-  it('should match same prop', () => {
-    const expectation = new StrongExpectation('bar', [], undefined);
-
-    expect(expectation.matches('baz', [])).toBeFalsy();
-  });
-
   it('should match empty args', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
 
-    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches([])).toBeTruthy();
   });
 
   it('should match no args', () => {
     const expectation = new StrongExpectation('bar', undefined, undefined);
 
-    expect(expectation.matches('bar', undefined)).toBeTruthy();
-    expect(expectation.matches('bar', [1])).toBeFalsy();
+    expect(expectation.matches(undefined)).toBeTruthy();
+    expect(expectation.matches([1])).toBeFalsy();
   });
 
   it('should match primitives', () => {
     const expectation = new StrongExpectation('bar', [1, '2', true], undefined);
 
-    expect(expectation.matches('bar', [1, '2', true])).toBeTruthy();
-    expect(expectation.matches('bar', [2, '2', true])).toBeFalsy();
-    expect(expectation.matches('bar', [1, '3', true])).toBeFalsy();
-    expect(expectation.matches('bar', [1, '2', false])).toBeFalsy();
+    expect(expectation.matches([1, '2', true])).toBeTruthy();
+    expect(expectation.matches([2, '2', true])).toBeFalsy();
+    expect(expectation.matches([1, '3', true])).toBeFalsy();
+    expect(expectation.matches([1, '2', false])).toBeFalsy();
   });
 
   it('should match objects', () => {
@@ -45,7 +39,7 @@ describe('StrongExpectation', () => {
     );
 
     expect(
-      expectation.matches('bar', [
+      expectation.matches([
         {
           bar: { baz: 42 },
         },
@@ -56,19 +50,19 @@ describe('StrongExpectation', () => {
   it('should match arrays', () => {
     const expectation = new StrongExpectation('bar', [[1, 2, 3]], 23);
 
-    expect(expectation.matches('bar', [[1, 2, 3]])).toBeTruthy();
+    expect(expectation.matches([[1, 2, 3]])).toBeTruthy();
   });
 
   it('should match deep arrays', () => {
     const expectation = new StrongExpectation('bar', [[1, 2, [3, 4]]], 23);
 
-    expect(expectation.matches('bar', [[1, 2, [3, 4]]])).toBeTruthy();
+    expect(expectation.matches([[1, 2, [3, 4]]])).toBeTruthy();
   });
 
   it('should match sets', () => {
     const expectation = new StrongExpectation('bar', [new Set([1, 2, 3])], 23);
 
-    expect(expectation.matches('bar', [new Set([1, 2, 3])])).toBeTruthy();
+    expect(expectation.matches([new Set([1, 2, 3])])).toBeTruthy();
   });
 
   it('should match maps', () => {
@@ -84,7 +78,7 @@ describe('StrongExpectation', () => {
     );
 
     expect(
-      expectation.matches('bar', [
+      expectation.matches([
         new Map([
           [1, true],
           [2, false],
@@ -96,25 +90,25 @@ describe('StrongExpectation', () => {
   it('should match optional args against undefined', () => {
     const expectation = new StrongExpectation('bar', [undefined], 23);
 
-    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches([])).toBeTruthy();
   });
 
   it('should match passed in optional args', () => {
     const expectation = new StrongExpectation('bar', [], 23);
 
-    expect(expectation.matches('bar', [42])).toBeTruthy();
+    expect(expectation.matches([42])).toBeTruthy();
   });
 
   it('should not match missing expected optional arg', () => {
     const expectation = new StrongExpectation('bar', [23], 23);
 
-    expect(expectation.matches('bar', [])).toBeFalsy();
+    expect(expectation.matches([])).toBeFalsy();
   });
 
   it('should not match defined expected undefined optional arg', () => {
     const expectation = new StrongExpectation('bar', [undefined], 23);
 
-    expect(expectation.matches('bar', [42])).toBeFalsy();
+    expect(expectation.matches([42])).toBeFalsy();
   });
 
   it('should call matchers', () => {
@@ -130,7 +124,7 @@ describe('StrongExpectation', () => {
 
     const expectation = new StrongExpectation('bar', [spyMatcher], 23);
 
-    expect(expectation.matches('bar', [23])).toBeTruthy();
+    expect(expectation.matches([23])).toBeTruthy();
     expect(matchesCalledWith).toEqual(23);
   });
 
@@ -147,25 +141,25 @@ describe('StrongExpectation', () => {
   it('should by default match only once', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
 
-    expect(expectation.matches('bar', [])).toBeTruthy();
-    expect(expectation.matches('bar', [])).toBeFalsy();
+    expect(expectation.matches([])).toBeTruthy();
+    expect(expectation.matches([])).toBeFalsy();
   });
 
   it('should match at most max times', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
     expectation.setInvocationCount(1, 2);
 
-    expect(expectation.matches('bar', [])).toBeTruthy();
-    expect(expectation.matches('bar', [])).toBeTruthy();
-    expect(expectation.matches('bar', [])).toBeFalsy();
+    expect(expectation.matches([])).toBeTruthy();
+    expect(expectation.matches([])).toBeTruthy();
+    expect(expectation.matches([])).toBeFalsy();
   });
 
   it('should match forever', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
     expectation.setInvocationCount(0, 0);
 
-    expect(expectation.matches('bar', [])).toBeTruthy();
-    expect(expectation.matches('bar', [])).toBeTruthy();
+    expect(expectation.matches([])).toBeTruthy();
+    expect(expectation.matches([])).toBeTruthy();
   });
 
   it('should by default be unmet', () => {
@@ -185,7 +179,7 @@ describe('StrongExpectation', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
     expectation.setInvocationCount(1);
 
-    expectation.matches('bar', []);
+    expectation.matches([]);
     expect(expectation.isUnmet()).toBeFalsy();
   });
 
@@ -193,7 +187,7 @@ describe('StrongExpectation', () => {
     const expectation = new StrongExpectation('bar', [], undefined);
     expectation.setInvocationCount(2);
 
-    expectation.matches('bar', []);
+    expectation.matches([]);
     expect(expectation.isUnmet()).toBeTruthy();
   });
 });
