@@ -12,7 +12,9 @@ export abstract class BaseRepository implements ExpectationRepository2 {
     CountableExpectation[]
   >();
 
-  private readonly callStats: CallMap = new Map();
+  private readonly expectedCallStats: CallMap = new Map();
+
+  private readonly unexpectedCallStats: CallMap = new Map();
 
   add(expectation: Expectation2): void {
     const { property } = expectation;
@@ -30,15 +32,17 @@ export abstract class BaseRepository implements ExpectationRepository2 {
 
   clear(): void {
     this.expectations.clear();
-    this.callStats.clear();
+    this.expectedCallStats.clear();
   }
 
   get(property: PropertyKey): any {
-    this.record(property, undefined);
-
     const expectations = this.expectations.get(property);
 
     if (expectations && expectations.length) {
+      // We record that an expected property access has happened, but an
+      // unexpected call could still happen later.
+      this.recordExpected(property, undefined);
+
       const propertyExpectation = expectations.find((e) =>
         e.expectation.matches(undefined)
       );
@@ -50,27 +54,31 @@ export abstract class BaseRepository implements ExpectationRepository2 {
       }
 
       return (...args: any[]) => {
-        this.record(property, args);
-
         const callExpectation = expectations.find((e) =>
           e.expectation.matches(args)
         );
 
         if (callExpectation) {
+          this.recordExpected(property, args);
           this.countAndConsume(callExpectation);
 
           return callExpectation.expectation.returnValue;
         }
 
+        this.recordUnexpected(property, args);
         return this.getValueForUnexpectedCall(property, args);
       };
     }
 
+    this.recordUnexpected(property, undefined);
     return this.getValueForUnexpectedAccess(property);
   }
 
   getCallStats() {
-    return { expected: this.callStats, unexpected: new Map() };
+    return {
+      expected: this.expectedCallStats,
+      unexpected: this.unexpectedCallStats,
+    };
   }
 
   getUnmet(): Expectation2[] {
@@ -103,12 +111,21 @@ export abstract class BaseRepository implements ExpectationRepository2 {
   ): void;
 
   /**
-   * Record the property access/method call.
+   * Record an expected property access/method call.
    */
-  protected record(property: PropertyKey, args: any[] | undefined) {
-    const calls = this.callStats.get(property) || [];
+  protected recordExpected(property: PropertyKey, args: any[] | undefined) {
+    const calls = this.expectedCallStats.get(property) || [];
 
-    this.callStats.set(property, [...calls, { arguments: args }]);
+    this.expectedCallStats.set(property, [...calls, { arguments: args }]);
+  }
+
+  /**
+   * Record an unexpected property access/method call.
+   */
+  protected recordUnexpected(property: PropertyKey, args: any[] | undefined) {
+    const calls = this.unexpectedCallStats.get(property) || [];
+
+    this.unexpectedCallStats.set(property, [...calls, { arguments: args }]);
   }
 
   private countAndConsume(expectation: CountableExpectation) {
@@ -118,3 +135,38 @@ export abstract class BaseRepository implements ExpectationRepository2 {
     this.consumeExpectation(expectation);
   }
 }
+
+/**
+ * const strictMock = mock<() => void>();
+ * when(strictMock()).thenReturn(undefined);
+ *
+ * instance(strictMock)();
+ *
+ * verify(strictMock); // all good
+ *
+ * instance(strictMock)(); // throws
+ * verify(strictMock); // throws
+ *
+ * callStats = {
+ *   expected: [mock()],
+ *   unexpected: [mock()]
+ * }
+ *
+ * ------------------------------------------
+ *
+ * const weakMock = mock<() => void>({ weak: true });
+ * when(weakMock()).thenReturn(undefined);
+ *
+ * instance(weakMock)();
+ * instance(weakMock)();
+ *
+ * verify(weakMock); // all good
+ *
+ * instance(weakMock)(); // all good
+ * verify(weakMock); // all good
+ *
+ * callStats = {
+ *   expected: [mock(), mock(), mock()],
+ *   unexpected: []
+ * }
+ */

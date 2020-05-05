@@ -302,8 +302,8 @@ export const repoContractTests2: ExpectationRepositoryContract = {
         } catch (e) {}
 
         const callStats: CallStats = {
-          expected: new Map([['foo', [{ arguments: undefined }]]]),
-          unexpected: new Map(),
+          expected: new Map(),
+          unexpected: new Map([['foo', [{ arguments: undefined }]]]),
         };
         expect(repo.getCallStats()).toEqual(callStats);
       },
@@ -318,10 +318,8 @@ export const repoContractTests2: ExpectationRepositoryContract = {
         } catch (e) {}
 
         const callStats: CallStats = {
-          expected: new Map([
-            ['foo', [{ arguments: undefined }, { arguments: [1, 2, 3] }]],
-          ]),
-          unexpected: new Map(),
+          expected: new Map([['foo', [{ arguments: undefined }]]]),
+          unexpected: new Map([['foo', [{ arguments: [1, 2, 3] }]]]),
         };
         expect(repo.getCallStats()).toEqual(callStats);
       },

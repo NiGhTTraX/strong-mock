@@ -1,6 +1,5 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { CallStats } from '../src/expectation-repository';
 import { WeakRepository } from '../src/weak-repository';
 import {
   MatchingCallExpectation,
@@ -21,20 +20,6 @@ describe('WeakRepository', () => {
     const repo = new WeakRepository();
 
     expect(repo.get('whatever')()).toEqual(null);
-  });
-
-  it('should record unexpected function calls', () => {
-    const repo = new WeakRepository();
-
-    repo.get('foo')(1, 2, 3);
-
-    const callStats: CallStats = {
-      expected: new Map([
-        ['foo', [{ arguments: undefined }, { arguments: [1, 2, 3] }]],
-      ]),
-      unexpected: new Map(),
-    };
-    expect(repo.getCallStats()).toEqual(callStats);
   });
 
   it('should keep repeating the last met property expectation', () => {

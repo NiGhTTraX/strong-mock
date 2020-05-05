@@ -22,7 +22,7 @@ export class WeakRepository extends BaseRepository
         return WeakRepository.TO_STRING_VALUE;
       default:
         return (...args: any[]) => {
-          this.record(property, args);
+          this.recordExpected(property, args);
 
           return null;
         };

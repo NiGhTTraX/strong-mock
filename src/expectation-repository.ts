@@ -40,6 +40,18 @@ export type Call = {
   arguments: any[] | undefined;
 };
 
+/**
+ * Method calls should be recorded both as a property access and a method call.
+ *
+ * @example
+ * // foo.bar(1, 2, 3) should generate
+ * {
+ *   foo: [
+ *     { arguments: undefined },
+ *     { arguments: [1, 2, 3] }
+ *   ]
+ * }
+ */
 export type CallMap = Map<PropertyKey, Call[]>;
 
 export type CallStats = {
@@ -93,7 +105,7 @@ export interface ExpectationRepository2 {
   getUnmet(): Expectation2[];
 
   /**
-   * Return all the calls that successfully returned a value so far.
+   * Return all the calls that have been made so far.
    */
   getCallStats(): CallStats;
 }
