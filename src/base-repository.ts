@@ -1,4 +1,4 @@
-import { Expectation } from './expectation';
+import { ApplyProp, Expectation } from './expectation';
 import { CallMap, ExpectationRepository } from './expectation-repository';
 
 export type CountableExpectation = {
@@ -70,8 +70,21 @@ export abstract class BaseRepository implements ExpectationRepository {
       };
     }
 
-    this.recordUnexpected(property, undefined);
-    return this.getValueForUnexpectedAccess(property);
+    switch (property) {
+      case 'toString':
+        return () => 'mock';
+      case '@@toStringTag':
+      case Symbol.toStringTag:
+        return 'mock';
+      case ApplyProp:
+        return (...args: any[]) => {
+          this.recordUnexpected(property, args);
+          return this.getValueForUnexpectedCall(property, args);
+        };
+      default:
+        this.recordUnexpected(property, undefined);
+        return this.getValueForUnexpectedAccess(property);
+    }
   }
 
   getCallStats() {

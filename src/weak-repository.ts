@@ -9,26 +9,16 @@ import { ExpectationRepository } from './expectation-repository';
  */
 export class WeakRepository extends BaseRepository
   implements ExpectationRepository {
-  private static TO_STRING_VALUE = 'weak-mock';
-
   private repeating = new Map<PropertyKey, boolean>();
 
   protected getValueForUnexpectedCall = (): any => null;
 
   protected getValueForUnexpectedAccess(property: PropertyKey): any {
-    switch (property) {
-      case 'toString':
-        return () => WeakRepository.TO_STRING_VALUE;
-      case '@@toStringTag':
-      case Symbol.toStringTag:
-        return WeakRepository.TO_STRING_VALUE;
-      default:
-        return (...args: any[]) => {
-          this.recordExpected(property, args);
+    return (...args: any[]) => {
+      this.recordExpected(property, args);
 
-          return null;
-        };
-    }
+      return null;
+    };
   }
 
   protected consumeExpectation(expectation: CountableExpectation): void {
