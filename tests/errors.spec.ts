@@ -136,7 +136,15 @@ foobar`
 
       const error = new UnexpectedCalls(
         new Map([
-          ['foo', [{ arguments: [1, 2, 3] }, { arguments: [4, 5, 6] }]],
+          [
+            'foo',
+            [
+              { arguments: undefined },
+              { arguments: [1, 2, 3] },
+              { arguments: undefined },
+              { arguments: [4, 5, 6] },
+            ],
+          ],
           ['bar', [{ arguments: undefined }]],
         ]) as CallMap,
         [e1, e2]
