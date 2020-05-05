@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.0-beta.0...v5.0.0-beta.1) (2020-05-05)
+
+
+### Bug Fixes
+
+* Don't mark toString accesses as unexpected ([20247b6](https://github.com/NiGhTTraX/strong-mock/commit/20247b6799f55fda32d72620e5b8571be323ce99))
+
 ## [5.0.0-beta.0](https://github.com/NiGhTTraX/strong-mock/compare/v4.1.3...v5.0.0-beta.0) (2020-05-05)
 
 
