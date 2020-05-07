@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.0-beta.1...v5.0.0) (2020-05-07)
+
+
+### Features
+
+* Improve error message for `UnexpectedCalls` ([ff8636c](https://github.com/NiGhTTraX/strong-mock/commit/ff8636c871a45a869d2d509120b40914887f554b))
+
 ## [5.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.0-beta.0...v5.0.0-beta.1) (2020-05-05)
 
 
