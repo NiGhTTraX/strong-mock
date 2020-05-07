@@ -5,7 +5,7 @@ import { PendingExpectation } from './pending-expectation';
 
 /**
  * Since `when()` doesn't receive the mock subject (because we can't make it
- * consistently return it from `mock()`, `mock.bar` and `mock.ba()`) we need
+ * consistently return it from `mock()`, `mock.foo` and `mock.bar()`) we need
  * to store a global state for the currently active mock.
  *
  * We also want to throw in the following case:
@@ -16,8 +16,7 @@ import { PendingExpectation } from './pending-expectation';
  * ```
  *
  * For that reason we can't just store the currently active mock, but also
- * whether we finished the expectation or not. We encode those 2 pieces of info
- * in one variable - "pending expectation".
+ * whether we finished the expectation or not.
  */
 let activeMock: Mock<any> | undefined;
 
@@ -44,7 +43,7 @@ type MockState = {
  * This is needed because we can't reliably pass the state between `when`,
  * `thenReturn` and `instance`.
  */
-export const mockMap = new Map<Mock<any>, MockState>();
+const mockMap = new Map<Mock<any>, MockState>();
 
 export const getMockState = (mock: Mock<any>): MockState => {
   if (mockMap.has(mock)) {
@@ -52,4 +51,8 @@ export const getMockState = (mock: Mock<any>): MockState => {
   }
 
   throw new NotAMock();
+};
+
+export const setMockState = (mock: Mock<any>, state: MockState): void => {
+  mockMap.set(mock, state);
 };

@@ -1,5 +1,5 @@
 import { ExpectationRepository } from './expectation-repository';
-import { mockMap } from './map';
+import { setMockState } from './map';
 import {
   ExpectationFactory,
   RepoSideEffectPendingExpectation,
@@ -53,7 +53,7 @@ export const mock = <T>({
 
   const stub = createStub<T>(repository, pendingExpectation);
 
-  mockMap.set(stub, { repository, pendingExpectation });
+  setMockState(stub, { repository, pendingExpectation });
 
   return stub;
 };
