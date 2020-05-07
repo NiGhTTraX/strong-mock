@@ -247,6 +247,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
         repo.add(new MatchingPropertyExpectation('foo', 23));
 
         repo.get('foo');
+        try {
+          repo.get('foo');
+        } catch (e) {}
         repo.clear();
 
         const callStats: CallStats = {

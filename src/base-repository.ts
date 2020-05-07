@@ -33,6 +33,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   clear(): void {
     this.expectations.clear();
     this.expectedCallStats.clear();
+    this.unexpectedCallStats.clear();
   }
 
   get(property: PropertyKey): any {
