@@ -1,12 +1,10 @@
 module.exports = {
-  'root': true,
+  root: true,
 
-  'extends': [
-    '@nighttrax/eslint-config-ts',
-  ],
+  extends: ['@nighttrax/eslint-config-ts'],
 
-  'rules': {
+  rules: {
     'prettier/prettier': 'error',
     'max-classes-per-file': 0,
-  }
+  },
 };
