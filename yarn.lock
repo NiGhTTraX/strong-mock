@@ -441,10 +441,10 @@
     eslint-plugin-prettier "^3.1.2"
     prettier "^2.0.0"
 
-"@nighttrax/eslint-config-ts@~6.1.0-beta.0":
-  version "6.1.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@nighttrax/eslint-config-ts/-/eslint-config-ts-6.1.0-beta.0.tgz#d9e543798885382fcb1e31a83d52c766c6c6664b"
-  integrity sha512-dA4M+GUUChMkRQbR02xUbj1kHp8dUnYr1nUGgSft2UIxMz24M+aLCig/athJZNQg8o8UNxkr32cPYWlg5S1VKA==
+"@nighttrax/eslint-config-ts@~6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@nighttrax/eslint-config-ts/-/eslint-config-ts-6.1.0.tgz#1afc1a5e140e18d79ae6dd5c668e3daac23233a0"
+  integrity sha512-CwLgIkLtsrSkvT0/uWzlAlP81HlJSH39lZwGsC3VYHLhGb3dCBEJgpWtJaWsz4g1pMd7FGdxlKeoShBbgdQzBA==
   dependencies:
     "@nighttrax/eslint-config-base" "^5.1.0-beta.0"
     "@typescript-eslint/eslint-plugin" "~2.31.0"
