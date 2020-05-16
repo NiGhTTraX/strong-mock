@@ -58,6 +58,6 @@
     "standard-version": "~8.0.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~0.16.0",
-    "typescript": "~3.9.1-rc"
+    "typescript": "~3.9.2"
   }
 }

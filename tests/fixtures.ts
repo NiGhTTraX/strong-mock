@@ -11,5 +11,5 @@ export interface Bar {
 }
 
 export interface Baz {
-  0: number;
+  foo: { bar: { baz: number } };
 }

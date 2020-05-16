@@ -5,7 +5,7 @@ import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
 import { createStub } from '../src/stub';
 import { OneIncomingExpectationRepository } from './expectation-repository';
 import { spyExpectationFactory } from './expectations';
-import { Fn, Foo } from './fixtures';
+import { Baz, Fn, Foo } from './fixtures';
 
 describe('createStub', () => {
   it('should intercept fn(...args)', () => {
@@ -150,5 +150,15 @@ describe('createStub', () => {
     expect(repo.expectation?.property).toEqual('bar');
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
     expect(repo.expectation?.returnValue).toEqual(23);
+  });
+
+  it('should throw on nested access', () => {
+    const repo = new OneIncomingExpectationRepository();
+    const pendingExpectation = new RepoSideEffectPendingExpectation(
+      spyExpectationFactory
+    );
+    const stub = createStub<Baz>(repo, pendingExpectation);
+
+    expect(() => stub.foo.bar.baz).toThrow();
   });
 });
