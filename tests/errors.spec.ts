@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
 import {
+  NestedWhen,
   UnexpectedAccess,
   UnexpectedCall,
   UnexpectedCalls,
@@ -165,6 +166,15 @@ foobar`
  - e1
  - e2`
       );
+    });
+  });
+
+  describe('NestedWhen', () => {
+    it('should print the nested property', () => {
+      const error = new NestedWhen('foo', Symbol('bar'));
+
+      expectAnsilessContain(error.message, `when(parentMock.foo)`);
+      expectAnsilessContain(error.message, `when(childMock[Symbol(bar)])`);
     });
   });
 });

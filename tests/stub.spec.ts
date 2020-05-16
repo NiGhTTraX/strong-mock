@@ -1,5 +1,6 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
+import { NestedWhen } from '../src/errors';
 import { ApplyProp } from '../src/expectation';
 import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
 import { createStub } from '../src/stub';
@@ -159,6 +160,7 @@ describe('createStub', () => {
     );
     const stub = createStub<Baz>(repo, pendingExpectation);
 
-    expect(() => stub.foo.bar.baz).toThrow();
+    expect(() => stub.foo.bar).toThrow(NestedWhen);
+    expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
   });
 });

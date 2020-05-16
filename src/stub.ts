@@ -1,3 +1,4 @@
+import { NestedWhen } from './errors';
 import { ApplyProp } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { setActiveMock } from './map';
@@ -17,10 +18,16 @@ export const createStub = <T>(
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.property = property;
 
-      return (...args: any[]) => {
-        // eslint-disable-next-line no-param-reassign
-        pendingExpectation.args = args;
-      };
+      return createProxy({
+        property: (childProp: PropertyKey) => {
+          pendingExpectation.clear();
+          throw new NestedWhen(property, childProp);
+        },
+        apply: (args: any[]) => {
+          // eslint-disable-next-line no-param-reassign
+          pendingExpectation.args = args;
+        },
+      });
     },
     apply: (args: any[]) => {
       setActiveMock(stub);

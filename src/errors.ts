@@ -110,3 +110,23 @@ export class UnexpectedCalls extends Error {
 ${printRemainingExpectations(expectations)}`);
   }
 }
+
+export class NestedWhen extends Error {
+  constructor(parentProp: PropertyKey, childProp: PropertyKey) {
+    const snippet = `
+const parentMock = mock<T1>();
+const childMock = mock<T2>();
+
+when(childMock${printProperty(childProp)}).thenReturn(...);
+when(parentMock${printProperty(parentProp)}).thenReturn(instance(childMock))
+`;
+
+    super(
+      `Setting an expectation on a nested property is not supported.
+
+You can return an object directly when the first property is accessed,
+or you can even return a separate mock:
+${snippet}`
+    );
+  }
+}
