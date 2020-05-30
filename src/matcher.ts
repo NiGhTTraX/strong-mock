@@ -113,13 +113,51 @@ const isNumber = (): Matcher<number> =>
   } as any);
 
 /**
+ * Match a string, potentially by a pattern.
+ *
+ * @param matching The string has to match this RegExp.
+ * @param containing The string has to contain this substring.
+ *
+ * @example
+ * const fn = mock<(x: string, y: string) => number>();
+ * when(fn(It.isString(), It.isString({ containing: 'bar' }).returns(42);
+ *
+ * instance(fn)('foo', 'baz') // throws
+ * instance(fn)('foo', 'bar') === 42
+ */
+const isString = ({
+  matching,
+  containing,
+}: { matching?: RegExp; containing?: string } = {}): Matcher<string> => {
+  if (matching && containing) {
+    throw new Error('You can only pass `matching` or `containing`, not both.');
+  }
+
+  return {
+    __isMatcher: true,
+    matches: (arg: any) => {
+      if (typeof arg !== 'string') {
+        return false;
+      }
+
+      if (containing) {
+        return arg.indexOf(containing) !== -1;
+      }
+
+      return matching?.test(arg) ?? true;
+    },
+    toJSON: () => 'isString',
+  } as any;
+};
+
+/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
-// TODO: add isStringContaining
 export const It = {
   isAny,
   matches,
   isObjectContaining,
   isNumber,
+  isString,
 };
