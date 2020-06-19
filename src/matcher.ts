@@ -75,23 +75,23 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
 /**
  * Recursively match an object.
  *
- * @param partial A subset of the expected objected.
+ * @param partial An optional subset of the expected objected.
  *
  * @example
  * const fn = mock<(foo: { x: number, y: number }) => number>();
- * when(fn(It.isObjectContaining({ x: 23 }).returns(42);
+ * when(fn(It.isObject({ x: 23 }).returns(42);
  *
  * instance(fn)({ x: 100, y: 200 }) // throws
  * instance(fn)({ x: 23, y: 200 }) // returns 42
  */
-const isObjectContaining = <T extends object, K extends DeepPartial<T>>(
-  partial: K
+const isObject = <T extends object, K extends DeepPartial<T>>(
+  partial?: K
 ): Matcher<T> => // matches(arg => isMatch(arg, partial));
   ({
     __isMatcher: true,
-    matches: (arg: any) => isMatch(arg, partial),
+    matches: (arg: any) => isMatch(arg, partial || {}),
     toJSON() {
-      return `objectContaining(${printExpected(partial)})`;
+      return partial ? `object(${printExpected(partial)})` : 'object';
     },
   } as any);
 
@@ -157,7 +157,7 @@ const isString = ({
 export const It = {
   isAny,
   matches,
-  isObjectContaining,
+  isObject,
   isNumber,
   isString,
 };

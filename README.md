@@ -246,7 +246,7 @@ const fn = mock<
 
 when(fn(
   It.isAny(),
-  It.isObjectContaining({ values: [1, 2, 3] })
+  It.isObject({ values: [1, 2, 3] })
 )).thenReturn('matched!');
 
 console.log(instance(fn)(

@@ -127,10 +127,10 @@ describe('It', () => {
     });
   });
 
-  describe('isObjectContaining', () => {
+  describe('isObject', () => {
     it('should match any object with empty object', () => {
       expect(
-        It.isObjectContaining({}).matches({
+        It.isObject().matches({
           foo: 'bar',
         })
       ).toBeTruthy();
@@ -138,22 +138,26 @@ describe('It', () => {
 
     it('should deep match nested objects', () => {
       expect(
-        It.isObjectContaining({ foo: { bar: { baz: 42 } } }).matches({
+        It.isObject({ foo: { bar: { baz: 42 } } }).matches({
           foo: { bar: { baz: 42, bazzz: 23 } },
         })
       ).toBeTruthy();
 
       expect(
-        It.isObjectContaining({ foo: { bar: { baz: 43 } } }).matches({
+        It.isObject({ foo: { bar: { baz: 43 } } }).matches({
           foo: { bar: { baz: 42, bazzz: 23 } },
         })
       ).toBeFalsy();
     });
 
     it('should pretty print', () => {
+      expectAnsilessEqual(It.isObject().toJSON(), `object`);
+    });
+
+    it('should pretty print the partial object', () => {
       expectAnsilessEqual(
-        It.isObjectContaining({ foo: 'bar' }).toJSON(),
-        `objectContaining({"foo": "bar"})`
+        It.isObject({ foo: 'bar' }).toJSON(),
+        `object({"foo": "bar"})`
       );
     });
   });

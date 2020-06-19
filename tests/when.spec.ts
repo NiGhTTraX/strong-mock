@@ -144,7 +144,7 @@ describe('when', () => {
     it('should support deep matching objects', () => {
       const fn = mock<(x: { foo: { bar: string; baz: number } }) => number>();
 
-      when(fn(It.isObjectContaining({ foo: { bar: 'bar' } }))).thenReturn(23);
+      when(fn(It.isObject({ foo: { bar: 'bar' } }))).thenReturn(23);
 
       expect(() => instance(fn)({ foo: { bar: 'baz', baz: 42 } })).toThrow(
         UnexpectedCall
