@@ -24,12 +24,13 @@ export const printCall = (property: PropertyKey, args: any[]) => {
   return `${prettyProperty}(${prettyArgs})`;
 };
 
-export const printReturns = (returnValue: any, min: number, max: number) =>
-  `.${
-    returnValue instanceof Error ? 'thenThrow' : 'thenReturn'
-  }(${printExpected(
-    returnValue instanceof Error ? returnValue.message : returnValue
+export const printReturns = (returnValue: any, min: number, max: number) => {
+  const isError = returnValue instanceof Error;
+
+  return `.${isError ? 'thenThrow' : 'thenReturn'}(${printExpected(
+    isError ? returnValue.message : returnValue
   )}).between(${min}, ${max})`;
+};
 
 export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
   if (args) {
