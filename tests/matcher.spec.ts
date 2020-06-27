@@ -112,6 +112,18 @@ describe('It', () => {
         It.isString({ matching: /foo/, containing: 'bar' })
       ).toThrow();
     });
+
+    it('should pretty print', () => {
+      expectAnsilessEqual(It.isString().toJSON(), 'string');
+      expectAnsilessEqual(
+        It.isString({ containing: 'foo' }).toJSON(),
+        'string("foo")'
+      );
+      expectAnsilessEqual(
+        It.isString({ matching: /bar/ }).toJSON(),
+        'string(/bar/)'
+      );
+    });
   });
 
   describe('matches', () => {

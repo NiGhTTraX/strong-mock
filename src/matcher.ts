@@ -146,7 +146,10 @@ const isString = ({
 
       return matching?.test(arg) ?? true;
     },
-    toJSON: () => 'isString',
+    toJSON: () =>
+      containing || matching
+        ? `string(${printExpected(containing || matching)})`
+        : 'string',
   } as any;
 };
 
