@@ -28,7 +28,7 @@ export class StrongExpectation implements Expectation {
     public returnValue: any
   ) {}
 
-  setInvocationCount(min = 1, max = 1) {
+  setInvocationCount(min: number, max = 1) {
     this.min = min;
     this.max = max;
   }
