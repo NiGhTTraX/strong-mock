@@ -168,6 +168,18 @@ describe('It', () => {
       ).toBeFalsy();
     });
 
+    it('should match nested matchers', () => {
+      expect(
+        It.isArray([It.isString(), It.isObject({ foo: 'bar' })]).matches([
+          'foo',
+          { foo: 'bar' },
+        ])
+      ).toBeTruthy();
+      expect(
+        It.isArray([It.isString({ containing: 'foobar' })]).matches(['foo'])
+      ).toBeFalsy();
+    });
+
     it('should pretty print', () => {
       expectAnsilessEqual(It.isArray().toJSON(), 'array');
       expectAnsilessEqual(It.isArray([1, 2, 3]).toJSON(), 'array([1, 2, 3])');
@@ -207,6 +219,20 @@ describe('It', () => {
         It.isObject({ foo: { bar: { baz: 43 } } }).matches({
           foo: { bar: { baz: 42, bazzz: 23 } },
         })
+      ).toBeFalsy();
+    });
+
+    it('should match nested matchers', () => {
+      expect(
+        It.isObject({ foo: It.isString() }).matches({ foo: 'bar' })
+      ).toBeTruthy();
+      expect(
+        It.isObject({ foo: It.isArray([It.isString()]) }).matches({
+          foo: ['bar'],
+        })
+      ).toBeTruthy();
+      expect(
+        It.isObject({ foo: It.isString() }).matches({ foo: 23 })
       ).toBeFalsy();
     });
 

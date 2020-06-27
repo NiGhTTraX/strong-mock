@@ -1,6 +1,6 @@
 import { printExpected } from 'jest-matcher-utils';
 import isEqual from 'lodash/isEqual';
-import isMatch from 'lodash/isMatch';
+import isMatchWith from 'lodash/isMatchWith';
 
 type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
@@ -76,6 +76,8 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
 /**
  * Recursively match an object.
  *
+ * Supports nested matcher.
+ *
  * @param partial An optional subset of the expected objected.
  *
  * @example
@@ -84,13 +86,24 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
  *
  * instance(fn)({ x: 100, y: 200 }) // throws
  * instance(fn)({ x: 23, y: 200 }) // returns 42
+ *
+ * @example
+ * It.isObject({ foo: It.isString() })
  */
 const isObject = <T extends object, K extends DeepPartial<T>>(
   partial?: K
 ): Matcher<T> => // matches(arg => isMatch(arg, partial));
   ({
     __isMatcher: true,
-    matches: (arg: any) => isMatch(arg, partial || {}),
+    matches: (arg: any) =>
+      isMatchWith(arg, partial || {}, (argValue, partialValue) => {
+        if (isMatcher(partialValue)) {
+          return partialValue.matches(argValue);
+        }
+
+        // Let lodash handle it otherwise.
+        return undefined;
+      }),
     toJSON() {
       return partial ? `object(${printExpected(partial)})` : 'object';
     },
@@ -157,6 +170,8 @@ const isString = ({
 /**
  * Match an array.
  *
+ * Supports nested matchers.
+ *
  * @param containing If given, the matched array has to contain ALL of these
  *   elements in ANY order.
  *
@@ -168,6 +183,9 @@ const isString = ({
  * instance(fn)({ length: 1, 0: 42 }) // throws
  * instance(fn)([]]) === 1
  * instance(fn)([3, 2, 1) === 2
+ *
+ * @example
+ * It.isArray([It.isString({ containing: 'foobar' }))
  */
 const isArray = <T extends any[]>(containing?: T): Matcher<T> => {
   return {
@@ -178,7 +196,16 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> => {
       }
 
       if (containing) {
-        return containing.every((x) => arg.find((y) => isEqual(x, y)));
+        return containing.every(
+          (x) =>
+            arg.find((y) => {
+              if (isMatcher(x)) {
+                return x.matches(y);
+              }
+
+              return isEqual(x, y);
+            }) !== undefined
+        );
       }
 
       return true;
