@@ -1,4 +1,5 @@
 import { printExpected } from 'jest-matcher-utils';
+import isEqual from 'lodash/isEqual';
 import isMatch from 'lodash/isMatch';
 
 type DeepPartial<T> = T extends object
@@ -154,6 +155,39 @@ const isString = ({
 };
 
 /**
+ * Match an array.
+ *
+ * @param containing If given, the matched array has to contain ALL of these
+ *   elements in ANY order.
+ *
+ * @example
+ * const fn = mock<(arr: number[]) => number>();
+ * when(fn(It.isArray())).thenReturn(1);
+ * when(fn(It.isArray([2, 3))).thenReturn(2);
+ *
+ * instance(fn)({ length: 1, 0: 42 }) // throws
+ * instance(fn)([]]) === 1
+ * instance(fn)([3, 2, 1) === 2
+ */
+const isArray = <T extends any[]>(containing?: T): Matcher<T> => {
+  return {
+    __isMatcher: true,
+    matches: (arg: any) => {
+      if (!Array.isArray(arg)) {
+        return false;
+      }
+
+      if (containing) {
+        return containing.every((x) => arg.find((y) => isEqual(x, y)));
+      }
+
+      return true;
+    },
+    toJSON: () =>
+      containing ? `array(${printExpected(containing)})` : 'array',
+  } as any;
+};
+/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
@@ -163,4 +197,5 @@ export const It = {
   isObject,
   isNumber,
   isString,
+  isArray,
 };
