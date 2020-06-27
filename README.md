@@ -273,7 +273,7 @@ when(fn(
 )).thenReturn('matched');
 ```
 
-Some of the matchers, like `isObject` and `isArray` support nesting matchers:
+Some matchers, like `isObject` and `isArray` support nesting matchers:
 
 ```typescript
 It.isObject({ foo: It.isString() })
