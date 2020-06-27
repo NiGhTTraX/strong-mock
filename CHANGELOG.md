@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.1...v6.0.0) (2020-06-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Rename `isObjectContaining` to `isObject`
+
+### Features
+
+* Add isNumber matcher ([cc5b0a8](https://github.com/NiGhTTraX/strong-mock/commit/cc5b0a8d125c3632f6c6610381b4fc78b8994f7f))
+* Add isString ([6d5980f](https://github.com/NiGhTTraX/strong-mock/commit/6d5980fc82479c6a5bc02068e33a2d5ae9b34fda))
+* Add It.isArray ([2359b43](https://github.com/NiGhTTraX/strong-mock/commit/2359b43206aa6bbb20e18295ae332700f0f8a3c8))
+* Add verifyAll and resetAll ([eef45e0](https://github.com/NiGhTTraX/strong-mock/commit/eef45e054f6818f629b4fcd17673e6323c025c26))
+* Improve error message when setting expectation on nested property ([f1ebabe](https://github.com/NiGhTTraX/strong-mock/commit/f1ebabe29cc5388a04c8183c29b205b38d75cf1a))
+* Make matching any object easier ([6011775](https://github.com/NiGhTTraX/strong-mock/commit/60117752e8e0a21ff7df4d2dc2daf05b7b94d0c1))
+* Support nested matchers ([c3157b1](https://github.com/NiGhTTraX/strong-mock/commit/c3157b1ce9e6b1761a4f3377885ff195c077f9d0))
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-matcher-utils to ~26.1.0 ([7884b7d](https://github.com/NiGhTTraX/strong-mock/commit/7884b7da0871a7a9e8855a328bd05d97546cf162))
+* Make isNumber pretty print consistently with other matchers ([bc5f4f8](https://github.com/NiGhTTraX/strong-mock/commit/bc5f4f86855d9090e82f3f13e323a17ff795ec71))
+* Make isString pretty print consistently with other matchers ([3b6d9e8](https://github.com/NiGhTTraX/strong-mock/commit/3b6d9e8b0fff14ca43542d267f1f95878adc3f6b))
+* Make mocks pretty-format-able ([73200db](https://github.com/NiGhTTraX/strong-mock/commit/73200dbadc8d5a90b8541fcf7394abd343f6dfd8))
+
 ### [5.0.1](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.0...v5.0.1) (2020-05-07)
 
 
