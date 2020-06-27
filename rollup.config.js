@@ -9,7 +9,7 @@ export default [
     external: [
       ...Object.keys(pkg.dependencies),
       'lodash/isEqual',
-      'lodash/isMatch',
+      'lodash/isMatchWith',
     ],
     plugins: [
       typescript({
