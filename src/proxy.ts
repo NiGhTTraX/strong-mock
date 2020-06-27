@@ -54,7 +54,7 @@ export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
       return property(prop);
     },
 
-    apply: (target, thisArg: any, args: any[] | undefined) => {
-      return apply(args || []);
+    apply: (target, thisArg: any, args: any[]) => {
+      return apply(args);
     },
   }) as unknown) as Mock<T>;

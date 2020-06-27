@@ -73,6 +73,23 @@ describe('proxy', () => {
   });
 
   it('should trap fn.apply(this)', () => {
+    let args: any[] = [];
+
+    const proxy = createProxy<() => void>({
+      property: () => {
+        throw new Error('should not be called');
+      },
+      apply: (argArray) => {
+        args = argArray;
+      },
+    });
+
+    proxy.apply(null);
+
+    expect(args).toEqual([]);
+  });
+
+  it('should trap fn.apply(this)', () => {
     let args: number[] = [];
 
     const proxy = createProxy<() => void>({
