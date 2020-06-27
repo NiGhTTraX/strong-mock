@@ -255,6 +255,13 @@ console.log(instance(fn)(
 ); // 'matched!'
 ```
 
+Available matchers:
+- `isAny` - matches anything,
+- `isNumber` - matches any number,
+- `isString` - matches any string, can search for substrings and patterns,
+- `isArray` - matches any array, can search for subsets,
+- `isObject` - matches any object, can search for partial objects.
+
 You can create arbitrarily complex and type safe matchers with `It.matches(cb)`:
 
 ```typescript
@@ -264,6 +271,16 @@ when(fn(
   It.matches(x => x > 0),
   It.matches(y => y.values.includes(42))
 )).thenReturn('matched');
+```
+
+Some of the matchers, like `isObject` and `isArray` support nesting matchers:
+
+```typescript
+It.isObject({ foo: It.isString() })
+
+It.isArray([ It.isObject({
+  foo: It.isString({ matching: /foo/ })
+})])
 ```
 
 ## FAQ
