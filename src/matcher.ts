@@ -123,7 +123,7 @@ const isNumber = (): Matcher<number> =>
   ({
     __isMatcher: true,
     matches: (arg: any) => typeof arg === 'number' && !Number.isNaN(arg),
-    toJSON: () => 'isNumber',
+    toJSON: () => 'number',
   } as any);
 
 /**

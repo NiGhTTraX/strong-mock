@@ -82,6 +82,10 @@ describe('It', () => {
     it('should not match NaN', () => {
       expect(It.isNumber().matches(NaN)).toBeFalsy();
     });
+
+    it('should pretty print', () => {
+      expect(It.isNumber().toJSON()).toEqual('number');
+    });
   });
 
   describe('isString', () => {
