@@ -265,9 +265,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should return values for toString and friends',
       test: (repo) => () => {
-        expect(repo.get('toString')()).not.toHaveLength(0);
-        expect(repo.get('@@toStringTag')).not.toHaveLength(0);
-        expect(repo.get(Symbol.toStringTag)).not.toHaveLength(0);
+        expect(repo.get('toString')()).toBeTruthy();
+        expect(repo.get('@@toStringTag')).toBeTruthy();
+        expect(repo.get(Symbol.toStringTag)).toBeTruthy();
       },
     },
     {

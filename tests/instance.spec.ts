@@ -1,8 +1,10 @@
+import { printExpected } from 'jest-matcher-utils';
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { ApplyProp } from '../src/expectation';
 import { mock } from '../src/mock';
+import { expectAnsilessEqual } from './ansiless';
 import { SpyRepository } from './expectation-repository';
 
 describe('instance', () => {
@@ -28,5 +30,12 @@ describe('instance', () => {
 
     expect(instance(foo).bar).toEqual(42);
     expect(repo.getCalledWith).toEqual(['bar']);
+  });
+
+  it('should pretty print', () => {
+    expectAnsilessEqual(
+      printExpected(instance(mock<any>())),
+      '[Function mock]'
+    );
   });
 });

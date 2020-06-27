@@ -76,7 +76,16 @@ export abstract class BaseRepository implements ExpectationRepository {
         return () => 'mock';
       case '@@toStringTag':
       case Symbol.toStringTag:
+      case 'name':
         return 'mock';
+
+      // pretty-format
+      case '$$typeof':
+      case 'constructor':
+      case '@@__IMMUTABLE_ITERABLE__@@':
+      case '@@__IMMUTABLE_RECORD__@@':
+        return null;
+
       case ApplyProp:
         return (...args: any[]) => {
           this.recordUnexpected(property, args);
