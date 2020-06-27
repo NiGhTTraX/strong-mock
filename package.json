@@ -28,8 +28,7 @@
     "prepublishOnly": "npm run build",
     "release": "standard-version",
     "lint": "eslint --ext ts,tsx,js .",
-    "test": "tdd-buffet test",
-    "test:coverage": "tdd-buffet test --coverage",
+    "test": "tdd-buffet test --coverage",
     "report-coverage": "nyc report --reporter=json && codecov -f tests/results/coverage-final.json"
   },
   "husky": {
