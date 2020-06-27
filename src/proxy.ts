@@ -35,7 +35,7 @@ interface ProxyTraps<T> {
 
 export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
   // eslint-disable-next-line no-empty-function
-  (new Proxy(() => {}, {
+  (new Proxy(/* istanbul ignore next */ () => {}, {
     get: (target, prop: keyof T) => {
       if (prop === 'bind') {
         return (thisArg: any, ...args: any[]) => {
