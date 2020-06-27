@@ -56,3 +56,7 @@ export const getMockState = (mock: Mock<any>): MockState => {
 export const setMockState = (mock: Mock<any>, state: MockState): void => {
   mockMap.set(mock, state);
 };
+
+export const getAllMocks = (): [Mock<any>, MockState][] => {
+  return Array.from(mockMap.entries());
+};

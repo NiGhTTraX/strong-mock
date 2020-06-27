@@ -1,6 +1,6 @@
 import { UnexpectedCalls, UnmetExpectations } from './errors';
 import { ExpectationRepository } from './expectation-repository';
-import { getMockState } from './map';
+import { getAllMocks, getMockState } from './map';
 import { Mock } from './mock';
 
 export const verifyRepo = (repository: ExpectationRepository) => {
@@ -21,6 +21,13 @@ export const verifyRepo = (repository: ExpectationRepository) => {
 /**
  * Verify that all expectations on the given mock have been met.
  *
+ * @throws Will throw if there are remaining expectations that were set
+ * using `when` and that weren't met.
+ *
+ * @throws Will throw if any unexpected calls happened. Normally those
+ * calls throw on their own, but the error might be caught by the code
+ * being tested.
+ *
  * @example
  * const fn = mock<() => number>();
  *
@@ -28,9 +35,19 @@ export const verifyRepo = (repository: ExpectationRepository) => {
  *
  * verify(fn); // throws
  */
-// TODO: add verifyAll
 export const verify = <T>(mock: Mock<T>): void => {
   const { repository } = getMockState(mock);
 
   verifyRepo(repository);
+};
+
+/**
+ * Verify all existing mocks.
+ *
+ * @see verify
+ */
+export const verifyAll = (): void => {
+  getAllMocks().forEach(([mock]) => {
+    verify(mock);
+  });
 };

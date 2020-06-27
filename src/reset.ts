@@ -1,4 +1,4 @@
-import { getMockState } from './map';
+import { getAllMocks, getMockState } from './map';
 import { Mock } from './mock';
 
 /**
@@ -12,9 +12,18 @@ import { Mock } from './mock';
  * reset(fn);
  *
  * instance(fn)(); // throws
- * @param mock
  */
-// TODO: add resetAll
 export const reset = (mock: Mock<any>): void => {
   getMockState(mock).repository.clear();
+};
+
+/**
+ * Reset all existing mocks.
+ *
+ * @see reset
+ */
+export const resetAll = (): void => {
+  getAllMocks().forEach(([mock]) => {
+    reset(mock);
+  });
 };

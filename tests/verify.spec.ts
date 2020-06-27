@@ -1,11 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
-import { instance, mock, verify } from '../src';
+import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
+import { instance, mock, verify, when } from '../src';
 import { UnexpectedCalls, UnmetExpectations } from '../src/errors';
 import { Expectation } from '../src/expectation';
 import { CallMap, ExpectationRepository } from '../src/expectation-repository';
-import { verifyRepo } from '../src/verify';
+import { resetAll } from '../src/reset';
+import { verifyAll, verifyRepo } from '../src/verify';
 import { NotMatchingExpectation } from './expectations';
 
 describe('verify', () => {
@@ -18,6 +19,20 @@ describe('verify', () => {
     } catch (e) {}
 
     expect(() => verify(fn)).toThrow(UnexpectedCalls);
+  });
+});
+
+describe('verifyAll', () => {
+  beforeEach(() => {});
+
+  it('should verify all mocks', () => {
+    resetAll();
+
+    const fn = mock<() => void>();
+
+    when(fn()).thenReturn(undefined);
+
+    expect(() => verifyAll()).toThrow(UnmetExpectations);
   });
 });
 

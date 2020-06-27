@@ -219,6 +219,8 @@ try {
 verify(fn); // throws
 ```
 
+It is recommended that that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code hasn't silently caught any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks e.g. in an `afterEach` hook.
+
 ![verify error](./media/verify.png)
 
 ### Resetting expectations
@@ -234,6 +236,8 @@ reset(fn);
 
 instance(fn)(1); // throws
 ```
+
+If you create common mocks that are shared by multiple tests you should reset them before using them e.g. in a `beforeEach` hook. You can use `resetAll()` to reset all existing mocks.
 
 ### Argument matchers
 
