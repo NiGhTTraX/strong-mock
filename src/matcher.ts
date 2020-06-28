@@ -92,7 +92,7 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
  */
 const isObject = <T extends object, K extends DeepPartial<T>>(
   partial?: K
-): Matcher<T> => // matches(arg => isMatch(arg, partial));
+): Matcher<T> =>
   ({
     __isMatcher: true,
     matches: (arg: any) =>
