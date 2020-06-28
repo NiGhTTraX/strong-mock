@@ -2,10 +2,6 @@ import { printExpected } from 'jest-matcher-utils';
 import isEqual from 'lodash/isEqual';
 import isMatchWith from 'lodash/isMatchWith';
 
-type DeepPartial<T> = T extends object
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : T;
-
 export type Matcher<T> = T & {
   /**
    * Will be called with a value to match against.
@@ -72,6 +68,10 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
       return `matches(${cb.toString()})`;
     },
   } as any);
+
+type DeepPartial<T> = T extends object
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : T;
 
 /**
  * Recursively match an object.

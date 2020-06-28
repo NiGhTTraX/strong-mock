@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { it } from 'tdd-buffet/suite/node';
-import { instance, mock, when } from '../src';
+import { instance, mock, when, It } from '../src';
 
 it('type safety', () => {
   function mockSafety() {
@@ -63,5 +63,56 @@ it('type safety', () => {
 
     // @ts-expect-error check interface method return
     const y: number = instance(obj).foo();
+  }
+
+  function matcherSafety() {
+    const number = (x: number) => x;
+    number(It.isAny());
+    // @ts-expect-error wrong matcher type
+    number(It.isString());
+
+    const nestedObject = (x: { foo: { bar: number; baz: string } }) => x;
+    nestedObject(It.isObject());
+    nestedObject(It.isObject({ foo: { bar: 23 } }));
+    nestedObject(
+      // @ts-expect-error wrong nested property type
+      It.isObject({ foo: { bar: 'boo' } })
+    );
+    // TODO: open an issue in TS repo
+    // @ts-expect-error because TS can't infer the proper type
+    nestedObject(It.isObject({ foo: It.isObject() }));
+
+    const numberArray = (x: number[]) => x;
+    numberArray(It.isArray());
+    numberArray(It.isArray([1, 2, 3]));
+    numberArray(It.isArray([It.isNumber()]));
+    // @ts-expect-error wrong type of array
+    numberArray(It.isArray(['a']));
+    // @ts-expect-error wrong nested matcher type
+    numberArray(It.isArray([It.isString()]));
+
+    const object = (x: { foo: number }) => x;
+    object(It.isObject({ foo: It.isNumber() }));
+    object(
+      // @ts-expect-error wrong nested matcher type
+      It.isObject({ foo: It.isString() })
+    );
+
+    const objectWithArrays = (x: { foo: { bar: number[] } }) => x;
+    objectWithArrays(
+      It.isObject({
+        foo: {
+          bar: It.isArray([It.isNumber()]),
+        },
+      })
+    );
+    objectWithArrays(
+      It.isObject({
+        foo: {
+          // @ts-expect-error wrong nexted matcher type
+          bar: It.isArray([It.isString()]),
+        },
+      })
+    );
   }
 });
