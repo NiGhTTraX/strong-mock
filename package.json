@@ -41,7 +41,7 @@
     "*.js": "eslint"
   },
   "dependencies": {
-    "jest-matcher-utils": "~26.1.0",
+    "jest-matcher-utils": "~26.2.0",
     "lodash": "~4.17.15"
   },
   "devDependencies": {
