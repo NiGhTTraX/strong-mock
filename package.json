@@ -51,7 +51,7 @@
     "@types/lodash": "~4.14.149",
     "codecov": "~3.7.0",
     "doctoc": "~1.4.0",
-    "eslint": "~7.5.0",
+    "eslint": "~7.6.0",
     "husky": "~4.2.0",
     "lint-staged": "~10.2.0",
     "rollup": "~2.23.0",
