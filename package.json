@@ -58,7 +58,7 @@
     "rollup-plugin-typescript2": "~0.27.0",
     "standard-version": "~9.0.0",
     "strip-ansi": "~6.0.0",
-    "tdd-buffet": "~2.0.0",
+    "tdd-buffet": "~2.1.0",
     "typescript": "~3.9.2"
   }
 }
