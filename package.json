@@ -55,7 +55,7 @@
     "husky": "~4.3.0",
     "lint-staged": "~10.4.0",
     "rollup": "~2.32.0",
-    "rollup-plugin-typescript2": "~0.27.0",
+    "rollup-plugin-typescript2": "~0.28.0",
     "standard-version": "~9.0.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~2.1.0",
