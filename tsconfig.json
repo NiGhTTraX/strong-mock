@@ -1,5 +1,5 @@
 {
-  "extends": "@tdd-buffet/tsconfig/src/tsconfig.json",
+  "extends": "@tdd-buffet/tsconfig",
 
   "exclude": [
     "node_modules",
