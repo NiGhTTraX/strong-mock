@@ -50,7 +50,7 @@
     "@tdd-buffet/tsconfig": "~1.0.2",
     "@types/lodash": "~4.14.149",
     "codecov": "~3.8.0",
-    "doctoc": "~1.4.0",
+    "doctoc": "~2.0.0",
     "eslint": "~7.14.0",
     "husky": "~4.3.0",
     "lint-staged": "~10.5.0",
