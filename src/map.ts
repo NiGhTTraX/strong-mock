@@ -28,9 +28,7 @@ export const clearActiveMock = () => {
   activeMock = undefined;
 };
 
-export const getActiveMock = (): Mock<any> => {
-  return activeMock;
-};
+export const getActiveMock = (): Mock<any> => activeMock;
 
 type MockState = {
   repository: ExpectationRepository;
@@ -57,6 +55,5 @@ export const setMockState = (mock: Mock<any>, state: MockState): void => {
   mockMap.set(mock, state);
 };
 
-export const getAllMocks = (): [Mock<any>, MockState][] => {
-  return Array.from(mockMap.entries());
-};
+export const getAllMocks = (): [Mock<any>, MockState][] =>
+  Array.from(mockMap.entries());

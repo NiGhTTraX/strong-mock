@@ -38,9 +38,8 @@ export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
   (new Proxy(/* istanbul ignore next */ () => {}, {
     get: (target, prop: keyof T) => {
       if (prop === 'bind') {
-        return (thisArg: any, ...args: any[]) => {
-          return (...moreArgs: any[]) => apply([...args, ...moreArgs]);
-        };
+        return (thisArg: any, ...args: any[]) => (...moreArgs: any[]) =>
+          apply([...args, ...moreArgs]);
       }
 
       if (prop === 'apply') {
@@ -54,7 +53,5 @@ export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
       return property(prop);
     },
 
-    apply: (target, thisArg: any, args: any[]) => {
-      return apply(args);
-    },
+    apply: (target, thisArg: any, args: any[]) => apply(args),
   }) as unknown) as Mock<T>;

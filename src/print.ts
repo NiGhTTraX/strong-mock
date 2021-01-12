@@ -46,9 +46,7 @@ export const printExpectation = (
   returnValue: any,
   min: number,
   max: number
-) => {
-  return `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;
-};
+) => `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;
 
 export const printRemainingExpectations = (expectations: Expectation[]) =>
   expectations.length

@@ -108,13 +108,11 @@ export const createReturns = <R>(
   pendingExpectation: PendingExpectation
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
-    thenReturn: (returnValue: any): InvocationCount => {
+    thenReturn: (returnValue: any): InvocationCount =>
       // TODO: should probably fix this
       /* istanbul ignore next: because it will be overridden by
        * promiseStub and the types are compatible */
-      return finishPendingExpectation(returnValue, pendingExpectation);
-    },
-
+      finishPendingExpectation(returnValue, pendingExpectation),
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(getError(errorOrMessage), pendingExpectation),
   };

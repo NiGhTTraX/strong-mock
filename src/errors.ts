@@ -74,8 +74,8 @@ export class UnmetExpectations extends Error {
  * mergeCalls({ foo: [{ arguments: undefined }, { arguments: [1, 2, 3] }] }
  * // returns { foo: [{ arguments: [1, 2, 3] } }
  */
-const mergeCalls = (callMap: CallMap): CallMap => {
-  return new Map(
+const mergeCalls = (callMap: CallMap): CallMap =>
+  new Map(
     Array.from(callMap.entries()).map(([property, calls]) => {
       const hasMethodCalls = calls.some((call) => call.arguments);
       const hasPropertyAccesses = calls.some((call) => !call.arguments);
@@ -87,7 +87,6 @@ const mergeCalls = (callMap: CallMap): CallMap => {
       return [property, calls];
     })
   );
-};
 
 export class UnexpectedCalls extends Error {
   constructor(unexpectedCalls: CallMap, expectations: Expectation[]) {

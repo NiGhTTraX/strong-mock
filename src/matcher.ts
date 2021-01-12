@@ -187,8 +187,8 @@ const isString = ({
  * @example
  * It.isArray([It.isString({ containing: 'foobar' }))
  */
-const isArray = <T extends any[]>(containing?: T): Matcher<T> => {
-  return {
+const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
+  ({
     __isMatcher: true,
     matches: (arg: any) => {
       if (!Array.isArray(arg)) {
@@ -212,8 +212,7 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> => {
     },
     toJSON: () =>
       containing ? `array(${printExpected(containing)})` : 'array',
-  } as any;
-};
+  } as any);
 /**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.

@@ -22,9 +22,7 @@ export const instance = <T>(mock: Mock<T>): T => {
   const { repository } = getMockState(mock);
 
   return createProxy<T>({
-    property: (property) => {
-      return returnOrThrow(repository.get(property));
-    },
+    property: (property) => returnOrThrow(repository.get(property)),
     apply: (args: any[]) => {
       const fn = repository.get(ApplyProp);
 

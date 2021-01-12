@@ -26,6 +26,5 @@ import { createReturns, Stub } from './returns';
  * when(fn(23)).thenResolve(42);
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const when = <R>(expectedCall: R): Stub<R> => {
-  return createReturns<R>(getMockState(getActiveMock()).pendingExpectation);
-};
+export const when = <R>(expectedCall: R): Stub<R> =>
+  createReturns<R>(getMockState(getActiveMock()).pendingExpectation);

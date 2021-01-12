@@ -7,7 +7,8 @@ import { ExpectationRepository } from './expectation-repository';
  *
  * WARNING: this is in development, do not use
  */
-export class WeakRepository extends BaseRepository
+export class WeakRepository
+  extends BaseRepository
   implements ExpectationRepository {
   private repeating = new Map<PropertyKey, boolean>();
 
