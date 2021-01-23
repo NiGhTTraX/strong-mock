@@ -108,11 +108,15 @@ export const createReturns = <R>(
   pendingExpectation: PendingExpectation
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
-    thenReturn: (returnValue: any): InvocationCount =>
+    // Need to disable the lint rule here because the fixed code without
+    // curly braces is not properly ignored by istanbul.
+    // eslint-disable-next-line arrow-body-style
+    thenReturn: (returnValue: any): InvocationCount => {
       // TODO: should probably fix this
       /* istanbul ignore next: because it will be overridden by
        * promiseStub and the types are compatible */
-      finishPendingExpectation(returnValue, pendingExpectation),
+      return finishPendingExpectation(returnValue, pendingExpectation);
+    },
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(getError(errorOrMessage), pendingExpectation),
   };
