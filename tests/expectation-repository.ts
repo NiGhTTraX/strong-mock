@@ -27,28 +27,6 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
 }
 
-export class OneExistingExpectationRepository implements ExpectationRepository {
-  constructor(public expectation: Expectation) {}
-
-  add() {
-    throw new Error('not supported');
-  }
-
-  get(): ReturnValue {
-    return { returnValue: this.expectation.returnValue };
-  }
-
-  getUnmet() {
-    return [this.expectation];
-  }
-
-  clear(): void {
-    throw new Error('not supported');
-  }
-
-  getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
-}
-
 export class EmptyRepository implements ExpectationRepository {
   add() {}
 
