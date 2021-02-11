@@ -27,7 +27,7 @@ describe('StrongRepository', () => {
 
   it('should throw if no call expectations match', () => {
     const repo = new StrongRepository();
-    repo.add(new NotMatchingExpectation('foo', 23));
+    repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
     expect(() => repo.get('foo')(3, 4)).toThrow(UnexpectedCall);
   });
@@ -40,7 +40,7 @@ describe('StrongRepository', () => {
 
   it('should throw after a property expectation is fulfilled', () => {
     const repo = new StrongRepository();
-    repo.add(new MatchingPropertyExpectation('foo', 23));
+    repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
     repo.get('foo');
 
     expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
@@ -48,7 +48,7 @@ describe('StrongRepository', () => {
 
   it('should throw after a function expectation is fulfilled', () => {
     const repo = new StrongRepository();
-    repo.add(new MatchingCallExpectation('foo', 23));
+    repo.add(new MatchingCallExpectation('foo', { value: 23 }));
     repo.get('foo')(1, 2);
 
     expect(() => repo.get('foo')).toThrow(UnexpectedAccess);

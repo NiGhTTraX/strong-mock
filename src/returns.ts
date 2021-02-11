@@ -1,3 +1,4 @@
+import { ReturnValue } from './expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from './pending-expectation';
 
@@ -83,7 +84,7 @@ export type Stub<T> = [T] extends [Promise<infer U>]
  * Set a return value for the currently pending expectation.
  */
 const finishPendingExpectation = (
-  returnValue: any,
+  returnValue: ReturnValue,
   pendingExpectation: PendingExpectation
 ) => {
   const finishedExpectation = pendingExpectation.finish(returnValue);
@@ -115,30 +116,55 @@ export const createReturns = <R>(
       // TODO: should probably fix this
       /* istanbul ignore next: because it will be overridden by
        * promiseStub and the types are compatible */
-      return finishPendingExpectation(returnValue, pendingExpectation);
+      return finishPendingExpectation(
+        { value: returnValue, isError: false, isPromise: false },
+        pendingExpectation
+      );
     },
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(getError(errorOrMessage), pendingExpectation),
+      finishPendingExpectation(
+        { value: getError(errorOrMessage), isError: true, isPromise: false },
+        pendingExpectation
+      ),
   };
 
   const promiseStub: PromiseStub<any> = {
     thenReturn: (promise: Promise<any>): InvocationCount =>
-      finishPendingExpectation(promise, pendingExpectation),
+      finishPendingExpectation(
+        {
+          value: promise,
+          isError: false,
+          // We're setting this to false because we can't distinguish between a
+          // promise thenReturn and a normal thenReturn.
+          isPromise: false,
+        },
+        pendingExpectation
+      ),
 
     thenResolve: (promiseValue: any): InvocationCount =>
       finishPendingExpectation(
-        Promise.resolve(promiseValue),
+        {
+          value: Promise.resolve(promiseValue),
+          promiseValue,
+          isError: false,
+          isPromise: true,
+        },
         pendingExpectation
       ),
 
     thenReject: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
-        Promise.reject(getError(errorOrMessage)),
+        {
+          value: Promise.reject(getError(errorOrMessage)),
+          promiseValue: getError(errorOrMessage),
+          isError: true,
+          isPromise: true,
+        },
         pendingExpectation
       ),
   };
 
-  // @ts-ignore TODO: because the return type is a conditional and
+  // @ts-expect-error TODO: because the return type is a conditional and
   // we're doing something fishy here that TS doesn't like
   return { ...nonPromiseStub, ...promiseStub };
 };

@@ -1,3 +1,10 @@
+export type ReturnValue = {
+  value: any;
+  isPromise?: boolean;
+  promiseValue?: any;
+  isError?: boolean;
+};
+
 export interface Expectation {
   property: PropertyKey;
 
@@ -7,7 +14,7 @@ export interface Expectation {
    */
   args: any[] | undefined;
 
-  returnValue: any;
+  returnValue: ReturnValue;
 
   min: number;
 

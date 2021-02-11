@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { Expectation } from './expectation';
+import { Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
 import { printExpectation } from './print';
 
@@ -25,7 +25,7 @@ export class StrongExpectation implements Expectation {
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
-    public returnValue: any
+    public returnValue: ReturnValue
   ) {}
 
   setInvocationCount(min: number, max = 1) {

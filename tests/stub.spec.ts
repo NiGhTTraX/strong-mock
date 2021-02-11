@@ -18,11 +18,11 @@ describe('createStub', () => {
 
     stub(1, 2, 3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual(ApplyProp);
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept fn.call(this, ...args)', () => {
@@ -34,11 +34,11 @@ describe('createStub', () => {
 
     stub.call(null, 1, 2, 3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual(ApplyProp);
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept fn.apply(this, [...args])', () => {
@@ -50,11 +50,11 @@ describe('createStub', () => {
 
     stub.apply(null, [1, 2, 3]);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual(ApplyProp);
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept Reflect.apply(fn, this, [...args])', () => {
@@ -66,11 +66,11 @@ describe('createStub', () => {
 
     Reflect.apply(stub, null, [1, 2, 3]);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual(ApplyProp);
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept fn.bind(this, ...args)', () => {
@@ -82,11 +82,11 @@ describe('createStub', () => {
 
     stub.bind(null, 1, 2)(3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual(ApplyProp);
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept foo.bar(...args)', () => {
@@ -98,11 +98,11 @@ describe('createStub', () => {
 
     stub.bar(1, 2, 3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual('bar');
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept foo.bar.call(this, ...args)', () => {
@@ -114,11 +114,11 @@ describe('createStub', () => {
 
     stub.bar.call(null, 1, 2, 3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual('bar');
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept foo.bar.apply(this, [...args])', () => {
@@ -130,11 +130,11 @@ describe('createStub', () => {
 
     stub.bar.apply(null, [1, 2, 3]);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual('bar');
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should intercept foo.bar.bind(this, ...args)', () => {
@@ -146,11 +146,11 @@ describe('createStub', () => {
 
     stub.bar.bind(null, 1, 2)(3);
 
-    pendingExpectation.finish(23);
+    pendingExpectation.finish({ value: 23 });
 
     expect(repo.expectation?.property).toEqual('bar');
     expect(repo.expectation?.args).toEqual([1, 2, 3]);
-    expect(repo.expectation?.returnValue).toEqual(23);
+    expect(repo.expectation?.returnValue.value).toEqual(23);
   });
 
   it('should throw on nested access', () => {

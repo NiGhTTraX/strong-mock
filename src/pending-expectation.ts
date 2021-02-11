@@ -1,19 +1,19 @@
 import { MissingWhen, UnfinishedExpectation } from './errors';
-import { Expectation } from './expectation';
+import { Expectation, ReturnValue } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { printWhen } from './print';
 
 export type ExpectationFactory = (
   property: PropertyKey,
   args: any[] | undefined,
-  returnValue: any
+  returnValue: ReturnValue
 ) => Expectation;
 
 export interface PendingExpectation {
   // TODO: get rid of repo
   start(repo: ExpectationRepository): void;
 
-  finish(returnValue: any): Expectation;
+  finish(returnValue: ReturnValue): Expectation;
 
   clear(): void;
 
@@ -54,7 +54,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     this._args = value;
   }
 
-  finish(returnValue: any): Expectation {
+  finish(returnValue: ReturnValue): Expectation {
     if (!this._repo) {
       throw new MissingWhen();
     }

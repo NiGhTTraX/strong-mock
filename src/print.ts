@@ -1,5 +1,5 @@
 import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
-import { ApplyProp, Expectation } from './expectation';
+import { ApplyProp, Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
 
 export const printProperty = (property: PropertyKey) => {
@@ -24,11 +24,27 @@ export const printCall = (property: PropertyKey, args: any[]) => {
   return `${prettyProperty}(${prettyArgs})`;
 };
 
-export const printReturns = (returnValue: any, min: number, max: number) => {
-  const isError = returnValue instanceof Error;
+export const printReturns = (
+  { isError, isPromise, value, promiseValue }: ReturnValue,
+  min: number,
+  max: number
+) => {
+  let thenPrefix = '';
 
-  return `.${isError ? 'thenThrow' : 'thenReturn'}(${printExpected(
-    isError ? returnValue.message : returnValue
+  if (isPromise) {
+    if (isError) {
+      thenPrefix += 'thenReject';
+    } else {
+      thenPrefix += 'thenResolve';
+    }
+  } else if (isError) {
+    thenPrefix += 'thenThrow';
+  } else {
+    thenPrefix += 'thenReturn';
+  }
+
+  return `.${thenPrefix}(${printExpected(
+    promiseValue || value
   )}).between(${min}, ${max})`;
 };
 
@@ -43,7 +59,7 @@ export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
 export const printExpectation = (
   property: PropertyKey,
   args: any[] | undefined,
-  returnValue: any,
+  returnValue: ReturnValue,
   min: number,
   max: number
 ) => `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;

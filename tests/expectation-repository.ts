@@ -1,9 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import { Expectation } from '../src/expectation';
-import {
-  ExpectationRepository,
-  ReturnValue,
-} from '../src/expectation-repository';
+import { Expectation, ReturnValue } from '../src/expectation';
+import { ExpectationRepository } from '../src/expectation-repository';
 
 export class OneIncomingExpectationRepository implements ExpectationRepository {
   public expectation: Expectation | undefined;
@@ -13,7 +10,7 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   }
 
   get(): ReturnValue | undefined {
-    return this.expectation && { returnValue: this.expectation.returnValue };
+    return this.expectation?.returnValue;
   }
 
   getUnmet() {

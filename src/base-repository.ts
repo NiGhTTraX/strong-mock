@@ -51,7 +51,7 @@ export abstract class BaseRepository implements ExpectationRepository {
       if (propertyExpectation) {
         this.countAndConsume(propertyExpectation);
 
-        return propertyExpectation.expectation.returnValue;
+        return propertyExpectation.expectation.returnValue.value;
       }
 
       return (...args: any[]) => {
@@ -63,7 +63,7 @@ export abstract class BaseRepository implements ExpectationRepository {
           this.recordExpected(property, args);
           this.countAndConsume(callExpectation);
 
-          return callExpectation.expectation.returnValue;
+          return callExpectation.expectation.returnValue.value;
         }
 
         this.recordUnexpected(property, args);

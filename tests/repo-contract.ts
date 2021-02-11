@@ -24,7 +24,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should match the first expectation',
       test: (repo) => () => {
-        repo.add(new MatchingPropertyExpectation('foo', 23));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
         expect(repo.get('foo')).toEqual(23);
       },
@@ -32,8 +32,8 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should match the expectations in order',
       test: (repo) => () => {
-        repo.add(new MatchingPropertyExpectation('foo', 23));
-        repo.add(new MatchingPropertyExpectation('foo', 42));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 42 }));
 
         expect(repo.get('foo')).toEqual(23);
         expect(repo.get('foo')).toEqual(42);
@@ -42,7 +42,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should keep matching an expectation until it is fulfilled',
       test: (repo) => () => {
-        const expectation = new MatchingPropertyExpectation('foo', 23);
+        const expectation = new MatchingPropertyExpectation('foo', {
+          value: 23,
+        });
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
@@ -57,7 +59,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should match the first expectation',
       test: (repo) => () => {
-        repo.add(new MatchingCallExpectation('foo', 23));
+        repo.add(new MatchingCallExpectation('foo', { value: 23 }));
 
         expect(repo.get('foo')()).toEqual(23);
       },
@@ -65,8 +67,8 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should match the expectations in order',
       test: (repo) => () => {
-        repo.add(new MatchingCallExpectation('foo', 23));
-        repo.add(new MatchingCallExpectation('foo', 42));
+        repo.add(new MatchingCallExpectation('foo', { value: 23 }));
+        repo.add(new MatchingCallExpectation('foo', { value: 42 }));
 
         expect(repo.get('foo')()).toEqual(23);
         expect(repo.get('foo')()).toEqual(42);
@@ -75,8 +77,8 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should match property expectations before function expectations',
       test: (repo) => () => {
-        repo.add(new MatchingCallExpectation('foo', 1));
-        repo.add(new MatchingPropertyExpectation('foo', () => 2));
+        repo.add(new MatchingCallExpectation('foo', { value: 1 }));
+        repo.add(new MatchingPropertyExpectation('foo', { value: () => 2 }));
 
         expect(repo.get('foo')()).toEqual(2);
         expect(repo.get('foo')()).toEqual(1);
@@ -85,7 +87,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should keep matching an expectation until it is fulfilled',
       test: (repo) => () => {
-        const expectation = new MatchingCallExpectation('foo', 23);
+        const expectation = new MatchingCallExpectation('foo', { value: 23 });
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
@@ -106,8 +108,8 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should mark all added expectations as unmet',
       test: (repo) => () => {
-        const e1 = new MatchingPropertyExpectation('foo', 1);
-        const e2 = new MatchingPropertyExpectation('bar', 1);
+        const e1 = new MatchingPropertyExpectation('foo', { value: 1 });
+        const e2 = new MatchingPropertyExpectation('bar', { value: 1 });
         repo.add(e1);
         repo.add(e2);
 
@@ -117,7 +119,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should mark an expectation as met when it is completely fulfilled',
       test: (repo) => () => {
-        const expectation = new MatchingPropertyExpectation('foo', 23);
+        const expectation = new MatchingPropertyExpectation('foo', {
+          value: 23,
+        });
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
@@ -132,7 +136,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
       name:
         'should keep an expectation as unmet until it is completely fulfilled',
       test: (repo) => () => {
-        const expectation = new MatchingPropertyExpectation('foo', 23);
+        const expectation = new MatchingPropertyExpectation('foo', {
+          value: 23,
+        });
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
@@ -159,10 +165,10 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'it should record property accesses',
       test: (repo) => () => {
-        repo.add(new MatchingPropertyExpectation('foo', 23));
-        repo.add(new MatchingPropertyExpectation('foo', 23));
-        repo.add(new MatchingPropertyExpectation('bar', 23));
-        repo.add(new MatchingPropertyExpectation('bar', 23));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('bar', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('bar', { value: 23 }));
 
         repo.get('foo');
         repo.get('foo');
@@ -183,7 +189,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'it should record function calls',
       test: (repo) => () => {
-        const expectation = new MatchingCallExpectation('foo', 23);
+        const expectation = new MatchingCallExpectation('foo', { value: 23 });
         repo.add(expectation);
 
         repo.get('foo')(1, 2);
@@ -215,7 +221,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should record calls for unexpected call',
       test: (repo) => () => {
-        repo.add(new NotMatchingExpectation('foo', 23));
+        repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
         try {
           repo.get('foo')(1, 2, 3);
@@ -234,7 +240,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should remove all expectations when clearing',
       test: (repo) => () => {
-        repo.add(new MatchingPropertyExpectation('foo', 23));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
         repo.clear();
 
@@ -244,7 +250,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should clear all call stats',
       test: (repo) => () => {
-        repo.add(new MatchingPropertyExpectation('foo', 23));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
         repo.get('foo');
         try {
@@ -274,17 +280,24 @@ export const repoContractTests: ExpectationRepositoryContract = {
       name: 'should match expectations for toString and friends',
       test: (repo) => () => {
         repo.add(
-          new MatchingPropertyExpectation('toString', () => 'not a mock')
-        );
-        repo.add(new MatchingCallExpectation('toString', 'I said not a mock'));
-        repo.add(
-          new MatchingPropertyExpectation('@@toStringTag', 'totally not a mock')
+          new MatchingPropertyExpectation('toString', {
+            value: () => 'not a mock',
+          })
         );
         repo.add(
-          new MatchingPropertyExpectation(
-            Symbol.toStringTag,
-            'absolutely not a mock'
-          )
+          new MatchingCallExpectation('toString', {
+            value: 'I said not a mock',
+          })
+        );
+        repo.add(
+          new MatchingPropertyExpectation('@@toStringTag', {
+            value: 'totally not a mock',
+          })
+        );
+        repo.add(
+          new MatchingPropertyExpectation(Symbol.toStringTag, {
+            value: 'absolutely not a mock',
+          })
         );
 
         expect(repo.get('toString')()).toEqual('not a mock');

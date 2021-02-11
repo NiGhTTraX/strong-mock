@@ -79,7 +79,9 @@ describe('verifyRepo', () => {
     expect(() =>
       verifyRepo(
         new MockRepo({
-          unmet: [new NotMatchingExpectation(':irrelevant:', undefined)],
+          unmet: [
+            new NotMatchingExpectation(':irrelevant:', { value: undefined }),
+          ],
         })
       )
     ).toThrow(UnmetExpectations);

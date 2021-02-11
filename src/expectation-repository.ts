@@ -1,7 +1,5 @@
 import { Expectation } from './expectation';
 
-export type ReturnValue = { returnValue: any };
-
 export type Call = {
   arguments: any[] | undefined;
 };

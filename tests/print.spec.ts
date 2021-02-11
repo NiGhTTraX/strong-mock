@@ -3,7 +3,7 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import { ApplyProp } from '../src/expectation';
 import { It } from '../src/matcher';
 import { printCall, printProperty, printReturns } from '../src/print';
-import { expectAnsilessEqual } from './ansiless';
+import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
 
 describe('print', () => {
   describe('printProperty', () => {
@@ -56,17 +56,58 @@ describe('print', () => {
   });
 
   describe('printReturn', () => {
-    it('should print return value and invocation count', () => {
-      expectAnsilessEqual(
-        printReturns(23, 1, 1),
-        `.thenReturn(23).between(1, 1)`
+    it('should print invocation count', () => {
+      expectAnsilessContain(
+        printReturns({ value: 23 }, 1, 3),
+        `.between(1, 3)`
       );
     });
 
-    it('should print error and invocation count', () => {
-      expectAnsilessEqual(
-        printReturns(new Error('foobar'), 1, 1),
-        `.thenThrow("foobar").between(1, 1)`
+    it('should print return value', () => {
+      expectAnsilessContain(
+        printReturns({ value: 23 }, 1, 1),
+        `.thenReturn(23)`
+      );
+    });
+
+    it('should print error', () => {
+      expectAnsilessContain(
+        printReturns(
+          {
+            value: new Error('foobar'),
+            isError: true,
+          },
+          1,
+          1
+        ),
+        `.thenThrow([Error: foobar])`
+      );
+    });
+
+    it('should print promise', () => {
+      expectAnsilessContain(
+        printReturns(
+          { value: Promise.resolve(23), promiseValue: 23, isPromise: true },
+          1,
+          1
+        ),
+        `.thenResolve(23)`
+      );
+    });
+
+    it('should print promise rejection', () => {
+      expectAnsilessContain(
+        printReturns(
+          {
+            value: new Error('foobar'),
+            promiseValue: new Error('foobar'),
+            isPromise: true,
+            isError: true,
+          },
+          1,
+          1
+        ),
+        `.thenReject([Error: foobar])`
       );
     });
   });

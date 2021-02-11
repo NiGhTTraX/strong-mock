@@ -5,7 +5,9 @@ import { SpyExpectation } from './expectations';
 
 describe('invocation count', () => {
   it('between should set the min and max', () => {
-    const expectation = new SpyExpectation('bar', undefined, undefined);
+    const expectation = new SpyExpectation('bar', undefined, {
+      value: undefined,
+    });
 
     const invocationCount = createInvocationCount(expectation);
     invocationCount.between(2, 8);

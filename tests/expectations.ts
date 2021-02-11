@@ -1,4 +1,4 @@
-import { Expectation } from '../src/expectation';
+import { Expectation, ReturnValue } from '../src/expectation';
 import { ExpectationRepository } from '../src/expectation-repository';
 import {
   ExpectationFactory,
@@ -18,7 +18,7 @@ export class NeverMatchingExpectation implements Expectation {
 
   property = 'bar';
 
-  returnValue = undefined;
+  returnValue = { value: undefined };
 
   matches = () => false;
 }
@@ -36,7 +36,7 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
 
   property = 'bar';
 
-  returnValue = 42;
+  returnValue = { value: 42 };
 
   matches = () => true;
 }
@@ -56,7 +56,7 @@ export class SpyExpectation implements Expectation {
   constructor(
     public property: PropertyKey,
     public args: any[] | undefined,
-    public returnValue: any
+    public returnValue: ReturnValue
   ) {}
 
   matches = () => false;
@@ -75,7 +75,7 @@ export class SpyPendingExpectation implements PendingExpectation {
 
   public clearCalled = false;
 
-  public finishCalledWith: any;
+  public finishCalledWith: ReturnValue | undefined;
 
   public propertyCalledWith: PropertyKey | undefined;
 
@@ -89,7 +89,7 @@ export class SpyPendingExpectation implements PendingExpectation {
     this.clearCalled = true;
   }
 
-  finish(returnValue: any) {
+  finish(returnValue: ReturnValue) {
     this.finishCalledWith = returnValue;
     return new OneUseAlwaysMatchingExpectation();
   }
@@ -104,7 +104,7 @@ export class SpyPendingExpectation implements PendingExpectation {
 }
 
 export class MatchingPropertyExpectation implements Expectation {
-  constructor(public property: PropertyKey, public returnValue: any) {}
+  constructor(public property: PropertyKey, public returnValue: ReturnValue) {}
 
   args = undefined;
 
@@ -123,7 +123,7 @@ export class MatchingPropertyExpectation implements Expectation {
 }
 
 export class MatchingCallExpectation implements Expectation {
-  constructor(public property: PropertyKey, public returnValue: any) {}
+  constructor(public property: PropertyKey, public returnValue: ReturnValue) {}
 
   args = [];
 

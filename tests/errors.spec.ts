@@ -130,8 +130,12 @@ foobar`
 
   describe('UnexpectedCalls', () => {
     it('should print the unexpected calls and remaining expectations', () => {
-      const e1 = new NotMatchingExpectation(':irrelevant:', undefined);
-      const e2 = new NotMatchingExpectation(':irrelevant:', undefined);
+      const e1 = new NotMatchingExpectation(':irrelevant:', {
+        value: undefined,
+      });
+      const e2 = new NotMatchingExpectation(':irrelevant:', {
+        value: undefined,
+      });
       e1.toJSON = () => 'e1';
       e2.toJSON = () => 'e2';
 
