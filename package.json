@@ -31,15 +31,6 @@
     "test": "tdd-buffet test --coverage",
     "report-coverage": "codecov"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.tsx?": "eslint",
-    "*.js": "eslint"
-  },
   "dependencies": {
     "jest-matcher-utils": "~26.6.0",
     "lodash": "~4.17.15"
@@ -52,8 +43,6 @@
     "codecov": "~3.8.0",
     "doctoc": "~2.0.0",
     "eslint": "~7.20.0",
-    "husky": "~5.0.0",
-    "lint-staged": "~10.5.0",
     "rollup": "~2.39.0",
     "rollup-plugin-typescript2": "~0.29.0",
     "standard-version": "~9.1.0",
