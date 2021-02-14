@@ -29,7 +29,7 @@
     "release": "standard-version",
     "lint": "eslint --ext ts,tsx,js .",
     "test": "tdd-buffet test --coverage",
-    "report-coverage": "nyc report --reporter=json && codecov -f tests/results/coverage-final.json"
+    "report-coverage": "codecov -f tests/results/coverage-final.json"
   },
   "husky": {
     "hooks": {
