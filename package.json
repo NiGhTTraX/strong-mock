@@ -44,7 +44,7 @@
     "doctoc": "~2.0.0",
     "eslint": "~7.20.0",
     "rollup": "~2.39.0",
-    "rollup-plugin-typescript2": "~0.29.0",
+    "rollup-plugin-typescript2": "~0.30.0",
     "standard-version": "~9.1.0",
     "strip-ansi": "~6.0.0",
     "tdd-buffet": "~2.1.0",
