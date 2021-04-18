@@ -858,10 +858,10 @@
     typescript "~4.0.0"
     whatwg-fetch "~3.4.0"
 
-"@tdd-buffet/jest-config@~3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@tdd-buffet/jest-config/-/jest-config-3.0.0.tgz#37a838c82e9fd909540383455d22080e24994266"
-  integrity sha512-/FWS1ykxoUwuxMaI1QkLx2Gv2/kPCV3JF3/UzVJgNq2atT/bh05QeKMCyG40Cs8wlXIVPS6sUXxnuHMebYD08Q==
+"@tdd-buffet/jest-config@~3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@tdd-buffet/jest-config/-/jest-config-3.0.2.tgz#159dc0ccd389be43e70293cdbda15703cc72f0a0"
+  integrity sha512-FiE85YdF6Z1GSDr96hrYhpWzCUZFDFih7+b+bciH+89G0kE4wJ3H8haWXuPZEgcfkePL/BNm1h4R3CyGjAJOOw==
   dependencies:
     "@jest/transform" "~26.6.0"
     "@jest/types" "~26.6.0"
@@ -870,8 +870,8 @@
     jest-environment-jsdom-fifteen "~1.0.2"
     jest-runtime "~26.6.0"
     ts-jest "~26.5.0"
-    typescript "~4.1.0"
-    whatwg-fetch "~3.5.0"
+    typescript "~4.2.0"
+    whatwg-fetch "~3.6.0"
 
 "@tdd-buffet/tsconfig@~1.0.2":
   version "1.0.2"
@@ -7840,6 +7840,11 @@ typescript@~4.1.0:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
   integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
 
+typescript@~4.2.0:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
+  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
+
 ua-parser-js@^0.7.21:
   version "0.7.21"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.21.tgz#853cf9ce93f642f67174273cc34565ae6f308777"
@@ -8148,10 +8153,10 @@ whatwg-fetch@~3.4.0:
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.4.0.tgz#e11de14f4878f773fbebcde8871b2c0699af8b30"
   integrity sha512-rsum2ulz2iuZH08mJkT0Yi6JnKhwdw4oeyMjokgxd+mmqYSd9cPpOQf01TIWgjxG/U4+QR+AwKq6lSbXVxkyoQ==
 
-whatwg-fetch@~3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.5.0.tgz#605a2cd0a7146e5db141e29d1c62ab84c0c4c868"
-  integrity sha512-jXkLtsR42xhXg7akoDKvKWE40eJeI+2KZqcp2h3NsOrRnDvtWX36KcKl30dy+hxECivdk2BVUHVNrPtoMBUx6A==
+whatwg-fetch@~3.6.0:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
+  integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
 
 whatwg-mimetype@^2.2.0, whatwg-mimetype@^2.3.0:
   version "2.3.0"
