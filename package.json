@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "jest-matcher-utils": "~26.6.0",
-    "lodash": "~4.17.15"
+    "lodash": "~4.17.0"
   },
   "devDependencies": {
     "@nighttrax/eslint-config-ts": "~8.0.0",
