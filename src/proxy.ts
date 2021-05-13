@@ -1,11 +1,11 @@
 import { Mock } from './mock';
 
-interface ProxyTraps<T> {
+interface ProxyTraps {
   /**
    * Called when accessing any property on an object, except for
    * `.call`, `.apply` and `.bind`.
    */
-  property: (property: keyof T) => void;
+  property: (property: string | symbol) => void;
 
   /**
    * Called when calling a function.
@@ -33,10 +33,10 @@ interface ProxyTraps<T> {
   apply: (args: any[]) => void;
 }
 
-export const createProxy = <T>({ apply, property }: ProxyTraps<T>): Mock<T> =>
+export const createProxy = <T>({ apply, property }: ProxyTraps): Mock<T> =>
   // eslint-disable-next-line no-empty-function
   (new Proxy(/* istanbul ignore next */ () => {}, {
-    get: (target, prop: keyof T) => {
+    get: (target, prop: string | symbol) => {
       if (prop === 'bind') {
         return (thisArg: any, ...args: any[]) => (...moreArgs: any[]) =>
           apply([...args, ...moreArgs]);
