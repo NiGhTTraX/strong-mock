@@ -3,11 +3,11 @@
 
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": ".",
+    "declarationDir": "./dist",
     "outDir": "./dist",
-    "module": "esnext"
+    "module": "ESNext",
+    "target": "ESNext"
   },
-
   "include": [
     "src/**/*"
   ],
