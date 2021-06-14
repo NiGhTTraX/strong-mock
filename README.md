@@ -49,6 +49,8 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
+  - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
+  - [Why doesn't the spread operator `...` work?](#why-doesnt-the-spread-operator--work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -328,3 +330,63 @@ console.log(instance(foo).bar(23)); // 'called 23'
 The function in `thenReturn()` will be type checked against the actual interface so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
 
 ![call-rename](media/rename-args.gif)
+
+### Why does accessing an unused method throw?
+
+Any unexpected property access will throw an error, even if the property is a method, and you never call it. This can sometimes be inconvenient if your code e.g. destructures your mock and only calls parts of it inside your test.
+
+```typescript
+interface Foo {
+  bar: () => number;
+  baz: () => number;
+}
+
+function doFoo(foo: Foo, { callBaz }: { callBaz: boolean }) {
+  // Will throw here with unexpected access on `baz`.
+  const { bar, baz } = foo;
+ 
+  bar();
+
+  if (callBaz) {
+    baz();
+  }
+}
+
+const foo = mock<Foo>();
+when(foo.bar()).thenReturn(42);
+
+// Throws with unexpected access on `baz`.
+doFoo(instance(foo), { callBaz: false });
+```
+
+To work around this, either change your code to avoid destructuring
+
+```typescript
+function doFoo(foo: Foo, callBaz: boolean) {
+  foo.bar();
+
+  if (callBaz) {
+    foo.baz();
+  }
+}
+```
+
+or set a dummy expectation on the methods you're not interested in during the test.
+
+```typescript
+when(foo.baz()).thenThrow('should not be called').anyTimes();
+```
+
+### Why doesn't the spread operator `...` work?
+
+All mock instances are backed up by empty functions with no keys, so attempting to get the own keys of one (via the spread operator `...`, `Object.keys` etc.) will not return anything.
+
+```typescript
+const foo = mock<{ bar: number }>();
+
+console.log(Object.keys(instance(foo))); // []
+
+when(foo.bar).thenReturn(42);
+
+console.log({ ...instance(foo) }); // {}
+```
