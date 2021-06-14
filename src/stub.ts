@@ -4,7 +4,7 @@ import { ExpectationRepository } from './expectation-repository';
 import { setActiveMock } from './map';
 import { Mock } from './mock';
 import { PendingExpectation } from './pending-expectation';
-import { createProxy } from './proxy';
+import { createProxy, Property } from './proxy';
 
 export const createStub = <T>(
   repo: ExpectationRepository,
@@ -19,7 +19,7 @@ export const createStub = <T>(
       pendingExpectation.property = property;
 
       return createProxy({
-        property: (childProp: PropertyKey) => {
+        property: (childProp: Property) => {
           pendingExpectation.clear();
           throw new NestedWhen(property, childProp);
         },

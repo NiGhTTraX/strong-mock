@@ -1,8 +1,9 @@
 import { EXPECTED_COLOR, printExpected } from 'jest-matcher-utils';
 import { ApplyProp, Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
+import { Property } from './proxy';
 
-export const printProperty = (property: PropertyKey) => {
+export const printProperty = (property: Property) => {
   if (property === ApplyProp) {
     return '';
   }
@@ -14,7 +15,7 @@ export const printProperty = (property: PropertyKey) => {
   return `.${property}`;
 };
 
-export const printCall = (property: PropertyKey, args: any[]) => {
+export const printCall = (property: Property, args: any[]) => {
   // TODO: don't leak the matcher concept here
   const prettyArgs = args
     .map((a) => (isMatcher(a) ? a.toJSON() : printExpected(a)))
@@ -48,7 +49,7 @@ export const printReturns = (
   )}).between(${min}, ${max})`;
 };
 
-export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
+export const printWhen = (property: Property, args: any[] | undefined) => {
   if (args) {
     return `when(${EXPECTED_COLOR(`mock${printCall(property, args)}`)})`;
   }
@@ -57,7 +58,7 @@ export const printWhen = (property: PropertyKey, args: any[] | undefined) => {
 };
 
 export const printExpectation = (
-  property: PropertyKey,
+  property: Property,
   args: any[] | undefined,
   returnValue: ReturnValue,
   min: number,

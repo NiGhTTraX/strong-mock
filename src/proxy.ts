@@ -1,11 +1,13 @@
 import { Mock } from './mock';
 
+export type Property = string | symbol;
+
 interface ProxyTraps {
   /**
    * Called when accessing any property on an object, except for
    * `.call`, `.apply` and `.bind`.
    */
-  property: (property: string | symbol) => void;
+  property: (property: Property) => void;
 
   /**
    * Called when calling a function.

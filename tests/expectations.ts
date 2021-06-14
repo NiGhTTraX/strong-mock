@@ -4,6 +4,7 @@ import {
   ExpectationFactory,
   PendingExpectation,
 } from '../src/pending-expectation';
+import { Property } from '../src/proxy';
 
 export class NeverMatchingExpectation implements Expectation {
   setInvocationCount = () => {};
@@ -54,7 +55,7 @@ export class SpyExpectation implements Expectation {
   toJSON = () => 'spy expectation';
 
   constructor(
-    public property: PropertyKey,
+    public property: Property,
     public args: any[] | undefined,
     public returnValue: ReturnValue
   ) {}
@@ -77,7 +78,7 @@ export class SpyPendingExpectation implements PendingExpectation {
 
   public finishCalledWith: ReturnValue | undefined;
 
-  public propertyCalledWith: PropertyKey | undefined;
+  public propertyCalledWith: Property | undefined;
 
   public startCalledWith: ExpectationRepository | undefined;
 
@@ -94,7 +95,7 @@ export class SpyPendingExpectation implements PendingExpectation {
     return new OneUseAlwaysMatchingExpectation();
   }
 
-  set property(value: PropertyKey) {
+  set property(value: Property) {
     this.propertyCalledWith = value;
   }
 
@@ -104,7 +105,7 @@ export class SpyPendingExpectation implements PendingExpectation {
 }
 
 export class MatchingPropertyExpectation implements Expectation {
-  constructor(public property: PropertyKey, public returnValue: ReturnValue) {}
+  constructor(public property: Property, public returnValue: ReturnValue) {}
 
   args = undefined;
 
@@ -123,7 +124,7 @@ export class MatchingPropertyExpectation implements Expectation {
 }
 
 export class MatchingCallExpectation implements Expectation {
-  constructor(public property: PropertyKey, public returnValue: ReturnValue) {}
+  constructor(public property: Property, public returnValue: ReturnValue) {}
 
   args = [];
 

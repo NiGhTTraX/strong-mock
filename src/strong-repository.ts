@@ -1,5 +1,6 @@
 import { BaseRepository, CountableExpectation } from './base-repository';
 import { UnexpectedAccess, UnexpectedCall } from './errors';
+import { Property } from './proxy';
 
 /**
  * Throw if no expectation matches.
@@ -18,11 +19,11 @@ export class StrongRepository extends BaseRepository {
     }
   }
 
-  protected getValueForUnexpectedCall(property: PropertyKey, args: any[]) {
+  protected getValueForUnexpectedCall(property: Property, args: any[]) {
     throw new UnexpectedCall(property, args, this.getUnmet());
   }
 
-  protected getValueForUnexpectedAccess(property: PropertyKey) {
+  protected getValueForUnexpectedAccess(property: Property) {
     throw new UnexpectedAccess(property, this.getUnmet());
   }
 }

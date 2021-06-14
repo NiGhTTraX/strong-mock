@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { Expectation, ReturnValue } from '../src/expectation';
 import { ExpectationRepository } from '../src/expectation-repository';
+import { Property } from '../src/proxy';
 
 export class OneIncomingExpectationRepository implements ExpectationRepository {
   public expectation: Expectation | undefined;
@@ -42,7 +43,7 @@ export class EmptyRepository implements ExpectationRepository {
 export class SpyRepository implements ExpectationRepository {
   public addCalledWith: Expectation | undefined;
 
-  public getCalledWith: [PropertyKey] | undefined;
+  public getCalledWith: [Property] | undefined;
 
   private getCounter = 0;
 
@@ -54,7 +55,7 @@ export class SpyRepository implements ExpectationRepository {
 
   clear() {}
 
-  get(property: PropertyKey) {
+  get(property: Property) {
     this.getCalledWith = [property];
 
     const returnValue = this.getReturns[this.getCounter];

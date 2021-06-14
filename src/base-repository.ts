@@ -1,5 +1,6 @@
 import { ApplyProp, Expectation } from './expectation';
 import { CallMap, ExpectationRepository } from './expectation-repository';
+import { Property } from './proxy';
 
 export type CountableExpectation = {
   expectation: Expectation;
@@ -7,10 +8,7 @@ export type CountableExpectation = {
 };
 
 export abstract class BaseRepository implements ExpectationRepository {
-  protected readonly expectations = new Map<
-    PropertyKey,
-    CountableExpectation[]
-  >();
+  protected readonly expectations = new Map<Property, CountableExpectation[]>();
 
   private readonly expectedCallStats: CallMap = new Map();
 
@@ -36,7 +34,7 @@ export abstract class BaseRepository implements ExpectationRepository {
     this.unexpectedCallStats.clear();
   }
 
-  get(property: PropertyKey): any {
+  get(property: Property): any {
     const expectations = this.expectations.get(property);
 
     if (expectations && expectations.length) {
@@ -119,7 +117,7 @@ export abstract class BaseRepository implements ExpectationRepository {
    * what should we return?
    */
   protected abstract getValueForUnexpectedCall(
-    property: PropertyKey,
+    property: Property,
     args: any[]
   ): any;
 
@@ -127,7 +125,7 @@ export abstract class BaseRepository implements ExpectationRepository {
    * We got a property access that doesn't match any expectation,
    * what should we return?
    */
-  protected abstract getValueForUnexpectedAccess(property: PropertyKey): any;
+  protected abstract getValueForUnexpectedAccess(property: Property): any;
 
   protected abstract consumeExpectation(
     expectation: CountableExpectation
@@ -136,7 +134,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   /**
    * Record an expected property access/method call.
    */
-  private recordExpected(property: PropertyKey, args: any[] | undefined) {
+  private recordExpected(property: Property, args: any[] | undefined) {
     const calls = this.expectedCallStats.get(property) || [];
 
     this.expectedCallStats.set(property, [...calls, { arguments: args }]);
@@ -145,7 +143,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   /**
    * Record an unexpected property access/method call.
    */
-  private recordUnexpected(property: PropertyKey, args: any[] | undefined) {
+  private recordUnexpected(property: Property, args: any[] | undefined) {
     const calls = this.unexpectedCallStats.get(property) || [];
 
     this.unexpectedCallStats.set(property, [...calls, { arguments: args }]);

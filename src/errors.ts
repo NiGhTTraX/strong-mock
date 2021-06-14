@@ -3,6 +3,7 @@ import { Expectation } from './expectation';
 import { CallMap } from './expectation-repository';
 import { PendingExpectation } from './pending-expectation';
 import { printCall, printProperty, printRemainingExpectations } from './print';
+import { Property } from './proxy';
 
 export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
@@ -28,7 +29,7 @@ Every call to set a return value must be preceded by an expectation.`);
 }
 
 export class UnexpectedAccess extends Error {
-  constructor(property: PropertyKey, expectations: Expectation[]) {
+  constructor(property: Property, expectations: Expectation[]) {
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printProperty(property)}`
     )} to be accessed.
@@ -41,7 +42,7 @@ ${printRemainingExpectations(expectations)}`);
 }
 
 export class UnexpectedCall extends Error {
-  constructor(property: PropertyKey, args: any[], expectations: Expectation[]) {
+  constructor(property: Property, args: any[], expectations: Expectation[]) {
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printCall(property, args)}`
     )} to be called.
@@ -111,7 +112,7 @@ ${printRemainingExpectations(expectations)}`);
 }
 
 export class NestedWhen extends Error {
-  constructor(parentProp: PropertyKey, childProp: PropertyKey) {
+  constructor(parentProp: Property, childProp: Property) {
     const snippet = `
 const parentMock = mock<T1>();
 const childMock = mock<T2>();

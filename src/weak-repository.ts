@@ -1,6 +1,7 @@
 import { BaseRepository, CountableExpectation } from './base-repository';
 import { Expectation } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
+import { Property } from './proxy';
 
 /**
  * Always return something, even if no expectations match.
@@ -10,7 +11,7 @@ import { ExpectationRepository } from './expectation-repository';
 export class WeakRepository
   extends BaseRepository
   implements ExpectationRepository {
-  private repeating = new Map<PropertyKey, boolean>();
+  private repeating = new Map<Property, boolean>();
 
   protected getValueForUnexpectedCall = () => null;
 

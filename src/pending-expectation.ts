@@ -2,9 +2,10 @@ import { MissingWhen, UnfinishedExpectation } from './errors';
 import { Expectation, ReturnValue } from './expectation';
 import { ExpectationRepository } from './expectation-repository';
 import { printWhen } from './print';
+import { Property } from './proxy';
 
 export type ExpectationFactory = (
-  property: PropertyKey,
+  property: Property,
   args: any[] | undefined,
   returnValue: ReturnValue
 ) => Expectation;
@@ -17,7 +18,7 @@ export interface PendingExpectation {
 
   clear(): void;
 
-  property: PropertyKey;
+  property: Property;
 
   args: any[] | undefined;
 
@@ -32,7 +33,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
 
   private _args: any[] | undefined;
 
-  private _property: PropertyKey = '';
+  private _property: Property = '';
 
   constructor(private createExpectation: ExpectationFactory) {}
 
@@ -46,7 +47,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     this._repo = repo;
   }
 
-  set property(value: PropertyKey) {
+  set property(value: Property) {
     this._property = value;
   }
 

@@ -2,6 +2,7 @@ import isEqual from 'lodash/isEqual';
 import { Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
 import { printExpectation } from './print';
+import { Property } from './proxy';
 
 /**
  * Deeply compare actual arguments against expected ones.
@@ -23,7 +24,7 @@ export class StrongExpectation implements Expectation {
   public max: number = 1;
 
   constructor(
-    public property: PropertyKey,
+    public property: Property,
     public args: any[] | undefined,
     public returnValue: ReturnValue
   ) {}

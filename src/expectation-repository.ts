@@ -1,4 +1,5 @@
 import { Expectation } from './expectation';
+import { Property } from './proxy';
 
 export type Call = {
   arguments: any[] | undefined;
@@ -16,7 +17,7 @@ export type Call = {
  *   ]
  * }
  */
-export type CallMap = Map<PropertyKey, Call[]>;
+export type CallMap = Map<Property, Call[]>;
 
 export type CallStats = {
   /**
@@ -56,7 +57,7 @@ export interface ExpectationRepository {
    * add(new Expectation('getData', undefined, () => 42);
    * get('getData')(1, 2, '3', false, NaN) === 42
    */
-  get(property: PropertyKey): any;
+  get(property: Property): any;
 
   /**
    * Remove any expectations and clear the call stats.

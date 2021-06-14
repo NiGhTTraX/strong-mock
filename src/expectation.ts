@@ -1,3 +1,5 @@
+import { Property } from './proxy';
+
 export type ReturnValue = {
   value: any;
   isPromise?: boolean;
@@ -6,7 +8,7 @@ export type ReturnValue = {
 };
 
 export interface Expectation {
-  property: PropertyKey;
+  property: Property;
 
   /**
    * `undefined` means this is a property expectation.
