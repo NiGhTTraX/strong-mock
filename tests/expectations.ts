@@ -1,9 +1,9 @@
-import { Expectation, ReturnValue } from '../src/expectation';
-import { ExpectationRepository } from '../src/expectation-repository';
+import { Expectation, ReturnValue } from '../src/expectation/expectation';
+import { ExpectationRepository } from '../src/repository/expectation-repository';
 import {
   ExpectationFactory,
   PendingExpectation,
-} from '../src/pending-expectation';
+} from '../src/when/pending-expectation';
 import { Property } from '../src/proxy';
 
 export class NeverMatchingExpectation implements Expectation {

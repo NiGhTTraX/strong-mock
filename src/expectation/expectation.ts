@@ -1,4 +1,4 @@
-import { Property } from './proxy';
+import { Property } from '../proxy';
 
 export type ReturnValue = {
   value: any;

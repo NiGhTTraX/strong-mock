@@ -7,10 +7,10 @@ import {
   UnfinishedExpectation,
   UnmetExpectations,
 } from '../src/errors';
-import { instance } from '../src/instance';
-import { clearActiveMock } from '../src/map';
-import { It } from '../src/matcher';
-import { mock } from '../src/mock';
+import { instance } from '../src/instance/instance';
+import { clearActiveMock } from '../src/mock/map';
+import { It } from '../src/expectation/matcher';
+import { mock } from '../src/mock/mock';
 import { Fn } from './fixtures';
 
 describe('when', () => {

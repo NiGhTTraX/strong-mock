@@ -1,8 +1,8 @@
-import { MissingWhen, UnfinishedExpectation } from './errors';
-import { Expectation, ReturnValue } from './expectation';
-import { ExpectationRepository } from './expectation-repository';
-import { printWhen } from './print';
-import { Property } from './proxy';
+import { MissingWhen, UnfinishedExpectation } from '../errors';
+import { Expectation, ReturnValue } from '../expectation/expectation';
+import { ExpectationRepository } from '../repository/expectation-repository';
+import { printWhen } from '../print';
+import { Property } from '../proxy';
 
 export type ExpectationFactory = (
   property: Property,

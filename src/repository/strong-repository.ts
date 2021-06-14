@@ -1,6 +1,6 @@
 import { BaseRepository, CountableExpectation } from './base-repository';
-import { UnexpectedAccess, UnexpectedCall } from './errors';
-import { Property } from './proxy';
+import { UnexpectedAccess, UnexpectedCall } from '../errors';
+import { Property } from '../proxy';
 
 /**
  * Throw if no expectation matches.

@@ -2,8 +2,8 @@ import { printExpected } from 'jest-matcher-utils';
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
-import { ApplyProp } from '../src/expectation';
-import { mock } from '../src/mock';
+import { ApplyProp } from '../src/expectation/expectation';
+import { mock } from '../src/mock/mock';
 import { expectAnsilessEqual } from './ansiless';
 import { SpyRepository } from './expectation-repository';
 

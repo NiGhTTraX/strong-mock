@@ -1,6 +1,6 @@
 import { describe, it } from 'tdd-buffet/suite/node';
 import { expect } from 'tdd-buffet/expect/jest';
-import { createInvocationCount } from '../src/invocation-count';
+import { createInvocationCount } from '../src/return/invocation-count';
 import { SpyExpectation } from './expectations';
 
 describe('invocation count', () => {

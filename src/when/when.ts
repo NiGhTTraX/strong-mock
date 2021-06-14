@@ -1,5 +1,5 @@
-import { getActiveMock, getMockState } from './map';
-import { createReturns, Stub } from './returns';
+import { getActiveMock, getMockState } from '../mock/map';
+import { createReturns, Stub } from '../return/returns';
 
 /**
  * Set an expectation on a mock.

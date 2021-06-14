@@ -1,10 +1,10 @@
-import { NestedWhen } from './errors';
-import { ApplyProp } from './expectation';
-import { ExpectationRepository } from './expectation-repository';
+import { NestedWhen } from '../errors';
+import { ApplyProp } from '../expectation/expectation';
+import { ExpectationRepository } from '../repository/expectation-repository';
 import { setActiveMock } from './map';
 import { Mock } from './mock';
-import { PendingExpectation } from './pending-expectation';
-import { createProxy, Property } from './proxy';
+import { PendingExpectation } from '../when/pending-expectation';
+import { createProxy, Property } from '../proxy';
 
 export const createStub = <T>(
   repo: ExpectationRepository,

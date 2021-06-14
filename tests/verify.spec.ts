@@ -3,10 +3,13 @@ import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { instance, mock, verify, when } from '../src';
 import { UnexpectedCalls, UnmetExpectations } from '../src/errors';
-import { Expectation } from '../src/expectation';
-import { CallMap, ExpectationRepository } from '../src/expectation-repository';
-import { resetAll } from '../src/reset';
-import { verifyAll, verifyRepo } from '../src/verify';
+import { Expectation } from '../src/expectation/expectation';
+import {
+  CallMap,
+  ExpectationRepository,
+} from '../src/repository/expectation-repository';
+import { resetAll } from '../src/verify/reset';
+import { verifyAll, verifyRepo } from '../src/verify/verify';
 import { NotMatchingExpectation } from './expectations';
 
 describe('verify', () => {

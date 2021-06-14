@@ -1,6 +1,6 @@
-import { ApplyProp, Expectation } from './expectation';
+import { ApplyProp, Expectation } from '../expectation/expectation';
 import { CallMap, ExpectationRepository } from './expectation-repository';
-import { Property } from './proxy';
+import { Property } from '../proxy';
 
 export type CountableExpectation = {
   expectation: Expectation;

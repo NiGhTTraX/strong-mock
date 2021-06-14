@@ -1,7 +1,7 @@
-import { ApplyProp } from './expectation';
-import { getMockState } from './map';
-import { Mock } from './mock';
-import { createProxy } from './proxy';
+import { ApplyProp } from '../expectation/expectation';
+import { getMockState } from '../mock/map';
+import { Mock } from '../mock/mock';
+import { createProxy } from '../proxy';
 
 /**
  * Return the expectation's return value. If the value is an error then

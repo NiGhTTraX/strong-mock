@@ -1,5 +1,5 @@
-import { Expectation } from './expectation';
-import { Property } from './proxy';
+import { Expectation } from '../expectation/expectation';
+import { Property } from '../proxy';
 
 export type Call = {
   arguments: any[] | undefined;

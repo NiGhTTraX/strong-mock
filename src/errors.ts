@@ -1,7 +1,7 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
-import { Expectation } from './expectation';
-import { CallMap } from './expectation-repository';
-import { PendingExpectation } from './pending-expectation';
+import { Expectation } from './expectation/expectation';
+import { CallMap } from './repository/expectation-repository';
+import { PendingExpectation } from './when/pending-expectation';
 import { printCall, printProperty, printRemainingExpectations } from './print';
 import { Property } from './proxy';
 

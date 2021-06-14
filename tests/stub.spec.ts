@@ -1,9 +1,9 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { NestedWhen } from '../src/errors';
-import { ApplyProp } from '../src/expectation';
-import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
-import { createStub } from '../src/stub';
+import { ApplyProp } from '../src/expectation/expectation';
+import { RepoSideEffectPendingExpectation } from '../src/when/pending-expectation';
+import { createStub } from '../src/mock/stub';
 import { OneIncomingExpectationRepository } from './expectation-repository';
 import { spyExpectationFactory } from './expectations';
 import { Baz, Fn, Foo } from './fixtures';

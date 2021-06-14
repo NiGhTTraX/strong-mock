@@ -8,8 +8,8 @@ import {
   UnfinishedExpectation,
   UnmetExpectations,
 } from '../src/errors';
-import { CallMap } from '../src/expectation-repository';
-import { RepoSideEffectPendingExpectation } from '../src/pending-expectation';
+import { CallMap } from '../src/repository/expectation-repository';
+import { RepoSideEffectPendingExpectation } from '../src/when/pending-expectation';
 import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
 import { EmptyRepository } from './expectation-repository';
 import {

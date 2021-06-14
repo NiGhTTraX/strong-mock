@@ -1,6 +1,6 @@
-import { ReturnValue } from './expectation';
+import { ReturnValue } from '../expectation/expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
-import { PendingExpectation } from './pending-expectation';
+import { PendingExpectation } from '../when/pending-expectation';
 
 type PromiseStub<R> = {
   /**

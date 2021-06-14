@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { ReturnValue } from '../src/expectation';
-import { createReturns } from '../src/returns';
+import { ReturnValue } from '../src/expectation/expectation';
+import { createReturns } from '../src/return/returns';
 import { SpyPendingExpectation } from './expectations';
 
 describe('returns', () => {

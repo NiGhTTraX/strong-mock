@@ -1,7 +1,7 @@
-import { NotAMock } from './errors';
-import { ExpectationRepository } from './expectation-repository';
+import { NotAMock } from '../errors';
+import { ExpectationRepository } from '../repository/expectation-repository';
 import { Mock } from './mock';
-import { PendingExpectation } from './pending-expectation';
+import { PendingExpectation } from '../when/pending-expectation';
 
 /**
  * Since `when()` doesn't receive the mock subject (because we can't make it

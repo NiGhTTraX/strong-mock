@@ -3,7 +3,7 @@ import { expect } from 'tdd-buffet/expect/jest';
 import {
   CallStats,
   ExpectationRepository,
-} from '../src/expectation-repository';
+} from '../src/repository/expectation-repository';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,

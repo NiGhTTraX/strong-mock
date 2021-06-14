@@ -1,4 +1,4 @@
-import { Expectation } from './expectation';
+import { Expectation } from '../expectation/expectation';
 
 export interface InvocationCount {
   /**

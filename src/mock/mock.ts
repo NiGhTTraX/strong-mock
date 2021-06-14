@@ -1,11 +1,11 @@
-import { ExpectationRepository } from './expectation-repository';
+import { ExpectationRepository } from '../repository/expectation-repository';
 import { setMockState } from './map';
 import {
   ExpectationFactory,
   RepoSideEffectPendingExpectation,
-} from './pending-expectation';
-import { StrongExpectation } from './strong-expectation';
-import { StrongRepository } from './strong-repository';
+} from '../when/pending-expectation';
+import { StrongExpectation } from '../expectation/strong-expectation';
+import { StrongRepository } from '../repository/strong-repository';
 import { createStub } from './stub';
 
 // TODO: is it possible to return a type here that won't be assignable to T,
