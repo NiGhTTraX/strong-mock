@@ -7,16 +7,19 @@ import {
   UnexpectedCalls,
   UnfinishedExpectation,
   UnmetExpectations,
-} from '../src/errors';
-import { Expectation } from '../src/expectation/expectation';
+} from './errors';
+import { Expectation } from './expectation/expectation';
 import {
   CallMap,
   ExpectationRepository,
-} from '../src/repository/expectation-repository';
-import { RepoSideEffectPendingExpectation } from '../src/when/pending-expectation';
-import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
-import { spyExpectationFactory, SpyPendingExpectation } from './expectations';
-import { SM } from './old';
+} from './expectation/repository/expectation-repository';
+import { RepoSideEffectPendingExpectation } from './when/pending-expectation';
+import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import {
+  spyExpectationFactory,
+  SpyPendingExpectation,
+} from './expectation/expectation.mocks';
+import { SM } from '../tests/old';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {

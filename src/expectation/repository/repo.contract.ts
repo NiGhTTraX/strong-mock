@@ -1,14 +1,12 @@
 /* eslint-disable no-empty */
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'tdd-buffet/expect/jest';
-import {
-  CallStats,
-  ExpectationRepository,
-} from '../src/repository/expectation-repository';
+import { CallStats, ExpectationRepository } from './expectation-repository';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
   NotMatchingExpectation,
-} from './expectations';
+} from '../expectation.mocks';
 
 export type ExpectationRepositoryContract = {
   [suite: string]: ExpectationRepositoryTest[];

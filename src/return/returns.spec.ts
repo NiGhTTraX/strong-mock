@@ -1,8 +1,8 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { ReturnValue } from '../src/expectation/expectation';
-import { createReturns } from '../src/return/returns';
-import { SpyPendingExpectation } from './expectations';
+import { ReturnValue } from '../expectation/expectation';
+import { createReturns } from './returns';
+import { SpyPendingExpectation } from '../expectation/expectation.mocks';
 
 describe('returns', () => {
   it('should set a return value', () => {

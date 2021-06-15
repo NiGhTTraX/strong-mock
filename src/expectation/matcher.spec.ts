@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { It } from '../src/expectation/matcher';
-import { expectAnsilessEqual } from './ansiless';
+import { It } from './matcher';
+import { expectAnsilessEqual } from '../../tests/ansiless';
 
 describe('It', () => {
   describe('isAny', () => {

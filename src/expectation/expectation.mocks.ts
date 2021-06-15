@@ -1,12 +1,13 @@
-import { Expectation, ReturnValue } from '../src/expectation/expectation';
-import { ExpectationRepository } from '../src/repository/expectation-repository';
+import { Expectation, ReturnValue } from './expectation';
+import { ExpectationRepository } from './repository/expectation-repository';
 import {
   ExpectationFactory,
   PendingExpectation,
-} from '../src/when/pending-expectation';
-import { Property } from '../src/proxy';
+} from '../when/pending-expectation';
+import { Property } from '../proxy';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
+  // eslint-disable-next-line no-empty-function
   setInvocationCount = () => {};
 
   toJSON = () => 'always matching';

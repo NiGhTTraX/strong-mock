@@ -1,8 +1,8 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { Matcher } from '../src/expectation/matcher';
-import { StrongExpectation } from '../src/expectation/strong-expectation';
-import { expectAnsilessEqual } from './ansiless';
+import { Matcher } from './matcher';
+import { StrongExpectation } from './strong-expectation';
+import { expectAnsilessEqual } from '../../tests/ansiless';
 
 describe('StrongExpectation', () => {
   it('should match empty args', () => {

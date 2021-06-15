@@ -1,12 +1,12 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { NestedWhen } from '../src/errors';
-import { ApplyProp } from '../src/expectation/expectation';
-import { RepoSideEffectPendingExpectation } from '../src/when/pending-expectation';
-import { createStub } from '../src/mock/stub';
-import { OneIncomingExpectationRepository } from './expectation-repository';
-import { spyExpectationFactory } from './expectations';
-import { Baz, Fn, Foo } from './fixtures';
+import { NestedWhen } from '../errors';
+import { ApplyProp } from '../expectation/expectation';
+import { RepoSideEffectPendingExpectation } from '../when/pending-expectation';
+import { createStub } from './stub';
+import { OneIncomingExpectationRepository } from '../expectation/repository/expectation-repository.mocks';
+import { spyExpectationFactory } from '../expectation/expectation.mocks';
+import { Baz, Fn, Foo } from '../../tests/fixtures';
 
 describe('createStub', () => {
   it('should intercept fn(...args)', () => {

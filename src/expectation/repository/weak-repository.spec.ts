@@ -1,11 +1,11 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { WeakRepository } from '../src/repository/weak-repository';
+import { WeakRepository } from './weak-repository';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
-} from './expectations';
-import { repoContractTests } from './repo-contract';
+} from '../expectation.mocks';
+import { repoContractTests } from './repo.contract';
 
 describe('WeakRepository', () => {
   Object.entries(repoContractTests).forEach(([suite, tests]) => {

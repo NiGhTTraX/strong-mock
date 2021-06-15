@@ -1,12 +1,12 @@
 import { printExpected } from 'jest-matcher-utils';
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { instance } from '../src';
-import { ApplyProp } from '../src/expectation/expectation';
-import { mock } from '../src/mock/mock';
-import { ExpectationRepository } from '../src/repository/expectation-repository';
-import { expectAnsilessEqual } from './ansiless';
-import { SM } from './old';
+import { instance } from '../index';
+import { ApplyProp } from '../expectation/expectation';
+import { mock } from '../mock/mock';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import { expectAnsilessEqual } from '../../tests/ansiless';
+import { SM } from '../../tests/old';
 
 describe('instance', () => {
   const repo = SM.mock<ExpectationRepository>();

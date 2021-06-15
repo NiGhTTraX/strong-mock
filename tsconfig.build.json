@@ -9,5 +9,11 @@
 
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.contract.ts",
+    "**/*.mocks.ts"
   ]
 }

@@ -1,5 +1,5 @@
 import { NotAMock } from '../errors';
-import { ExpectationRepository } from '../repository/expectation-repository';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { Mock } from './mock';
 import { PendingExpectation } from '../when/pending-expectation';
 

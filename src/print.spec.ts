@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 import { describe, it } from 'tdd-buffet/suite/node';
-import { ApplyProp } from '../src/expectation/expectation';
-import { It } from '../src/expectation/matcher';
-import { printCall, printProperty, printReturns } from '../src/print';
-import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
+import { ApplyProp } from './expectation/expectation';
+import { It } from './expectation/matcher';
+import { printCall, printProperty, printReturns } from './print';
+import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 
 describe('print', () => {
   describe('printProperty', () => {

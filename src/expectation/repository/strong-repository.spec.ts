@@ -1,14 +1,14 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { UnexpectedAccess, UnexpectedCall } from '../src/errors';
-import { ApplyProp } from '../src/expectation/expectation';
-import { StrongRepository } from '../src/repository/strong-repository';
+import { UnexpectedAccess, UnexpectedCall } from '../../errors';
+import { ApplyProp } from '../expectation';
+import { StrongRepository } from './strong-repository';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
   NotMatchingExpectation,
-} from './expectations';
-import { repoContractTests } from './repo-contract';
+} from '../expectation.mocks';
+import { repoContractTests } from './repo.contract';
 
 describe('StrongRepository', () => {
   Object.entries(repoContractTests).forEach(([suite, tests]) => {

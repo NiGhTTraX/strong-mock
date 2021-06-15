@@ -1,6 +1,6 @@
 import { NestedWhen } from '../errors';
 import { ApplyProp } from '../expectation/expectation';
-import { ExpectationRepository } from '../repository/expectation-repository';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { setActiveMock } from './map';
 import { Mock } from './mock';
 import { PendingExpectation } from '../when/pending-expectation';

@@ -1,10 +1,10 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { NotAMock } from '../src/errors';
-import { getMockState } from '../src/mock/map';
-import { mock } from '../src/mock/mock';
-import { ExpectationRepository } from '../src/repository/expectation-repository';
-import { SM } from './old';
+import { NotAMock } from '../errors';
+import { getMockState } from './map';
+import { mock } from './mock';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import { SM } from '../../tests/old';
 
 describe('mock', () => {
   const repository = SM.mock<ExpectationRepository>();

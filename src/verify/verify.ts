@@ -1,5 +1,5 @@
 import { UnexpectedCalls, UnmetExpectations } from '../errors';
-import { ExpectationRepository } from '../repository/expectation-repository';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { getAllMocks, getMockState } from '../mock/map';
 import { Mock } from '../mock/mock';
 

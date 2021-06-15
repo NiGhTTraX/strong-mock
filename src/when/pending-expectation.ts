@@ -1,6 +1,6 @@
 import { MissingWhen, UnfinishedExpectation } from '../errors';
 import { Expectation, ReturnValue } from '../expectation/expectation';
-import { ExpectationRepository } from '../repository/expectation-repository';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { printWhen } from '../print';
 import { Property } from '../proxy';
 

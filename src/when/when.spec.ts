@@ -1,17 +1,17 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { verify, when } from '../src';
+import { verify, when } from '../index';
 import {
   MissingWhen,
   UnexpectedCall,
   UnfinishedExpectation,
   UnmetExpectations,
-} from '../src/errors';
-import { instance } from '../src/instance/instance';
-import { clearActiveMock } from '../src/mock/map';
-import { It } from '../src/expectation/matcher';
-import { mock } from '../src/mock/mock';
-import { Fn } from './fixtures';
+} from '../errors';
+import { instance } from '../instance/instance';
+import { clearActiveMock } from '../mock/map';
+import { It } from '../expectation/matcher';
+import { mock } from '../mock/mock';
+import { Fn } from '../../tests/fixtures';
 
 describe('when', () => {
   beforeEach(() => {
@@ -178,4 +178,6 @@ describe('when', () => {
       expect(instance(foo).bar).toEqual(23);
     });
   });
+
+  it('type safety', () => {});
 });

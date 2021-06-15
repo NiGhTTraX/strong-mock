@@ -1,7 +1,7 @@
 import { describe, it } from 'tdd-buffet/suite/node';
-import { Expectation } from '../src/expectation/expectation';
-import { createInvocationCount } from '../src/return/invocation-count';
-import { SM } from './old';
+import { Expectation } from '../expectation/expectation';
+import { createInvocationCount } from './invocation-count';
+import { SM } from '../../tests/old';
 
 describe('invocation count', () => {
   const expectation = SM.mock<Expectation>();

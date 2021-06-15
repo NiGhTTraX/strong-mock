@@ -1,7 +1,7 @@
 import { BaseRepository, CountableExpectation } from './base-repository';
-import { Expectation } from '../expectation/expectation';
+import { Expectation } from '../expectation';
 import { ExpectationRepository } from './expectation-repository';
-import { Property } from '../proxy';
+import { Property } from '../../proxy';
 
 /**
  * Always return something, even if no expectations match.

@@ -1,16 +1,16 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { instance, mock, verify, when } from '../src';
-import { UnexpectedCalls, UnmetExpectations } from '../src/errors';
-import { Expectation } from '../src/expectation/expectation';
+import { instance, mock, verify, when } from '../index';
+import { UnexpectedCalls, UnmetExpectations } from '../errors';
+import { Expectation } from '../expectation/expectation';
 import {
   CallMap,
   ExpectationRepository,
-} from '../src/repository/expectation-repository';
-import { resetAll } from '../src/verify/reset';
-import { verifyAll, verifyRepo } from '../src/verify/verify';
-import { NotMatchingExpectation } from './expectations';
+} from '../expectation/repository/expectation-repository';
+import { resetAll } from './reset';
+import { verifyAll, verifyRepo } from './verify';
+import { NotMatchingExpectation } from '../expectation/expectation.mocks';
 
 describe('verify', () => {
   it('should throw on unexpected calls', () => {
