@@ -6,24 +6,6 @@ import {
 } from '../src/when/pending-expectation';
 import { Property } from '../src/proxy';
 
-export class NeverMatchingExpectation implements Expectation {
-  setInvocationCount = () => {};
-
-  toJSON = () => 'never matching';
-
-  min = 1;
-
-  max = 1;
-
-  args = undefined;
-
-  property = 'bar';
-
-  returnValue = { value: undefined };
-
-  matches = () => false;
-}
-
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   setInvocationCount = () => {};
 

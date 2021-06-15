@@ -8,25 +8,25 @@ import {
   UnfinishedExpectation,
   UnmetExpectations,
 } from '../src/errors';
-import { CallMap } from '../src/repository/expectation-repository';
+import { Expectation } from '../src/expectation/expectation';
+import {
+  CallMap,
+  ExpectationRepository,
+} from '../src/repository/expectation-repository';
 import { RepoSideEffectPendingExpectation } from '../src/when/pending-expectation';
 import { expectAnsilessContain, expectAnsilessEqual } from './ansiless';
-import { EmptyRepository } from './expectation-repository';
-import {
-  NeverMatchingExpectation,
-  NotMatchingExpectation,
-  spyExpectationFactory,
-  SpyPendingExpectation,
-} from './expectations';
+import { spyExpectationFactory, SpyPendingExpectation } from './expectations';
+import { SM } from './old';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {
     it('should print call', () => {
+      const repo = SM.mock<ExpectationRepository>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 
-      pendingExpectation.start(new EmptyRepository());
+      pendingExpectation.start(SM.instance(repo));
       pendingExpectation.args = [1, 2, 3];
       pendingExpectation.property = 'bar';
 
@@ -37,11 +37,12 @@ describe('errors', () => {
     });
 
     it('should print property access', () => {
+      const repo = SM.mock<ExpectationRepository>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 
-      pendingExpectation.start(new EmptyRepository());
+      pendingExpectation.start(repo);
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 
@@ -67,12 +68,15 @@ foobar`
 
   describe('UnmetExpectations', () => {
     it('should print all expectations', () => {
-      const expectation1 = new NeverMatchingExpectation();
-      expectation1.toJSON = () => 'e1';
-      const expectation2 = new NeverMatchingExpectation();
-      expectation2.toJSON = () => 'e2';
+      const expectation1 = SM.mock<Expectation>();
+      SM.when(expectation1.toJSON()).thenReturn('e1');
+      const expectation2 = SM.mock<Expectation>();
+      SM.when(expectation2.toJSON()).thenReturn('e2');
 
-      const error = new UnmetExpectations([expectation1, expectation2]);
+      const error = new UnmetExpectations([
+        SM.instance(expectation1),
+        SM.instance(expectation2),
+      ]);
 
       expectAnsilessEqual(
         error.message,
@@ -86,11 +90,15 @@ foobar`
 
   describe('UnexpectedAccess', () => {
     it('should print the property and the existing expectations', () => {
-      const e1 = new NeverMatchingExpectation();
-      const e2 = new NeverMatchingExpectation();
-      e1.toJSON = () => 'e1';
-      e2.toJSON = () => 'e2';
-      const error = new UnexpectedAccess('bar', [e1, e2]);
+      const e1 = SM.mock<Expectation>();
+      const e2 = SM.mock<Expectation>();
+      SM.when(e1.toJSON()).thenReturn('e1');
+      SM.when(e2.toJSON()).thenReturn('e2');
+
+      const error = new UnexpectedAccess('bar', [
+        SM.instance(e1),
+        SM.instance(e2),
+      ]);
 
       expectAnsilessContain(
         error.message,
@@ -108,11 +116,16 @@ foobar`
 
   describe('UnexpectedCall', () => {
     it('should print the property and the existing expectations', () => {
-      const e1 = new NeverMatchingExpectation();
-      const e2 = new NeverMatchingExpectation();
-      e1.toJSON = () => 'e1';
-      e2.toJSON = () => 'e2';
-      const error = new UnexpectedCall('bar', [1, 2, 3], [e1, e2]);
+      const e1 = SM.mock<Expectation>();
+      const e2 = SM.mock<Expectation>();
+      SM.when(e1.toJSON()).thenReturn('e1');
+      SM.when(e2.toJSON()).thenReturn('e2');
+
+      const error = new UnexpectedCall(
+        'bar',
+        [1, 2, 3],
+        [SM.instance(e1), SM.instance(e2)]
+      );
 
       expectAnsilessContain(
         error.message,
@@ -130,14 +143,10 @@ foobar`
 
   describe('UnexpectedCalls', () => {
     it('should print the unexpected calls and remaining expectations', () => {
-      const e1 = new NotMatchingExpectation(':irrelevant:', {
-        value: undefined,
-      });
-      const e2 = new NotMatchingExpectation(':irrelevant:', {
-        value: undefined,
-      });
-      e1.toJSON = () => 'e1';
-      e2.toJSON = () => 'e2';
+      const e1 = SM.mock<Expectation>();
+      const e2 = SM.mock<Expectation>();
+      SM.when(e1.toJSON()).thenReturn('e1');
+      SM.when(e2.toJSON()).thenReturn('e2');
 
       const error = new UnexpectedCalls(
         new Map([
@@ -152,7 +161,7 @@ foobar`
           ],
           ['bar', [{ arguments: undefined }]],
         ]) as CallMap,
-        [e1, e2]
+        [SM.instance(e1), SM.instance(e2)]
       );
 
       expectAnsilessContain(

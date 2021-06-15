@@ -1,18 +1,17 @@
 import { describe, it } from 'tdd-buffet/suite/node';
-import { expect } from 'tdd-buffet/expect/jest';
+import { Expectation } from '../src/expectation/expectation';
 import { createInvocationCount } from '../src/return/invocation-count';
-import { SpyExpectation } from './expectations';
+import { SM } from './old';
 
 describe('invocation count', () => {
-  it('between should set the min and max', () => {
-    const expectation = new SpyExpectation('bar', undefined, {
-      value: undefined,
-    });
+  const expectation = SM.mock<Expectation>();
 
-    const invocationCount = createInvocationCount(expectation);
+  it('between should set the min and max', () => {
+    SM.when(expectation.setInvocationCount(2, 8)).thenReturn();
+
+    const invocationCount = createInvocationCount(SM.instance(expectation));
     invocationCount.between(2, 8);
 
-    expect(expectation.min).toEqual(2);
-    expect(expectation.max).toEqual(8);
+    SM.verify(expectation);
   });
 });

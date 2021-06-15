@@ -3,5 +3,6 @@
     "config:base"
   ],
   "rangeStrategy": "replace",
-  "automerge": true
+  "automerge": true,
+  "ignoreDeps": ["strong-mock"]
 }

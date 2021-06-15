@@ -1,6 +1,8 @@
 {
   "extends": "@tdd-buffet/tsconfig",
-
+  "compilerOptions": {
+    "declaration": false
+  },
   "exclude": [
     "node_modules",
     "dist"

@@ -4,32 +4,36 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import { instance } from '../src';
 import { ApplyProp } from '../src/expectation/expectation';
 import { mock } from '../src/mock/mock';
+import { ExpectationRepository } from '../src/repository/expectation-repository';
 import { expectAnsilessEqual } from './ansiless';
-import { SpyRepository } from './expectation-repository';
+import { SM } from './old';
 
 describe('instance', () => {
-  it('should get matching expectation for apply', () => {
-    const repo = new SpyRepository(true, [() => 42]);
-    const fn = mock<(x: number) => number>({ repository: repo });
+  const repo = SM.mock<ExpectationRepository>();
 
+  it('should get matching expectation for apply', () => {
+    const fn = mock<(x: number) => number>({ repository: SM.instance(repo) });
+
+    SM.when(repo.get(ApplyProp) as unknown).thenReturn(() => 42);
     expect(instance(fn)(1)).toEqual(42);
-    expect(repo.getCalledWith).toEqual([ApplyProp]);
   });
 
   it('should get matching expectation for method', () => {
-    const repo = new SpyRepository(true, [() => 42]);
-    const foo = mock<{ bar: (x: number) => number }>({ repository: repo });
+    const foo = mock<{ bar: (x: number) => number }>({
+      repository: SM.instance(repo),
+    });
+
+    SM.when(repo.get('bar') as unknown).thenReturn(() => 42);
 
     expect(instance(foo).bar(1)).toEqual(42);
-    expect(repo.getCalledWith).toEqual(['bar']);
   });
 
   it('should get matching expectation for property', () => {
-    const repo = new SpyRepository(true, [42]);
-    const foo = mock<{ bar: number }>({ repository: repo });
+    const foo = mock<{ bar: number }>({ repository: SM.instance(repo) });
+
+    SM.when(repo.get('bar') as unknown).thenReturn(42);
 
     expect(instance(foo).bar).toEqual(42);
-    expect(repo.getCalledWith).toEqual(['bar']);
   });
 
   it('should pretty print', () => {
