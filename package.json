@@ -28,7 +28,7 @@
     "prepublishOnly": "npm run build",
     "release": "standard-version",
     "lint": "eslint --ext ts,tsx,js .",
-    "test": "tdd-buffet test --coverage",
+    "test": "tdd-buffet test --coverage --config tests/jest.config.js",
     "report-coverage": "codecov"
   },
   "dependencies": {
