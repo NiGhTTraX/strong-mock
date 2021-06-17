@@ -148,4 +148,13 @@ describe('proxy', () => {
 
     expect(keys).toEqual(['a', 'b']);
   });
+
+  it('should trap getOwnPropertyDescriptor', () => {
+    SM.when(traps.ownKeys()).thenReturn(['foo']).twice();
+
+    const proxy = createProxy<{}>(SM.instance(traps));
+
+    expect(Object.getOwnPropertyDescriptor(proxy, 'foo')).toBeDefined();
+    expect(Object.getOwnPropertyDescriptor(proxy, 'bar')).toBeUndefined();
+  });
 });
