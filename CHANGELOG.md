@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v6.0.0...v7.0.0) (2021-06-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Node 10 is no longer supported.
+
+### Features
+
+* Allow mock instances to be enumerable ([850223c](https://github.com/NiGhTTraX/strong-mock/commit/850223cbd906297f07923883c554589b5d12ed53)), closes [#235](https://github.com/NiGhTTraX/strong-mock/issues/235)
+* Print promise values in error messages ([bc0301f](https://github.com/NiGhTTraX/strong-mock/commit/bc0301f983147d738af657ae285f696cbfa497e3))
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-matcher-utils to ~26.2.0 ([52e9740](https://github.com/NiGhTTraX/strong-mock/commit/52e9740420bf0479e16f00d9f179e99714ae58fd))
+* **deps:** update dependency jest-matcher-utils to ~26.3.0 ([b7f483b](https://github.com/NiGhTTraX/strong-mock/commit/b7f483b8e9b3ed4585a81c3a401f7501691e38ad))
+* **deps:** update dependency jest-matcher-utils to ~26.4.0 ([3fe4f66](https://github.com/NiGhTTraX/strong-mock/commit/3fe4f663388724dafaa6813fd8ac02e8a0db6960))
+* **deps:** update dependency jest-matcher-utils to ~26.5.0 ([b496bcf](https://github.com/NiGhTTraX/strong-mock/commit/b496bcf1386d1586472f6c15f9a6b8be62dc472c))
+* **deps:** update dependency jest-matcher-utils to ~26.6.0 ([7e25d8c](https://github.com/NiGhTTraX/strong-mock/commit/7e25d8c84a19b0f1fa06c6d003d3c0a137b8928b))
+* **deps:** update dependency jest-matcher-utils to v27 ([ed3740b](https://github.com/NiGhTTraX/strong-mock/commit/ed3740b47247267f21ce1cc6df2b3cf01df5a019))
+* **deps:** update dependency lodash to ~4.17.0 ([8c192bc](https://github.com/NiGhTTraX/strong-mock/commit/8c192bc79df3af4400445949eca307d86aafb8f7))
+
+
+### build
+
+* Use node 12 ([d30054a](https://github.com/NiGhTTraX/strong-mock/commit/d30054aa2eee48f612737e3d747022c57694d219))
+
 ## [6.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v5.0.1...v6.0.0) (2020-06-27)
 
 
