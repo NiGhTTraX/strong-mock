@@ -50,7 +50,6 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
-  - [Why doesn't the spread operator `...` work?](#why-doesnt-the-spread-operator--work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -375,18 +374,4 @@ or set a dummy expectation on the methods you're not interested in during the te
 
 ```typescript
 when(foo.baz()).thenThrow('should not be called').anyTimes();
-```
-
-### Why doesn't the spread operator `...` work?
-
-All mock instances are backed up by empty functions with no keys, so attempting to get the own keys of one (via the spread operator `...`, `Object.keys` etc.) will not return anything.
-
-```typescript
-const foo = mock<{ bar: number }>();
-
-console.log(Object.keys(instance(foo))); // []
-
-when(foo.bar).thenReturn(42);
-
-console.log({ ...instance(foo) }); // {}
 ```

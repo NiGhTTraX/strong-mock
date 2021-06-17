@@ -1,217 +1,151 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { createProxy } from './proxy';
 import { Bar, Fn, Foo, uniqueSymbol } from '../tests/fixtures';
+import { SM } from '../tests/old';
+import { createProxy, ProxyTraps } from './proxy';
 
 describe('proxy', () => {
+  const traps = SM.mock<ProxyTraps>();
+
   it('should trap fn(...args)', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 
-    const proxy = createProxy<Fn>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<Fn>(SM.instance(traps));
 
-    proxy(1, 2, 3);
+    expect(proxy(1, 2, 3)).toEqual(42);
 
-    expect(args).toEqual([1, 2, 3]);
+    SM.verify(traps);
   });
 
   it('should trap fn.call(this, ...args)', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 
-    const proxy = createProxy<Fn>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<Fn>(SM.instance(traps));
 
-    proxy.call(null, 1, 2, 3);
-
-    expect(args).toEqual([1, 2, 3]);
+    expect(proxy.call(null, 1, 2, 3)).toEqual(42);
   });
 
   it('should trap fn.call(this)', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([])).thenReturn(42);
 
-    const proxy = createProxy<() => void>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<() => void>(SM.instance(traps));
 
-    proxy.call(null);
-
-    expect(args).toEqual([]);
+    expect(proxy.call(null)).toEqual(42);
   });
 
   it('should trap fn.apply(this, [...args])', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 
-    const proxy = createProxy<Fn>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<Fn>(SM.instance(traps));
 
-    proxy.apply(null, [1, 2, 3]);
-
-    expect(args).toEqual([1, 2, 3]);
+    expect(proxy.apply(null, [1, 2, 3])).toEqual(42);
   });
 
   it('should trap fn.apply(this)', () => {
-    let args: any[] = [];
+    SM.when(traps.apply([])).thenReturn(42);
 
-    const proxy = createProxy<() => void>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<() => void>(SM.instance(traps));
 
-    proxy.apply(null);
-
-    expect(args).toEqual([]);
-  });
-
-  it('should trap fn.apply(this)', () => {
-    let args: number[] = [];
-
-    const proxy = createProxy<() => void>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
-
-    proxy.apply(null);
-
-    expect(args).toEqual([]);
+    expect(proxy.apply(null)).toEqual(42);
   });
 
   it('should trap Reflect.apply(fn, this, [...args])', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 
-    const proxy = createProxy<Fn>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
+    const proxy = createProxy<Fn>(SM.instance(traps));
 
-    Reflect.apply(proxy, null, [1, 2, 3]);
-
-    expect(args).toEqual([1, 2, 3]);
+    expect(Reflect.apply(proxy, null, [1, 2, 3])).toEqual(42);
   });
 
   it('should trap binding', () => {
-    let args: number[] = [];
+    SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 
-    const proxy = createProxy<Fn>({
-      property: () => {
-        throw new Error('should not be called');
-      },
-      apply: (argArray) => {
-        args = argArray;
-      },
-    });
-
+    const proxy = createProxy<Fn>(SM.instance(traps));
     const bound = proxy.bind(null, 1, 2);
-    bound(3);
 
-    expect(args).toEqual([1, 2, 3]);
+    expect(bound(3)).toEqual(42);
   });
 
   it('should trap foo.bar', () => {
-    let prop;
+    SM.when(traps.property('bar')).thenReturn('baz');
 
-    const proxy = createProxy<Foo>({
-      property: (property) => {
-        prop = property;
-      },
-      apply: () => {
-        throw new Error('should not be called');
-      },
-    });
+    const proxy = createProxy<Foo>(SM.instance(traps));
 
-    proxy.bar;
-
-    expect(prop).toEqual('bar');
+    expect(proxy.bar).toEqual('baz');
   });
 
   it('should trap foo[Symbol]', () => {
-    let prop;
+    SM.when(traps.property(uniqueSymbol)).thenReturn(42);
 
-    const proxy = createProxy<Bar>({
-      property: (property) => {
-        prop = property;
-      },
-      apply: () => {
-        throw new Error('should not be called');
-      },
-    });
+    const proxy = createProxy<Bar>(SM.instance(traps));
 
-    proxy[uniqueSymbol]++;
-
-    expect(prop).toEqual(uniqueSymbol);
+    expect(proxy[uniqueSymbol]).toEqual(42);
   });
 
   it('should trap foo[23]', () => {
-    let prop;
+    // Keys are coerced to strings.
+    SM.when(traps.property('0')).thenReturn(1);
 
-    const proxy = createProxy<[1, 2, 3]>({
-      property: (property) => {
-        prop = property;
-      },
-      apply: () => {
-        throw new Error('should not be called');
-      },
-    });
+    const proxy = createProxy<[1, 2, 3]>(SM.instance(traps));
 
-    proxy[0]++;
-
-    // TODO: the returned key is a string, but the original is a number
-    expect(prop).toEqual('0');
+    expect(proxy[0]).toEqual(1);
   });
 
   it('should trap toString', () => {
-    let prop;
+    SM.when(traps.property('toString')).thenReturn(() => '1');
+    SM.when(traps.property(Symbol.toStringTag)).thenReturn(() => '2');
+    SM.when(traps.property('@@toStringTag')).thenReturn(() => '3');
 
-    const proxy = createProxy<() => void>({
-      property: (property) => {
-        prop = property;
-      },
-      apply: () => {
-        throw new Error('should not be called');
-      },
-    });
+    const proxy = createProxy<() => void>(SM.instance(traps));
 
-    proxy.toString;
-    expect(prop).toEqual('toString');
-    // @ts-ignore
-    proxy[Symbol.toStringTag];
-    expect(prop).toEqual(Symbol.toStringTag);
-    // @ts-ignore
-    proxy['@@toStringTag'];
-    expect(prop).toEqual('@@toStringTag');
+    expect(proxy.toString()).toEqual('1');
+    // @ts-expect-error
+    expect(proxy[Symbol.toStringTag]()).toEqual('2');
+    // @ts-expect-error
+    expect(proxy['@@toStringTag']()).toEqual('3');
+  });
+
+  it('should trap the spread operator', () => {
+    const c = Symbol('c');
+    SM.when(traps.ownKeys()).thenReturn(['a', 'b', c]).times(4);
+    SM.when(traps.property('a')).thenReturn(1);
+    SM.when(traps.property('b')).thenReturn(2);
+    SM.when(traps.property(c)).thenReturn(3);
+
+    const proxy = createProxy<{}>(SM.instance(traps));
+
+    expect({ ...proxy }).toEqual({ a: 1, b: 2, [c]: 3 });
+  });
+
+  it('should trap Reflect.ownKeys', () => {
+    const c = Symbol('c');
+    SM.when(traps.ownKeys()).thenReturn(['a', 'b', c]);
+
+    const proxy = createProxy<{}>(SM.instance(traps));
+
+    expect(Reflect.ownKeys(proxy)).toEqual(['a', 'b', c]);
+  });
+
+  it('should trap Object.keys', () => {
+    SM.when(traps.ownKeys()).thenReturn(['a', 'b']).times(3);
+
+    const proxy = createProxy<{}>(SM.instance(traps));
+
+    expect(Object.keys(proxy)).toEqual(['a', 'b']);
+  });
+
+  it('should trap for..in', () => {
+    SM.when(traps.ownKeys()).thenReturn(['a', 'b']).times(3);
+
+    const proxy = createProxy<{}>(SM.instance(traps));
+
+    const keys: string[] = [];
+    // eslint-disable-next-line no-restricted-syntax,@typescript-eslint/no-unused-vars,guard-for-in
+    for (const key in proxy) {
+      // noinspection JSUnfilteredForInLoop
+      keys.push(key);
+    }
+
+    expect(keys).toEqual(['a', 'b']);
   });
 });

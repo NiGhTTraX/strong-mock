@@ -60,6 +60,15 @@ export interface ExpectationRepository {
   get(property: Property): any;
 
   /**
+   * Get all the properties that have expectations.
+   *
+   * @example
+   * add(new Expectation('foo', undefined, 23));
+   * getAllProperties() === ['foo']
+   */
+  getAllProperties(): Property[];
+
+  /**
    * Remove any expectations and clear the call stats.
    */
   clear(): void;

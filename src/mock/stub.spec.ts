@@ -163,4 +163,14 @@ describe('createStub', () => {
     expect(() => stub.foo.bar).toThrow(NestedWhen);
     expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
   });
+
+  it('should throw on the spread operator', () => {
+    const repo = new OneIncomingExpectationRepository();
+    const pendingExpectation = new RepoSideEffectPendingExpectation(
+      spyExpectationFactory
+    );
+    const stub = createStub<Fn>(repo, pendingExpectation);
+
+    expect(() => ({ ...stub })).toThrow();
+  });
 });

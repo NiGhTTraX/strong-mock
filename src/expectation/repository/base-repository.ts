@@ -95,6 +95,10 @@ export abstract class BaseRepository implements ExpectationRepository {
     }
   }
 
+  getAllProperties(): Property[] {
+    return Array.from(this.expectations.keys());
+  }
+
   getCallStats() {
     return {
       expected: this.expectedCallStats,

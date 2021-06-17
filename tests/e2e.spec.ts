@@ -1,19 +1,19 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { verify, when } from '../index';
+import { verify, when } from '../src';
 import {
   MissingWhen,
   UnexpectedCall,
   UnfinishedExpectation,
   UnmetExpectations,
-} from '../errors';
-import { instance } from '../instance/instance';
-import { clearActiveMock } from '../mock/map';
-import { It } from '../expectation/matcher';
-import { mock } from '../mock/mock';
-import { Fn } from '../../tests/fixtures';
+} from '../src/errors';
+import { instance } from '../src/instance/instance';
+import { clearActiveMock } from '../src/mock/map';
+import { It } from '../src/expectation/matcher';
+import { mock } from '../src/mock/mock';
+import { Fn } from './fixtures';
 
-describe('when', () => {
+describe('e2e', () => {
   beforeEach(() => {
     clearActiveMock();
   });
@@ -116,6 +116,14 @@ describe('when', () => {
 
   it('should be stringifiable', () => {
     expect(instance(mock<() => void>()).toString()).toEqual('mock');
+  });
+
+  it('should be enumerable', () => {
+    const foo = mock<{ bar: number; baz: number }>();
+    when(foo.bar).thenReturn(42);
+
+    expect(Object.keys(instance(foo))).toEqual(['bar']);
+    expect({ ...instance(foo) }).toEqual({ bar: 42 });
   });
 
   describe('ignoring arguments', () => {

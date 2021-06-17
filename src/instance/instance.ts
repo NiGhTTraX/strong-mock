@@ -28,5 +28,6 @@ export const instance = <T>(mock: Mock<T>): T => {
 
       return returnOrThrow(fn(...args));
     },
+    ownKeys: () => repository.getAllProperties(),
   });
 };

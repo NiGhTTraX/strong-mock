@@ -1,12 +1,12 @@
 /* eslint-disable no-empty */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'tdd-buffet/expect/jest';
-import { CallStats, ExpectationRepository } from './expectation-repository';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
   NotMatchingExpectation,
 } from '../expectation.mocks';
+import { CallStats, ExpectationRepository } from './expectation-repository';
 
 export type ExpectationRepositoryContract = {
   [suite: string]: ExpectationRepositoryTest[];
@@ -302,6 +302,19 @@ export const repoContractTests: ExpectationRepositoryContract = {
         expect(repo.get('toString')()).toEqual('I said not a mock');
         expect(repo.get('@@toStringTag')).toEqual('totally not a mock');
         expect(repo.get(Symbol.toStringTag)).toEqual('absolutely not a mock');
+      },
+    },
+  ],
+
+  getAllProperties: [
+    {
+      name: 'should return all the properties that have expectations',
+      test: (repo) => () => {
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.add(new MatchingPropertyExpectation('bar', { value: 23 }));
+
+        expect(repo.getAllProperties()).toEqual(['foo', 'bar']);
       },
     },
   ],

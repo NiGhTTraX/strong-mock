@@ -27,6 +27,9 @@ export const createStub = <T>(
           // eslint-disable-next-line no-param-reassign
           pendingExpectation.args = args;
         },
+        ownKeys: () => {
+          throw new Error('Spreading during an expectation is not supported.');
+        },
       });
     },
     apply: (args: any[]) => {
@@ -37,6 +40,9 @@ export const createStub = <T>(
       pendingExpectation.property = ApplyProp;
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.args = args;
+    },
+    ownKeys: () => {
+      throw new Error();
     },
   });
   return stub;
