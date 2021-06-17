@@ -164,7 +164,7 @@ describe('createStub', () => {
     expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
   });
 
-  it('should throw on the spread operator', () => {
+  it('should throw when spreading', () => {
     const repo = new OneIncomingExpectationRepository();
     const pendingExpectation = new RepoSideEffectPendingExpectation(
       spyExpectationFactory
@@ -172,5 +172,15 @@ describe('createStub', () => {
     const stub = createStub<Fn>(repo, pendingExpectation);
 
     expect(() => ({ ...stub })).toThrow();
+  });
+
+  it('should throw when spreading a property', () => {
+    const repo = new OneIncomingExpectationRepository();
+    const pendingExpectation = new RepoSideEffectPendingExpectation(
+      spyExpectationFactory
+    );
+    const stub = createStub<Foo>(repo, pendingExpectation);
+
+    expect(() => ({ ...stub.bar })).toThrow();
   });
 });

@@ -42,7 +42,7 @@ export const createStub = <T>(
       pendingExpectation.args = args;
     },
     ownKeys: () => {
-      throw new Error();
+      throw new Error('Spreading during an expectation is not supported.');
     },
   });
   return stub;
