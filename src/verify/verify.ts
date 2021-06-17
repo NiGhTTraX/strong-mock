@@ -10,11 +10,10 @@ export const verifyRepo = (repository: ExpectationRepository) => {
     throw new UnmetExpectations(unmetExpectations);
   }
 
-  if (repository.getCallStats().unexpected.size) {
-    throw new UnexpectedCalls(
-      repository.getCallStats().unexpected,
-      repository.getUnmet()
-    );
+  const callStats = repository.getCallStats();
+
+  if (callStats.unexpected.size) {
+    throw new UnexpectedCalls(callStats.unexpected, unmetExpectations);
   }
 };
 

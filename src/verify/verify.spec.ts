@@ -1,16 +1,16 @@
 /* eslint-disable class-methods-use-this */
 import { expect } from 'tdd-buffet/expect/jest';
 import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
-import { instance, mock, verify, when } from '../index';
+import { SM } from '../../tests/old';
 import { UnexpectedCalls, UnmetExpectations } from '../errors';
-import { Expectation } from '../expectation/expectation';
+import { NotMatchingExpectation } from '../expectation/expectation.mocks';
 import {
   CallMap,
   ExpectationRepository,
 } from '../expectation/repository/expectation-repository';
+import { instance, mock, verify, when } from '../index';
 import { resetAll } from './reset';
 import { verifyAll, verifyRepo } from './verify';
-import { NotMatchingExpectation } from '../expectation/expectation.mocks';
 
 describe('verify', () => {
   it('should throw on unexpected calls', () => {
@@ -40,63 +40,25 @@ describe('verifyAll', () => {
 });
 
 describe('verifyRepo', () => {
-  class MockRepo implements ExpectationRepository {
-    private readonly unmet: Expectation[] = [];
-
-    private readonly unexpected: CallMap = new Map();
-
-    private readonly expected: CallMap = new Map();
-
-    constructor({
-      expected = new Map(),
-      unexpected = new Map(),
-      unmet = [],
-    }: {
-      expected?: CallMap;
-      unexpected?: CallMap;
-      unmet?: Expectation[];
-    } = {}) {
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      this.expected = expected;
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      this.unexpected = unexpected;
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      this.unmet = unmet;
-    }
-
-    add = () => {};
-
-    clear = () => {};
-
-    get = () => {};
-
-    getCallStats = () => ({
-      expected: this.expected,
-      unexpected: this.unexpected,
-    });
-
-    getUnmet = () => this.unmet;
-  }
-
   it('should throw if remaining expectations', () => {
-    expect(() =>
-      verifyRepo(
-        new MockRepo({
-          unmet: [
-            new NotMatchingExpectation(':irrelevant:', { value: undefined }),
-          ],
-        })
-      )
-    ).toThrow(UnmetExpectations);
+    const repo = SM.mock<ExpectationRepository>();
+
+    SM.when(repo.getUnmet()).thenReturn([
+      new NotMatchingExpectation(':irrelevant:', { value: undefined }),
+    ]);
+
+    expect(() => verifyRepo(SM.instance(repo))).toThrow(UnmetExpectations);
   });
 
   it('should throw if unexpected calls', () => {
-    expect(() =>
-      verifyRepo(
-        new MockRepo({
-          unexpected: new Map([['bar', [{ arguments: [] }]]]) as CallMap,
-        })
-      )
-    ).toThrow(UnexpectedCalls);
+    const repo = SM.mock<ExpectationRepository>();
+
+    SM.when(repo.getUnmet()).thenReturn([]);
+    SM.when(repo.getCallStats()).thenReturn({
+      unexpected: new Map([['bar', [{ arguments: [] }]]]) as CallMap,
+      expected: new Map(),
+    });
+
+    expect(() => verifyRepo(SM.instance(repo))).toThrow(UnexpectedCalls);
   });
 });
