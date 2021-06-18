@@ -375,3 +375,19 @@ or set a dummy expectation on the methods you're not interested in during the te
 ```typescript
 when(foo.baz()).thenThrow('should not be called').anyTimes();
 ```
+
+### Can I spread/enumerate a mock instance?
+
+Yes, and you will only get the properties that have expectations on them.
+
+```typescript
+const foo = mock<{ bar: number; baz: number }>();
+when(foo.bar).thenReturn(42);
+
+console.log(Object.keys(instance(foo))); // ['bar']
+
+const foo2 = { ...instance(foo) };
+
+console.log(foo2.bar); // 42
+console.log(foo2.baz); // undefined
+```
