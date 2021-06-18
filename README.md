@@ -51,6 +51,7 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
+  - [Can I spread/enumerate a mock instance?](#can-i-spreadenumerate-a-mock-instance)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
