@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.0.0...v7.1.0) (2021-06-24)
+
+
+### Features
+
+* `thenReject` now lazily creates promise rejection ([01c9995](https://github.com/NiGhTTraX/strong-mock/commit/01c9995c69d00205388da6d7dba2b35d9e70e5b8)), closes [#238](https://github.com/NiGhTTraX/strong-mock/issues/238)
+
+
+### Bug Fixes
+
+* Correctly throw error values from method expectations ([a1ad324](https://github.com/NiGhTTraX/strong-mock/commit/a1ad3244f8dfe7ed1e93193479e5cd347f2bf348))
+
 ## [7.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v6.0.0...v7.0.0) (2021-06-17)
 
 
