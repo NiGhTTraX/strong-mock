@@ -8,21 +8,95 @@ import { mock } from '../src/mock/mock';
 import { Fn } from './fixtures';
 
 describe('e2e', () => {
-  it('should set expectation to throw', () => {
-    const fn = mock<() => {}>();
-    const error = new Error();
+  describe('function', () => {
+    it('should set expectation to throw', () => {
+      const fn = mock<() => {}>();
+      const error = new Error();
 
-    when(fn()).thenThrow(error);
+      when(fn()).thenThrow(error);
 
-    expect(() => instance(fn)()).toThrow(error);
+      expect(() => instance(fn)()).toThrow(error);
+    });
+
+    it('should set expectation with promise', async () => {
+      const fn = mock<() => Promise<number>>();
+
+      when(fn()).thenResolve(23);
+
+      await expect(instance(fn)()).resolves.toEqual(23);
+    });
+
+    it('should set expectation with promise rejection', async () => {
+      const fn = mock<() => Promise<number>>();
+
+      when(fn()).thenReject('oops');
+
+      await expect(instance(fn)()).rejects.toThrow('oops');
+    });
   });
 
-  it('should set expectation with promise', async () => {
-    const fn = mock<() => Promise<number>>();
+  describe('property', () => {
+    it('should set expectation to throw', () => {
+      const fn = mock<{ bar: () => void }>();
+      const error = new Error();
 
-    when(fn()).thenResolve(23);
+      when(fn.bar()).thenThrow(error);
 
-    await expect(instance(fn)()).resolves.toEqual(23);
+      expect(() => instance(fn).bar()).toThrow(error);
+    });
+
+    it('should set expectation with promise', async () => {
+      const fn = mock<{ bar: () => Promise<number> }>();
+
+      when(fn.bar()).thenResolve(23);
+
+      await expect(instance(fn).bar()).resolves.toEqual(23);
+    });
+
+    it('should set expectation with promise rejection', async () => {
+      const fn = mock<{ bar: () => Promise<number> }>();
+
+      when(fn.bar()).thenReject('oops');
+
+      await expect(instance(fn).bar()).rejects.toThrow('oops');
+    });
+  });
+
+  describe('interface', () => {
+    it('should set expectation on method', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+
+      const foo = mock<Foo>();
+
+      when(foo.bar(1)).thenReturn(23);
+
+      expect(instance(foo).bar(1)).toEqual(23);
+    });
+
+    it('should set expectation on method to throw', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+
+      const foo = mock<Foo>();
+      when(foo.bar(1)).thenThrow();
+
+      expect(() => instance(foo).bar(1)).toThrow();
+    });
+
+    it('should set expectation on member', () => {
+      interface Foo {
+        bar: number;
+      }
+
+      const foo = mock<Foo>();
+
+      when(foo.bar).thenReturn(23);
+
+      expect(instance(foo).bar).toEqual(23);
+    });
   });
 
   it('should set expectation with invocation count', async () => {
@@ -87,43 +161,6 @@ describe('e2e', () => {
         UnexpectedCall
       );
       expect(instance(fn)({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
-    });
-  });
-
-  describe('interface', () => {
-    it('should set expectation on method', () => {
-      interface Foo {
-        bar(x: number): number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo.bar(1)).thenReturn(23);
-
-      expect(instance(foo).bar(1)).toEqual(23);
-    });
-
-    it('should set expectation on method to throw', () => {
-      interface Foo {
-        bar(x: number): number;
-      }
-
-      const foo = mock<Foo>();
-      when(foo.bar(1)).thenThrow();
-
-      expect(() => instance(foo).bar(1)).toThrow();
-    });
-
-    it('should set expectation on member', () => {
-      interface Foo {
-        bar: number;
-      }
-
-      const foo = mock<Foo>();
-
-      when(foo.bar).thenReturn(23);
-
-      expect(instance(foo).bar).toEqual(23);
     });
   });
 
