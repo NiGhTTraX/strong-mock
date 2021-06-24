@@ -1,5 +1,5 @@
 import { returnOrThrow } from '../../instance/instance';
-import { ApplyProp, Expectation } from '../expectation';
+import { ApplyProp, Expectation, ReturnValue } from '../expectation';
 import { CallMap, ExpectationRepository } from './expectation-repository';
 import { Property } from '../../proxy';
 
@@ -35,7 +35,7 @@ export abstract class BaseRepository implements ExpectationRepository {
     this.unexpectedCallStats.clear();
   }
 
-  get(property: Property): any {
+  get(property: Property): ReturnValue {
     const expectations = this.expectations.get(property);
 
     if (expectations && expectations.length) {
@@ -50,45 +50,50 @@ export abstract class BaseRepository implements ExpectationRepository {
       if (propertyExpectation) {
         this.countAndConsume(propertyExpectation);
 
-        return propertyExpectation.expectation.returnValue.value;
+        return propertyExpectation.expectation.returnValue;
       }
 
-      return (...args: any[]) => {
-        const callExpectation = expectations.find((e) =>
-          e.expectation.matches(args)
-        );
+      return {
+        value: (...args: any[]) => {
+          const callExpectation = expectations.find((e) =>
+            e.expectation.matches(args)
+          );
 
-        if (callExpectation) {
-          this.recordExpected(property, args);
-          this.countAndConsume(callExpectation);
+          if (callExpectation) {
+            this.recordExpected(property, args);
+            this.countAndConsume(callExpectation);
 
-          return returnOrThrow(callExpectation.expectation.returnValue.value);
-        }
+            // TODO: this is duplicated in instance
+            return returnOrThrow(callExpectation.expectation.returnValue);
+          }
 
-        this.recordUnexpected(property, args);
-        return this.getValueForUnexpectedCall(property, args);
+          this.recordUnexpected(property, args);
+          return this.getValueForUnexpectedCall(property, args);
+        },
       };
     }
 
     switch (property) {
       case 'toString':
-        return () => 'mock';
+        return { value: () => 'mock' };
       case '@@toStringTag':
       case Symbol.toStringTag:
       case 'name':
-        return 'mock';
+        return { value: 'mock' };
 
       // pretty-format
       case '$$typeof':
       case 'constructor':
       case '@@__IMMUTABLE_ITERABLE__@@':
       case '@@__IMMUTABLE_RECORD__@@':
-        return null;
+        return { value: null };
 
       case ApplyProp:
-        return (...args: any[]) => {
-          this.recordUnexpected(property, args);
-          return this.getValueForUnexpectedCall(property, args);
+        return {
+          value: (...args: any[]) => {
+            this.recordUnexpected(property, args);
+            return this.getValueForUnexpectedCall(property, args);
+          },
         };
       default:
         this.recordUnexpected(property, undefined);
@@ -124,13 +129,15 @@ export abstract class BaseRepository implements ExpectationRepository {
   protected abstract getValueForUnexpectedCall(
     property: Property,
     args: any[]
-  ): any;
+  ): ReturnValue;
 
   /**
    * We got a property access that doesn't match any expectation,
    * what should we return?
    */
-  protected abstract getValueForUnexpectedAccess(property: Property): any;
+  protected abstract getValueForUnexpectedAccess(
+    property: Property
+  ): ReturnValue;
 
   protected abstract consumeExpectation(
     expectation: CountableExpectation

@@ -19,11 +19,11 @@ export class StrongRepository extends BaseRepository {
     }
   }
 
-  protected getValueForUnexpectedCall(property: Property, args: any[]) {
+  protected getValueForUnexpectedCall(property: Property, args: any[]): never {
     throw new UnexpectedCall(property, args, this.getUnmet());
   }
 
-  protected getValueForUnexpectedAccess(property: Property) {
+  protected getValueForUnexpectedAccess(property: Property): never {
     throw new UnexpectedAccess(property, this.getUnmet());
   }
 }

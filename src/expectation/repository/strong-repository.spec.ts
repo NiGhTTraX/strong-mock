@@ -29,13 +29,13 @@ describe('StrongRepository', () => {
     const repo = new StrongRepository();
     repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
-    expect(() => repo.get('foo')(3, 4)).toThrow(UnexpectedCall);
+    expect(() => repo.get('foo').value(3, 4)).toThrow(UnexpectedCall);
   });
 
   it('should throw if no apply expectations', () => {
     const repo = new StrongRepository();
 
-    expect(() => repo.get(ApplyProp)(1, 2, 3)).toThrow(UnexpectedCall);
+    expect(() => repo.get(ApplyProp).value(1, 2, 3)).toThrow(UnexpectedCall);
   });
 
   it('should throw after a property expectation is fulfilled', () => {
@@ -49,7 +49,7 @@ describe('StrongRepository', () => {
   it('should throw after a function expectation is fulfilled', () => {
     const repo = new StrongRepository();
     repo.add(new MatchingCallExpectation('foo', { value: 23 }));
-    repo.get('foo')(1, 2);
+    repo.get('foo').value(1, 2);
 
     expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
   });

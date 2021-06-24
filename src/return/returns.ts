@@ -140,7 +140,7 @@ export const createReturns = <R>(
     thenResolve: (promiseValue: any): InvocationCount =>
       finishPendingExpectation(
         {
-          value: Promise.resolve(promiseValue),
+          value: promiseValue,
           promiseValue,
           isError: false,
           isPromise: true,
@@ -151,7 +151,7 @@ export const createReturns = <R>(
     thenReject: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
         {
-          value: Promise.reject(getError(errorOrMessage)),
+          value: getError(errorOrMessage),
           promiseValue: getError(errorOrMessage),
           isError: true,
           isPromise: true,

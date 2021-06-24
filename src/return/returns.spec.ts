@@ -42,7 +42,7 @@ describe('returns', () => {
     });
   });
 
-  it('should set a exception message', () => {
+  it('should set an exception message', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     createReturns<number>(pendingExpectation).thenThrow('foobar');
@@ -70,14 +70,12 @@ describe('returns', () => {
     });
   });
 
-  it('should set a return promise value', async () => {
+  it('should set a return promise value', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     createReturns<Promise<number>>(pendingExpectation).thenResolve(23);
 
-    await expect(pendingExpectation.finishCalledWith?.value).resolves.toEqual(
-      23
-    );
+    expect(pendingExpectation.finishCalledWith?.value).toEqual(23);
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
@@ -87,15 +85,13 @@ describe('returns', () => {
     });
   });
 
-  it('should set a custom promise rejection', async () => {
+  it('should set a custom promise rejection', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     const error = new Error();
     createReturns<Promise<number>>(pendingExpectation).thenReject(error);
 
-    await expect(pendingExpectation.finishCalledWith?.value).rejects.toEqual(
-      error
-    );
+    expect(pendingExpectation.finishCalledWith?.value).toEqual(error);
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
@@ -105,14 +101,12 @@ describe('returns', () => {
     });
   });
 
-  it('should set an empty promise rejection', async () => {
+  it('should set an empty promise rejection', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     createReturns<Promise<number>>(pendingExpectation).thenReject();
 
-    await expect(pendingExpectation.finishCalledWith?.value).rejects.toEqual(
-      new Error()
-    );
+    expect(pendingExpectation.finishCalledWith?.value).toEqual(new Error());
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
@@ -122,12 +116,12 @@ describe('returns', () => {
     });
   });
 
-  it('should set a promise rejection message', async () => {
+  it('should set a promise rejection message', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     createReturns<Promise<number>>(pendingExpectation).thenReject('foobar');
 
-    await expect(pendingExpectation.finishCalledWith?.value).rejects.toEqual(
+    expect(pendingExpectation.finishCalledWith?.value).toEqual(
       new Error('foobar')
     );
     expect(pendingExpectation.finishCalledWith).toMatchObject<

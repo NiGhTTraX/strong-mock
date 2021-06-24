@@ -1,4 +1,4 @@
-import { Expectation } from '../expectation';
+import { Expectation, ReturnValue } from '../expectation';
 import { Property } from '../../proxy';
 
 export type Call = {
@@ -47,17 +47,17 @@ export interface ExpectationRepository {
    *
    * @example
    * add(new Expectation('getData', [1, 2], 23);
-   * get('getData')(1, 2) === 23
+   * get('getData').value(1, 2) === 23
    *
    * @example
    * add(new Expectation('hasData', undefined, true);
-   * get('hasData') === true
+   * get('hasData').value === true
    *
    * @example
    * add(new Expectation('getData', undefined, () => 42);
-   * get('getData')(1, 2, '3', false, NaN) === 42
+   * get('getData').value(1, 2, '3', false, NaN) === 42
    */
-  get(property: Property): any;
+  get(property: Property): ReturnValue;
 
   /**
    * Get all the properties that have expectations.

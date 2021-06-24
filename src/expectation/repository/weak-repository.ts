@@ -13,9 +13,9 @@ export class WeakRepository
   implements ExpectationRepository {
   private repeating = new Map<Property, boolean>();
 
-  protected getValueForUnexpectedCall = () => null;
+  protected getValueForUnexpectedCall = () => ({ value: () => null });
 
-  protected getValueForUnexpectedAccess = () => () => null;
+  protected getValueForUnexpectedAccess = () => ({ value: () => null });
 
   protected consumeExpectation(expectation: CountableExpectation): void {
     const { property, max } = expectation.expectation;

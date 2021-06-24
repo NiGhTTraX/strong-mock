@@ -1,18 +1,33 @@
-import { ApplyProp } from '../expectation/expectation';
+import { ApplyProp, ReturnValue } from '../expectation/expectation';
 import { getMockState } from '../mock/map';
 import { Mock } from '../mock/mock';
 import { createProxy } from '../proxy';
 
 /**
- * Return the expectation's return value. If the value is an error then
- * throw it.
+ * Return the expectation's return value.
+ *
+ * If the value is an error then throw it.
+ *
+ * If the value is a promise then resolve/reject it.
  */
-export const returnOrThrow = (returnValue: any) => {
-  if (returnValue instanceof Error) {
-    throw returnValue;
+export const returnOrThrow = ({ isError, isPromise, value }: ReturnValue) => {
+  if (isError) {
+    if (isPromise) {
+      return Promise.reject(value);
+    }
+
+    if (value instanceof Error) {
+      throw value;
+    }
+
+    throw new Error(value);
   }
 
-  return returnValue;
+  if (isPromise) {
+    return Promise.resolve(value);
+  }
+
+  return value;
 };
 
 /**
@@ -26,7 +41,8 @@ export const instance = <T>(mock: Mock<T>): T => {
     apply: (args: any[]) => {
       const fn = repository.get(ApplyProp);
 
-      return returnOrThrow(fn(...args));
+      // This is not using `returnOrThrow` because the repo will use it.
+      return fn.value(...args);
     },
     ownKeys: () => repository.getAllProperties(),
   });

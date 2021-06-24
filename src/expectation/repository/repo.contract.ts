@@ -24,7 +24,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
       test: (repo) => () => {
         repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
-        expect(repo.get('foo')).toEqual(23);
+        expect(repo.get('foo').value).toEqual(23);
       },
     },
     {
@@ -33,8 +33,8 @@ export const repoContractTests: ExpectationRepositoryContract = {
         repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
         repo.add(new MatchingPropertyExpectation('foo', { value: 42 }));
 
-        expect(repo.get('foo')).toEqual(23);
-        expect(repo.get('foo')).toEqual(42);
+        expect(repo.get('foo').value).toEqual(23);
+        expect(repo.get('foo').value).toEqual(42);
       },
     },
     {
@@ -46,9 +46,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
-        expect(repo.get('foo')).toEqual(23);
-        expect(repo.get('foo')).toEqual(23);
-        expect(repo.get('foo')).toEqual(23);
+        expect(repo.get('foo').value).toEqual(23);
+        expect(repo.get('foo').value).toEqual(23);
+        expect(repo.get('foo').value).toEqual(23);
       },
     },
   ],
@@ -59,7 +59,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
       test: (repo) => () => {
         repo.add(new MatchingCallExpectation('foo', { value: 23 }));
 
-        expect(repo.get('foo')()).toEqual(23);
+        expect(repo.get('foo').value()).toEqual(23);
       },
     },
     {
@@ -68,18 +68,22 @@ export const repoContractTests: ExpectationRepositoryContract = {
         repo.add(new MatchingCallExpectation('foo', { value: 23 }));
         repo.add(new MatchingCallExpectation('foo', { value: 42 }));
 
-        expect(repo.get('foo')()).toEqual(23);
-        expect(repo.get('foo')()).toEqual(42);
+        expect(repo.get('foo').value()).toEqual(23);
+        expect(repo.get('foo').value()).toEqual(42);
       },
     },
     {
       name: 'should match property expectations before function expectations',
       test: (repo) => () => {
         repo.add(new MatchingCallExpectation('foo', { value: 1 }));
-        repo.add(new MatchingPropertyExpectation('foo', { value: () => 2 }));
+        repo.add(
+          new MatchingPropertyExpectation('foo', {
+            value: () => ({ value: 2 }),
+          })
+        );
 
-        expect(repo.get('foo')()).toEqual(2);
-        expect(repo.get('foo')()).toEqual(1);
+        expect(repo.get('foo').value()).toEqual({ value: 2 });
+        expect(repo.get('foo').value()).toEqual(1);
       },
     },
     {
@@ -89,9 +93,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
         expectation.setInvocationCount(2, 3);
         repo.add(expectation);
 
-        expect(repo.get('foo')()).toEqual(23);
-        expect(repo.get('foo')()).toEqual(23);
-        expect(repo.get('foo')()).toEqual(23);
+        expect(repo.get('foo').value()).toEqual(23);
+        expect(repo.get('foo').value()).toEqual(23);
+        expect(repo.get('foo').value()).toEqual(23);
       },
     },
     {
@@ -99,10 +103,11 @@ export const repoContractTests: ExpectationRepositoryContract = {
       test: (repo) => () => {
         const expectation = new MatchingCallExpectation('foo', {
           value: new Error(),
+          isError: true,
         });
         repo.add(expectation);
 
-        expect(() => repo.get('foo')()).toThrow();
+        expect(() => repo.get('foo').value()).toThrow();
       },
     },
   ],
@@ -201,7 +206,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
         const expectation = new MatchingCallExpectation('foo', { value: 23 });
         repo.add(expectation);
 
-        repo.get('foo')(1, 2);
+        repo.get('foo').value(1, 2);
 
         const callStats: CallStats = {
           expected: new Map([
@@ -233,7 +238,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
         repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
         try {
-          repo.get('foo')(1, 2, 3);
+          repo.get('foo').value(1, 2, 3);
         } catch (e) {}
 
         const callStats: CallStats = {
@@ -280,9 +285,9 @@ export const repoContractTests: ExpectationRepositoryContract = {
     {
       name: 'should return values for toString and friends',
       test: (repo) => () => {
-        expect(repo.get('toString')()).toBeTruthy();
-        expect(repo.get('@@toStringTag')).toBeTruthy();
-        expect(repo.get(Symbol.toStringTag)).toBeTruthy();
+        expect(repo.get('toString').value()).toBeTruthy();
+        expect(repo.get('@@toStringTag').value).toBeTruthy();
+        expect(repo.get(Symbol.toStringTag).value).toBeTruthy();
       },
     },
     {
@@ -309,10 +314,12 @@ export const repoContractTests: ExpectationRepositoryContract = {
           })
         );
 
-        expect(repo.get('toString')()).toEqual('not a mock');
-        expect(repo.get('toString')()).toEqual('I said not a mock');
-        expect(repo.get('@@toStringTag')).toEqual('totally not a mock');
-        expect(repo.get(Symbol.toStringTag)).toEqual('absolutely not a mock');
+        expect(repo.get('toString').value()).toEqual('not a mock');
+        expect(repo.get('toString').value()).toEqual('I said not a mock');
+        expect(repo.get('@@toStringTag').value).toEqual('totally not a mock');
+        expect(repo.get(Symbol.toStringTag).value).toEqual(
+          'absolutely not a mock'
+        );
       },
     },
   ],

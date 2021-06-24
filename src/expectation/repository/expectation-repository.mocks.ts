@@ -10,8 +10,9 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
     this.expectation = expectation;
   }
 
-  get(): ReturnValue | undefined {
-    return this.expectation?.returnValue;
+  get(): ReturnValue {
+    if (!this.expectation) throw new Error();
+    return this.expectation.returnValue;
   }
 
   getAllProperties(): Property[] {

@@ -49,6 +49,12 @@ describe('e2e', () => {
     expect({ ...instance(foo) }).toEqual({ bar: 42 });
   });
 
+  it('should not throw an unhandled rejection from an unmet promise expectation', () => {
+    const fn = mock<() => Promise<number>>();
+
+    when(fn()).thenReject('if you are seeing this it means the test failed');
+  });
+
   describe('ignoring arguments', () => {
     it('should support matching anything', () => {
       const fn = mock<Fn>();
