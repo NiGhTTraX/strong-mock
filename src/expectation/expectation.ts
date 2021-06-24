@@ -3,7 +3,6 @@ import { Property } from '../proxy';
 export type ReturnValue = {
   value: any;
   isPromise?: boolean;
-  promiseValue?: any; // TODO: remove, since value is equal to this
   isError?: boolean;
 };
 

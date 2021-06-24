@@ -26,7 +26,7 @@ export const printCall = (property: Property, args: any[]) => {
 };
 
 export const printReturns = (
-  { isError, isPromise, value, promiseValue }: ReturnValue,
+  { isError, isPromise, value }: ReturnValue,
   min: number,
   max: number
 ) => {
@@ -44,9 +44,7 @@ export const printReturns = (
     thenPrefix += 'thenReturn';
   }
 
-  return `.${thenPrefix}(${printExpected(
-    promiseValue || value
-  )}).between(${min}, ${max})`;
+  return `.${thenPrefix}(${printExpected(value)}).between(${min}, ${max})`;
 };
 
 export const printWhen = (property: Property, args: any[] | undefined) => {

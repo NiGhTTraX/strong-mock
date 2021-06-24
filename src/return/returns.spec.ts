@@ -79,7 +79,7 @@ describe('returns', () => {
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
-      promiseValue: 23,
+      value: 23,
       isError: false,
       isPromise: true,
     });
@@ -95,7 +95,7 @@ describe('returns', () => {
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
-      promiseValue: error,
+      value: error,
       isError: true,
       isPromise: true,
     });
@@ -110,7 +110,7 @@ describe('returns', () => {
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
-      promiseValue: new Error(),
+      value: new Error(),
       isError: true,
       isPromise: true,
     });
@@ -127,7 +127,7 @@ describe('returns', () => {
     expect(pendingExpectation.finishCalledWith).toMatchObject<
       Partial<ReturnValue>
     >({
-      promiseValue: new Error('foobar'),
+      value: new Error('foobar'),
       isError: true,
       isPromise: true,
     });

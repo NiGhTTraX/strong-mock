@@ -141,7 +141,6 @@ export const createReturns = <R>(
       finishPendingExpectation(
         {
           value: promiseValue,
-          promiseValue,
           isError: false,
           isPromise: true,
         },
@@ -152,7 +151,6 @@ export const createReturns = <R>(
       finishPendingExpectation(
         {
           value: getError(errorOrMessage),
-          promiseValue: getError(errorOrMessage),
           isError: true,
           isPromise: true,
         },

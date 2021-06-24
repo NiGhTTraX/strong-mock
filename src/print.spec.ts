@@ -86,11 +86,7 @@ describe('print', () => {
 
     it('should print promise', () => {
       expectAnsilessContain(
-        printReturns(
-          { value: Promise.resolve(23), promiseValue: 23, isPromise: true },
-          1,
-          1
-        ),
+        printReturns({ value: 23, isPromise: true }, 1, 1),
         `.thenResolve(23)`
       );
     });
@@ -100,7 +96,6 @@ describe('print', () => {
         printReturns(
           {
             value: new Error('foobar'),
-            promiseValue: new Error('foobar'),
             isPromise: true,
             isError: true,
           },
