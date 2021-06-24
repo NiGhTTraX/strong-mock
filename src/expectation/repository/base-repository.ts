@@ -129,7 +129,7 @@ export abstract class BaseRepository implements ExpectationRepository {
   protected abstract getValueForUnexpectedCall(
     property: Property,
     args: any[]
-  ): ReturnValue;
+  ): any;
 
   /**
    * We got a property access that doesn't match any expectation,

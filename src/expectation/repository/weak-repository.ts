@@ -13,7 +13,7 @@ export class WeakRepository
   implements ExpectationRepository {
   private repeating = new Map<Property, boolean>();
 
-  protected getValueForUnexpectedCall = () => ({ value: () => null });
+  protected getValueForUnexpectedCall = () => null;
 
   protected getValueForUnexpectedAccess = () => ({ value: () => null });
 

@@ -1,5 +1,6 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
+import { ApplyProp } from '../expectation';
 import { WeakRepository } from './weak-repository';
 import {
   MatchingCallExpectation,
@@ -20,6 +21,7 @@ describe('WeakRepository', () => {
     const repo = new WeakRepository();
 
     expect(repo.get('whatever').value()).toEqual(null);
+    expect(repo.get(ApplyProp).value()).toEqual(null);
   });
 
   it('should keep repeating the last met property expectation', () => {
