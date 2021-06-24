@@ -1,3 +1,4 @@
+import { returnOrThrow } from '../../instance/instance';
 import { ApplyProp, Expectation } from '../expectation';
 import { CallMap, ExpectationRepository } from './expectation-repository';
 import { Property } from '../../proxy';
@@ -61,7 +62,7 @@ export abstract class BaseRepository implements ExpectationRepository {
           this.recordExpected(property, args);
           this.countAndConsume(callExpectation);
 
-          return callExpectation.expectation.returnValue.value;
+          return returnOrThrow(callExpectation.expectation.returnValue.value);
         }
 
         this.recordUnexpected(property, args);

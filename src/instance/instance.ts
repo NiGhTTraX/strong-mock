@@ -7,7 +7,7 @@ import { createProxy } from '../proxy';
  * Return the expectation's return value. If the value is an error then
  * throw it.
  */
-const returnOrThrow = (returnValue: any) => {
+export const returnOrThrow = (returnValue: any) => {
   if (returnValue instanceof Error) {
     throw returnValue;
   }

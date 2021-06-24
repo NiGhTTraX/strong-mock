@@ -97,6 +97,17 @@ describe('e2e', () => {
       expect(instance(foo).bar(1)).toEqual(23);
     });
 
+    it('should set expectation on method to throw', () => {
+      interface Foo {
+        bar(x: number): number;
+      }
+
+      const foo = mock<Foo>();
+      when(foo.bar(1)).thenThrow();
+
+      expect(() => instance(foo).bar(1)).toThrow();
+    });
+
     it('should set expectation on member', () => {
       interface Foo {
         bar: number;

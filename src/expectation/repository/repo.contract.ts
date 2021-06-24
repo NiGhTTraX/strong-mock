@@ -94,6 +94,17 @@ export const repoContractTests: ExpectationRepositoryContract = {
         expect(repo.get('foo')()).toEqual(23);
       },
     },
+    {
+      name: 'should throw if the value is an error',
+      test: (repo) => () => {
+        const expectation = new MatchingCallExpectation('foo', {
+          value: new Error(),
+        });
+        repo.add(expectation);
+
+        expect(() => repo.get('foo')()).toThrow();
+      },
+    },
   ],
 
   'unmet expectations': [
