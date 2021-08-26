@@ -37,8 +37,8 @@ type PromiseStub<R, P> = {
    * Make the current call reject with an error with the given message.
    *
    * @param message Will be wrapped in `new Error()`. If you want to reject
-   *   with a custom error then use `thenReject`. If you want to reject with a
-   *   non error then use `thenReturn`.
+   *   with a custom error then pass it here instead of the message. If you
+   *   want to reject with a non error then use `thenReturn`.
    */
   thenReject(message: string): InvocationCount;
 
@@ -59,13 +59,17 @@ type NonPromiseStub<R> = {
 
   /**
    * Make the current call throw the given error.
+   *
+   * @param error The error instance. If you want to throw a simple `Error`
+   *   you can pass just the message.
    */
   thenThrow(error: Error): InvocationCount;
 
   /**
    * Make the current call throw an error with the given message.
    *
-   * @param message Will be wrapped in `new Error()`.
+   * @param message Will be wrapped in `new Error()`. If you want to throw
+   *   a custom error pass it here instead of the message.
    */
   thenThrow(message: string): InvocationCount;
 
