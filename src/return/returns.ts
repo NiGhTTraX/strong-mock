@@ -2,12 +2,12 @@ import { ReturnValue } from '../expectation/expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from '../when/pending-expectation';
 
-type PromiseStub<R> = {
+type PromiseStub<R, P> = {
   /**
    * Set the return value for the current call.
    *
-   * @param promise This needs to be a Promise wrapping the same type
-   *   as the value returned by the call inside `when()`.
+   * @param value This needs to be of the same type as the value returned
+   *   by the call inside `when()`.
    *
    * @example
    * when(fn()).thenReturn(Promise.resolve(23));
@@ -15,7 +15,7 @@ type PromiseStub<R> = {
    * @example
    * when(fn()).thenReturn(Promise.reject({ foo: 'bar' });
    */
-  thenReturn(promise: Promise<R>): InvocationCount;
+  thenReturn(value: P): InvocationCount;
 
   /**
    * Set the return value for the current call.
@@ -77,7 +77,7 @@ type NonPromiseStub<R> = {
 
 // Wrap T in a tuple to prevent distribution in case it's a union.
 export type Stub<T> = [T] extends [Promise<infer U>]
-  ? PromiseStub<U>
+  ? PromiseStub<U, T>
   : NonPromiseStub<T>;
 
 /**
@@ -124,7 +124,7 @@ export const createReturns = <R>(
       ),
   };
 
-  const promiseStub: PromiseStub<any> = {
+  const promiseStub: PromiseStub<any, any> = {
     thenReturn: (promise: Promise<any>): InvocationCount =>
       finishPendingExpectation(
         {
@@ -158,7 +158,5 @@ export const createReturns = <R>(
       ),
   };
 
-  // @ts-expect-error TODO: because the return type is a conditional and
-  // we're doing something fishy here that TS doesn't like
   return { ...nonPromiseStub, ...promiseStub };
 };

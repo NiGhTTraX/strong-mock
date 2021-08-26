@@ -42,6 +42,10 @@ it('type safety', () => {
 
     // @ts-expect-error promises only reject
     when(fnp()).thenThrow;
+
+    // any will be treated like a promise but should allow any return value.
+    const fnany = mock<() => any>();
+    when(fnany()).thenReturn(23);
   }
 
   function instanceSafety() {
