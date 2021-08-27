@@ -53,6 +53,7 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
   - [Can I spread/enumerate a mock instance?](#can-i-spreadenumerate-a-mock-instance)
+  - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -274,6 +275,15 @@ Available matchers:
 - `matches` - build your own matcher,
 - `willCapture` - matches anything and stores the received value.
 
+The following table illustrates the differences between the equality matchers:
+
+expected | actual | `It.is` | `It.deepEquals` | `It.deepEquals({ strict: false })`
+-------|----------|---------|-----------------|-----------------------------------
+`"foo"` | `"bar"` | equal   | equal           | equal
+`{ foo: "bar" }` | `{ foo: "bar" }` | not equal | equal | equal
+`{ }` | `{ foo: undefined }` | not equal | not equal | equal
+`new (class {})()` | `new (class {})()` | not equal | not equal | equal
+
 Some matchers, like `isObject` and `isArray` support nesting matchers:
 
 ```typescript
@@ -429,4 +439,25 @@ const foo2 = { ...instance(foo) };
 
 console.log(foo2.bar); // 42
 console.log(foo2.baz); // undefined
+```
+
+
+### How can I ignore `undefined` keys when setting expectations on objects?
+
+Use the `It.deepEquals` matcher explicitly inside `when` and pass `{ strict: false }`:
+
+```ts
+const fn = mock<(x: { foo: string }) => boolean>();
+
+when(fn(It.deepEquals({ foo: "bar" }, { strict: false }))).thenReturn(true);
+
+instance(fn)({ foo: "bar", baz: undefined }) === true
+```
+
+You can also set this behavior to be the default by using [`setDefaults`](#overriding-default-matcher):
+
+```ts
+setDefaults({
+  matcher: (expected) => It.deepEquals(expected, { strict: false })
+});
 ```
