@@ -67,7 +67,7 @@ export const createProxy = <T>(traps: ProxyTraps, name?: string): Mock<T> => {
       }
 
       if (prop === '__isMatcher') {
-        return proxyName;
+        return true;
       }
 
       if (prop === 'matches') {
