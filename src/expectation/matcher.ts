@@ -1,6 +1,6 @@
 import { printExpected } from 'jest-matcher-utils';
-import isEqual from 'lodash/isEqual';
 import isMatchWith from 'lodash/isMatchWith';
+import isSafeEqual from './is-safe-equal';
 
 export type Matcher<T> = T & {
   /**
@@ -203,7 +203,7 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
                 return x.matches(y);
               }
 
-              return isEqual(x, y);
+              return isSafeEqual(x, y);
             }) !== undefined
         );
       }

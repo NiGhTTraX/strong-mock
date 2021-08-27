@@ -5,6 +5,24 @@ import { StrongExpectation } from './strong-expectation';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 
 describe('StrongExpectation', () => {
+  it('should support undefined keys', () => {
+    const expectation = new StrongExpectation('bar', [{}], { value: undefined });
+
+    expect(expectation.matches([{key: undefined}])).toBeTruthy();
+  });
+
+  it('should support nested undefined keys', () => {
+    const expectation = new StrongExpectation('bar', [{parent: {}}], { value: undefined });
+
+    expect(expectation.matches([{parent: {key: undefined}}])).toBeTruthy();
+  });
+
+  it('should support arrays with undefined keys', () => {
+    const expectation = new StrongExpectation('bar', [[{}]], { value: undefined });
+
+    expect(expectation.matches([[{key: undefined}]])).toBeTruthy();
+  });
+
   it('should match empty args', () => {
     const expectation = new StrongExpectation('bar', [], { value: undefined });
 

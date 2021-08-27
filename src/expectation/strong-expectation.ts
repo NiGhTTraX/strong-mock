@@ -1,8 +1,8 @@
-import isEqual from 'lodash/isEqual';
 import { Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
 import { printExpectation } from '../print';
 import { Property } from '../proxy';
+import isSafeEqual from './is-safe-equal';
 
 /**
  * Deeply compare actual arguments against expected ones.
@@ -62,7 +62,7 @@ export class StrongExpectation implements Expectation {
         return arg.matches(args[i]);
       }
 
-      return isEqual(arg, args[i]);
+      return isSafeEqual(arg, args[i]);
     });
   }
 
