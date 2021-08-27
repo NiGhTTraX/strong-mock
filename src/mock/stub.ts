@@ -8,7 +8,8 @@ import { createProxy, Property } from '../proxy';
 
 export const createStub = <T>(
   repo: ExpectationRepository,
-  pendingExpectation: PendingExpectation
+  pendingExpectation: PendingExpectation,
+  name?: string
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {
@@ -44,6 +45,6 @@ export const createStub = <T>(
     ownKeys: () => {
       throw new Error('Spreading during an expectation is not supported.');
     },
-  });
+  }, name);
   return stub;
 };

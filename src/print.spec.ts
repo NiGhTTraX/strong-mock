@@ -4,6 +4,7 @@ import { ApplyProp } from './expectation/expectation';
 import { It } from './expectation/matcher';
 import { printCall, printProperty, printReturns } from './print';
 import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import { mock } from './mock/mock';
 
 describe('print', () => {
   describe('printProperty', () => {
@@ -21,6 +22,12 @@ describe('print', () => {
   });
 
   describe('printCall', () => {
+    it('should print mock name', () => {
+      const mocked = mock({name: 'test'});
+
+      expectAnsilessEqual(printCall('bar', [mocked]), `.bar(mock[test])`);
+    });
+
     it('should print method call', () => {
       expectAnsilessEqual(printCall('bar', [1, 2, 3]), `.bar(1, 2, 3)`);
     });

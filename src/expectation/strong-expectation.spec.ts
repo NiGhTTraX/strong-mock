@@ -3,6 +3,7 @@ import { describe, it } from 'tdd-buffet/suite/node';
 import { Matcher } from './matcher';
 import { StrongExpectation } from './strong-expectation';
 import { expectAnsilessEqual } from '../../tests/ansiless';
+import { mock } from '../mock/mock';
 
 describe('StrongExpectation', () => {
   it('should match empty args', () => {
@@ -11,6 +12,7 @@ describe('StrongExpectation', () => {
     expect(expectation.matches([])).toBeTruthy();
   });
 
+
   it('should match no args', () => {
     const expectation = new StrongExpectation('bar', undefined, {
       value: undefined,
@@ -18,6 +20,18 @@ describe('StrongExpectation', () => {
 
     expect(expectation.matches(undefined)).toBeTruthy();
     expect(expectation.matches([1])).toBeFalsy();
+  });
+
+  it('should match mocks', () => {
+    const mock1 = mock();
+    const mock2 = mock();
+
+    const expectation = new StrongExpectation('bar', [mock1], {
+      value: undefined,
+    });
+
+    expect(expectation.matches([mock1])).toBeTruthy();
+    expect(expectation.matches([mock2])).toBeFalsy();
   });
 
   it('should match primitives', () => {

@@ -7,6 +7,12 @@ import { createProxy, ProxyTraps } from './proxy';
 describe('proxy', () => {
   const traps = SM.mock<ProxyTraps>();
 
+  it('should store mock name in proxy', () => {
+    const proxy = createProxy<any>(SM.instance(traps), 'test');
+
+    expect(proxy.__mockName).toEqual('test');
+  });
+
   it('should trap fn(...args)', () => {
     SM.when(traps.apply([1, 2, 3])).thenReturn(42);
 

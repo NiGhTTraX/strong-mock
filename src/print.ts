@@ -18,7 +18,7 @@ export const printProperty = (property: Property) => {
 export const printCall = (property: Property, args: any[]) => {
   // TODO: don't leak the matcher concept here
   const prettyArgs = args
-    .map((a) => (isMatcher(a) ? a.toJSON() : printExpected(a)))
+    .map((a) => (a?.__mockName ? `mock[${a.__mockName}]` : (isMatcher(a) ? a.toJSON() : printExpected(a))))
     .join(', ');
   const prettyProperty = printProperty(property);
 

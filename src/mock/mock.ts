@@ -28,6 +28,11 @@ interface MockOptions {
    * You can provide your own way of creating expectations.
    */
   expectationFactory?: ExpectationFactory;
+
+  /**
+   * You can provide a name for better debugging
+   */
+  name?: string;
 }
 
 /**
@@ -46,12 +51,13 @@ interface MockOptions {
 export const mock = <T>({
   repository = new StrongRepository(),
   expectationFactory = strongExpectationFactory,
+  name
 }: MockOptions = {}): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
     expectationFactory
   );
 
-  const stub = createStub<T>(repository, pendingExpectation);
+  const stub = createStub<T>(repository, pendingExpectation, name);
 
   setMockState(stub, { repository, pendingExpectation });
 

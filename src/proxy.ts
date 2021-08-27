@@ -50,10 +50,36 @@ export interface ProxyTraps {
   ownKeys: () => Property[];
 }
 
-export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
+let proxies = 1;
+
+export const createProxy = <T>(traps: ProxyTraps, name?: string): Mock<T> => {
+  proxies += 1;
+
+  const proxyName = name || `mock#${proxies}`;
+
   // eslint-disable-next-line no-empty-function
-  (new Proxy(/* istanbul ignore next */ () => {}, {
+
+  return (new Proxy(/* istanbul ignore next */ () => {
+  }, {
     get: (target, prop: string | symbol) => {
+      if (prop === '__mockName') {
+        return proxyName;
+      }
+
+      if (prop === '__isMatcher') {
+        return proxyName;
+      }
+
+      if (prop === 'matches') {
+        return (arg: any) => {
+          if(!arg?.__mockName){
+            return false;
+          }
+
+          return arg.__mockName === proxyName;
+        };
+      }
+
       if (prop === 'bind') {
         return (thisArg: any, ...args: any[]) => (...moreArgs: any[]) =>
           traps.apply([...args, ...moreArgs]);
@@ -91,3 +117,4 @@ export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
       return undefined;
     },
   }) as unknown) as Mock<T>;
+}
