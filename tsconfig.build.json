@@ -3,6 +3,7 @@
 
   "compilerOptions": {
     "declaration": true,
+    "declarationDir": ".",
     "outDir": "./dist",
     "module": "esnext"
   },
@@ -11,6 +12,7 @@
     "src/**/*"
   ],
   "exclude": [
+    "dist",
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/*.contract.ts",
