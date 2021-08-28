@@ -1,8 +1,8 @@
-import isEqual from 'lodash/isEqual';
 import { Expectation, ReturnValue } from './expectation';
 import { isMatcher } from './matcher';
 import { printExpectation } from '../print';
 import { Property } from '../proxy';
+import { isEqual } from '../equal';
 
 /**
  * Deeply compare actual arguments against expected ones.

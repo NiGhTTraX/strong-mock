@@ -1,6 +1,5 @@
 import { printExpected } from 'jest-matcher-utils';
-import isEqual from 'lodash/isEqual';
-import isMatchWith from 'lodash/isMatchWith';
+import { isEqual, isMatchWith } from '../equal';
 
 export type Matcher<T> = T & {
   /**
