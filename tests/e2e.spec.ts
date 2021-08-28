@@ -163,6 +163,4 @@ describe('e2e', () => {
       expect(instance(fn)({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
     });
   });
-
-  it('type safety', () => {});
 });
