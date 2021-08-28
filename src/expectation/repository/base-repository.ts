@@ -88,6 +88,9 @@ export abstract class BaseRepository implements ExpectationRepository {
       case '@@__IMMUTABLE_RECORD__@@':
         return { value: null };
 
+      case '__isMatcher':
+        return { value: false };
+
       case ApplyProp:
         return {
           value: (...args: any[]) => {

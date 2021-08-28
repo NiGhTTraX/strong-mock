@@ -129,6 +129,16 @@ describe('e2e', () => {
     when(fn()).thenReject('if you are seeing this it means the test failed');
   });
 
+  it('should match other mocks', () => {
+    const mock1 = mock<(x: any) => boolean>();
+    // This one has to be an instance to be used in expectations.
+    const mock2 = instance(mock());
+
+    when(mock1(mock2)).thenReturn(true);
+
+    expect(instance(mock1)(mock2)).toBeTruthy();
+  });
+
   describe('ignoring arguments', () => {
     it('should support matching anything', () => {
       const fn = mock<Fn>();
