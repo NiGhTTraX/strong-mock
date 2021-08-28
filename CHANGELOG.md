@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.1.2](https://github.com/NiGhTTraX/strong-mock/compare/v7.1.1...v7.1.2) (2021-08-28)
+
+
+### Bug Fixes
+
+* Allow other strong mocks in expectations ([569815b](https://github.com/NiGhTTraX/strong-mock/commit/569815b26acaff178dab70602ad705e07f352185)), closes [#254](https://github.com/NiGhTTraX/strong-mock/issues/254) [#256](https://github.com/NiGhTTraX/strong-mock/issues/256)
+* **deps:** update dependency jest-matcher-utils to ~27.1.0 ([b024ed0](https://github.com/NiGhTTraX/strong-mock/commit/b024ed00ba11d39bc1195a971285136f443a719d))
+
 ### [7.1.1](https://github.com/NiGhTTraX/strong-mock/compare/v7.1.0...v7.1.1) (2021-08-26)
 
 ## [7.1.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.0.0...v7.1.0) (2021-06-24)
