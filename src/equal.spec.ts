@@ -1,4 +1,4 @@
-import { isEqual } from './equal';
+import { isEqual, isMatchWith } from './equal';
 
 describe('isEqual', () => {
   it('should match primitives', () => {
@@ -62,5 +62,28 @@ describe('isEqual', () => {
   it('should match buffers', () => {
     expect(isEqual(Buffer.from('abc'), Buffer.from('abc'))).toBeTruthy();
     expect(isEqual(Buffer.from('abc'), Buffer.from('abd'))).toBeFalsy();
+  });
+});
+
+describe('isMatchWith', () => {
+  const lodashDefaultCustomizer = () => undefined;
+
+  it('should match nested partial objects', () => {
+    expect(
+      isMatchWith(
+        { foo: { bar: 1, baz: 2 } },
+        { foo: { bar: 1 } },
+        lodashDefaultCustomizer
+      )
+    ).toBeTruthy();
+    expect(
+      isMatchWith({ foo: { bar: 'baz' } }, { foo: {} }, lodashDefaultCustomizer)
+    ).toBeTruthy();
+  });
+
+  it('should not match object partials with extra undefined keys', () => {
+    expect(
+      isMatchWith({}, { key: undefined }, lodashDefaultCustomizer)
+    ).toBeFalsy();
   });
 });
