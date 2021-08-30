@@ -209,20 +209,20 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
         return false;
       }
 
-      if (containing) {
-        return containing.every(
-          (x) =>
-            arg.find((y) => {
-              if (isMatcher(x)) {
-                return x.matches(y);
-              }
-
-              return isEqual(x, y);
-            }) !== undefined
-        );
+      if (!containing) {
+        return true;
       }
 
-      return true;
+      return containing.every(
+        (x) =>
+          arg.find((y) => {
+            if (isMatcher(x)) {
+              return x.matches(y);
+            }
+
+            return isEqual(x, y);
+          }) !== undefined
+      );
     },
     toJSON: () =>
       containing ? `array(${printExpected(containing)})` : 'array',
