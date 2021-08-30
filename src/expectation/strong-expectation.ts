@@ -1,8 +1,7 @@
-import { Expectation, ReturnValue } from './expectation';
-import { isMatcher } from './matcher';
 import { printExpectation } from '../print';
 import { Property } from '../proxy';
-import { isEqual } from '../equal';
+import { Expectation, ReturnValue } from './expectation';
+import { Matcher } from './matcher';
 
 /**
  * Deeply compare actual arguments against expected ones.
@@ -25,7 +24,7 @@ export class StrongExpectation implements Expectation {
 
   constructor(
     public property: Property,
-    public args: any[] | undefined,
+    public args: Matcher<any>[] | undefined,
     public returnValue: ReturnValue
   ) {}
 
@@ -48,22 +47,16 @@ export class StrongExpectation implements Expectation {
     return this.matched < this.min;
   }
 
-  private matchesArgs(args: any[] | undefined) {
+  private matchesArgs(received: any[] | undefined) {
     if (this.args === undefined) {
-      return !args;
+      return !received;
     }
 
-    if (!args) {
+    if (!received) {
       return false;
     }
 
-    return this.args.every((arg, i) => {
-      if (arg && isMatcher(arg)) {
-        return arg.matches(args[i]);
-      }
-
-      return isEqual(arg, args[i]);
-    });
+    return this.args.every((arg, i) => arg.matches(received[i]));
   }
 
   toJSON() {

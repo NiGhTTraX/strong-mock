@@ -1,9 +1,96 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { It } from './matcher';
+import { deepEquals, It } from './matcher';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 
 describe('It', () => {
+  describe('deepEquals', () => {
+    it('should match primitives', () => {
+      expect(deepEquals(1).matches(1)).toBeTruthy();
+      expect(deepEquals(1).matches(2)).toBeFalsy();
+
+      expect(deepEquals(1.0).matches(1.0)).toBeTruthy();
+      expect(deepEquals(1.0).matches(1.1)).toBeFalsy();
+
+      expect(deepEquals(true).matches(true)).toBeTruthy();
+      expect(deepEquals(true).matches(false)).toBeFalsy();
+
+      expect(deepEquals('a').matches('a')).toBeTruthy();
+      expect(deepEquals('a').matches('b')).toBeFalsy();
+    });
+
+    it('should match arrays', () => {
+      expect(deepEquals([1, 2, 3]).matches([1, 2, 3])).toBeTruthy();
+      expect(deepEquals([1, 2, 3]).matches([1, 2, 4])).toBeFalsy();
+      expect(deepEquals([1, 2, 3]).matches([2, 3])).toBeFalsy();
+    });
+
+    it('should match objects', () => {
+      expect(deepEquals({ foo: 'bar' }).matches({ foo: 'bar' })).toBeTruthy();
+      expect(deepEquals({ foo: 'bar' }).matches({ foo: 'baz' })).toBeFalsy();
+      expect(deepEquals({ foo: 'bar' }).matches({})).toBeFalsy();
+      expect(deepEquals({}).matches({ foo: 'bar' })).toBeFalsy();
+    });
+
+    it('should match nested objects', () => {
+      expect(
+        deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'baz' } })
+      ).toBeTruthy();
+      expect(
+        deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'boo' } })
+      ).toBeFalsy();
+    });
+
+    it('should not match objects with missing optional keys', () => {
+      expect(deepEquals({}).matches({ key: undefined })).toBeFalsy();
+      expect(deepEquals({ key: undefined }).matches({})).toBeFalsy();
+    });
+
+    it('should match sets', () => {
+      expect(
+        deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
+      ).toBeTruthy();
+      expect(
+        deepEquals(new Set([1, 2, 3])).matches(new Set([2, 3]))
+      ).toBeFalsy();
+      expect(
+        deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 4]))
+      ).toBeFalsy();
+    });
+
+    it('should match maps', () => {
+      expect(
+        deepEquals(new Map([[1, 2]])).matches(new Map([[1, 2]]))
+      ).toBeTruthy();
+      expect(
+        deepEquals(new Map([[1, 2]])).matches(new Map([[1, 3]]))
+      ).toBeFalsy();
+      expect(deepEquals(new Map([[1, 2]])).matches(new Map([]))).toBeFalsy();
+    });
+
+    it('should match dates', () => {
+      expect(deepEquals(new Date(1000)).matches(new Date(1000))).toBeTruthy();
+      expect(deepEquals(new Date(1000)).matches(new Date(1001))).toBeFalsy();
+    });
+
+    it('should match buffers', () => {
+      expect(
+        deepEquals(Buffer.from('abc')).matches(Buffer.from('abc'))
+      ).toBeTruthy();
+      expect(
+        deepEquals(Buffer.from('abc')).matches(Buffer.from('abd'))
+      ).toBeFalsy();
+    });
+
+    it('should pretty print', () => {
+      expectAnsilessEqual(deepEquals(23).toJSON(), '23');
+      expectAnsilessEqual(
+        deepEquals({ foo: { bar: [1, 2, 3] } }).toJSON(),
+        '{"foo": {"bar": [1, 2, 3]}}'
+      );
+    });
+  });
+
   describe('isAny', () => {
     it('should match null', () => {
       expect(It.isAny().matches(null)).toBeTruthy();
@@ -224,6 +311,14 @@ describe('It', () => {
           foo: { bar: { baz: 42, bazzz: 23 } },
         })
       ).toBeFalsy();
+    });
+
+    it('should match against extra undefined keys', () => {
+      expect(It.isObject({}).matches({ key: undefined })).toBeTruthy();
+    });
+
+    it('should not match if undefined keys are missing', () => {
+      expect(It.isObject({ key: undefined }).matches({})).toBeFalsy();
     });
 
     it('should match nested matchers', () => {

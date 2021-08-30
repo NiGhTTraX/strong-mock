@@ -15,11 +15,12 @@ export const printProperty = (property: Property) => {
   return `.${property}`;
 };
 
+export const printArg = (arg: unknown): string =>
+  isMatcher(arg) ? arg.toJSON() : printExpected(arg);
+
 export const printCall = (property: Property, args: any[]) => {
   // TODO: don't leak the matcher concept here
-  const prettyArgs = args
-    .map((a) => (isMatcher(a) ? a.toJSON() : printExpected(a)))
-    .join(', ');
+  const prettyArgs = args.map((arg) => printArg(arg)).join(', ');
   const prettyProperty = printProperty(property);
 
   return `${prettyProperty}(${prettyArgs})`;

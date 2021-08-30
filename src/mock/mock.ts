@@ -1,3 +1,4 @@
+import { deepEquals, isMatcher } from '../expectation/matcher';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { setMockState } from './map';
 import {
@@ -16,7 +17,13 @@ const strongExpectationFactory: ExpectationFactory = (
   property,
   args,
   returnValue
-) => new StrongExpectation(property, args, returnValue);
+) =>
+  new StrongExpectation(
+    property,
+    // Wrap every non-matcher in the default matcher.
+    args?.map((arg) => (isMatcher(arg) ? arg : deepEquals(arg))),
+    returnValue
+  );
 
 interface MockOptions {
   /**

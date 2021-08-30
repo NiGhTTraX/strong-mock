@@ -1,8 +1,8 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { Matcher } from './matcher';
-import { StrongExpectation } from './strong-expectation';
 import { expectAnsilessEqual } from '../../tests/ansiless';
+import { deepEquals } from './matcher';
+import { StrongExpectation } from './strong-expectation';
 
 describe('StrongExpectation', () => {
   it('should match empty args', () => {
@@ -20,85 +20,8 @@ describe('StrongExpectation', () => {
     expect(expectation.matches([1])).toBeFalsy();
   });
 
-  it('should match primitives', () => {
-    const expectation = new StrongExpectation('bar', [1, '2', true], {
-      value: undefined,
-    });
-
-    expect(expectation.matches([1, '2', true])).toBeTruthy();
-    expect(expectation.matches([2, '2', true])).toBeFalsy();
-    expect(expectation.matches([1, '3', true])).toBeFalsy();
-    expect(expectation.matches([1, '2', false])).toBeFalsy();
-  });
-
-  it('should match objects', () => {
-    const expectation = new StrongExpectation(
-      'bar',
-      [
-        {
-          bar: { baz: 42 },
-        },
-      ],
-      { value: undefined }
-    );
-
-    expect(
-      expectation.matches([
-        {
-          bar: { baz: 42 },
-        },
-      ])
-    ).toBeTruthy();
-  });
-
-  it('should match arrays', () => {
-    const expectation = new StrongExpectation('bar', [[1, 2, 3]], {
-      value: 23,
-    });
-
-    expect(expectation.matches([[1, 2, 3]])).toBeTruthy();
-  });
-
-  it('should match deep arrays', () => {
-    const expectation = new StrongExpectation('bar', [[1, 2, [3, 4]]], {
-      value: 23,
-    });
-
-    expect(expectation.matches([[1, 2, [3, 4]]])).toBeTruthy();
-  });
-
-  it('should match sets', () => {
-    const expectation = new StrongExpectation('bar', [new Set([1, 2, 3])], {
-      value: 23,
-    });
-
-    expect(expectation.matches([new Set([1, 2, 3])])).toBeTruthy();
-  });
-
-  it('should match maps', () => {
-    const expectation = new StrongExpectation(
-      'bar',
-      [
-        new Map([
-          [1, true],
-          [2, false],
-        ]),
-      ],
-      { value: 23 }
-    );
-
-    expect(
-      expectation.matches([
-        new Map([
-          [1, true],
-          [2, false],
-        ]),
-      ])
-    ).toBeTruthy();
-  });
-
   it('should match optional args against undefined', () => {
-    const expectation = new StrongExpectation('bar', [undefined], {
+    const expectation = new StrongExpectation('bar', [deepEquals(undefined)], {
       value: 23,
     });
 
@@ -112,36 +35,19 @@ describe('StrongExpectation', () => {
   });
 
   it('should not match missing expected optional arg', () => {
-    const expectation = new StrongExpectation('bar', [23], { value: 23 });
+    const expectation = new StrongExpectation('bar', [deepEquals(23)], {
+      value: 23,
+    });
 
     expect(expectation.matches([])).toBeFalsy();
   });
 
   it('should not match defined expected undefined optional arg', () => {
-    const expectation = new StrongExpectation('bar', [undefined], {
+    const expectation = new StrongExpectation('bar', [deepEquals(undefined)], {
       value: 23,
     });
 
     expect(expectation.matches([42])).toBeFalsy();
-  });
-
-  it('should call matchers', () => {
-    let matchesCalledWith;
-
-    const spyMatcher: Matcher<any> = {
-      __isMatcher: true,
-      matches: (arg: any) => {
-        matchesCalledWith = arg;
-        return true;
-      },
-    };
-
-    const expectation = new StrongExpectation('bar', [spyMatcher], {
-      value: 23,
-    });
-
-    expect(expectation.matches([23])).toBeTruthy();
-    expect(matchesCalledWith).toEqual(23);
   });
 
   it('should print when, returns and invocation count', () => {

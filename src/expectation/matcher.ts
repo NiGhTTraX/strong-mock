@@ -1,5 +1,7 @@
 import { printExpected } from 'jest-matcher-utils';
-import { isEqual, isMatchWith } from '../equal';
+import isEqual from 'lodash/isEqual';
+import isMatchWith from 'lodash/isMatchWith';
+import { printArg } from '../print';
 
 export type Matcher<T> = T & {
   /**
@@ -24,6 +26,19 @@ export type Matcher<T> = T & {
 export function isMatcher(f: unknown): f is Matcher<unknown> {
   return !!(f && (<Matcher<unknown>>f).__isMatcher);
 }
+
+/**
+ * The default matcher that checks for deep equality.
+ */
+export const deepEquals = <T>(expected: T): Matcher<T> =>
+  ({
+    matches: (received: any) => isEqual(received, expected),
+    __isMatcher: true,
+
+    toJSON() {
+      return printArg(expected);
+    },
+  } as any);
 
 /**
  * Match any value, including `undefined` and `null`.
@@ -212,6 +227,7 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
     toJSON: () =>
       containing ? `array(${printExpected(containing)})` : 'array',
   } as any);
+
 /**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
