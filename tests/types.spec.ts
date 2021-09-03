@@ -118,5 +118,14 @@ it('type safety', () => {
         },
       })
     );
+
+    const string = (x: string) => string;
+    const captureMatcher = It.willCapture<number>();
+    // The incoming value can be of any type.
+    captureMatcher.matches('aaa');
+    // @ts-expect-error because the value can be undefined.
+    number(captureMatcher.value);
+    // @ts-expect-error number is not string
+    string(captureMatcher.value!);
   }
 });

@@ -172,5 +172,18 @@ describe('e2e', () => {
       );
       expect(instance(fn)({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
     });
+
+    it('should capture arguments', () => {
+      type Cb = (value: number) => number;
+
+      const fn = mock<(cb: Cb) => number>();
+
+      const matcher = It.willCapture<Cb>('test');
+      when(fn(matcher)).thenReturn(42);
+
+      expect(instance(fn)((x) => x + 1)).toEqual(42);
+
+      expect(matcher.value?.(3)).toEqual(4);
+    });
   });
 });

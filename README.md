@@ -267,7 +267,19 @@ Available matchers:
 - `isNumber` - matches any number,
 - `isString` - matches any string, can search for substrings and patterns,
 - `isArray` - matches any array, can search for subsets,
-- `isObject` - matches any object, can search for partial objects.
+- `isObject` - matches any object, can search for partial objects,
+- `matches` - build your own matcher,
+- `willCapture` - matches anything and stores the received value.
+
+Some matchers, like `isObject` and `isArray` support nesting matchers:
+
+```typescript
+It.isObject({ foo: It.isString() })
+
+It.isArray([ It.isObject({
+  foo: It.isString({ matching: /foo/ })
+})])
+```
 
 You can create arbitrarily complex and type safe matchers with `It.matches(cb)`:
 
@@ -280,14 +292,18 @@ when(fn(
 )).thenReturn('matched');
 ```
 
-Some matchers, like `isObject` and `isArray` support nesting matchers:
+`It.willCapture` is a special matcher that will match any value and store it, so you can access it outside an expectation. This could be useful to capture a callback and then test it separately.
 
-```typescript
-It.isObject({ foo: It.isString() })
+```ts
+type Cb = (value: number) => number;
 
-It.isArray([ It.isObject({
-  foo: It.isString({ matching: /foo/ })
-})])
+const fn = mock<(cb: Cb) => number>();
+
+const matcher = It.willCapture<Cb>();
+when(fn(matcher)).thenReturn(42);
+
+console.log(instance(fn)(23, (x) => x + 1)); // 42
+console.log(matcher.value?.(3)); // 4
 ```
 
 ## FAQ

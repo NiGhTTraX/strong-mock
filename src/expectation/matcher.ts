@@ -7,7 +7,7 @@ export type Matcher<T> = T & {
   /**
    * Will be called with a value to match against.
    */
-  matches: (arg: any) => boolean;
+  matches: (arg: unknown) => boolean;
 
   /**
    * TODO: turn into a symbol
@@ -229,6 +229,44 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
   } as any);
 
 /**
+ * Matches anything and stores the received value.
+ *
+ * This should not be needed for most cases, but can be useful if you need
+ * access to a complex argument outside of the expectation e.g. to test a
+ * callback.
+ *
+ * @param name If given, this name will be printed in error messages.
+ *
+ * @example
+ * const fn = mock<(cb: (value: number) => number) => void>();
+ * const matcher = It.willCapture();
+ * when(fn(matcher)).thenReturn();
+ *
+ * instance(fn)(x => x + 1);
+ * matcher.value?.(3) === 4
+ */
+const willCapture = <T = unknown>(
+  name?: string
+): Matcher<T> & { value: T | undefined } => {
+  let capturedValue: T | undefined;
+
+  return {
+    __isMatcher: true,
+    matches: (value: T) => {
+      capturedValue = value;
+
+      return true;
+    },
+    toJSON(): string {
+      return name ?? 'captures';
+    },
+    get value(): T | undefined {
+      return capturedValue;
+    },
+  } as any;
+};
+
+/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
@@ -239,4 +277,5 @@ export const It = {
   isNumber,
   isString,
   isArray,
+  willCapture,
 };
