@@ -83,6 +83,21 @@ const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
     },
   } as any);
 
+export class Capture<T = any> {
+  private _value?: T;
+
+  get() {
+    return this._value;
+  }
+
+  capture() {
+    return matches<T>((value) => {
+      this._value = value;
+      return true;
+    });
+  }
+}
+
 type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T;
@@ -239,4 +254,5 @@ export const It = {
   isNumber,
   isString,
   isArray,
+  Capture,
 };

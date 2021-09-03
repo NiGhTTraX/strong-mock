@@ -125,6 +125,55 @@ describe('It', () => {
     });
   });
 
+  describe('Capture', () => {
+    it('should capture null', () => {
+      const capture = new It.Capture();
+      expect(capture.capture().matches(null)).toBeTruthy();
+      expect(capture.get()).toBe(null);
+    });
+
+    it('should capture undefined', () => {
+      const capture = new It.Capture();
+      expect(capture.capture().matches(undefined)).toBeTruthy();
+      expect(capture.get()).toBe(undefined);
+    });
+
+    it('should capture strings', () => {
+      const capture = new It.Capture<string>();
+      expect(capture.capture().matches('foobar')).toBeTruthy();
+      expect(capture.get()).toBe('foobar');
+    });
+
+    it('should return undefined when not captured', () => {
+      const capture = new It.Capture<string>();
+      expect(capture.get()).toBe(undefined);
+    });
+
+    it('should capture numbers', () => {
+      const capture = new It.Capture<number>();
+      expect(capture.capture().matches(23)).toBeTruthy();
+      expect(capture.get()).toBe(23);
+    });
+
+    it('should capture booleans', () => {
+      const capture = new It.Capture<boolean>();
+      expect(capture.capture().matches(true)).toBeTruthy();
+      expect(capture.get()).toBe(true);
+    });
+
+    it('should capture objects', () => {
+      const capture = new It.Capture<object>();
+      expect(capture.capture().matches({ foo: 'bar' })).toBeTruthy();
+      expect(capture.get()).toMatchObject({ foo: 'bar' });
+    });
+
+    it('should capture arrays', () => {
+      const capture = new It.Capture<Array<number>>();
+      expect(capture.capture().matches([1, 2, 3])).toBeTruthy();
+      expect(capture.get()).toMatchObject([1, 2, 3]);
+    });
+  });
+
   describe('isNumber', () => {
     it('should match 0', () => {
       expect(It.isNumber().matches(0)).toBeTruthy();
