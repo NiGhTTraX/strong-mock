@@ -16,6 +16,7 @@ export const printProperty = (property: Property) => {
 };
 
 export const printArg = (arg: unknown): string =>
+  // Call toJSON on matchers directly to avoid wrapping them in quotes.
   isMatcher(arg) ? arg.toJSON() : printExpected(arg);
 
 export const printCall = (property: Property, args: any[]) => {
