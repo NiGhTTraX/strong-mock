@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.2.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.1.2...v7.2.0) (2021-09-06)
+
+
+### Features
+
+* Add `It.willCapture` ([987e391](https://github.com/NiGhTTraX/strong-mock/commit/987e3910db4abbce4ca4b65e3c54c32191e30ddd))
+
 ### [7.1.2](https://github.com/NiGhTTraX/strong-mock/compare/v7.1.1...v7.1.2) (2021-08-28)
 
 
