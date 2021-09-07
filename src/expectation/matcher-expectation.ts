@@ -4,18 +4,19 @@ import { Expectation, ReturnValue } from './expectation';
 import { Matcher } from './matcher';
 
 /**
- * Deeply compare actual arguments against expected ones.
+ * Compare received arguments against matchers.
  *
- * Supports argument matchers. Matches a call with more parameters
- * than expected because it is assumed the compiler will check that those
- * parameters are optional.
+ * Matches a call with more parameters than expected because it is assumed the
+ * compiler will check that those parameters are optional.
  *
  * @example
- * new Expectation('bar', [1, 2, 3], 23).matches('bar', [1, 2, 3]) === true;
- * new Expectation('bar', [1, 2, 3], 23).matches('bar', [1, 2]) === false;
- * new Expectation('bar', [1, 2], 23).matches('bar', [1, 2, 3]) === true;
+ * new MatcherExpectation(
+ *   'bar',
+ *   deepEquals([1, 2, 3]),
+ *   23
+ * ).matches('bar', [1, 2, 3]) === true;
  */
-export class StrongExpectation implements Expectation {
+export class MatcherExpectation implements Expectation {
   private matched = 0;
 
   public min: number = 1;
