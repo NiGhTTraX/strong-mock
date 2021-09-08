@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.2.1](https://github.com/NiGhTTraX/strong-mock/compare/v7.2.0...v7.2.1) (2021-09-08)
+
+
+### Bug Fixes
+
+* Make `instance` referentially stable ([4194526](https://github.com/NiGhTTraX/strong-mock/commit/41945264343024039e89b8a0dedcf8f3ba87209a))
+
 ## [7.2.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.1.2...v7.2.0) (2021-09-06)
 
 
