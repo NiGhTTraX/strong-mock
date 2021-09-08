@@ -87,4 +87,13 @@ describe('instance', () => {
 
     expect({ ...instance(foo) }).toEqual({ foo: 1, bar: 2, [baz]: 3 });
   });
+
+  it('should be referentially stable', () => {
+    const fn = mock<unknown>({ repository: SM.instance(repo) });
+
+    const i1 = instance(fn);
+    const i2 = instance(fn);
+
+    expect(i1 === i2).toBeTruthy();
+  });
 });
