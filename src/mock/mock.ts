@@ -1,12 +1,13 @@
-import { deepEquals, isMatcher } from '../expectation/matcher';
+import { isMatcher } from '../expectation/matcher';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { setMockState } from './map';
+import { StrongRepository } from '../expectation/repository/strong-repository';
+import { StrongExpectation } from '../expectation/strong-expectation';
 import {
   ExpectationFactory,
   RepoSideEffectPendingExpectation,
 } from '../when/pending-expectation';
-import { StrongExpectation } from '../expectation/strong-expectation';
-import { StrongRepository } from '../expectation/repository/strong-repository';
+import { currentDefaults } from './defaults';
+import { setMockState } from './map';
 import { createStub } from './stub';
 
 // TODO: is it possible to return a type here that won't be assignable to T,
@@ -21,7 +22,7 @@ const strongExpectationFactory: ExpectationFactory = (
   new StrongExpectation(
     property,
     // Wrap every non-matcher in the default matcher.
-    args?.map((arg) => (isMatcher(arg) ? arg : deepEquals(arg))),
+    args?.map((arg) => (isMatcher(arg) ? arg : currentDefaults.matcher(arg))),
     returnValue
   );
 

@@ -44,6 +44,7 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
   - [Argument matchers](#argument-matchers)
+  - [Overriding default matcher](#overriding-default-matcher)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Can I mock an existing object/function?](#can-i-mock-an-existing-objectfunction)
@@ -304,6 +305,24 @@ when(fn(matcher)).thenReturn(42);
 
 console.log(instance(fn)(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
+```
+
+### Overriding default matcher
+
+You can override the default matcher that will be used when setting expectations with non-matcher values e.g. `42` or `{ foo: "bar" }`.
+
+```ts
+import { mock, when, instance, It, setDefaults } from 'strong-mock';
+
+// Set the default matcher to use strict equality.
+setDefaults({
+  matcher: (x) => It.matches((y) => y === x)
+})
+
+const fn = mock<(x: { foo: string }) => boolean>();
+when(fn({ foo: "bar" })).thenReturn(true);
+
+instance(fn)({ foo: "bar" }); // throws because different objects
 ```
 
 ## FAQ
