@@ -25,7 +25,7 @@ export class MatcherExpectation implements Expectation {
 
   constructor(
     public property: Property,
-    public args: Matcher<any>[] | undefined,
+    public args: Matcher[] | undefined,
     public returnValue: ReturnValue
   ) {}
 

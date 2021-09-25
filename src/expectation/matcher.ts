@@ -3,11 +3,11 @@ import isEqual from 'lodash/isEqual';
 import isMatchWith from 'lodash/isMatchWith';
 import { printArg } from '../print';
 
-export type Matcher<T> = T & {
+export type Matcher = {
   /**
    * Will be called with a value to match against.
    */
-  matches: (arg: unknown) => boolean;
+  matches: (arg: any) => boolean;
 
   /**
    * TODO: turn into a symbol
@@ -21,24 +21,33 @@ export type Matcher<T> = T & {
 };
 
 /**
+ * This takes the shape of T to satisfy call sites, but strong-mock will only
+ * care about the matcher type.
+ */
+export type TypeMatcher<T> = T & Matcher;
+
+/**
  * Used to test if an expectation on an argument is a custom matcher.
  */
-export function isMatcher(f: unknown): f is Matcher<unknown> {
-  return !!(f && (<Matcher<unknown>>f).__isMatcher);
+export function isMatcher(f: unknown): f is Matcher {
+  return !!(f && (<Matcher>f).__isMatcher);
 }
 
 /**
  * The default matcher that checks for deep equality.
  */
-export const deepEquals = <T>(expected: T): Matcher<T> =>
-  ({
-    matches: (received: any) => isEqual(received, expected),
+export const deepEquals = <T>(expected: T): TypeMatcher<T> => {
+  const matcher: Matcher = {
+    matches: (received) => isEqual(received, expected),
     __isMatcher: true,
 
     toJSON() {
       return printArg(expected);
     },
-  } as any);
+  };
+
+  return matcher as any;
+};
 
 /**
  * Match any value, including `undefined` and `null`.
@@ -49,17 +58,18 @@ export const deepEquals = <T>(expected: T): Matcher<T> =>
  *
  * instance(fn)(23, 'foobar') === 1
  */
-const isAny = (): Matcher<any> => ({
-  matches: () => true,
-  __isMatcher: true,
+const isAny = (): TypeMatcher<any> => {
+  const matcher: Matcher = {
+    matches: () => true,
+    __isMatcher: true,
 
-  /**
-   * Used by `pretty-format`.
-   */
-  toJSON() {
-    return 'anything';
-  },
-});
+    toJSON() {
+      return 'anything';
+    },
+  };
+
+  return matcher as any;
+};
 
 /**
  * Match a custom predicate.
@@ -73,15 +83,18 @@ const isAny = (): Matcher<any> => ({
  * instance(fn)(2) === 42
  * instance(fn)(-1) // throws
  */
-const matches = <T>(cb: (arg: T) => boolean): Matcher<T> =>
-  ({
-    matches: (arg: any) => cb(arg),
+const matches = <T>(cb: (arg: T) => boolean): TypeMatcher<T> => {
+  const matcher: Matcher = {
+    matches: (arg: T) => cb(arg),
     __isMatcher: true,
 
     toJSON() {
       return `matches(${cb.toString()})`;
     },
-  } as any);
+  };
+
+  return matcher as any;
+};
 
 type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
@@ -106,10 +119,10 @@ type DeepPartial<T> = T extends object
  */
 const isObject = <T extends object, K extends DeepPartial<T>>(
   partial?: K
-): Matcher<T> =>
-  ({
+): TypeMatcher<T> => {
+  const matcher: Matcher = {
     __isMatcher: true,
-    matches: (arg: any) =>
+    matches: (arg) =>
       isMatchWith(arg, partial || {}, (argValue, partialValue) => {
         if (isMatcher(partialValue)) {
           return partialValue.matches(argValue);
@@ -121,7 +134,10 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
     toJSON() {
       return partial ? `object(${printExpected(partial)})` : 'object';
     },
-  } as any);
+  };
+
+  return matcher as any;
+};
 
 /**
  * Match any number.
@@ -133,12 +149,15 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
  * instance(fn)(20.5) === 42
  * instance(fn)(NaN) // throws
  */
-const isNumber = (): Matcher<number> =>
-  ({
+const isNumber = (): TypeMatcher<number> => {
+  const matcher: Matcher = {
     __isMatcher: true,
-    matches: (arg: any) => typeof arg === 'number' && !Number.isNaN(arg),
+    matches: (arg) => typeof arg === 'number' && !Number.isNaN(arg),
     toJSON: () => 'number',
-  } as any);
+  };
+
+  return matcher as any;
+};
 
 /**
  * Match a string, potentially by a pattern.
@@ -156,14 +175,14 @@ const isNumber = (): Matcher<number> =>
 const isString = ({
   matching,
   containing,
-}: { matching?: RegExp; containing?: string } = {}): Matcher<string> => {
+}: { matching?: RegExp; containing?: string } = {}): TypeMatcher<string> => {
   if (matching && containing) {
     throw new Error('You can only pass `matching` or `containing`, not both.');
   }
 
-  return {
+  const matcher: Matcher = {
     __isMatcher: true,
-    matches: (arg: any) => {
+    matches: (arg) => {
       if (typeof arg !== 'string') {
         return false;
       }
@@ -178,7 +197,9 @@ const isString = ({
       containing || matching
         ? `string(${printExpected(containing || matching)})`
         : 'string',
-  } as any;
+  };
+
+  return matcher as any;
 };
 
 /**
@@ -201,10 +222,10 @@ const isString = ({
  * @example
  * It.isArray([It.isString({ containing: 'foobar' })])
  */
-const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
-  ({
+const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> => {
+  const matcher: Matcher = {
     __isMatcher: true,
-    matches: (arg: any) => {
+    matches: (arg) => {
       if (!Array.isArray(arg)) {
         return false;
       }
@@ -226,7 +247,10 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
     },
     toJSON: () =>
       containing ? `array(${printExpected(containing)})` : 'array',
-  } as any);
+  };
+
+  return matcher as any;
+};
 
 /**
  * Matches anything and stores the received value.
@@ -247,12 +271,12 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
  */
 const willCapture = <T = unknown>(
   name?: string
-): Matcher<T> & { value: T | undefined } => {
+): TypeMatcher<T> & { value: T | undefined } => {
   let capturedValue: T | undefined;
 
-  return {
+  const matcher: Matcher & { value: T | undefined } = {
     __isMatcher: true,
-    matches: (value: T) => {
+    matches: (value) => {
       capturedValue = value;
 
       return true;
@@ -263,7 +287,9 @@ const willCapture = <T = unknown>(
     get value(): T | undefined {
       return capturedValue;
     },
-  } as any;
+  };
+
+  return matcher as any;
 };
 
 /**

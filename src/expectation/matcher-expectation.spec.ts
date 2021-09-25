@@ -51,7 +51,13 @@ describe('MatcherExpectation', () => {
   });
 
   it('should print when, returns and invocation count', () => {
-    const expectation = new MatcherExpectation('baz', [4, 5, 6], { value: 42 });
+    const expectation = new MatcherExpectation(
+      'baz',
+      [deepEquals(4), deepEquals(5), deepEquals(6)],
+      {
+        value: 42,
+      }
+    );
     expectation.setInvocationCount(2, 3);
 
     expectAnsilessEqual(
