@@ -5,7 +5,7 @@ import {
   ExpectationFactory,
   RepoSideEffectPendingExpectation,
 } from '../when/pending-expectation';
-import { MatcherExpectation } from '../expectation/matcher-expectation';
+import { StrongExpectation } from '../expectation/strong-expectation';
 import { StrongRepository } from '../expectation/repository/strong-repository';
 import { createStub } from './stub';
 
@@ -18,7 +18,7 @@ const strongExpectationFactory: ExpectationFactory = (
   args,
   returnValue
 ) =>
-  new MatcherExpectation(
+  new StrongExpectation(
     property,
     // Wrap every non-matcher in the default matcher.
     args?.map((arg) => (isMatcher(arg) ? arg : deepEquals(arg))),

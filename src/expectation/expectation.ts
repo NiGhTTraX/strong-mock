@@ -1,4 +1,5 @@
 import { Property } from '../proxy';
+import { Matcher } from './matcher';
 
 export type ReturnValue = {
   value: any;
@@ -6,6 +7,9 @@ export type ReturnValue = {
   isError?: boolean;
 };
 
+/**
+ * Compare received arguments against matchers.
+ */
 export interface Expectation {
   property: Property;
 
@@ -13,7 +17,7 @@ export interface Expectation {
    * `undefined` means this is a property expectation.
    * `[]` means this is a function call with no arguments.
    */
-  args: any[] | undefined;
+  args: Matcher[] | undefined;
 
   returnValue: ReturnValue;
 

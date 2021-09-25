@@ -4,19 +4,17 @@ import { Expectation, ReturnValue } from './expectation';
 import { Matcher } from './matcher';
 
 /**
- * Compare received arguments against matchers.
- *
  * Matches a call with more parameters than expected because it is assumed the
  * compiler will check that those parameters are optional.
  *
  * @example
- * new MatcherExpectation(
+ * new StrongExpectation(
  *   'bar',
  *   deepEquals([1, 2, 3]),
  *   23
  * ).matches('bar', [1, 2, 3]) === true;
  */
-export class MatcherExpectation implements Expectation {
+export class StrongExpectation implements Expectation {
   private matched = 0;
 
   public min: number = 1;
