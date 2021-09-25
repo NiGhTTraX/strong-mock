@@ -46,6 +46,16 @@ describe('It', () => {
       expect(deepEquals({ key: undefined }).matches({})).toBeFalsy();
     });
 
+    it('should match objects with symbol keys', () => {
+      const foo = Symbol('foo');
+
+      expect(deepEquals({ [foo]: true }).matches({ [foo]: true })).toBeTruthy();
+      expect(deepEquals({ [foo]: true }).matches({ [foo]: false })).toBeFalsy();
+
+      expect(deepEquals({ [foo]: true }).matches({})).toBeFalsy();
+      expect(deepEquals({}).matches({ [foo]: false })).toBeFalsy();
+    });
+
     it('should match sets', () => {
       expect(
         deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
