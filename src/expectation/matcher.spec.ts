@@ -62,6 +62,27 @@ describe('It', () => {
       expect(It.deepEquals({}).matches({ [foo]: false })).toBeFalsy();
     });
 
+    it('should match instances of the same class', () => {
+      class Foo {
+        bar = 42;
+      }
+
+      expect(It.deepEquals(new Foo()).matches(new Foo())).toBeTruthy();
+    });
+
+    it('should not match objects with different prototypes', () => {
+      class Foo {
+        bar = 42;
+      }
+
+      class Bar {
+        bar = 42;
+      }
+
+      expect(It.deepEquals(new Foo()).matches(new Bar())).toBeFalsy();
+      expect(It.deepEquals(new Foo()).matches({ bar: 42 })).toBeFalsy();
+    });
+
     it('should match sets', () => {
       expect(
         It.deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
