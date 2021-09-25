@@ -231,7 +231,7 @@ const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> =>
               return x.matches(y);
             }
 
-            return isEqual(x, y);
+            return deepEquals(x).matches(y);
           }) !== undefined
       );
     },
