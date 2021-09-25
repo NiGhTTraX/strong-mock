@@ -293,10 +293,26 @@ const willCapture = <T = unknown>(
 };
 
 /**
+ * Compare values using `Object.is`.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+const is = <T = unknown>(expected: T): TypeMatcher<T> => {
+  const matcher: Matcher = {
+    __isMatcher: true,
+    matches: (actual) => Object.is(actual, expected),
+    toJSON: () => `${printExpected(expected)}`,
+  };
+
+  return matcher as any;
+};
+
+/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
 export const It = {
+  is,
   isAny,
   matches,
   isObject,

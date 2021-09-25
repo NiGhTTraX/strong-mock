@@ -264,6 +264,7 @@ console.log(instance(fn)(
 ```
 
 Available matchers:
+- `is` - uses `Object.is` for comparison,
 - `isAny` - matches anything,
 - `isNumber` - matches any number,
 - `isString` - matches any string, can search for substrings and patterns,
@@ -314,15 +315,15 @@ You can override the default matcher that will be used when setting expectations
 ```ts
 import { mock, when, instance, It, setDefaults } from 'strong-mock';
 
-// Set the default matcher to use strict equality.
+// Use strict equality instead of deep equality.
 setDefaults({
-  matcher: (x) => It.matches((y) => y === x)
+  matcher: It.is
 })
 
-const fn = mock<(x: { foo: string }) => boolean>();
-when(fn({ foo: "bar" })).thenReturn(true);
+const fn = mock<(x: number[]) => boolean>();
+when(fn([1, 2, 3])).thenReturn(true);
 
-instance(fn)({ foo: "bar" }); // throws because different objects
+instance(fn)([1, 2, 3]); // throws because different arrays
 ```
 
 ## FAQ
