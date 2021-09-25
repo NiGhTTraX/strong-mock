@@ -1,7 +1,7 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
 import { expectAnsilessEqual } from '../../tests/ansiless';
-import { deepEquals } from './matcher';
+import { It } from './matcher';
 import { StrongExpectation } from './strong-expectation';
 
 describe('StrongExpectation', () => {
@@ -21,9 +21,13 @@ describe('StrongExpectation', () => {
   });
 
   it('should match optional args against undefined', () => {
-    const expectation = new StrongExpectation('bar', [deepEquals(undefined)], {
-      value: 23,
-    });
+    const expectation = new StrongExpectation(
+      'bar',
+      [It.deepEquals(undefined)],
+      {
+        value: 23,
+      }
+    );
 
     expect(expectation.matches([])).toBeTruthy();
   });
@@ -35,7 +39,7 @@ describe('StrongExpectation', () => {
   });
 
   it('should not match missing expected optional arg', () => {
-    const expectation = new StrongExpectation('bar', [deepEquals(23)], {
+    const expectation = new StrongExpectation('bar', [It.deepEquals(23)], {
       value: 23,
     });
 
@@ -43,9 +47,13 @@ describe('StrongExpectation', () => {
   });
 
   it('should not match defined expected undefined optional arg', () => {
-    const expectation = new StrongExpectation('bar', [deepEquals(undefined)], {
-      value: 23,
-    });
+    const expectation = new StrongExpectation(
+      'bar',
+      [It.deepEquals(undefined)],
+      {
+        value: 23,
+      }
+    );
 
     expect(expectation.matches([42])).toBeFalsy();
   });
@@ -53,7 +61,7 @@ describe('StrongExpectation', () => {
   it('should print when, returns and invocation count', () => {
     const expectation = new StrongExpectation(
       'baz',
-      [deepEquals(4), deepEquals(5), deepEquals(6)],
+      [It.deepEquals(4), It.deepEquals(5), It.deepEquals(6)],
       {
         value: 42,
       }

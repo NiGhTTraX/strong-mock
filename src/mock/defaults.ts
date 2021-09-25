@@ -1,4 +1,4 @@
-import { deepEquals, Matcher } from '../expectation/matcher';
+import { It, Matcher } from '../expectation/matcher';
 
 export type StrongMockDefaults = {
   /**
@@ -19,7 +19,7 @@ export type StrongMockDefaults = {
 };
 
 const defaults: StrongMockDefaults = {
-  matcher: deepEquals,
+  matcher: It.deepEquals,
 };
 
 export let currentDefaults: StrongMockDefaults = defaults;

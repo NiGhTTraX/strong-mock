@@ -264,6 +264,7 @@ console.log(instance(fn)(
 ```
 
 Available matchers:
+- `deepEquals` - the default, uses deep equality,
 - `is` - uses `Object.is` for comparison,
 - `isAny` - matches anything,
 - `isNumber` - matches any number,

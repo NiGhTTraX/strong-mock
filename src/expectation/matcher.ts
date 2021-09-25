@@ -62,12 +62,27 @@ const matches = <T>(
 };
 
 /**
- * The default matcher that checks for deep equality.
+ * Compare values using deep equality.
+ *
+ * @see It.is A matcher that uses strict equality.
  */
-export const deepEquals = <T>(expected: T): TypeMatcher<T> =>
+const deepEquals = <T>(expected: T): TypeMatcher<T> =>
   matches(
     (actual) => isEqual(actual, expected),
     () => printArg(expected)
+  );
+
+/**
+ * Compare values using `Object.is`.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ *
+ * @see It.deepEquals A matcher that uses deep equality.
+ */
+const is = <T = unknown>(expected: T): TypeMatcher<T> =>
+  matches(
+    (actual) => Object.is(actual, expected),
+    () => `${printExpected(expected)}`
   );
 
 /**
@@ -262,24 +277,14 @@ const willCapture = <T = unknown>(
 };
 
 /**
- * Compare values using `Object.is`.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */
-const is = <T = unknown>(expected: T): TypeMatcher<T> =>
-  matches(
-    (actual) => Object.is(actual, expected),
-    () => `${printExpected(expected)}`
-  );
-
-/**
  * Contains argument matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
 export const It = {
+  matches,
+  deepEquals,
   is,
   isAny,
-  matches,
   isObject,
   isNumber,
   isString,

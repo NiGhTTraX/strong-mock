@@ -1,101 +1,109 @@
 import { expect } from 'tdd-buffet/expect/jest';
 import { describe, it } from 'tdd-buffet/suite/node';
-import { deepEquals, It } from './matcher';
+import { It } from './matcher';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 
 describe('It', () => {
   describe('deepEquals', () => {
     it('should match primitives', () => {
-      expect(deepEquals(1).matches(1)).toBeTruthy();
-      expect(deepEquals(1).matches(2)).toBeFalsy();
+      expect(It.deepEquals(1).matches(1)).toBeTruthy();
+      expect(It.deepEquals(1).matches(2)).toBeFalsy();
 
-      expect(deepEquals(1.0).matches(1.0)).toBeTruthy();
-      expect(deepEquals(1.0).matches(1.1)).toBeFalsy();
+      expect(It.deepEquals(1.0).matches(1.0)).toBeTruthy();
+      expect(It.deepEquals(1.0).matches(1.1)).toBeFalsy();
 
-      expect(deepEquals(true).matches(true)).toBeTruthy();
-      expect(deepEquals(true).matches(false)).toBeFalsy();
+      expect(It.deepEquals(true).matches(true)).toBeTruthy();
+      expect(It.deepEquals(true).matches(false)).toBeFalsy();
 
-      expect(deepEquals('a').matches('a')).toBeTruthy();
-      expect(deepEquals('a').matches('b')).toBeFalsy();
+      expect(It.deepEquals('a').matches('a')).toBeTruthy();
+      expect(It.deepEquals('a').matches('b')).toBeFalsy();
     });
 
     it('should match arrays', () => {
-      expect(deepEquals([1, 2, 3]).matches([1, 2, 3])).toBeTruthy();
-      expect(deepEquals([1, 2, 3]).matches([1, 2, 4])).toBeFalsy();
-      expect(deepEquals([1, 2, 3]).matches([2, 3])).toBeFalsy();
+      expect(It.deepEquals([1, 2, 3]).matches([1, 2, 3])).toBeTruthy();
+      expect(It.deepEquals([1, 2, 3]).matches([1, 2, 4])).toBeFalsy();
+      expect(It.deepEquals([1, 2, 3]).matches([2, 3])).toBeFalsy();
     });
 
     it('should match objects', () => {
-      expect(deepEquals({ foo: 'bar' }).matches({ foo: 'bar' })).toBeTruthy();
-      expect(deepEquals({ foo: 'bar' }).matches({ foo: 'baz' })).toBeFalsy();
-      expect(deepEquals({ foo: 'bar' }).matches({})).toBeFalsy();
-      expect(deepEquals({}).matches({ foo: 'bar' })).toBeFalsy();
+      expect(
+        It.deepEquals({ foo: 'bar' }).matches({ foo: 'bar' })
+      ).toBeTruthy();
+      expect(It.deepEquals({ foo: 'bar' }).matches({ foo: 'baz' })).toBeFalsy();
+      expect(It.deepEquals({ foo: 'bar' }).matches({})).toBeFalsy();
+      expect(It.deepEquals({}).matches({ foo: 'bar' })).toBeFalsy();
     });
 
     it('should match nested objects', () => {
       expect(
-        deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'baz' } })
+        It.deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'baz' } })
       ).toBeTruthy();
       expect(
-        deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'boo' } })
+        It.deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'boo' } })
       ).toBeFalsy();
     });
 
     it('should not match objects with missing optional keys', () => {
-      expect(deepEquals({}).matches({ key: undefined })).toBeFalsy();
-      expect(deepEquals({ key: undefined }).matches({})).toBeFalsy();
+      expect(It.deepEquals({}).matches({ key: undefined })).toBeFalsy();
+      expect(It.deepEquals({ key: undefined }).matches({})).toBeFalsy();
     });
 
     it('should match objects with symbol keys', () => {
       const foo = Symbol('foo');
 
-      expect(deepEquals({ [foo]: true }).matches({ [foo]: true })).toBeTruthy();
-      expect(deepEquals({ [foo]: true }).matches({ [foo]: false })).toBeFalsy();
+      expect(
+        It.deepEquals({ [foo]: true }).matches({ [foo]: true })
+      ).toBeTruthy();
+      expect(
+        It.deepEquals({ [foo]: true }).matches({ [foo]: false })
+      ).toBeFalsy();
 
-      expect(deepEquals({ [foo]: true }).matches({})).toBeFalsy();
-      expect(deepEquals({}).matches({ [foo]: false })).toBeFalsy();
+      expect(It.deepEquals({ [foo]: true }).matches({})).toBeFalsy();
+      expect(It.deepEquals({}).matches({ [foo]: false })).toBeFalsy();
     });
 
     it('should match sets', () => {
       expect(
-        deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
+        It.deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
       ).toBeTruthy();
       expect(
-        deepEquals(new Set([1, 2, 3])).matches(new Set([2, 3]))
+        It.deepEquals(new Set([1, 2, 3])).matches(new Set([2, 3]))
       ).toBeFalsy();
       expect(
-        deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 4]))
+        It.deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 4]))
       ).toBeFalsy();
     });
 
     it('should match maps', () => {
       expect(
-        deepEquals(new Map([[1, 2]])).matches(new Map([[1, 2]]))
+        It.deepEquals(new Map([[1, 2]])).matches(new Map([[1, 2]]))
       ).toBeTruthy();
       expect(
-        deepEquals(new Map([[1, 2]])).matches(new Map([[1, 3]]))
+        It.deepEquals(new Map([[1, 2]])).matches(new Map([[1, 3]]))
       ).toBeFalsy();
-      expect(deepEquals(new Map([[1, 2]])).matches(new Map([]))).toBeFalsy();
+      expect(It.deepEquals(new Map([[1, 2]])).matches(new Map([]))).toBeFalsy();
     });
 
     it('should match dates', () => {
-      expect(deepEquals(new Date(1000)).matches(new Date(1000))).toBeTruthy();
-      expect(deepEquals(new Date(1000)).matches(new Date(1001))).toBeFalsy();
+      expect(
+        It.deepEquals(new Date(1000)).matches(new Date(1000))
+      ).toBeTruthy();
+      expect(It.deepEquals(new Date(1000)).matches(new Date(1001))).toBeFalsy();
     });
 
     it('should match buffers', () => {
       expect(
-        deepEquals(Buffer.from('abc')).matches(Buffer.from('abc'))
+        It.deepEquals(Buffer.from('abc')).matches(Buffer.from('abc'))
       ).toBeTruthy();
       expect(
-        deepEquals(Buffer.from('abc')).matches(Buffer.from('abd'))
+        It.deepEquals(Buffer.from('abc')).matches(Buffer.from('abd'))
       ).toBeFalsy();
     });
 
     it('should pretty print', () => {
-      expectAnsilessEqual(deepEquals(23).toJSON(), '23');
+      expectAnsilessEqual(It.deepEquals(23).toJSON(), '23');
       expectAnsilessEqual(
-        deepEquals({ foo: { bar: [1, 2, 3] } }).toJSON(),
+        It.deepEquals({ foo: { bar: [1, 2, 3] } }).toJSON(),
         '{"foo": {"bar": [1, 2, 3]}}'
       );
     });
