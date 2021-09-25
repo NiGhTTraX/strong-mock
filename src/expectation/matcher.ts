@@ -21,7 +21,7 @@ export type Matcher<T> = T & {
 };
 
 /**
- * Use to test if an expectation on an argument is a custom matcher.
+ * Used to test if an expectation on an argument is a custom matcher.
  */
 export function isMatcher(f: unknown): f is Matcher<unknown> {
   return !!(f && (<Matcher<unknown>>f).__isMatcher);
@@ -45,7 +45,7 @@ export const deepEquals = <T>(expected: T): Matcher<T> =>
  *
  * @example
  * const fn = mock<(x: number, y: string) => number>();
- * when(fn(It.isAny(), It.isAny()).thenReturn(1);
+ * when(fn(It.isAny(), It.isAny())).thenReturn(1);
  *
  * instance(fn)(23, 'foobar') === 1
  */
@@ -68,7 +68,7 @@ const isAny = (): Matcher<any> => ({
  *
  * @example
  * const fn = mock<(x: number) => number>();
- * when(fn(It.matches(x => x >= 0)).returns(42);
+ * when(fn(It.matches(x => x >= 0))).returns(42);
  *
  * instance(fn)(2) === 42
  * instance(fn)(-1) // throws
@@ -96,7 +96,7 @@ type DeepPartial<T> = T extends object
  *
  * @example
  * const fn = mock<(foo: { x: number, y: number }) => number>();
- * when(fn(It.isObject({ x: 23 }).returns(42);
+ * when(fn(It.isObject({ x: 23 }))).returns(42);
  *
  * instance(fn)({ x: 100, y: 200 }) // throws
  * instance(fn)({ x: 23, y: 200 }) // returns 42
@@ -128,7 +128,7 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
  *
  * @example
  * const fn = mock<(x: number) => number>();
- * when(fn(It.isNumber()).returns(42);
+ * when(fn(It.isNumber())).returns(42);
  *
  * instance(fn)(20.5) === 42
  * instance(fn)(NaN) // throws
@@ -148,7 +148,7 @@ const isNumber = (): Matcher<number> =>
  *
  * @example
  * const fn = mock<(x: string, y: string) => number>();
- * when(fn(It.isString(), It.isString({ containing: 'bar' }).returns(42);
+ * when(fn(It.isString(), It.isString({ containing: 'bar' }))).returns(42);
  *
  * instance(fn)('foo', 'baz') // throws
  * instance(fn)('foo', 'bar') === 42
@@ -192,14 +192,14 @@ const isString = ({
  * @example
  * const fn = mock<(arr: number[]) => number>();
  * when(fn(It.isArray())).thenReturn(1);
- * when(fn(It.isArray([2, 3))).thenReturn(2);
+ * when(fn(It.isArray([2, 3]))).thenReturn(2);
  *
  * instance(fn)({ length: 1, 0: 42 }) // throws
- * instance(fn)([]]) === 1
- * instance(fn)([3, 2, 1) === 2
+ * instance(fn)([]) === 1
+ * instance(fn)([3, 2, 1]) === 2
  *
  * @example
- * It.isArray([It.isString({ containing: 'foobar' }))
+ * It.isArray([It.isString({ containing: 'foobar' })])
  */
 const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
   ({
@@ -232,7 +232,7 @@ const isArray = <T extends any[]>(containing?: T): Matcher<T> =>
  * Matches anything and stores the received value.
  *
  * This should not be needed for most cases, but can be useful if you need
- * access to a complex argument outside of the expectation e.g. to test a
+ * access to a complex argument outside the expectation e.g. to test a
  * callback.
  *
  * @param name If given, this name will be printed in error messages.
