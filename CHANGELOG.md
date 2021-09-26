@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.3.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.2.1...v7.3.0) (2021-09-26)
+
+
+### Features
+
+* Add `It.is` matcher ([d0e89b2](https://github.com/NiGhTTraX/strong-mock/commit/d0e89b216b2160d40b7b9334788ca19aed68f468)), closes [#252](https://github.com/NiGhTTraX/strong-mock/issues/252)
+* Add `strict` option to `deepEquals` matcher ([c98ea56](https://github.com/NiGhTTraX/strong-mock/commit/c98ea56c2eddb30df7d133a56cb37ac89154c608)), closes [#252](https://github.com/NiGhTTraX/strong-mock/issues/252) [#257](https://github.com/NiGhTTraX/strong-mock/issues/257)
+* Allow overriding the default matcher ([e5d27c8](https://github.com/NiGhTTraX/strong-mock/commit/e5d27c87d99d3690d47bf553551acf95d39bd07a)), closes [#252](https://github.com/NiGhTTraX/strong-mock/issues/252)
+* Expose default `deepEquals` matcher ([7d1d015](https://github.com/NiGhTTraX/strong-mock/commit/7d1d01500344a67a3bcc06ba28c93a8b9c9b077b))
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-matcher-utils to ~27.2.0 ([8a68c86](https://github.com/NiGhTTraX/strong-mock/commit/8a68c86ea6c630818d0f1b05e79c08d23fbbe350))
+
 ### [7.2.1](https://github.com/NiGhTTraX/strong-mock/compare/v7.2.0...v7.2.1) (2021-09-08)
 
 
