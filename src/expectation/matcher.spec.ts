@@ -505,6 +505,12 @@ describe('It', () => {
     it('should pretty print', () => {
       expect(It.matches(() => true).toJSON()).toEqual('matches(() => true)');
     });
+
+    it('should pretty print with custom message', () => {
+      expect(
+        It.matches(() => true, { toJSON: () => 'foobar' }).toJSON()
+      ).toEqual('foobar');
+    });
   });
 
   describe('isObject', () => {

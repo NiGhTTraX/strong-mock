@@ -55,7 +55,7 @@ export function isMatcher(f: unknown): f is Matcher {
  */
 const matches = <T>(
   cb: (actual: T) => boolean,
-  toJSON: () => string = () => `matches(${cb.toString()})`
+  { toJSON = () => `matches(${cb.toString()})` }: { toJSON?: () => string } = {}
 ): TypeMatcher<T> => {
   const matcher: Matcher = {
     __isMatcher: true,
@@ -101,7 +101,7 @@ const deepEquals = <T>(
 
       return isEqual(removeUndefined(actual), removeUndefined(expected));
     },
-    () => printArg(expected)
+    { toJSON: () => printArg(expected) }
   );
 
 /**
@@ -112,10 +112,9 @@ const deepEquals = <T>(
  * @see It.deepEquals A matcher that uses deep equality.
  */
 const is = <T = unknown>(expected: T): TypeMatcher<T> =>
-  matches(
-    (actual) => Object.is(actual, expected),
-    () => `${printExpected(expected)}`
-  );
+  matches((actual) => Object.is(actual, expected), {
+    toJSON: () => `${printExpected(expected)}`,
+  });
 
 /**
  * Match any value, including `undefined` and `null`.
@@ -127,10 +126,7 @@ const is = <T = unknown>(expected: T): TypeMatcher<T> =>
  * instance(fn)(23, 'foobar') === 1
  */
 const isAny = (): TypeMatcher<any> =>
-  matches(
-    () => true,
-    () => 'anything'
-  );
+  matches(() => true, { toJSON: () => 'anything' });
 
 type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
@@ -166,7 +162,7 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
         // Let lodash handle it otherwise.
         return undefined;
       }),
-    () => (partial ? `object(${printExpected(partial)})` : 'object')
+    { toJSON: () => (partial ? `object(${printExpected(partial)})` : 'object') }
   );
 
 /**
@@ -180,10 +176,9 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
  * instance(fn)(NaN) // throws
  */
 const isNumber = (): TypeMatcher<number> =>
-  matches(
-    (actual) => typeof actual === 'number' && !Number.isNaN(actual),
-    () => 'number'
-  );
+  matches((actual) => typeof actual === 'number' && !Number.isNaN(actual), {
+    toJSON: () => 'number',
+  });
 
 /**
  * Match a string, potentially by a pattern.
@@ -218,10 +213,12 @@ const isString = ({
 
       return matching?.test(actual) ?? true;
     },
-    () =>
-      containing || matching
-        ? `string(${printExpected(containing || matching)})`
-        : 'string'
+    {
+      toJSON: () =>
+        containing || matching
+          ? `string(${printExpected(containing || matching)})`
+          : 'string',
+    }
   );
 };
 
@@ -267,7 +264,10 @@ const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> =>
           }) !== undefined
       );
     },
-    () => (containing ? `array(${printExpected(containing)})` : 'array')
+    {
+      toJSON: () =>
+        containing ? `array(${printExpected(containing)})` : 'array',
+    }
   );
 
 /**
