@@ -1,6 +1,7 @@
 /* istanbul ignore file */
+import { It } from './expectation/it';
 import { instance } from './instance/instance';
-import { It, Matcher } from './expectation/matcher';
+import { Matcher } from './expectation/matcher';
 import { setDefaults, StrongMockDefaults } from './mock/defaults';
 import { mock } from './mock/mock';
 import { reset, resetAll } from './verify/reset';

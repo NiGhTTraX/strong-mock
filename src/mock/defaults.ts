@@ -1,4 +1,5 @@
-import { It, Matcher } from '../expectation/matcher';
+import { It } from '../expectation/it';
+import { Matcher } from '../expectation/matcher';
 
 export type StrongMockDefaults = {
   /**
