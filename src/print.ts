@@ -20,7 +20,6 @@ export const printArg = (arg: unknown): string =>
   isMatcher(arg) ? arg.toJSON() : printExpected(arg);
 
 export const printCall = (property: Property, args: any[]) => {
-  // TODO: don't leak the matcher concept here
   const prettyArgs = args.map((arg) => printArg(arg)).join(', ');
   const prettyProperty = printProperty(property);
 
