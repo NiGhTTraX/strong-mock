@@ -5,12 +5,7 @@ import pkg from './package.json';
 export default [
   {
     input: 'src/index.ts',
-    // Don't know why rollup thinks lodash/* are different from lodash.
-    external: [
-      ...Object.keys(pkg.dependencies),
-      'lodash/isEqual',
-      'lodash/isMatchWith',
-    ],
+    external: Object.keys(pkg.dependencies),
     plugins: [
       typescript({
         tsconfig: './tsconfig.build.json',
