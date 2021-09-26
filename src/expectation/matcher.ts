@@ -8,16 +8,15 @@ import {
 } from 'lodash';
 import { printArg } from '../print';
 
+export const MATCHER_SYMBOL = Symbol('matcher');
+
 export type Matcher = {
   /**
    * Will be called with a value to match against.
    */
   matches: (arg: any) => boolean;
 
-  /**
-   * TODO: turn into a symbol
-   */
-  __isMatcher: boolean;
+  [MATCHER_SYMBOL]: boolean;
 
   /**
    * Used by `pretty-format`.
@@ -35,7 +34,7 @@ export type TypeMatcher<T> = T & Matcher;
  * Used to test if an expectation on an argument is a custom matcher.
  */
 export function isMatcher(f: unknown): f is Matcher {
-  return !!(f && (<Matcher>f).__isMatcher);
+  return !!(f && (<Matcher>f)[MATCHER_SYMBOL]);
 }
 
 /**
@@ -58,7 +57,7 @@ const matches = <T>(
   { toJSON = () => `matches(${cb.toString()})` }: { toJSON?: () => string } = {}
 ): TypeMatcher<T> => {
   const matcher: Matcher = {
-    __isMatcher: true,
+    [MATCHER_SYMBOL]: true,
     matches: (arg: T) => cb(arg),
     toJSON,
   };
@@ -293,7 +292,7 @@ const willCapture = <T = unknown>(
   let capturedValue: T | undefined;
 
   const matcher: Matcher & { value: T | undefined } = {
-    __isMatcher: true,
+    [MATCHER_SYMBOL]: true,
     matches: (actual) => {
       capturedValue = actual;
 

@@ -1,5 +1,6 @@
 import { returnOrThrow } from '../../instance/instance';
 import { ApplyProp, Expectation, ReturnValue } from '../expectation';
+import { MATCHER_SYMBOL } from '../matcher';
 import { CallMap, ExpectationRepository } from './expectation-repository';
 import { Property } from '../../proxy';
 
@@ -88,7 +89,7 @@ export abstract class BaseRepository implements ExpectationRepository {
       case '@@__IMMUTABLE_RECORD__@@':
         return { value: null };
 
-      case '__isMatcher':
+      case MATCHER_SYMBOL:
         return { value: false };
 
       case ApplyProp:
