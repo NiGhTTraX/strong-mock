@@ -9,7 +9,7 @@ import { Fn } from './fixtures';
 describe('e2e', () => {
   describe('function', () => {
     it('should set expectation to throw', () => {
-      const fn = mock<() => {}>();
+      const fn = mock<() => void>();
       const error = new Error();
 
       when(fn()).thenThrow(error);
