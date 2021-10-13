@@ -41,7 +41,7 @@
     "@tdd-buffet/tsconfig": "~1.0.0",
     "@types/lodash": "~4.14.0",
     "codecov": "~3.8.0",
-    "doctoc": "~2.0.0",
+    "doctoc": "~2.1.0",
     "eslint": "~7.32.0",
     "rollup": "~2.58.0",
     "rollup-plugin-typescript2": "~0.30.0",
