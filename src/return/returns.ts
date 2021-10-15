@@ -114,13 +114,14 @@ export const createReturns = <R>(
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
     // TODO: merge this with the promise version
-    thenReturn: /* istanbul ignore next: because this is overwritten by the promise version */ (
-      returnValue: any
-    ): InvocationCount =>
-      finishPendingExpectation(
-        { value: returnValue, isError: false, isPromise: false },
-        pendingExpectation
-      ),
+    thenReturn:
+      /* istanbul ignore next: because this is overwritten by the promise version */ (
+        returnValue: any
+      ): InvocationCount =>
+        finishPendingExpectation(
+          { value: returnValue, isError: false, isPromise: false },
+          pendingExpectation
+        ),
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
         { value: getError(errorOrMessage), isError: true, isPromise: false },

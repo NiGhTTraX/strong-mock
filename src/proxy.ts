@@ -52,11 +52,12 @@ export interface ProxyTraps {
 
 export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
   // eslint-disable-next-line no-empty-function
-  (new Proxy(/* istanbul ignore next */ () => {}, {
+  new Proxy(/* istanbul ignore next */ () => {}, {
     get: (target, prop: string | symbol) => {
       if (prop === 'bind') {
-        return (thisArg: any, ...args: any[]) => (...moreArgs: any[]) =>
-          traps.apply([...args, ...moreArgs]);
+        return (thisArg: any, ...args: any[]) =>
+          (...moreArgs: any[]) =>
+            traps.apply([...args, ...moreArgs]);
       }
 
       if (prop === 'apply') {
@@ -90,4 +91,4 @@ export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
 
       return undefined;
     },
-  }) as unknown) as Mock<T>;
+  }) as unknown as Mock<T>;

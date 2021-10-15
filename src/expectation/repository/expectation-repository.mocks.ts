@@ -11,7 +11,9 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   }
 
   get(): ReturnValue {
-    if (!this.expectation) throw new Error();
+    if (!this.expectation) {
+      throw new Error();
+    }
     return this.expectation.returnValue;
   }
 
