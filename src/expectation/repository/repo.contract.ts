@@ -147,8 +147,7 @@ export const repoContractTests: ExpectationRepositoryContract = {
       },
     },
     {
-      name:
-        'should keep an expectation as unmet until it is completely fulfilled',
+      name: 'should keep an expectation as unmet until it is completely fulfilled',
       test: (repo) => () => {
         const expectation = new MatchingPropertyExpectation('foo', {
           value: 23,

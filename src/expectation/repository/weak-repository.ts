@@ -10,7 +10,8 @@ import { Property } from '../../proxy';
  */
 export class WeakRepository
   extends BaseRepository
-  implements ExpectationRepository {
+  implements ExpectationRepository
+{
   private repeating = new Map<Property, boolean>();
 
   protected getValueForUnexpectedCall = () => null;
