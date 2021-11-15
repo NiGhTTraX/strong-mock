@@ -301,7 +301,7 @@ const fn = mock<(x: number, y: number[]) => string>();
 
 when(fn(
   It.matches(x => x > 0),
-  It.matches(y => y.values.includes(42))
+  It.matches(y => y.includes(42))
 )).thenReturn('matched');
 ```
 
