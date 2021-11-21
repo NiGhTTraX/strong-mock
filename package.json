@@ -42,7 +42,7 @@
     "@types/lodash": "~4.14.0",
     "codecov": "~3.8.0",
     "doctoc": "~2.1.0",
-    "eslint": "~8.2.0",
+    "eslint": "~8.3.0",
     "rollup": "~2.60.0",
     "rollup-plugin-typescript2": "~0.31.0",
     "standard-version": "~9.3.0",
