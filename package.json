@@ -32,7 +32,7 @@
     "report-coverage": "codecov"
   },
   "dependencies": {
-    "jest-matcher-utils": "~27.3.0",
+    "jest-matcher-utils": "~27.4.0",
     "lodash": "~4.17.0"
   },
   "devDependencies": {
