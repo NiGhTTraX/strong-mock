@@ -279,12 +279,12 @@ Available matchers:
 
 The following table illustrates the differences between the equality matchers:
 
-expected | actual | `It.is` | `It.deepEquals` | `It.deepEquals({ strict: false })`
--------|----------|---------|-----------------|-----------------------------------
-`"foo"` | `"bar"` | equal   | equal           | equal
-`{ foo: "bar" }` | `{ foo: "bar" }` | not equal | equal | equal
-`{ }` | `{ foo: undefined }` | not equal | not equal | equal
-`new (class {})()` | `new (class {})()` | not equal | not equal | equal
+| expected           | actual               | `It.is`   | `It.deepEquals` | `It.deepEquals({ strict: false })` |
+|--------------------|----------------------|-----------|-----------------|------------------------------------|
+| `"foo"`            | `"bar"`              | equal     | equal           | equal                              |
+| `{ foo: "bar" }`   | `{ foo: "bar" }`     | not equal | equal           | equal                              |
+| `{ }`              | `{ foo: undefined }` | not equal | not equal       | equal                              |
+| `new (class {})()` | `new (class {})()`   | not equal | not equal       | equal                              |
 
 Some matchers, like `isObject` and `isArray` support nesting matchers:
 
