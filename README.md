@@ -87,6 +87,8 @@ Error messages include the property that has been accessed, any arguments passed
 
 ### Type safe argument matchers
 
+Optional argument matchers allow you to create complex expectations, while still maintaining type safety.
+
 ![type safe matchers](./media/type-safe-matchers.png)
 
 ## API
