@@ -27,12 +27,12 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Installation](#installation)
-- [Requirements](#requirements)
 - [Features](#features)
   - [Type safety](#type-safety)
   - [Useful error messages](#useful-error-messages)
   - [Type safe argument matchers](#type-safe-argument-matchers)
+- [Installation](#installation)
+- [Requirements](#requirements)
 - [API](#api)
   - [Setting expectations](#setting-expectations)
   - [Setting multiple expectations](#setting-multiple-expectations)
@@ -57,20 +57,6 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Installation
-
-```
-npm i -D strong-mock
-```
-
-```
-yarn add -D strong-mock
-```
-
-## Requirements
-
-strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
-
 ## Features
 
 ### Type safety
@@ -90,6 +76,20 @@ Error messages include the property that has been accessed, any arguments passed
 Optional argument matchers allow you to create complex expectations, while still maintaining type safety.
 
 ![type safe matchers](./media/type-safe-matchers.png)
+
+## Installation
+
+```
+npm i -D strong-mock
+```
+
+```
+yarn add -D strong-mock
+```
+
+## Requirements
+
+strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
 
 ## API
 
