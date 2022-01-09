@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { NestedWhen } from '../errors';
 import { ApplyProp } from '../expectation/expectation';
 import { RepoSideEffectPendingExpectation } from '../when/pending-expectation';

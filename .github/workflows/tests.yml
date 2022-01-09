@@ -10,23 +10,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
+
       - name: Install Node
         uses: actions/setup-node@v2
         with:
           node-version: 12
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: pnpm i
 
       - name: Lint
-        run: yarn lint
+        run: pnpm run lint
 
       - name: Test
-        run: yarn test
+        run: pnpm run test
 
       - name: Build
-        run: yarn build
+        run: pnpm run build
 
       - name: Coverage
-        run: yarn report-coverage
+        run: pnpm run report-coverage

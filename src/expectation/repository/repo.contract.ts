@@ -1,6 +1,4 @@
 /* eslint-disable no-empty */
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { expect } from 'tdd-buffet/expect/jest';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,

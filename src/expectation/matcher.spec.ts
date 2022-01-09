@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { It } from './it';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 

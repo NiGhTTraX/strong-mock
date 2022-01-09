@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
 import { ApplyProp } from '../expectation';
 import { StrongRepository } from './strong-repository';

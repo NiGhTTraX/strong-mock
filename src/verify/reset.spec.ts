@@ -1,6 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { when } from '../index';
 import { mock } from '../mock/mock';
 import { reset } from './reset';

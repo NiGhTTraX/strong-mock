@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { ReturnValue } from '../expectation/expectation';
 import { createReturns } from './returns';
 import { SpyPendingExpectation } from '../expectation/expectation.mocks';

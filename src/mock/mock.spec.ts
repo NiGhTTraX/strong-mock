@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { NotAMock } from '../errors';
 import { getMockState } from './map';
 import { mock } from './mock';

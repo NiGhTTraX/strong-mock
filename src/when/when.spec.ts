@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { instance, mock, when } from '..';
 import { MissingWhen, UnfinishedExpectation } from '../errors';
 import { clearActiveMock } from '../mock/map';

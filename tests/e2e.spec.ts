@@ -1,5 +1,3 @@
-import { expect } from 'tdd-buffet/expect/jest';
-import { describe, it } from 'tdd-buffet/suite/node';
 import { It, verify, when } from '../src';
 import { UnexpectedCall, UnmetExpectations } from '../src/errors';
 import { instance } from '../src/instance/instance';

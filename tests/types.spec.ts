@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { it } from 'tdd-buffet/suite/node';
 import { instance, mock, when, It } from '../src';
 
 it('type safety', () => {

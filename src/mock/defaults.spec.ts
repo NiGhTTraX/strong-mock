@@ -1,5 +1,3 @@
-import { describe, it, beforeEach } from 'tdd-buffet/suite/node';
-import { expect } from 'tdd-buffet/expect/jest';
 import { instance, It, when } from '../index';
 import { setDefaults } from './defaults';
 import { mock } from './mock';

@@ -1,4 +1,3 @@
-import { describe, it } from 'tdd-buffet/suite/node';
 import { Expectation } from '../expectation/expectation';
 import { createInvocationCount } from './invocation-count';
 import { SM } from '../../tests/old';

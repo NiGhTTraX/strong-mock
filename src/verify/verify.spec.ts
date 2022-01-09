@@ -1,6 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import { expect } from 'tdd-buffet/expect/jest';
-import { beforeEach, describe, it } from 'tdd-buffet/suite/node';
 import { SM } from '../../tests/old';
 import { UnexpectedCalls, UnmetExpectations } from '../errors';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks';

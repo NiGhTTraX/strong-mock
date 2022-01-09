@@ -1,7 +1,8 @@
 {
   "extends": "@tdd-buffet/tsconfig",
   "compilerOptions": {
-    "declaration": false
+    "declaration": false,
+    "types": ["jest", "node"]
   },
   "exclude": [
     "node_modules",
