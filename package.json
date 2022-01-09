@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "docs": "doctoc --title '**Table of Contents**' README.md",
-    "build": "pnpm run clean && yarn run compile",
+    "build": "pnpm run clean && pnpm run compile",
     "clean": "rm -rf ./dist",
     "compile": "rollup -c",
     "prepublishOnly": "pnpm run build",
