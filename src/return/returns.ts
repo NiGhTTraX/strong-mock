@@ -163,5 +163,7 @@ export const createReturns = <R>(
       ),
   };
 
+  // @ts-expect-error because the return type is a conditional, and we're merging
+  // both branches here
   return { ...nonPromiseStub, ...promiseStub };
 };
