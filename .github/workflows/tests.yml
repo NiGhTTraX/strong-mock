@@ -33,4 +33,4 @@ jobs:
         run: pnpm run build
 
       - name: Coverage
-        run: pnpm run report-coverage
+        uses: codecov/codecov-action@v2
