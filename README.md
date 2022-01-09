@@ -226,7 +226,7 @@ try {
 verify(fn); // throws
 ```
 
-It is recommended that that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code hasn't silently caught any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks e.g. in an `afterEach` hook.
+It is recommended that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code did not silently catch any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks e.g. in an `afterEach` hook.
 
 ![verify error](./media/verify.png)
 
@@ -345,7 +345,7 @@ instance(fn)([1, 2, 3]); // throws because different arrays
 
 This library is different from other mocking/spying libraries you might have used before such as [sinon](https://sinonjs.org) or [jest](https://jestjs.io/docs/en/mock-functions). Whereas those libraries are focused on recording calls to the mocks and always returning something, strong-mock requires you to set your expectations upfront. If a call happens that is not expected the mock will throw an error.
 
-This design decision has a few reasons behind it. First of all, it forces you to be aware of what your code needs from its dependencies. Spying libraries encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
+This design decision has a few reasons behind it. First, it forces you to be aware of what your code needs from its dependencies. Spying libraries encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
 
 Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them then you might want to look into splitting the code to only depend on things it really needs.
 
@@ -359,7 +359,7 @@ You currently can't do that. Please use a normal method instead e.g. `setFoo()` 
 
 ### Why do I have to set a return value even if it's `undefined`?
 
-To make side effects explicit and to prevent future refactoring headaches. If you would have just `when(fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
+To make side effects explicit and to prevent future refactoring headaches. If you had just `when(fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
 
 ### How do I provide a function for the mock to call?
 
@@ -377,7 +377,7 @@ when(foo.bar).thenReturn(x => `called ${x}`);
 console.log(instance(foo).bar(23)); // 'called 23'
 ```
 
-The function in `thenReturn()` will be type checked against the actual interface so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
+The function in `thenReturn()` will be type checked against the actual interface, so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
 
 ![call-rename](media/rename-args.gif)
 
