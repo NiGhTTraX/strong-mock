@@ -16,7 +16,7 @@ specifiers:
   standard-version: ~9.3.0
   strip-ansi: ~6.0.0
   strong-mock: ~6.0.0
-  tslib: ~2.3.1
+  tslib: ~2.4.0
   typescript: ~4.6.0
 
 dependencies:
@@ -37,7 +37,7 @@ devDependencies:
   standard-version: 9.3.2
   strip-ansi: 6.0.1
   strong-mock: 6.0.0
-  tslib: 2.3.1
+  tslib: 2.4.0
   typescript: 4.6.2
 
 packages:
@@ -5424,7 +5424,7 @@ packages:
       sade: 1.8.1
       terser: 5.10.0
       tiny-glob: 0.2.9
-      tslib: 2.3.1
+      tslib: 2.4.0
       typescript: 4.6.2
     transitivePeerDependencies:
       - '@types/babel__core'
@@ -7232,8 +7232,8 @@ packages:
     resolution: {integrity: sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==}
     dev: true
 
-  /tslib/2.3.1:
-    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
+  /tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
     dev: true
 
   /tsutils/3.21.0_typescript@4.6.2:
