@@ -44,7 +44,7 @@
     "doctoc": "~2.1.0",
     "eslint": "~8.14.0",
     "jest": "~27.5.0",
-    "microbundle": "~0.14.2",
+    "microbundle": "~0.15.0",
     "standard-version": "~9.3.0",
     "strip-ansi": "~6.0.0",
     "strong-mock": "~6.0.0",
