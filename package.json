@@ -38,7 +38,7 @@
     "@nighttrax/eslint-config-ts": "~10.0.0-beta.2",
     "@tdd-buffet/jest-config": "~4.1.0",
     "@tdd-buffet/tsconfig": "~1.0.0",
-    "@types/jest": "~27.4.0",
+    "@types/jest": "~27.5.0",
     "@types/node": "~17.0.8",
     "@types/lodash": "~4.14.0",
     "doctoc": "~2.1.0",
