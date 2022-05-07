@@ -42,7 +42,7 @@
     "@types/node": "~17.0.8",
     "@types/lodash": "~4.14.0",
     "doctoc": "~2.2.0",
-    "eslint": "~8.14.0",
+    "eslint": "~8.15.0",
     "jest": "~27.5.0",
     "microbundle": "~0.15.0",
     "standard-version": "~9.3.0",
