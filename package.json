@@ -45,7 +45,7 @@
     "eslint": "~8.15.0",
     "jest": "~27.5.0",
     "microbundle": "~0.15.0",
-    "standard-version": "~9.3.0",
+    "standard-version": "~9.5.0",
     "strip-ansi": "~6.0.0",
     "strong-mock": "~6.0.0",
     "tslib": "~2.4.0",
