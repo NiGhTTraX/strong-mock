@@ -1,7 +1,7 @@
-import { ApplyProp, ReturnValue } from '../expectation/expectation';
+import { ReturnValue } from '../expectation/expectation';
 import { getMockState } from '../mock/map';
 import { Mock } from '../mock/mock';
-import { createProxy } from '../proxy';
+import { createStub } from '../mock/stub';
 
 // Keep a cache of all mock instances so that we can return a stable reference
 // if `instance` is used multiple times.
@@ -42,18 +42,9 @@ export const instance = <T>(mock: Mock<T>): T => {
     return cache.get(mock);
   }
 
-  const { repository } = getMockState(mock);
+  const { repository, pendingExpectation } = getMockState(mock);
 
-  const proxy = createProxy<T>({
-    property: (property) => returnOrThrow(repository.get(property)),
-    apply: (args: any[]) => {
-      const fn = repository.get(ApplyProp);
-
-      // This is not using `returnOrThrow` because the repo will use it.
-      return fn.value(...args);
-    },
-    ownKeys: () => repository.getAllProperties(),
-  });
+  const proxy = createStub<T>(repository, pendingExpectation, () => false);
 
   cache.set(mock, proxy);
 
