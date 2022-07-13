@@ -38,8 +38,8 @@ type MockState = {
 /**
  * Store a global map of all mocks created and their state.
  *
- * This is needed because we can't reliably pass the state between `when`,
- * `thenReturn` and `instance`.
+ * This is needed because we can't reliably pass the state between `when`
+ * and `thenReturn`.
  */
 const mockMap = new Map<Mock<any>, MockState>();
 

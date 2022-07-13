@@ -12,11 +12,7 @@ export class UnfinishedExpectation extends Error {
 ${pendingExpectation.toJSON()}
 
 Please finish it by setting a return value even if the value
-is undefined.
-
-This may have been caused by using the mock without getting
-an instance from it first. Please use instance(mock) and use
-that value in the code you're testing.`);
+is undefined.`);
   }
 }
 
@@ -118,9 +114,7 @@ const parentMock = mock<T1>();
 const childMock = mock<T2>();
 
 when(() => childMock${printProperty(childProp)}).thenReturn(...);
-when(() => parentMock${printProperty(
-      parentProp
-    )}).thenReturn(instance(childMock))
+when(() => parentMock${printProperty(parentProp)}).thenReturn(childMock)
 `;
 
     super(

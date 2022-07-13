@@ -1,4 +1,4 @@
-import { instance, It, when } from '../index';
+import { It, when } from '../index';
 import { setDefaults } from './defaults';
 import { mock } from './mock';
 
@@ -16,7 +16,7 @@ describe('defaults', () => {
 
     when(() => fn(1)).thenReturn(true);
 
-    expect(instance(fn)(-1)).toBeTruthy();
+    expect(fn(-1)).toBeTruthy();
   });
 
   it('should not override the matcher for matcher values', () => {
@@ -28,7 +28,7 @@ describe('defaults', () => {
 
     when(() => fn(It.matches((x) => x === 1))).thenReturn(true);
 
-    expect(() => instance(fn)(-1)).toThrow();
+    expect(() => fn(-1)).toThrow();
   });
 
   it('should not stack', () => {
@@ -42,6 +42,6 @@ describe('defaults', () => {
 
     when(() => fn(1)).thenReturn(true);
 
-    expect(() => instance(fn)(-1)).toThrow();
+    expect(() => fn(-1)).toThrow();
   });
 });

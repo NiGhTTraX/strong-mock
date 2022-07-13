@@ -1,8 +1,8 @@
-import { returnOrThrow } from '../../instance/instance';
+import { returnOrThrow } from '../../mock/stub';
+import { Property } from '../../proxy';
 import { ApplyProp, Expectation, ReturnValue } from '../expectation';
 import { MATCHER_SYMBOL } from '../matcher';
 import { CallMap, ExpectationRepository } from './expectation-repository';
-import { Property } from '../../proxy';
 
 export type CountableExpectation = {
   expectation: Expectation;
@@ -64,7 +64,7 @@ export abstract class BaseRepository implements ExpectationRepository {
             this.recordExpected(property, args);
             this.countAndConsume(callExpectation);
 
-            // TODO: this is duplicated in instance
+            // TODO: this is duplicated in stub
             return returnOrThrow(callExpectation.expectation.returnValue);
           }
 

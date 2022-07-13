@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { instance, It, mock, when } from '../src';
+import { It, mock, when } from '../src';
 
 it('type safety', () => {
   function mockSafety() {
@@ -45,27 +45,6 @@ it('type safety', () => {
     // any will be treated like a promise but should allow any return value.
     const fnany = mock<() => any>();
     when(() => fnany()).thenReturn(23);
-  }
-
-  function instanceSafety() {
-    const fn = mock<() => void>();
-
-    // @ts-expect-error check function arguments
-    instance(fn)(23);
-
-    // @ts-expect-error check function return
-    const x: number = instance(fn)();
-
-    const obj = mock<{ foo: () => void }>();
-
-    // @ts-expect-error check interface method arguments
-    instance(obj).foo(23);
-
-    // @ts-expect-error check interface methods
-    instance(obj).bar();
-
-    // @ts-expect-error check interface method return
-    const y: number = instance(obj).foo();
   }
 
   function matcherSafety() {

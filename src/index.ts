@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 export { mock } from './mock/mock';
 export { when } from './when/when';
-export { instance } from './instance/instance';
 export { reset, resetAll } from './verify/reset';
 export { verify, verifyAll } from './verify/verify';
 export { It } from './expectation/it';

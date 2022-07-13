@@ -1,11 +1,37 @@
 import { NestedWhen } from '../errors';
-import { ApplyProp } from '../expectation/expectation';
+import { ApplyProp, ReturnValue } from '../expectation/expectation';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { returnOrThrow } from '../instance/instance';
 import { createProxy, Property } from '../proxy';
 import { PendingExpectation } from '../when/pending-expectation';
 import { setActiveMock } from './map';
 import { Mock } from './mock';
+
+/**
+ * Return the expectation's return value.
+ *
+ * If the value is an error then throw it.
+ *
+ * If the value is a promise then resolve/reject it.
+ */
+export const returnOrThrow = ({ isError, isPromise, value }: ReturnValue) => {
+  if (isError) {
+    if (isPromise) {
+      return Promise.reject(value);
+    }
+
+    if (value instanceof Error) {
+      throw value;
+    }
+
+    throw new Error(value);
+  }
+
+  if (isPromise) {
+    return Promise.resolve(value);
+  }
+
+  return value;
+};
 
 export const createStub = <T>(
   repo: ExpectationRepository,

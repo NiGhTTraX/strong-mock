@@ -21,8 +21,8 @@ import { isMatcher, Matcher, MATCHER_SYMBOL, TypeMatcher } from './matcher';
  * const fn = mock<(x: number) => number>();
  * when(() => fn(It.matches(x => x >= 0))).returns(42);
  *
- * instance(fn)(2) === 42
- * instance(fn)(-1) // throws
+ * fn(2) === 42
+ * fn(-1) // throws
  */
 const matches = <T>(
   cb: (actual: T) => boolean,
@@ -94,7 +94,7 @@ const is = <T = unknown>(expected: T): TypeMatcher<T> =>
  * const fn = mock<(x: number, y: string) => number>();
  * when(() => fn(It.isAny(), It.isAny())).thenReturn(1);
  *
- * instance(fn)(23, 'foobar') === 1
+ * fn(23, 'foobar') === 1
  */
 const isAny = (): TypeMatcher<any> =>
   matches(() => true, { toJSON: () => 'anything' });
@@ -114,8 +114,8 @@ type DeepPartial<T> = T extends object
  * const fn = mock<(foo: { x: number, y: number }) => number>();
  * when(() => fn(It.isObject({ x: 23 }))).returns(42);
  *
- * instance(fn)({ x: 100, y: 200 }) // throws
- * instance(fn)({ x: 23, y: 200 }) // returns 42
+ * fn({ x: 100, y: 200 }) // throws
+ * fn({ x: 23, y: 200 }) // returns 42
  *
  * @example
  * It.isObject({ foo: It.isString() })
@@ -143,8 +143,8 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
  * const fn = mock<(x: number) => number>();
  * when(() => fn(It.isNumber())).returns(42);
  *
- * instance(fn)(20.5) === 42
- * instance(fn)(NaN) // throws
+ * fn(20.5) === 42
+ * fn(NaN) // throws
  */
 const isNumber = (): TypeMatcher<number> =>
   matches((actual) => typeof actual === 'number' && !Number.isNaN(actual), {
@@ -161,8 +161,8 @@ const isNumber = (): TypeMatcher<number> =>
  * const fn = mock<(x: string, y: string) => number>();
  * when(() => fn(It.isString(), It.isString({ containing: 'bar' }))).returns(42);
  *
- * instance(fn)('foo', 'baz') // throws
- * instance(fn)('foo', 'bar') === 42
+ * fn('foo', 'baz') // throws
+ * fn('foo', 'bar') === 42
  */
 const isString = ({
   matching,
@@ -206,9 +206,9 @@ const isString = ({
  * when(() => fn(It.isArray())).thenReturn(1);
  * when(() => fn(It.isArray([2, 3]))).thenReturn(2);
  *
- * instance(fn)({ length: 1, 0: 42 }) // throws
- * instance(fn)([]) === 1
- * instance(fn)([3, 2, 1]) === 2
+ * fn({ length: 1, 0: 42 }) // throws
+ * fn([]) === 1
+ * fn([3, 2, 1]) === 2
  *
  * @example
  * It.isArray([It.isString({ containing: 'foobar' })])
@@ -255,7 +255,7 @@ const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> =>
  * const matcher = It.willCapture();
  * when(() => fn(matcher)).thenReturn();
  *
- * instance(fn)(x => x + 1);
+ * fn(x => x + 1);
  * matcher.value?.(3) === 4
  */
 const willCapture = <T = unknown>(

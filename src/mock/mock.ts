@@ -10,8 +10,6 @@ import { currentDefaults } from './defaults';
 import { setMockState } from './map';
 import { createStub } from './stub';
 
-// TODO: is it possible to return a type here that won't be assignable to T,
-// but still has the same properties as T?
 export type Mock<T> = T;
 
 const strongExpectationFactory: ExpectationFactory = (
@@ -47,15 +45,14 @@ interface MockOptions {
 /**
  * Create a type safe mock.
  *
- * Set expectations on the mock using `when` and `thenReturn` and get an
- * instance from the mock using `instance`.
+ * @see {@link when} Set expectations on the mock using `when`.
  *
  * @example
  * const fn = mock<() => number>();
  *
  * when(() => fn()).thenReturn(23);
  *
- * instance(fn) === 23;
+ * fn() === 23;
  */
 export const mock = <T>({
   repository = new StrongRepository(),

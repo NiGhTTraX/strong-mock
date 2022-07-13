@@ -13,12 +13,14 @@ import { createStub } from './stub';
 
 describe('createStub', () => {
   describe('recording', () => {
+    const recordingMode = () => true;
+
     it('should intercept fn(...args)', () => {
       const repo = new OneIncomingExpectationRepository();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       stub(1, 2, 3);
 
@@ -34,7 +36,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       stub.call(null, 1, 2, 3);
 
@@ -50,7 +52,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       stub.apply(null, [1, 2, 3]);
 
@@ -66,7 +68,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       Reflect.apply(stub, null, [1, 2, 3]);
 
@@ -82,7 +84,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       stub.bind(null, 1, 2)(3);
 
@@ -98,7 +100,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation);
+      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
 
       stub.bar(1, 2, 3);
 
@@ -114,7 +116,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation);
+      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
 
       stub.bar.call(null, 1, 2, 3);
 
@@ -130,7 +132,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation);
+      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
 
       stub.bar.apply(null, [1, 2, 3]);
 
@@ -146,7 +148,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation);
+      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
 
       stub.bar.bind(null, 1, 2)(3);
 
@@ -162,7 +164,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Baz>(repo, pendingExpectation);
+      const stub = createStub<Baz>(repo, pendingExpectation, recordingMode);
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
       expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
@@ -173,7 +175,7 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation);
+      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
 
       expect(() => ({ ...stub })).toThrow();
     });
@@ -183,16 +185,18 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation);
+      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
 
       expect(() => ({ ...stub.bar })).toThrow();
     });
   });
 
-  describe('instance', () => {
+  describe('not recording', () => {
     const repo = SM.mock<ExpectationRepository>();
     // TODO: this smells because we're not using one of the parameters in all these tests
     const unusedPendingExpectation = SM.mock<PendingExpectation>();
+
+    const notRecordingMode = () => false;
 
     it('should get matching expectation for apply', () => {
       SM.when(repo.get(ApplyProp)).thenReturn({ value: () => 42 });
@@ -200,7 +204,7 @@ describe('createStub', () => {
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       expect(fn(1)).toEqual(42);
@@ -212,7 +216,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       expect(foo.bar(1)).toEqual(42);
@@ -224,7 +228,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       expect(foo.bar).toEqual(42);
@@ -236,7 +240,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       expect(() => foo.bar).toThrow('foo');
@@ -248,7 +252,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       await expect(foo.bar).resolves.toEqual('foo');
@@ -264,7 +268,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       await expect(foo.bar).rejects.toThrow('foo');
@@ -282,7 +286,7 @@ describe('createStub', () => {
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        () => false
+        notRecordingMode
       );
 
       expect({ ...foo }).toEqual({ foo: 1, bar: 2, [baz]: 3 });

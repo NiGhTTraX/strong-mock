@@ -6,7 +6,7 @@
 </div>
 
 ```typescript
-import { mock, when, instance } from 'strong-mock';
+import { mock, when } from 'strong-mock';
 
 interface Foo {
   bar: (x: number) => string;
@@ -16,7 +16,7 @@ const foo = mock<Foo>();
 
 when(() => foo.bar(23)).thenReturn('I am strong!');
 
-console.log(instance(foo).bar(23)); // 'I am strong!'
+console.log(foo.bar(23)); // 'I am strong!'
 ```
 
 ----
@@ -52,7 +52,7 @@ console.log(instance(foo).bar(23)); // 'I am strong!'
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
-  - [Can I spread/enumerate a mock instance?](#can-i-spreadenumerate-a-mock-instance)
+  - [Can I spread/enumerate a mock?](#can-i-spreadenumerate-a-mock)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -101,12 +101,6 @@ Expectations are set by calling the mock inside a `when` callback and finishing 
 when(() => foo.bar(23)).thenReturn('awesome');
 ```
 
-After expectations have been set you need to get an instance of the mock by calling `instance()`.
-
-```typescript
-instance(foo)
-```
-
 ### Setting multiple expectations
 
 You can set as many expectations as you want by calling `when` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
@@ -115,8 +109,8 @@ You can set as many expectations as you want by calling `when` multiple times. I
 when(() => foo.bar(23)).thenReturn('awesome');
 when(() => foo.bar(23)).thenReturn('even more awesome');
 
-console.log(instance(foo).bar(23)); // awesome
-console.log(instance(foo).bar(23)); // even more awesome
+console.log(foo.bar(23)); // awesome
+console.log(foo.bar(23)); // even more awesome
 ```
 
 By default, each call is expected to be called only once. You can expect a call to be made multiple times using the [invocation count](#setting-invocation-count-expectations) helpers.
@@ -130,10 +124,10 @@ const fn = mock<(x: number) => number>();
 
 when(() => fn(1)).thenReturn(1).between(2, 3);
 
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // 1
-console.log(instance(fn)(1)); // throws because the expectation is finished
+console.log(fn(1)); // 1
+console.log(fn(1)); // 1
+console.log(fn(1)); // 1
+console.log(fn(1)); // throws because the expectation is finished
 ```
 
 ### Mocking interfaces
@@ -151,8 +145,8 @@ const foo = mock<Foo>();
 when(() => foo.bar(23)).thenReturn('awesome');
 when(() => foo.baz).thenReturn(100);
 
-console.log(instance(foo).bar(23)); // 'awesome'
-console.log(instance(foo).baz); // 100
+console.log(foo.bar(23)); // 'awesome'
+console.log(foo.baz); // 100
 ```
 
 Since the mock is type safe the compiler will guarantee that you're only mocking things that actually exist on the interface.
@@ -168,7 +162,7 @@ const fn = mock<Fn>();
 
 when(() => fn(1)).thenReturn(2);
 
-console.log(instance(fn)(1)); // 2
+console.log(fn(1)); // 2
 ```
 
 ### Mocking promises
@@ -182,7 +176,7 @@ const fn = mock<Fn>();
 
 when(() => fn(1)).thenResolve(2);
 
-console.log(await instance(fn)()); // 2
+console.log(await fn()); // 2
 ```
 
 ### Throwing errors
@@ -218,7 +212,7 @@ It will also throw if any unexpected calls happened that were maybe caught in th
 const fn = mock<() => void>();
 
 try {
-  instance(fn)(); // throws because the call is unexpected
+  fn(); // throws because the call is unexpected
 } catch(e) {
   // your code might transition to an error state here
 }
@@ -241,7 +235,7 @@ when(() => fn(1)).thenReturn(1);
 
 reset(fn);
 
-instance(fn)(1); // throws
+fn(1); // throws
 ```
 
 If you create common mocks that are shared by multiple tests you should reset them before using them e.g. in a `beforeEach` hook. You can use `resetAll()` to reset all existing mocks.
@@ -260,7 +254,7 @@ when(() => fn(
   It.isObject({ values: [1, 2, 3] })
 )).thenReturn('matched!');
 
-console.log(instance(fn)(
+console.log(fn(
   123, 
   { values: [1, 2, 3], labels: ['a', 'b', 'c'] })
 ); // 'matched!'
@@ -317,7 +311,7 @@ const fn = mock<(cb: Cb) => number>();
 const matcher = It.willCapture<Cb>();
 when(() => fn(matcher)).thenReturn(42);
 
-console.log(instance(fn)(23, (x) => x + 1)); // 42
+console.log(fn(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
 ```
 
@@ -326,7 +320,7 @@ console.log(matcher.value?.(3)); // 4
 You can override the default matcher that will be used when setting expectations with non-matcher values e.g. `42` or `{ foo: "bar" }`.
 
 ```ts
-import { mock, when, instance, It, setDefaults } from 'strong-mock';
+import { mock, when, It, setDefaults } from 'strong-mock';
 
 // Use strict equality instead of deep equality.
 setDefaults({
@@ -336,7 +330,7 @@ setDefaults({
 const fn = mock<(x: number[]) => boolean>();
 when(() => fn([1, 2, 3])).thenReturn(true);
 
-instance(fn)([1, 2, 3]); // throws because different arrays
+fn([1, 2, 3]); // throws because different arrays
 ```
 
 ## FAQ
@@ -374,7 +368,7 @@ const foo = mock<Foo>();
 
 when(() => foo.bar).thenReturn(x => `called ${x}`);
 
-console.log(instance(foo).bar(23)); // 'called 23'
+console.log(foo.bar(23)); // 'called 23'
 ```
 
 The function in `thenReturn()` will be type checked against the actual interface, so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
@@ -406,7 +400,7 @@ const foo = mock<Foo>();
 when(() => foo.bar()).thenReturn(42);
 
 // Throws with unexpected access on `baz`.
-doFoo(instance(foo), { callBaz: false });
+doFoo(foo, { callBaz: false });
 ```
 
 To work around this, either change your code to avoid destructuring
@@ -427,7 +421,7 @@ or set a dummy expectation on the methods you're not interested in during the te
 when(() => foo.baz()).thenThrow('should not be called').anyTimes();
 ```
 
-### Can I spread/enumerate a mock instance?
+### Can I spread/enumerate a mock?
 
 Yes, and you will only get the properties that have expectations on them.
 
@@ -435,9 +429,9 @@ Yes, and you will only get the properties that have expectations on them.
 const foo = mock<{ bar: number; baz: number }>();
 when(() => foo.bar).thenReturn(42);
 
-console.log(Object.keys(instance(foo))); // ['bar']
+console.log(Object.keys(foo)); // ['bar']
 
-const foo2 = { ...instance(foo) };
+const foo2 = { ...foo };
 
 console.log(foo2.bar); // 42
 console.log(foo2.baz); // undefined
@@ -453,7 +447,7 @@ const fn = mock<(x: { foo: string }) => boolean>();
 
 when(() => fn(It.deepEquals({ foo: "bar" }, { strict: false }))).thenReturn(true);
 
-instance(fn)({ foo: "bar", baz: undefined }) === true
+fn({ foo: "bar", baz: undefined }) === true
 ```
 
 You can also set this behavior to be the default by using [`setDefaults`](#overriding-default-matcher):

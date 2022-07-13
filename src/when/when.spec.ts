@@ -1,4 +1,4 @@
-import { instance, mock, when } from '..';
+import { mock, when } from '..';
 import { MissingWhen, UnfinishedExpectation } from '../errors';
 import { clearActiveMock } from '../mock/map';
 
@@ -32,8 +32,8 @@ describe('e2e', () => {
 
     when(() => fn2()).thenReturn(2);
 
-    expect(instance(fn1)()).toEqual(1);
-    expect(instance(fn2)()).toEqual(2);
+    expect(fn1()).toEqual(1);
+    expect(fn2()).toEqual(2);
   });
 
   it('should throw when setting a return value without an expectation', () => {
@@ -52,8 +52,8 @@ describe('e2e', () => {
     when(() => fn()).thenReturn(1);
     when(() => fn()).thenReturn(2);
 
-    expect(instance(fn)()).toEqual(1);
-    expect(instance(fn)()).toEqual(2);
+    expect(fn()).toEqual(1);
+    expect(fn()).toEqual(2);
   });
 
   it('should set expectations on different mocks', () => {
@@ -64,7 +64,7 @@ describe('e2e', () => {
     when(() => fn2()).thenReturn(2);
 
     // Call in reverse order.
-    expect(instance(fn2)()).toEqual(2);
-    expect(instance(fn1)()).toEqual(1);
+    expect(fn2()).toEqual(2);
+    expect(fn1()).toEqual(1);
   });
 });

@@ -1,6 +1,5 @@
 import { It, verify, when } from '../src';
 import { UnexpectedCall, UnmetExpectations } from '../src/errors';
-import { instance } from '../src/instance/instance';
 import { mock } from '../src/mock/mock';
 import { Fn } from './fixtures';
 
@@ -12,7 +11,7 @@ describe('e2e', () => {
 
       when(() => fn()).thenThrow(error);
 
-      expect(() => instance(fn)()).toThrow(error);
+      expect(() => fn()).toThrow(error);
     });
 
     it('should set expectation with promise', async () => {
@@ -20,7 +19,7 @@ describe('e2e', () => {
 
       when(() => fn()).thenResolve(23);
 
-      await expect(instance(fn)()).resolves.toEqual(23);
+      await expect(fn()).resolves.toEqual(23);
     });
 
     it('should set expectation with promise rejection', async () => {
@@ -28,7 +27,7 @@ describe('e2e', () => {
 
       when(() => fn()).thenReject('oops');
 
-      await expect(instance(fn)()).rejects.toThrow('oops');
+      await expect(fn()).rejects.toThrow('oops');
     });
   });
 
@@ -39,7 +38,7 @@ describe('e2e', () => {
 
       when(() => fn.bar()).thenThrow(error);
 
-      expect(() => instance(fn).bar()).toThrow(error);
+      expect(() => fn.bar()).toThrow(error);
     });
 
     it('should set expectation with promise', async () => {
@@ -47,7 +46,7 @@ describe('e2e', () => {
 
       when(() => fn.bar()).thenResolve(23);
 
-      await expect(instance(fn).bar()).resolves.toEqual(23);
+      await expect(fn.bar()).resolves.toEqual(23);
     });
 
     it('should set expectation with promise rejection', async () => {
@@ -55,7 +54,7 @@ describe('e2e', () => {
 
       when(() => fn.bar()).thenReject('oops');
 
-      await expect(instance(fn).bar()).rejects.toThrow('oops');
+      await expect(fn.bar()).rejects.toThrow('oops');
     });
   });
 
@@ -69,7 +68,7 @@ describe('e2e', () => {
 
       when(() => foo.bar(1)).thenReturn(23);
 
-      expect(instance(foo).bar(1)).toEqual(23);
+      expect(foo.bar(1)).toEqual(23);
     });
 
     it('should set expectation on method to throw', () => {
@@ -80,7 +79,7 @@ describe('e2e', () => {
       const foo = mock<Foo>();
       when(() => foo.bar(1)).thenThrow();
 
-      expect(() => instance(foo).bar(1)).toThrow();
+      expect(() => foo.bar(1)).toThrow();
     });
 
     it('should set expectation on member', () => {
@@ -92,7 +91,7 @@ describe('e2e', () => {
 
       when(() => foo.bar).thenReturn(23);
 
-      expect(instance(foo).bar).toEqual(23);
+      expect(foo.bar).toEqual(23);
     });
   });
 
@@ -102,24 +101,24 @@ describe('e2e', () => {
       .thenReturn(undefined)
       .between(2, 3);
 
-    expect(instance(fn)()).toEqual(undefined);
+    expect(fn()).toEqual(undefined);
     expect(() => verify(fn)).toThrow(UnmetExpectations);
-    expect(instance(fn)()).toEqual(undefined);
+    expect(fn()).toEqual(undefined);
     expect(() => verify(fn)).not.toThrow();
-    expect(instance(fn)()).toEqual(undefined);
-    expect(() => instance(fn)()).toThrow(UnexpectedCall);
+    expect(fn()).toEqual(undefined);
+    expect(() => fn()).toThrow(UnexpectedCall);
   });
 
   it('should be stringifiable', () => {
-    expect(instance(mock<() => void>()).toString()).toEqual('mock');
+    expect(mock<() => void>().toString()).toEqual('mock');
   });
 
   it('should be enumerable', () => {
     const foo = mock<{ bar: number; baz: number }>();
     when(() => foo.bar).thenReturn(42);
 
-    expect(Object.keys(instance(foo))).toEqual(['bar']);
-    expect({ ...instance(foo) }).toEqual({ bar: 42 });
+    expect(Object.keys(foo)).toEqual(['bar']);
+    expect({ ...foo }).toEqual({ bar: 42 });
   });
 
   it('should not throw an unhandled rejection from an unmet promise expectation', () => {
@@ -132,12 +131,12 @@ describe('e2e', () => {
 
   it('should match other mocks', () => {
     const mock1 = mock<(x: any) => boolean>();
-    // This one has to be an instance to be used in expectations.
-    const mock2 = instance(mock());
+    // This one has to be an  to be used in expectations.
+    const mock2 = mock();
 
     when(() => mock1(mock2)).thenReturn(true);
 
-    expect(instance(mock1)(mock2)).toBeTruthy();
+    expect(mock1(mock2)).toBeTruthy();
   });
 
   describe('ignoring arguments', () => {
@@ -146,7 +145,7 @@ describe('e2e', () => {
 
       when(() => fn(1, It.isAny(), It.isAny())).thenReturn(23);
 
-      expect(instance(fn)(1, 2, 3)).toEqual(23);
+      expect(fn(1, 2, 3)).toEqual(23);
     });
 
     it('should support matching custom predicates', () => {
@@ -160,7 +159,7 @@ describe('e2e', () => {
         )
       ).thenReturn(23);
 
-      expect(instance(fn)(1, 2, 3)).toEqual(23);
+      expect(fn(1, 2, 3)).toEqual(23);
     });
 
     it('should support deep matching objects', () => {
@@ -168,10 +167,10 @@ describe('e2e', () => {
 
       when(() => fn(It.isObject({ foo: { bar: 'bar' } }))).thenReturn(23);
 
-      expect(() => instance(fn)({ foo: { bar: 'baz', baz: 42 } })).toThrow(
+      expect(() => fn({ foo: { bar: 'baz', baz: 42 } })).toThrow(
         UnexpectedCall
       );
-      expect(instance(fn)({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
+      expect(fn({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
     });
 
     it('should capture arguments', () => {
@@ -182,7 +181,7 @@ describe('e2e', () => {
       const matcher = It.willCapture<Cb>('test');
       when(() => fn(matcher)).thenReturn(42);
 
-      expect(instance(fn)((x) => x + 1)).toEqual(42);
+      expect(fn((x) => x + 1)).toEqual(42);
 
       expect(matcher.value?.(3)).toEqual(4);
     });

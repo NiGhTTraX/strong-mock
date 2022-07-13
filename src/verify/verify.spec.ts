@@ -6,7 +6,7 @@ import {
   CallMap,
   ExpectationRepository,
 } from '../expectation/repository/expectation-repository';
-import { instance, mock, verify, when } from '../index';
+import { mock, verify, when } from '../index';
 import { resetAll } from './reset';
 import { verifyAll, verifyRepo } from './verify';
 
@@ -15,7 +15,7 @@ describe('verify', () => {
     const fn = mock<() => void>();
 
     try {
-      instance(fn)();
+      fn();
       // eslint-disable-next-line no-empty
     } catch (e) {}
 

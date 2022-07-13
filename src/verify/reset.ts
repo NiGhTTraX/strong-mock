@@ -11,7 +11,7 @@ import { Mock } from '../mock/mock';
  *
  * reset(fn);
  *
- * instance(fn)(); // throws
+ * fn(); // throws
  */
 export const reset = (mock: Mock<any>): void => {
   getMockState(mock).repository.clear();
