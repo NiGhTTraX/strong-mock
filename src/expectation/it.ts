@@ -19,7 +19,7 @@ import { isMatcher, Matcher, MATCHER_SYMBOL, TypeMatcher } from './matcher';
  *
  * @example
  * const fn = mock<(x: number) => number>();
- * when(fn(It.matches(x => x >= 0))).returns(42);
+ * when(() => fn(It.matches(x => x >= 0))).returns(42);
  *
  * instance(fn)(2) === 42
  * instance(fn)(-1) // throws
@@ -92,7 +92,7 @@ const is = <T = unknown>(expected: T): TypeMatcher<T> =>
  *
  * @example
  * const fn = mock<(x: number, y: string) => number>();
- * when(fn(It.isAny(), It.isAny())).thenReturn(1);
+ * when(() => fn(It.isAny(), It.isAny())).thenReturn(1);
  *
  * instance(fn)(23, 'foobar') === 1
  */
@@ -112,7 +112,7 @@ type DeepPartial<T> = T extends object
  *
  * @example
  * const fn = mock<(foo: { x: number, y: number }) => number>();
- * when(fn(It.isObject({ x: 23 }))).returns(42);
+ * when(() => fn(It.isObject({ x: 23 }))).returns(42);
  *
  * instance(fn)({ x: 100, y: 200 }) // throws
  * instance(fn)({ x: 23, y: 200 }) // returns 42
@@ -141,7 +141,7 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
  *
  * @example
  * const fn = mock<(x: number) => number>();
- * when(fn(It.isNumber())).returns(42);
+ * when(() => fn(It.isNumber())).returns(42);
  *
  * instance(fn)(20.5) === 42
  * instance(fn)(NaN) // throws
@@ -159,7 +159,7 @@ const isNumber = (): TypeMatcher<number> =>
  *
  * @example
  * const fn = mock<(x: string, y: string) => number>();
- * when(fn(It.isString(), It.isString({ containing: 'bar' }))).returns(42);
+ * when(() => fn(It.isString(), It.isString({ containing: 'bar' }))).returns(42);
  *
  * instance(fn)('foo', 'baz') // throws
  * instance(fn)('foo', 'bar') === 42
@@ -203,8 +203,8 @@ const isString = ({
  *
  * @example
  * const fn = mock<(arr: number[]) => number>();
- * when(fn(It.isArray())).thenReturn(1);
- * when(fn(It.isArray([2, 3]))).thenReturn(2);
+ * when(() => fn(It.isArray())).thenReturn(1);
+ * when(() => fn(It.isArray([2, 3]))).thenReturn(2);
  *
  * instance(fn)({ length: 1, 0: 42 }) // throws
  * instance(fn)([]) === 1
@@ -253,7 +253,7 @@ const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> =>
  * @example
  * const fn = mock<(cb: (value: number) => number) => void>();
  * const matcher = It.willCapture();
- * when(fn(matcher)).thenReturn();
+ * when(() => fn(matcher)).thenReturn();
  *
  * instance(fn)(x => x + 1);
  * matcher.value?.(3) === 4

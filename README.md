@@ -14,7 +14,7 @@ interface Foo {
 
 const foo = mock<Foo>();
 
-when(foo.bar(23)).thenReturn('I am strong!');
+when(() => foo.bar(23)).thenReturn('I am strong!');
 
 console.log(instance(foo).bar(23)); // 'I am strong!'
 ```
@@ -95,10 +95,10 @@ strong-mock requires an environment that supports the [ES6 Proxy object](https:/
 
 ### Setting expectations
 
-Expectations are set by calling the mock inside a `when()` call and finishing it by setting a return value.
+Expectations are set by calling the mock inside a `when` callback and finishing it by setting a return value.
 
 ```typescript
-when(foo.bar(23)).thenReturn('awesome');
+when(() => foo.bar(23)).thenReturn('awesome');
 ```
 
 After expectations have been set you need to get an instance of the mock by calling `instance()`.
@@ -109,11 +109,11 @@ instance(foo)
 
 ### Setting multiple expectations
 
-You can set as many expectations as you want by calling `when()` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
+You can set as many expectations as you want by calling `when` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
 
 ```typescript
-when(foo.bar(23)).thenReturn('awesome');
-when(foo.bar(23)).thenReturn('even more awesome');
+when(() => foo.bar(23)).thenReturn('awesome');
+when(() => foo.bar(23)).thenReturn('even more awesome');
 
 console.log(instance(foo).bar(23)); // awesome
 console.log(instance(foo).bar(23)); // even more awesome
@@ -128,7 +128,7 @@ You can expect a call to be made multiple times by using the invocation count he
 ```typescript
 const fn = mock<(x: number) => number>();
 
-when(fn(1)).thenReturn(1).between(2, 3);
+when(() => fn(1)).thenReturn(1).between(2, 3);
 
 console.log(instance(fn)(1)); // 1
 console.log(instance(fn)(1)); // 1
@@ -148,8 +148,8 @@ interface Foo {
 
 const foo = mock<Foo>();
 
-when(foo.bar(23)).thenReturn('awesome');
-when(foo.baz).thenReturn(100);
+when(() => foo.bar(23)).thenReturn('awesome');
+when(() => foo.baz).thenReturn(100);
 
 console.log(instance(foo).bar(23)); // 'awesome'
 console.log(instance(foo).baz); // 100
@@ -166,7 +166,7 @@ type Fn = (x: number) => number;
 
 const fn = mock<Fn>();
 
-when(fn(1)).thenReturn(2);
+when(() => fn(1)).thenReturn(2);
 
 console.log(instance(fn)(1)); // 2
 ```
@@ -180,7 +180,7 @@ type Fn = (x: number) => Promise<number>;
 
 const fn = mock<Fn>();
 
-when(fn(1)).thenResolve(2);
+when(() => fn(1)).thenResolve(2);
 
 console.log(await instance(fn)()); // 2
 ```
@@ -194,8 +194,8 @@ type FnWithPromise = (x: number) => Promise<void>;
 const fn = mock<Fn>();
 const fnWithPromise = mock<FnWithPromise>();
 
-when(fn(1)).thenThrow();
-when(fnWithPromise(1)).thenReject();
+when(() => fn(1)).thenThrow();
+when(() => fnWithPromise(1)).thenReject();
 ```
 
 You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
@@ -207,7 +207,7 @@ Calling `verify(mock)` will make sure that all expectations set on `mock` have b
 ```typescript
 const fn = mock<(x: number) => number>();
 
-when(fn(1)).thenReturn(1).between(2, 10);
+when(() => fn(1)).thenReturn(1).between(2, 10);
 
 verify(fn); // throws
 ```
@@ -237,7 +237,7 @@ You can remove all expectations from a mock by using the `reset()` method:
 ```typescript
 const fn = mock<(x: number) => number>();
 
-when(fn(1)).thenReturn(1);
+when(() => fn(1)).thenReturn(1);
 
 reset(fn);
 
@@ -255,7 +255,7 @@ const fn = mock<
   (x: number, data: { values: number[]; labels: string[] }) => string
 >();
 
-when(fn(
+when(() => fn(
   It.isAny(),
   It.isObject({ values: [1, 2, 3] })
 )).thenReturn('matched!');
@@ -301,7 +301,7 @@ You can create arbitrarily complex and type safe matchers with `It.matches(cb)`:
 ```typescript
 const fn = mock<(x: number, y: number[]) => string>();
 
-when(fn(
+when(() => fn(
   It.matches(x => x > 0),
   It.matches(y => y.includes(42))
 )).thenReturn('matched');
@@ -315,7 +315,7 @@ type Cb = (value: number) => number;
 const fn = mock<(cb: Cb) => number>();
 
 const matcher = It.willCapture<Cb>();
-when(fn(matcher)).thenReturn(42);
+when(() => fn(matcher)).thenReturn(42);
 
 console.log(instance(fn)(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
@@ -334,7 +334,7 @@ setDefaults({
 })
 
 const fn = mock<(x: number[]) => boolean>();
-when(fn([1, 2, 3])).thenReturn(true);
+when(() => fn([1, 2, 3])).thenReturn(true);
 
 instance(fn)([1, 2, 3]); // throws because different arrays
 ```
@@ -359,11 +359,11 @@ You currently can't do that. Please use a normal method instead e.g. `setFoo()` 
 
 ### Why do I have to set a return value even if it's `undefined`?
 
-To make side effects explicit and to prevent future refactoring headaches. If you had just `when(fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
+To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
 
 ### How do I provide a function for the mock to call?
 
-There is no `thenCall()` method because it can't be safely typed - the type for `thenReturn()` is inferred from the return type in `when()`, meaning that the required type would be the return value for the function, not the function itself. However, we can leverage this by setting an expectation on the function property instead:
+There is no `thenCall()` method because it can't be safely typed - the type for `thenReturn()` is inferred from the return type in `when`, meaning that the required type would be the return value for the function, not the function itself. However, we can leverage this by setting an expectation on the function property instead:
 
 ```typescript
 interface Foo {
@@ -372,7 +372,7 @@ interface Foo {
 
 const foo = mock<Foo>();
 
-when(foo.bar).thenReturn(x => `called ${x}`);
+when(() => foo.bar).thenReturn(x => `called ${x}`);
 
 console.log(instance(foo).bar(23)); // 'called 23'
 ```
@@ -403,7 +403,7 @@ function doFoo(foo: Foo, { callBaz }: { callBaz: boolean }) {
 }
 
 const foo = mock<Foo>();
-when(foo.bar()).thenReturn(42);
+when(() => foo.bar()).thenReturn(42);
 
 // Throws with unexpected access on `baz`.
 doFoo(instance(foo), { callBaz: false });
@@ -424,7 +424,7 @@ function doFoo(foo: Foo, callBaz: boolean) {
 or set a dummy expectation on the methods you're not interested in during the test.
 
 ```typescript
-when(foo.baz()).thenThrow('should not be called').anyTimes();
+when(() => foo.baz()).thenThrow('should not be called').anyTimes();
 ```
 
 ### Can I spread/enumerate a mock instance?
@@ -433,7 +433,7 @@ Yes, and you will only get the properties that have expectations on them.
 
 ```typescript
 const foo = mock<{ bar: number; baz: number }>();
-when(foo.bar).thenReturn(42);
+when(() => foo.bar).thenReturn(42);
 
 console.log(Object.keys(instance(foo))); // ['bar']
 
@@ -451,7 +451,7 @@ Use the `It.deepEquals` matcher explicitly inside `when` and pass `{ strict: fal
 ```ts
 const fn = mock<(x: { foo: string }) => boolean>();
 
-when(fn(It.deepEquals({ foo: "bar" }, { strict: false }))).thenReturn(true);
+when(() => fn(It.deepEquals({ foo: "bar" }, { strict: false }))).thenReturn(true);
 
 instance(fn)({ foo: "bar", baz: undefined }) === true
 ```

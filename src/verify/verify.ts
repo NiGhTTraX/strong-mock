@@ -30,7 +30,7 @@ export const verifyRepo = (repository: ExpectationRepository) => {
  * @example
  * const fn = mock<() => number>();
  *
- * when(fn()).thenReturn(23);
+ * when(() => fn()).thenReturn(23);
  *
  * verify(fn); // throws
  */

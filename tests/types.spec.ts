@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { instance, mock, when, It } from '../src';
+import { instance, It, mock, when } from '../src';
 
 it('type safety', () => {
   function mockSafety() {
@@ -22,29 +22,29 @@ it('type safety', () => {
     const fnp = mock<() => Promise<void>>();
 
     // @ts-expect-error check the return type
-    when(fn()).thenReturn(23);
+    when(() => fn()).thenReturn(23);
 
     // @ts-expect-error don't allow promise returns on non promise
-    when(fn()).thenResolve;
+    when(() => fn()).thenResolve;
 
     // @ts-expect-error throw only errors
-    when(fn()).thenThrow(23);
+    when(() => fn()).thenThrow(23);
 
     // @ts-expect-error check promise return type
-    when(fnp()).thenReturn(23);
+    when(() => fnp()).thenReturn(23);
 
     // @ts-expect-error check promise return type
-    when(fnp()).thenResolve(23);
+    when(() => fnp()).thenResolve(23);
 
     // @ts-expect-error reject only errors
-    when(fnp()).thenReject(23);
+    when(() => fnp()).thenReject(23);
 
     // @ts-expect-error promises only reject
-    when(fnp()).thenThrow;
+    when(() => fnp()).thenThrow;
 
     // any will be treated like a promise but should allow any return value.
     const fnany = mock<() => any>();
-    when(fnany()).thenReturn(23);
+    when(() => fnany()).thenReturn(23);
   }
 
   function instanceSafety() {

@@ -1,4 +1,5 @@
 import { getActiveMock, getMockState } from '../mock/map';
+import { setRecording } from '../mock/mock';
 import { createReturns, Stub } from '../return/returns';
 
 /**
@@ -11,20 +12,26 @@ import { createReturns, Stub } from '../return/returns';
  * By default, the call is expected to only be made once. Use the invocation
  * count helpers to expect a call multiple times.
  *
- * @param expectedCall Make a "real" call using the value returned by `mock()`.
+ * @param expectation A callback to set the expectation on your mock. The
+ *   callback must return the value from the mock to properly infer types.
  *
  * @example
  * const fn = mock<() => void>();
- * when(fn()).thenReturn(undefined);
+ * when(() => fn()).thenReturn(undefined);
  *
  * @example
  * const fn = mock<() => number>();
- * when(fn()).thenReturn(42).atMost(3);
+ * when(() => fn()).thenReturn(42).atMost(3);
  *
  * @example
  * const fn = mock<(x: number) => Promise<number>();
- * when(fn(23)).thenResolve(42);
+ * when(() => fn(23)).thenResolve(42);
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const when = <R>(expectedCall: R): Stub<R> =>
-  createReturns<R>(getMockState(getActiveMock()).pendingExpectation);
+export const when = <R>(expectation: () => R): Stub<R> => {
+  setRecording(true);
+  expectation();
+  setRecording(false);
+
+  return createReturns<R>(getMockState(getActiveMock()).pendingExpectation);
+};

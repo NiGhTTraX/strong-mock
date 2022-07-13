@@ -1,4 +1,6 @@
 /* eslint-disable class-methods-use-this */
+import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import { SM } from '../tests/old';
 import {
   NestedWhen,
   UnexpectedAccess,
@@ -9,16 +11,14 @@ import {
 } from './errors';
 import { Expectation } from './expectation/expectation';
 import {
+  spyExpectationFactory,
+  SpyPendingExpectation,
+} from './expectation/expectation.mocks';
+import {
   CallMap,
   ExpectationRepository,
 } from './expectation/repository/expectation-repository';
 import { RepoSideEffectPendingExpectation } from './when/pending-expectation';
-import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
-import {
-  spyExpectationFactory,
-  SpyPendingExpectation,
-} from './expectation/expectation.mocks';
-import { SM } from '../tests/old';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {
@@ -188,8 +188,11 @@ foobar`
     it('should print the nested property', () => {
       const error = new NestedWhen('foo', Symbol('bar'));
 
-      expectAnsilessContain(error.message, `when(parentMock.foo)`);
-      expectAnsilessContain(error.message, `when(childMock[Symbol(bar)])`);
+      expectAnsilessContain(error.message, `when(() => parentMock.foo)`);
+      expectAnsilessContain(
+        error.message,
+        `when(() => childMock[Symbol(bar)])`
+      );
     });
   });
 });

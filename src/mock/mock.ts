@@ -26,6 +26,12 @@ const strongExpectationFactory: ExpectationFactory = (
     returnValue
   );
 
+export let isRecording = false;
+
+export const setRecording = (recording: boolean) => {
+  isRecording = recording;
+};
+
 interface MockOptions {
   /**
    * You can provide your own repository to store and find expectations.
@@ -47,7 +53,7 @@ interface MockOptions {
  * @example
  * const fn = mock<() => number>();
  *
- * when(fn()).thenReturn(23);
+ * when(() => fn()).thenReturn(23);
  *
  * instance(fn) === 23;
  */
@@ -59,7 +65,7 @@ export const mock = <T>({
     expectationFactory
   );
 
-  const stub = createStub<T>(repository, pendingExpectation);
+  const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
 
   setMockState(stub, { repository, pendingExpectation });
 

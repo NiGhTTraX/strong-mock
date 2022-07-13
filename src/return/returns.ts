@@ -1,19 +1,19 @@
 import { ReturnValue } from '../expectation/expectation';
-import { createInvocationCount, InvocationCount } from './invocation-count';
 import { PendingExpectation } from '../when/pending-expectation';
+import { createInvocationCount, InvocationCount } from './invocation-count';
 
 type PromiseStub<R, P> = {
   /**
    * Set the return value for the current call.
    *
    * @param value This needs to be of the same type as the value returned
-   *   by the call inside `when()`.
+   *   by the call inside `when`.
    *
    * @example
-   * when(fn()).thenReturn(Promise.resolve(23));
+   * when(() => fn()).thenReturn(Promise.resolve(23));
    *
    * @example
-   * when(fn()).thenReturn(Promise.reject({ foo: 'bar' });
+   * when(() => fn()).thenReturn(Promise.reject({ foo: 'bar' });
    */
   thenReturn(value: P): InvocationCount;
 
@@ -21,7 +21,7 @@ type PromiseStub<R, P> = {
    * Set the return value for the current call.
    *
    * @param promiseValue This needs to be of the same type as the value inside
-   *   the promise returned by the call inside `when()`.
+   *   the promise returned by the `when` callback.
    */
   thenResolve(promiseValue: R): InvocationCount;
 
@@ -53,7 +53,7 @@ type NonPromiseStub<R> = {
    * Set the return value for the current call.
    *
    * @param returnValue This needs to be of the same type as the value returned
-   *   by the call inside `when()`.
+   *   by the `when` callback.
    */
   thenReturn(returnValue: R): InvocationCount;
 

@@ -12,7 +12,7 @@ export type StrongMockDefaults = {
    *   matcher: () => It.matches(() => true)
    * });
    *
-   * when(fn('value')).thenReturn(true);
+   * when(() => fn('value')).thenReturn(true);
    *
    * instance(fn('not-value')) === true;
    */

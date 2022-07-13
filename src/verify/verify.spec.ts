@@ -31,7 +31,7 @@ describe('verifyAll', () => {
 
     const fn = mock<() => void>();
 
-    when(fn()).thenReturn(undefined);
+    when(() => fn()).thenReturn(undefined);
 
     expect(() => verifyAll()).toThrow(UnmetExpectations);
   });

@@ -7,7 +7,7 @@ import { Mock } from '../mock/mock';
  * @example
  * const fn = mock<() => number>();
  *
- * when(fn()).thenReturn(23);
+ * when(() => fn()).thenReturn(23);
  *
  * reset(fn);
  *

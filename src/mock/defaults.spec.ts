@@ -14,7 +14,7 @@ describe('defaults', () => {
 
     const fn = mock<(x: number) => boolean>();
 
-    when(fn(1)).thenReturn(true);
+    when(() => fn(1)).thenReturn(true);
 
     expect(instance(fn)(-1)).toBeTruthy();
   });
@@ -26,7 +26,7 @@ describe('defaults', () => {
 
     const fn = mock<(x: number) => boolean>();
 
-    when(fn(It.matches((x) => x === 1))).thenReturn(true);
+    when(() => fn(It.matches((x) => x === 1))).thenReturn(true);
 
     expect(() => instance(fn)(-1)).toThrow();
   });
@@ -40,7 +40,7 @@ describe('defaults', () => {
 
     const fn = mock<(x: number) => boolean>();
 
-    when(fn(1)).thenReturn(true);
+    when(() => fn(1)).thenReturn(true);
 
     expect(() => instance(fn)(-1)).toThrow();
   });

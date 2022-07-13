@@ -1,9 +1,9 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import { Expectation } from './expectation/expectation';
 import { CallMap } from './expectation/repository/expectation-repository';
-import { PendingExpectation } from './when/pending-expectation';
 import { printCall, printProperty, printRemainingExpectations } from './print';
 import { Property } from './proxy';
+import { PendingExpectation } from './when/pending-expectation';
 
 export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
@@ -117,8 +117,10 @@ export class NestedWhen extends Error {
 const parentMock = mock<T1>();
 const childMock = mock<T2>();
 
-when(childMock${printProperty(childProp)}).thenReturn(...);
-when(parentMock${printProperty(parentProp)}).thenReturn(instance(childMock))
+when(() => childMock${printProperty(childProp)}).thenReturn(...);
+when(() => parentMock${printProperty(
+      parentProp
+    )}).thenReturn(instance(childMock))
 `;
 
     super(
