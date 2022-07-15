@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0-beta.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.3.0...v8.0.0-beta.0) (2022-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* You no longer have to remember to call `instance`
+before passing the mock to the code under test, because we removed it!
+The object returned by `mock()` can now be passed directly to your code.
+* Expectations now have to be wrapped in a callback
+inside `when`. This change is necessary to remove the `instance`
+function. Before: `when(foo.bar())`. After: `when(() => foo.bar())`.
+
+### Bug Fixes
+
+* **deps:** update dependency jest-matcher-utils to ~27.3.0 ([a287174](https://github.com/NiGhTTraX/strong-mock/commit/a28717432dd07d67242d32caeca80c7e8bd0c427))
+* **deps:** update dependency jest-matcher-utils to ~27.4.0 ([133a17d](https://github.com/NiGhTTraX/strong-mock/commit/133a17d2684bbc1135764fd2ad67afb7e16034c8))
+
+
+* Remove `instance` ([dc2338d](https://github.com/NiGhTTraX/strong-mock/commit/dc2338d36f74e9383934bc5cf07f0ca6fc7e9096))
+* Require callback when setting expectations ([b0e46f4](https://github.com/NiGhTTraX/strong-mock/commit/b0e46f48bb28c37e87f5d9534c15f06324f308b3))
+
 ## [7.3.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.2.1...v7.3.0) (2021-09-26)
 
 
