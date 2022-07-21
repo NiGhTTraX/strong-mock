@@ -1,6 +1,8 @@
+import { printExpected } from 'jest-matcher-utils';
 import { It, verify, when } from '../src';
 import { UnexpectedCall, UnmetExpectations } from '../src/errors';
 import { mock } from '../src/mock/mock';
+import { expectAnsilessEqual } from './ansiless';
 import { Fn } from './fixtures';
 
 describe('e2e', () => {
@@ -110,7 +112,10 @@ describe('e2e', () => {
   });
 
   it('should be stringifiable', () => {
-    expect(mock<() => void>().toString()).toEqual('mock');
+    const fn = mock<() => void>();
+
+    expect(fn.toString()).toEqual('mock');
+    expectAnsilessEqual(printExpected(fn), '[Function mock]');
   });
 
   it('should be enumerable', () => {
@@ -131,7 +136,6 @@ describe('e2e', () => {
 
   it('should match other mocks', () => {
     const mock1 = mock<(x: any) => boolean>();
-    // This one has to be an  to be used in expectations.
     const mock2 = mock();
 
     when(() => mock1(mock2)).thenReturn(true);
