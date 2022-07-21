@@ -36,7 +36,7 @@ export const returnOrThrow = ({ isError, isPromise, value }: ReturnValue) => {
 export const createStub = <T>(
   repo: ExpectationRepository,
   pendingExpectation: PendingExpectation,
-  isRecording: () => boolean = () => true
+  isRecording: () => boolean
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {
