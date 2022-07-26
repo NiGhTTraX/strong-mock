@@ -79,11 +79,11 @@ Optional argument matchers allow you to create complex expectations, while still
 
 ## Installation
 
-```
+```shell
 npm i -D strong-mock
 ```
 
-```
+```shell
 yarn add -D strong-mock
 ```
 
