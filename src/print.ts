@@ -50,10 +50,10 @@ export const printReturns = (
 
 export const printWhen = (property: Property, args: any[] | undefined) => {
   if (args) {
-    return `when(${EXPECTED_COLOR(`mock${printCall(property, args)}`)})`;
+    return `when(() => ${EXPECTED_COLOR(`mock${printCall(property, args)}`)})`;
   }
 
-  return `when(${EXPECTED_COLOR(`mock${printProperty(property)}`)})`;
+  return `when(() => ${EXPECTED_COLOR(`mock${printProperty(property)}`)})`;
 };
 
 export const printExpectation = (

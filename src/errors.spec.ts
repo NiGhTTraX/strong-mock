@@ -34,7 +34,7 @@ describe('errors', () => {
 
       expectAnsilessEqual(
         pendingExpectation.toJSON(),
-        `when(mock.bar(1, 2, 3))`
+        `when(() => mock.bar(1, 2, 3))`
       );
     });
 
@@ -48,7 +48,7 @@ describe('errors', () => {
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 
-      expectAnsilessEqual(pendingExpectation.toJSON(), `when(mock.bar)`);
+      expectAnsilessEqual(pendingExpectation.toJSON(), `when(() => mock.bar)`);
     });
   });
 

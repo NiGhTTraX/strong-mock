@@ -68,7 +68,7 @@ describe('StrongExpectation', () => {
 
     expectAnsilessEqual(
       expectation.toJSON(),
-      `when(mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
+      `when(() => mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
     );
   });
 
