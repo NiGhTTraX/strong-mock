@@ -63,19 +63,29 @@ console.log(foo.bar(23)); // 'I am strong!'
 
 The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
 
-![rename-interface](media/rename-interface.gif)
+![Renaming production code and test code](media/rename-refactor.gif)
 
 ### Useful error messages
 
 Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
 
-![error messages](media/error-messages.png)
+```typescript
+import { mock, when } from 'strong-mock';
+
+const fn = mock<(a: number, b: number, c: number) => number>();
+
+when(() => fn(1, 2, 3)).thenReturn(42);
+
+fn(4, 5, 6);
+```
+
+![Test output showing details about mock expectations](media/error-messages.png)
 
 ### Type safe argument matchers
 
 Optional argument matchers allow you to create complex expectations, while still maintaining type safety.
 
-![type safe matchers](./media/type-safe-matchers.png)
+![Type safe matcher showing a type error](media/type-safe-matchers.png)
 
 ## Installation
 
@@ -372,8 +382,6 @@ console.log(foo.bar(23)); // 'called 23'
 ```
 
 The function in `thenReturn()` will be type checked against the actual interface, so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
-
-![call-rename](media/rename-args.gif)
 
 ### Why does accessing an unused method throw?
 
