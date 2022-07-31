@@ -1,5 +1,5 @@
 import { UnexpectedAccess } from '../errors';
-import { Strictness } from '../expectation/repository/strong-repository';
+import { Strictness } from '../expectation/repository/flexible-repository';
 import { It, when } from '../index';
 import { setDefaults } from './defaults';
 import { mock } from './mock';

@@ -1,15 +1,63 @@
+import { UnexpectedAccess, UnexpectedCall } from '../../errors';
 import { returnOrThrow } from '../../mock/stub';
 import { Property } from '../../proxy';
 import { ApplyProp, Expectation, ReturnValue } from '../expectation';
 import { MATCHER_SYMBOL } from '../matcher';
 import { CallMap, ExpectationRepository } from './expectation-repository';
 
-export type CountableExpectation = {
+/**
+ * Controls what happens when a property is accessed, or a call is made,
+ * and there are no expectations set for it.
+ */
+export enum Strictness {
+  /**
+   * Any property that's accessed, or any call that's made, without a matching
+   * expectation, will throw immediately.
+   *
+   * @example
+   * type Service = { foo: (x: number) => number };
+   * const service = mock<Service>();
+   *
+   * // This will throw.
+   * const { foo } = service;
+   *
+   * // Will throw "Didn't expect foo to be accessed",
+   * // without printing the arguments.
+   * foo(42);
+   */
+  SUPER_STRICT,
+  /**
+   * Properties with unmatched expectations will return functions that will
+   * throw if called. This can be useful if your code destructures a function
+   * but never calls it.
+   *
+   * It will also improve error messages for unexpected calls because arguments
+   * will be captured instead of throwing immediately on the property access.
+   *
+   * @example
+   * type Service = { foo: (x: number) => number };
+   * const service = mock<Service>();
+   *
+   * // This will not throw.
+   * const { foo } = service;
+   *
+   * // Will throw "Didn't expect foo(42) to be called".
+   * foo(42);
+   */
+  STRICT,
+}
+
+type CountableExpectation = {
   expectation: Expectation;
   matchCount: number;
 };
 
-export abstract class BaseRepository implements ExpectationRepository {
+/**
+ * An expectation repository for configurable levels of strictness.
+ */
+export class FlexibleRepository implements ExpectationRepository {
+  constructor(private strictness: Strictness = Strictness.SUPER_STRICT) {}
+
   protected readonly expectations = new Map<Property, CountableExpectation[]>();
 
   private readonly expectedCallStats: CallMap = new Map();
@@ -126,39 +174,12 @@ export abstract class BaseRepository implements ExpectationRepository {
     );
   }
 
-  /**
-   * We got a method call that doesn't match any expectation,
-   * what should we return?
-   */
-  protected abstract getValueForUnexpectedCall(
-    property: Property,
-    args: any[]
-  ): any;
-
-  /**
-   * We got a property access that doesn't match any expectation,
-   * what should we return?
-   */
-  protected abstract getValueForUnexpectedAccess(
-    property: Property
-  ): ReturnValue;
-
-  protected abstract consumeExpectation(
-    expectation: CountableExpectation
-  ): void;
-
-  /**
-   * Record an expected property access/method call.
-   */
   private recordExpected(property: Property, args: any[] | undefined) {
     const calls = this.expectedCallStats.get(property) || [];
 
     this.expectedCallStats.set(property, [...calls, { arguments: args }]);
   }
 
-  /**
-   * Record an unexpected property access/method call.
-   */
   private recordUnexpected(property: Property, args: any[] | undefined) {
     const calls = this.unexpectedCallStats.get(property) || [];
 
@@ -170,5 +191,34 @@ export abstract class BaseRepository implements ExpectationRepository {
     expectation.matchCount++;
 
     this.consumeExpectation(expectation);
+  }
+
+  private consumeExpectation(expectation: CountableExpectation): void {
+    const { property, max } = expectation.expectation;
+
+    const expectations = this.expectations.get(property)!;
+
+    if (expectation.matchCount === max) {
+      this.expectations.set(
+        property,
+        expectations.filter((e) => e !== expectation)
+      );
+    }
+  }
+
+  private getValueForUnexpectedCall(property: Property, args: any[]): never {
+    throw new UnexpectedCall(property, args, this.getUnmet());
+  }
+
+  private getValueForUnexpectedAccess(property: Property): ReturnValue {
+    if (this.strictness === Strictness.SUPER_STRICT) {
+      throw new UnexpectedAccess(property, this.getUnmet());
+    }
+
+    return {
+      value: (...args: unknown[]) => {
+        throw new UnexpectedCall(property, args, this.getUnmet());
+      },
+    };
   }
 }

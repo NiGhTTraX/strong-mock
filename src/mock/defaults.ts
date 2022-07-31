@@ -1,6 +1,6 @@
 import { It } from '../expectation/it';
 import { Matcher } from '../expectation/matcher';
-import { Strictness } from '../expectation/repository/strong-repository';
+import { Strictness } from '../expectation/repository/flexible-repository';
 
 export type StrongMockDefaults = {
   /**

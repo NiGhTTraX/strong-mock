@@ -1,5 +1,5 @@
 import { isMatcher } from '../expectation/matcher';
-import { StrongRepository } from '../expectation/repository/strong-repository';
+import { FlexibleRepository } from '../expectation/repository/flexible-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import {
   ExpectationFactory,
@@ -46,7 +46,7 @@ export const mock = <T>(): Mock<T> => {
     strongExpectationFactory
   );
 
-  const repository = new StrongRepository(currentDefaults.strictness);
+  const repository = new FlexibleRepository(currentDefaults.strictness);
   const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
 
   setMockState(stub, { repository, pendingExpectation });
