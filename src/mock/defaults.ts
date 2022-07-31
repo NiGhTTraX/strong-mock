@@ -1,5 +1,6 @@
 import { It } from '../expectation/it';
 import { Matcher } from '../expectation/matcher';
+import { Strictness } from '../expectation/repository/strong-repository';
 
 export type StrongMockDefaults = {
   /**
@@ -17,10 +18,17 @@ export type StrongMockDefaults = {
    * fn('not-value') === true;
    */
   matcher: <T>(expected: T) => Matcher;
+
+  /**
+   * Controls what happens when a property is accessed, or a call is made,
+   * and there are no expectations set for it.
+   */
+  strictness: Strictness;
 };
 
 const defaults: StrongMockDefaults = {
   matcher: It.deepEquals,
+  strictness: Strictness.STRICT,
 };
 
 export let currentDefaults: StrongMockDefaults = defaults;

@@ -46,7 +46,7 @@ export const mock = <T>(): Mock<T> => {
     strongExpectationFactory
   );
 
-  const repository = new StrongRepository();
+  const repository = new StrongRepository(currentDefaults.strictness);
   const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
 
   setMockState(stub, { repository, pendingExpectation });
