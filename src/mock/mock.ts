@@ -1,5 +1,4 @@
 import { isMatcher } from '../expectation/matcher';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { StrongRepository } from '../expectation/repository/strong-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import {
@@ -30,18 +29,6 @@ export const setRecording = (recording: boolean) => {
   isRecording = recording;
 };
 
-interface MockOptions {
-  /**
-   * You can provide your own repository to store and find expectations.
-   */
-  repository?: ExpectationRepository;
-
-  /**
-   * You can provide your own way of creating expectations.
-   */
-  expectationFactory?: ExpectationFactory;
-}
-
 /**
  * Create a type safe mock.
  *
@@ -54,14 +41,12 @@ interface MockOptions {
  *
  * fn() === 23;
  */
-export const mock = <T>({
-  repository = new StrongRepository(),
-  expectationFactory = strongExpectationFactory,
-}: MockOptions = {}): Mock<T> => {
+export const mock = <T>(): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
-    expectationFactory
+    strongExpectationFactory
   );
 
+  const repository = new StrongRepository();
   const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
 
   setMockState(stub, { repository, pendingExpectation });

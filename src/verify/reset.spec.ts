@@ -1,17 +1,21 @@
 /* eslint-disable class-methods-use-this */
-import { StrongRepository } from '../expectation/repository/strong-repository';
+import { NotAMock } from '../errors';
 import { when } from '../index';
+import { getMockState } from '../mock/map';
 import { mock } from '../mock/mock';
 import { reset } from './reset';
 
 describe('reset', () => {
   it('should clear the expectation repo', () => {
-    const repo = new StrongRepository();
-    const fn = mock<() => void>({ repository: repo });
+    const fn = mock<() => void>();
 
     when(() => fn()).thenReturn(undefined);
     reset(fn);
 
-    expect(repo.getUnmet()).toHaveLength(0);
+    expect(getMockState(fn).repository.getUnmet()).toHaveLength(0);
+  });
+
+  it('should throw if called on a non mock', () => {
+    expect(() => reset('bla')).toThrow(NotAMock);
   });
 });
