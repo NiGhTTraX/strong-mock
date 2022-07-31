@@ -98,16 +98,16 @@ describe('e2e', () => {
   });
 
   it('should set expectation with invocation count', async () => {
-    const fn = mock<() => void>();
+    const fn = mock<() => number>();
     when(() => fn())
-      .thenReturn(undefined)
+      .thenReturn(42)
       .between(2, 3);
 
-    expect(fn()).toEqual(undefined);
+    expect(fn()).toEqual(42);
     expect(() => verify(fn)).toThrow(UnmetExpectations);
-    expect(fn()).toEqual(undefined);
+    expect(fn()).toEqual(42);
     expect(() => verify(fn)).not.toThrow();
-    expect(fn()).toEqual(undefined);
+    expect(fn()).toEqual(42);
     expect(() => fn()).toThrow(UnexpectedCall);
   });
 
