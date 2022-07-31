@@ -1,5 +1,8 @@
 import { isMatcher } from '../expectation/matcher';
-import { FlexibleRepository } from '../expectation/repository/flexible-repository';
+import {
+  FlexibleRepository,
+  Strictness,
+} from '../expectation/repository/flexible-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import {
   ExpectationFactory,
@@ -29,10 +32,17 @@ export const setRecording = (recording: boolean) => {
   isRecording = recording;
 };
 
+export interface MockOptions {
+  strictness?: Strictness;
+}
+
 /**
  * Create a type safe mock.
  *
  * @see {@link when} Set expectations on the mock using `when`.
+ *
+ * @param strictness Controls what happens when a property is accessed,
+ *   or a call is made, and there are no expectations set for it.
  *
  * @example
  * const fn = mock<() => number>();
@@ -41,12 +51,15 @@ export const setRecording = (recording: boolean) => {
  *
  * fn() === 23;
  */
-export const mock = <T>(): Mock<T> => {
+export const mock = <T>({ strictness }: MockOptions = {}): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
     strongExpectationFactory
   );
 
-  const repository = new FlexibleRepository(currentDefaults.strictness);
+  const repository = new FlexibleRepository(
+    strictness ?? currentDefaults.strictness
+  );
+
   const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
 
   setMockState(stub, { repository, pendingExpectation });

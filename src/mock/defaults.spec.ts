@@ -1,4 +1,4 @@
-import { UnexpectedAccess } from '../errors';
+import { UnexpectedAccess, UnexpectedCall } from '../errors';
 import { Strictness } from '../expectation/repository/flexible-repository';
 import { It, when } from '../index';
 import { setDefaults } from './defaults';
@@ -36,9 +36,17 @@ describe('defaults', () => {
   it('should override the strictness', () => {
     setDefaults({ strictness: Strictness.SUPER_STRICT });
 
-    const fn = mock<{ foo: () => number }>();
+    const foo = mock<{ bar: () => number }>();
 
-    expect(() => fn.foo()).toThrow(UnexpectedAccess);
+    expect(() => foo.bar()).toThrow(UnexpectedAccess);
+  });
+
+  it('should override the strictness', () => {
+    setDefaults({ strictness: Strictness.SUPER_STRICT });
+
+    const foo = mock<{ bar: () => number }>({ strictness: Strictness.STRICT });
+
+    expect(() => foo.bar()).toThrow(UnexpectedCall);
   });
 
   it('should not stack', () => {
