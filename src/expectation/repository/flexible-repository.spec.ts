@@ -189,36 +189,6 @@ describe('FlexibleRepository', () => {
 
       expect(repo.getCallStats()).toEqual(callStats);
     });
-
-    it('should record calls for unexpected access', () => {
-      const repo = new FlexibleRepository();
-      try {
-        repo.get('foo');
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
-      const callStats: CallStats = {
-        expected: new Map(),
-        unexpected: new Map([['foo', [{ arguments: undefined }]]]),
-      };
-      expect(repo.getCallStats()).toEqual(callStats);
-    });
-
-    it('should record calls for unexpected call', () => {
-      const repo = new FlexibleRepository();
-      repo.add(new NotMatchingExpectation('foo', { value: 23 }));
-
-      try {
-        repo.get('foo').value(1, 2, 3);
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
-      const callStats: CallStats = {
-        expected: new Map([['foo', [{ arguments: undefined }]]]),
-        unexpected: new Map([['foo', [{ arguments: [1, 2, 3] }]]]),
-      };
-      expect(repo.getCallStats()).toEqual(callStats);
-    });
   });
 
   describe('clearing', () => {
@@ -339,6 +309,36 @@ describe('FlexibleRepository', () => {
 
       expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
     });
+
+    it('should record calls for unexpected access', () => {
+      const repo = new FlexibleRepository();
+      try {
+        repo.get('foo');
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+
+      const callStats: CallStats = {
+        expected: new Map(),
+        unexpected: new Map([['foo', [{ arguments: undefined }]]]),
+      };
+      expect(repo.getCallStats()).toEqual(callStats);
+    });
+
+    it('should record calls for unexpected call', () => {
+      const repo = new FlexibleRepository();
+      repo.add(new NotMatchingExpectation('foo', { value: 23 }));
+
+      try {
+        repo.get('foo').value(1, 2, 3);
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+
+      const callStats: CallStats = {
+        expected: new Map([['foo', [{ arguments: undefined }]]]),
+        unexpected: new Map([['foo', [{ arguments: [1, 2, 3] }]]]),
+      };
+      expect(repo.getCallStats()).toEqual(callStats);
+    });
   });
 
   describe('medium strict', () => {
@@ -357,6 +357,24 @@ describe('FlexibleRepository', () => {
 
       expect(value).toBeInstanceOf(Function);
       expect(() => value(1, 2, 3)).toThrow(UnexpectedCall);
+    });
+
+    it('should not record the unexpected property access', () => {
+      const repo = new FlexibleRepository(Strictness.STRICT);
+
+      repo.get('foo');
+
+      expect(repo.getCallStats().unexpected.size).toEqual(0);
+    });
+
+    it('should record the unexpected call', () => {
+      const repo = new FlexibleRepository(Strictness.STRICT);
+
+      expect(() => repo.get('foo').value(1, 2, 3)).toThrow();
+
+      expect(repo.getCallStats().unexpected.get('foo')).toEqual([
+        { arguments: [1, 2, 3] },
+      ]);
     });
   });
 });

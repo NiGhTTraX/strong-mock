@@ -209,14 +209,16 @@ export class FlexibleRepository implements ExpectationRepository {
   }
 
   private getValueForUnexpectedAccess(property: Property): ReturnValue {
-    this.recordUnexpected(property, undefined);
-
     if (this.strictness === Strictness.SUPER_STRICT) {
+      this.recordUnexpected(property, undefined);
+
       throw new UnexpectedAccess(property, this.getUnmet());
     }
 
     return {
       value: (...args: unknown[]) => {
+        this.recordUnexpected(property, args);
+
         throw new UnexpectedCall(property, args, this.getUnmet());
       },
     };
