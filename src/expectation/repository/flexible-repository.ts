@@ -116,7 +116,6 @@ export class FlexibleRepository implements ExpectationRepository {
             return returnOrThrow(callExpectation.expectation.returnValue);
           }
 
-          this.recordUnexpected(property, args);
           return this.getValueForUnexpectedCall(property, args);
         },
       };
@@ -142,13 +141,10 @@ export class FlexibleRepository implements ExpectationRepository {
 
       case ApplyProp:
         return {
-          value: (...args: any[]) => {
-            this.recordUnexpected(property, args);
-            return this.getValueForUnexpectedCall(property, args);
-          },
+          value: (...args: any[]) =>
+            this.getValueForUnexpectedCall(property, args),
         };
       default:
-        this.recordUnexpected(property, undefined);
         return this.getValueForUnexpectedAccess(property);
     }
   }
@@ -207,10 +203,14 @@ export class FlexibleRepository implements ExpectationRepository {
   }
 
   private getValueForUnexpectedCall(property: Property, args: any[]): never {
+    this.recordUnexpected(property, args);
+
     throw new UnexpectedCall(property, args, this.getUnmet());
   }
 
   private getValueForUnexpectedAccess(property: Property): ReturnValue {
+    this.recordUnexpected(property, undefined);
+
     if (this.strictness === Strictness.SUPER_STRICT) {
       throw new UnexpectedAccess(property, this.getUnmet());
     }
