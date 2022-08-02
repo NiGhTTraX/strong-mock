@@ -4,7 +4,7 @@ import { ExpectationRepository } from '../expectation/repository/expectation-rep
 import { createProxy, Property } from '../proxy';
 import { PendingExpectation } from '../when/pending-expectation';
 import { setActiveMock } from './map';
-import { Mock } from './mock';
+import { Mock, Mode } from './mock';
 import { ConcreteMatcher } from './options';
 
 /**
@@ -37,12 +37,12 @@ export const returnOrThrow = ({ isError, isPromise, value }: ReturnValue) => {
 export const createStub = <T>(
   repo: ExpectationRepository,
   pendingExpectation: PendingExpectation,
-  isRecording: () => boolean,
+  getCurrentMode: () => Mode,
   concreteMatcher: ConcreteMatcher
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {
-      if (!isRecording()) {
+      if (getCurrentMode() === Mode.CALL) {
         return returnOrThrow(repo.get(property));
       }
 
@@ -67,7 +67,7 @@ export const createStub = <T>(
       });
     },
     apply: (args: any[]) => {
-      if (!isRecording()) {
+      if (getCurrentMode() === Mode.CALL) {
         const fn = repo.get(ApplyProp);
 
         // This is not using `returnOrThrow` because the repo will use it.
@@ -85,7 +85,7 @@ export const createStub = <T>(
       return undefined;
     },
     ownKeys: () => {
-      if (!isRecording()) {
+      if (getCurrentMode() === Mode.CALL) {
         return repo.getAllProperties();
       }
 

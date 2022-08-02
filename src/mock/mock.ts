@@ -25,10 +25,15 @@ const strongExpectationFactory: ExpectationFactory = (
     returnValue
   );
 
-export let isRecording = false;
+export enum Mode {
+  EXPECT,
+  CALL,
+}
 
-export const setRecording = (recording: boolean) => {
-  isRecording = recording;
+export let currentMode: Mode = Mode.CALL;
+
+export const setMode = (mode: Mode) => {
+  currentMode = mode;
 };
 
 /**
@@ -67,7 +72,7 @@ export const mock = <T>({
   const stub = createStub<T>(
     repository,
     pendingExpectation,
-    () => isRecording,
+    () => currentMode,
     options.concreteMatcher
   );
 

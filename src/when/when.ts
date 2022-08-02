@@ -1,5 +1,5 @@
 import { getActiveMock, getMockState } from '../mock/map';
-import { setRecording } from '../mock/mock';
+import { Mode, setMode } from '../mock/mock';
 import { createReturns, Stub } from '../return/returns';
 
 /**
@@ -29,9 +29,9 @@ import { createReturns, Stub } from '../return/returns';
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 export const when = <R>(expectation: () => R): Stub<R> => {
-  setRecording(true);
+  setMode(Mode.EXPECT);
   expectation();
-  setRecording(false);
+  setMode(Mode.CALL);
 
   const { pendingExpectation } = getMockState(getActiveMock());
 

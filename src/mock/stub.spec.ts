@@ -10,11 +10,12 @@ import {
   PendingExpectation,
   RepoSideEffectPendingExpectation,
 } from '../when/pending-expectation';
+import { Mode } from './mock';
 import { createStub } from './stub';
 
 describe('createStub', () => {
   describe('recording', () => {
-    const recordingMode = () => true;
+    const expectMode = () => Mode.EXPECT;
 
     it('should intercept fn(...args)', () => {
       const repo = new OneIncomingExpectationRepository();
@@ -24,7 +25,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -45,7 +46,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -66,7 +67,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -87,7 +88,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -108,7 +109,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -129,7 +130,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -150,7 +151,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -171,7 +172,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -192,7 +193,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -213,7 +214,7 @@ describe('createStub', () => {
       const stub = createStub<Baz>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -229,7 +230,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -244,7 +245,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         repo,
         pendingExpectation,
-        recordingMode,
+        expectMode,
         It.deepEquals
       );
 
@@ -257,7 +258,7 @@ describe('createStub', () => {
     // TODO: this smells because we're not using one of the parameters in all these tests
     const unusedPendingExpectation = SM.mock<PendingExpectation>();
 
-    const notRecordingMode = () => false;
+    const callMode = () => Mode.CALL;
 
     it('should get matching expectation for apply', () => {
       SM.when(repo.get(ApplyProp)).thenReturn({ value: () => 42 });
@@ -265,7 +266,7 @@ describe('createStub', () => {
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -278,7 +279,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -291,7 +292,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -304,7 +305,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -317,7 +318,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -334,7 +335,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
@@ -353,7 +354,7 @@ describe('createStub', () => {
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode,
+        callMode,
         It.deepEquals
       );
 
