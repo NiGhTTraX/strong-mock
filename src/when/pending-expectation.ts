@@ -1,20 +1,25 @@
 import { MissingWhen, UnfinishedExpectation } from '../errors';
 import { Expectation, ReturnValue } from '../expectation/expectation';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import { ConcreteMatcher } from '../mock/options';
 import { printWhen } from '../print';
 import { Property } from '../proxy';
 
 export type ExpectationFactory = (
   property: Property,
   args: any[] | undefined,
-  returnValue: ReturnValue
+  returnValue: ReturnValue,
+  concreteMatcher: ConcreteMatcher
 ) => Expectation;
 
 export interface PendingExpectation {
   // TODO: get rid of repo
   start(repo: ExpectationRepository): void;
 
-  finish(returnValue: ReturnValue): Expectation;
+  finish(
+    returnValue: ReturnValue,
+    concreteMatcher: ConcreteMatcher
+  ): Expectation;
 
   clear(): void;
 
@@ -55,7 +60,10 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     this._args = value;
   }
 
-  finish(returnValue: ReturnValue): Expectation {
+  finish(
+    returnValue: ReturnValue,
+    concreteMatcher: ConcreteMatcher
+  ): Expectation {
     if (!this._repo) {
       throw new MissingWhen();
     }
@@ -63,7 +71,8 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     const expectation = this.createExpectation(
       this._property,
       this._args,
-      returnValue
+      returnValue,
+      concreteMatcher
     );
     this._repo.add(expectation);
 

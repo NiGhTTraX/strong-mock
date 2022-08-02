@@ -3,6 +3,7 @@ import { SM } from '../../tests/old';
 import { NestedWhen } from '../errors';
 import { ApplyProp } from '../expectation/expectation';
 import { spyExpectationFactory } from '../expectation/expectation.mocks';
+import { It } from '../expectation/it';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { OneIncomingExpectationRepository } from '../expectation/repository/expectation-repository.mocks';
 import {
@@ -24,7 +25,7 @@ describe('createStub', () => {
 
       stub(1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -40,7 +41,7 @@ describe('createStub', () => {
 
       stub.call(null, 1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -56,7 +57,7 @@ describe('createStub', () => {
 
       stub.apply(null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -72,7 +73,7 @@ describe('createStub', () => {
 
       Reflect.apply(stub, null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -88,7 +89,7 @@ describe('createStub', () => {
 
       stub.bind(null, 1, 2)(3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -104,7 +105,7 @@ describe('createStub', () => {
 
       stub.bar(1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -120,7 +121,7 @@ describe('createStub', () => {
 
       stub.bar.call(null, 1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -136,7 +137,7 @@ describe('createStub', () => {
 
       stub.bar.apply(null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -152,7 +153,7 @@ describe('createStub', () => {
 
       stub.bar.bind(null, 1, 2)(3);
 
-      pendingExpectation.finish({ value: 23 });
+      pendingExpectation.finish({ value: 23 }, It.deepEquals);
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);

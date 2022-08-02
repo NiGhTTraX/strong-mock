@@ -1,10 +1,6 @@
 import { printExpected } from 'jest-matcher-utils';
-import { It, Strictness, verify, when } from '../src';
-import {
-  UnexpectedAccess,
-  UnexpectedCall,
-  UnmetExpectations,
-} from '../src/errors';
+import { It, verify, when } from '../src';
+import { UnexpectedCall, UnmetExpectations } from '../src/errors';
 import { mock } from '../src/mock/mock';
 import { expectAnsilessEqual } from './ansiless';
 import { Fn } from './fixtures';
@@ -145,14 +141,6 @@ describe('e2e', () => {
     when(() => mock1(mock2)).thenReturn(true);
 
     expect(mock1(mock2)).toBeTruthy();
-  });
-
-  it('should configure strictness', () => {
-    const foo = mock<{ bar: () => number }>({
-      strictness: Strictness.SUPER_STRICT,
-    });
-
-    expect(() => foo.bar()).toThrow(UnexpectedAccess);
   });
 
   describe('ignoring arguments', () => {

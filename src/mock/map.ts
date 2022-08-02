@@ -1,6 +1,7 @@
 import { NotAMock } from '../errors';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { PendingExpectation } from '../when/pending-expectation';
+import { StrongMockDefaults } from './defaults';
 import { Mock } from './mock';
 
 /**
@@ -33,6 +34,7 @@ export const getActiveMock = (): Mock<any> => activeMock;
 type MockState = {
   repository: ExpectationRepository;
   pendingExpectation: PendingExpectation;
+  options: StrongMockDefaults;
 };
 
 /**

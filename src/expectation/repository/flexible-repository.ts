@@ -1,51 +1,10 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
+import { Strictness } from '../../mock/options';
 import { returnOrThrow } from '../../mock/stub';
 import { Property } from '../../proxy';
 import { ApplyProp, Expectation, ReturnValue } from '../expectation';
 import { MATCHER_SYMBOL } from '../matcher';
 import { CallMap, ExpectationRepository } from './expectation-repository';
-
-/**
- * Controls what happens when a property is accessed, or a call is made,
- * and there are no expectations set for it.
- */
-export enum Strictness {
-  /**
-   * Any property that's accessed, or any call that's made, without a matching
-   * expectation, will throw immediately.
-   *
-   * @example
-   * type Service = { foo: (x: number) => number };
-   * const service = mock<Service>();
-   *
-   * // This will throw.
-   * const { foo } = service;
-   *
-   * // Will throw "Didn't expect foo to be accessed",
-   * // without printing the arguments.
-   * foo(42);
-   */
-  SUPER_STRICT,
-  /**
-   * Properties with unmatched expectations will return functions that will
-   * throw if called. This can be useful if your code destructures a function
-   * but never calls it.
-   *
-   * It will also improve error messages for unexpected calls because arguments
-   * will be captured instead of throwing immediately on the property access.
-   *
-   * @example
-   * type Service = { foo: (x: number) => number };
-   * const service = mock<Service>();
-   *
-   * // This will not throw.
-   * const { foo } = service;
-   *
-   * // Will throw "Didn't expect foo(42) to be called".
-   * foo(42);
-   */
-  STRICT,
-}
 
 type CountableExpectation = {
   expectation: Expectation;

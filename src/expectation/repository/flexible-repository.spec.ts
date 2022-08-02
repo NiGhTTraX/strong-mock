@@ -1,4 +1,5 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
+import { Strictness } from '../../mock/options';
 import { ApplyProp } from '../expectation';
 import {
   MatchingCallExpectation,
@@ -6,7 +7,7 @@ import {
   NotMatchingExpectation,
 } from '../expectation.mocks';
 import { CallStats } from './expectation-repository';
-import { FlexibleRepository, Strictness } from './flexible-repository';
+import { FlexibleRepository } from './flexible-repository';
 
 describe('FlexibleRepository', () => {
   describe('property expectations', () => {

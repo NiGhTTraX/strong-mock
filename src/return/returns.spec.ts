@@ -1,12 +1,13 @@
 import { ReturnValue } from '../expectation/expectation';
-import { createReturns } from './returns';
 import { SpyPendingExpectation } from '../expectation/expectation.mocks';
+import { It } from '../expectation/it';
+import { createReturns } from './returns';
 
 describe('returns', () => {
   it('should set a return value', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).thenReturn(23);
+    createReturns<number>(pendingExpectation, It.deepEquals).thenReturn(23);
 
     expect(pendingExpectation.finishCalledWith).toEqual({
       value: 23,
@@ -19,7 +20,7 @@ describe('returns', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     const error = new Error();
-    createReturns<number>(pendingExpectation).thenThrow(error);
+    createReturns<number>(pendingExpectation, It.deepEquals).thenThrow(error);
 
     expect(pendingExpectation.finishCalledWith).toEqual({
       value: error,
@@ -31,7 +32,7 @@ describe('returns', () => {
   it('should set an empty exception', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).thenThrow();
+    createReturns<number>(pendingExpectation, It.deepEquals).thenThrow();
 
     expect(pendingExpectation.finishCalledWith).toEqual({
       value: new Error(),
@@ -43,7 +44,9 @@ describe('returns', () => {
   it('should set an exception message', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<number>(pendingExpectation).thenThrow('foobar');
+    createReturns<number>(pendingExpectation, It.deepEquals).thenThrow(
+      'foobar'
+    );
 
     expect(pendingExpectation.finishCalledWith).toEqual({
       value: new Error('foobar'),
@@ -55,9 +58,10 @@ describe('returns', () => {
   it('should set a return promise', async () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).thenReturn(
-      Promise.resolve(23)
-    );
+    createReturns<Promise<number>>(
+      pendingExpectation,
+      It.deepEquals
+    ).thenReturn(Promise.resolve(23));
 
     await expect(pendingExpectation.finishCalledWith?.value).resolves.toEqual(
       23
@@ -71,7 +75,10 @@ describe('returns', () => {
   it('should set a return promise value', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).thenResolve(23);
+    createReturns<Promise<number>>(
+      pendingExpectation,
+      It.deepEquals
+    ).thenResolve(23);
 
     expect(pendingExpectation.finishCalledWith?.value).toEqual(23);
     expect(pendingExpectation.finishCalledWith).toMatchObject<
@@ -87,7 +94,10 @@ describe('returns', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
     const error = new Error();
-    createReturns<Promise<number>>(pendingExpectation).thenReject(error);
+    createReturns<Promise<number>>(
+      pendingExpectation,
+      It.deepEquals
+    ).thenReject(error);
 
     expect(pendingExpectation.finishCalledWith?.value).toEqual(error);
     expect(pendingExpectation.finishCalledWith).toMatchObject<
@@ -102,7 +112,10 @@ describe('returns', () => {
   it('should set an empty promise rejection', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).thenReject();
+    createReturns<Promise<number>>(
+      pendingExpectation,
+      It.deepEquals
+    ).thenReject();
 
     expect(pendingExpectation.finishCalledWith?.value).toEqual(new Error());
     expect(pendingExpectation.finishCalledWith).toMatchObject<
@@ -117,7 +130,10 @@ describe('returns', () => {
   it('should set a promise rejection message', () => {
     const pendingExpectation = new SpyPendingExpectation();
 
-    createReturns<Promise<number>>(pendingExpectation).thenReject('foobar');
+    createReturns<Promise<number>>(
+      pendingExpectation,
+      It.deepEquals
+    ).thenReject('foobar');
 
     expect(pendingExpectation.finishCalledWith?.value).toEqual(
       new Error('foobar')

@@ -1,4 +1,5 @@
 import { ReturnValue } from '../expectation/expectation';
+import { ConcreteMatcher } from '../mock/options';
 import { PendingExpectation } from '../when/pending-expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
 
@@ -89,9 +90,13 @@ export type Stub<T> = [T] extends [Promise<infer U>]
  */
 const finishPendingExpectation = (
   returnValue: ReturnValue,
-  pendingExpectation: PendingExpectation
+  pendingExpectation: PendingExpectation,
+  concreteMatcher: ConcreteMatcher
 ) => {
-  const finishedExpectation = pendingExpectation.finish(returnValue);
+  const finishedExpectation = pendingExpectation.finish(
+    returnValue,
+    concreteMatcher
+  );
   pendingExpectation.clear();
 
   return createInvocationCount(finishedExpectation);
@@ -110,7 +115,8 @@ const getError = (errorOrMessage: Error | string | undefined): Error => {
 };
 
 export const createReturns = <R>(
-  pendingExpectation: PendingExpectation
+  pendingExpectation: PendingExpectation,
+  concreteMatcher: ConcreteMatcher
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
     // TODO: merge this with the promise version
@@ -120,12 +126,14 @@ export const createReturns = <R>(
       ): InvocationCount =>
         finishPendingExpectation(
           { value: returnValue, isError: false, isPromise: false },
-          pendingExpectation
+          pendingExpectation,
+          concreteMatcher
         ),
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
         { value: getError(errorOrMessage), isError: true, isPromise: false },
-        pendingExpectation
+        pendingExpectation,
+        concreteMatcher
       ),
   };
 
@@ -139,7 +147,8 @@ export const createReturns = <R>(
           // promise thenReturn and a normal thenReturn.
           isPromise: false,
         },
-        pendingExpectation
+        pendingExpectation,
+        concreteMatcher
       ),
 
     thenResolve: (promiseValue: any): InvocationCount =>
@@ -149,7 +158,8 @@ export const createReturns = <R>(
           isError: false,
           isPromise: true,
         },
-        pendingExpectation
+        pendingExpectation,
+        concreteMatcher
       ),
 
     thenReject: (errorOrMessage?: Error | string): InvocationCount =>
@@ -159,7 +169,8 @@ export const createReturns = <R>(
           isError: true,
           isPromise: true,
         },
-        pendingExpectation
+        pendingExpectation,
+        concreteMatcher
       ),
   };
 

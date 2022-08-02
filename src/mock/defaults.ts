@@ -1,33 +1,10 @@
 import { It } from '../expectation/it';
-import { Matcher } from '../expectation/matcher';
-import { Strictness } from '../expectation/repository/flexible-repository';
+import { MockOptions, Strictness } from './options';
 
-export type StrongMockDefaults = {
-  /**
-   * The matcher that will be used when one isn't specified explicitly.
-   *
-   * @param expected The non matcher expected value.
-   *
-   * @example
-   * StrongMock.setDefaults({
-   *   matcher: () => It.matches(() => true)
-   * });
-   *
-   * when(() => fn('value')).thenReturn(true);
-   *
-   * fn('not-value') === true;
-   */
-  matcher: <T>(expected: T) => Matcher;
-
-  /**
-   * Controls what happens when a property is accessed, or a call is made,
-   * and there are no expectations set for it.
-   */
-  strictness: Strictness;
-};
+export type StrongMockDefaults = Required<MockOptions>;
 
 const defaults: StrongMockDefaults = {
-  matcher: It.deepEquals,
+  concreteMatcher: It.deepEquals,
   strictness: Strictness.STRICT,
 };
 
@@ -40,7 +17,7 @@ export let currentDefaults: StrongMockDefaults = defaults;
  *   calls don't stack e.g. calling this with `{}` will clear any previously
  *   applied defaults.
  */
-export const setDefaults = (newDefaults: Partial<StrongMockDefaults>): void => {
+export const setDefaults = (newDefaults: MockOptions): void => {
   currentDefaults = {
     ...defaults,
     ...newDefaults,
