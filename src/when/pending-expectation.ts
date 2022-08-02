@@ -14,12 +14,9 @@ export type ExpectationFactory = (
 
 export interface PendingExpectation {
   // TODO: get rid of repo
-  start(repo: ExpectationRepository): void;
+  start(repo: ExpectationRepository, concreteMatcher: ConcreteMatcher): void;
 
-  finish(
-    returnValue: ReturnValue,
-    concreteMatcher: ConcreteMatcher
-  ): Expectation;
+  finish(returnValue: ReturnValue): Expectation;
 
   clear(): void;
 
@@ -36,13 +33,15 @@ export interface PendingExpectation {
 export class RepoSideEffectPendingExpectation implements PendingExpectation {
   private _repo: ExpectationRepository | undefined;
 
+  private _concreteMatcher: ConcreteMatcher | undefined;
+
   private _args: any[] | undefined;
 
   private _property: Property = '';
 
   constructor(private createExpectation: ExpectationFactory) {}
 
-  start(repo: ExpectationRepository) {
+  start(repo: ExpectationRepository, concreteMatcher: ConcreteMatcher) {
     if (this._repo) {
       throw new UnfinishedExpectation(this);
     }
@@ -50,6 +49,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     this.clear();
 
     this._repo = repo;
+    this._concreteMatcher = concreteMatcher;
   }
 
   set property(value: Property) {
@@ -60,11 +60,8 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
     this._args = value;
   }
 
-  finish(
-    returnValue: ReturnValue,
-    concreteMatcher: ConcreteMatcher
-  ): Expectation {
-    if (!this._repo) {
+  finish(returnValue: ReturnValue): Expectation {
+    if (!this._repo || !this._concreteMatcher) {
       throw new MissingWhen();
     }
 
@@ -72,7 +69,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
       this._property,
       this._args,
       returnValue,
-      concreteMatcher
+      this._concreteMatcher
     );
     this._repo.add(expectation);
 

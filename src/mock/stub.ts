@@ -5,6 +5,7 @@ import { createProxy, Property } from '../proxy';
 import { PendingExpectation } from '../when/pending-expectation';
 import { setActiveMock } from './map';
 import { Mock } from './mock';
+import { ConcreteMatcher } from './options';
 
 /**
  * Return the expectation's return value.
@@ -36,7 +37,8 @@ export const returnOrThrow = ({ isError, isPromise, value }: ReturnValue) => {
 export const createStub = <T>(
   repo: ExpectationRepository,
   pendingExpectation: PendingExpectation,
-  isRecording: () => boolean
+  isRecording: () => boolean,
+  concreteMatcher: ConcreteMatcher
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {
@@ -46,7 +48,7 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start(repo);
+      pendingExpectation.start(repo, concreteMatcher);
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.property = property;
 
@@ -74,7 +76,7 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start(repo);
+      pendingExpectation.start(repo, concreteMatcher);
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.property = ApplyProp;
       // eslint-disable-next-line no-param-reassign

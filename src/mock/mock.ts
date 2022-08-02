@@ -64,7 +64,12 @@ export const mock = <T>({
 
   const repository = new FlexibleRepository(options.strictness);
 
-  const stub = createStub<T>(repository, pendingExpectation, () => isRecording);
+  const stub = createStub<T>(
+    repository,
+    pendingExpectation,
+    () => isRecording,
+    options.concreteMatcher
+  );
 
   setMockState(stub, {
     repository,

@@ -21,11 +21,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub(1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -37,11 +42,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.call(null, 1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -53,11 +63,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.apply(null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -69,11 +84,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       Reflect.apply(stub, null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -85,11 +105,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.bind(null, 1, 2)(3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual(ApplyProp);
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -101,11 +126,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Foo>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.bar(1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -117,11 +147,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Foo>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.bar.call(null, 1, 2, 3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -133,11 +168,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Foo>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.bar.apply(null, [1, 2, 3]);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -149,11 +189,16 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Foo>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       stub.bar.bind(null, 1, 2)(3);
 
-      pendingExpectation.finish({ value: 23 }, It.deepEquals);
+      pendingExpectation.finish({ value: 23 });
 
       expect(repo.expectation?.property).toEqual('bar');
       expect(repo.expectation?.args).toEqual([1, 2, 3]);
@@ -165,7 +210,12 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Baz>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Baz>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
       expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
@@ -176,7 +226,12 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Fn>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       expect(() => ({ ...stub })).toThrow();
     });
@@ -186,7 +241,12 @@ describe('createStub', () => {
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, recordingMode);
+      const stub = createStub<Foo>(
+        repo,
+        pendingExpectation,
+        recordingMode,
+        It.deepEquals
+      );
 
       expect(() => ({ ...stub.bar })).toThrow();
     });
@@ -205,7 +265,8 @@ describe('createStub', () => {
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       expect(fn(1)).toEqual(42);
@@ -217,7 +278,8 @@ describe('createStub', () => {
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       expect(foo.bar(1)).toEqual(42);
@@ -229,7 +291,8 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       expect(foo.bar).toEqual(42);
@@ -241,7 +304,8 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       expect(() => foo.bar).toThrow('foo');
@@ -253,7 +317,8 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       await expect(foo.bar).resolves.toEqual('foo');
@@ -269,7 +334,8 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       await expect(foo.bar).rejects.toThrow('foo');
@@ -287,7 +353,8 @@ describe('createStub', () => {
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),
         unusedPendingExpectation,
-        notRecordingMode
+        notRecordingMode,
+        It.deepEquals
       );
 
       expect({ ...foo }).toEqual({ foo: 1, bar: 2, [baz]: 3 });

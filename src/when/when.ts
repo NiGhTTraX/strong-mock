@@ -33,10 +33,7 @@ export const when = <R>(expectation: () => R): Stub<R> => {
   expectation();
   setRecording(false);
 
-  const mockState = getMockState(getActiveMock());
+  const { pendingExpectation } = getMockState(getActiveMock());
 
-  return createReturns<R>(
-    mockState.pendingExpectation,
-    mockState.options.concreteMatcher
-  );
+  return createReturns<R>(pendingExpectation);
 };

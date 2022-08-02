@@ -18,17 +18,19 @@ import {
   CallMap,
   ExpectationRepository,
 } from './expectation/repository/expectation-repository';
+import { ConcreteMatcher } from './mock/options';
 import { RepoSideEffectPendingExpectation } from './when/pending-expectation';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {
     it('should print call', () => {
       const repo = SM.mock<ExpectationRepository>();
+      const matcher = SM.mock<ConcreteMatcher>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 
-      pendingExpectation.start(SM.instance(repo));
+      pendingExpectation.start(SM.instance(repo), SM.instance(matcher));
       pendingExpectation.args = [1, 2, 3];
       pendingExpectation.property = 'bar';
 
@@ -40,11 +42,12 @@ describe('errors', () => {
 
     it('should print property access', () => {
       const repo = SM.mock<ExpectationRepository>();
+      const matcher = SM.mock<ConcreteMatcher>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
         spyExpectationFactory
       );
 
-      pendingExpectation.start(repo);
+      pendingExpectation.start(SM.instance(repo), SM.instance(matcher));
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 
