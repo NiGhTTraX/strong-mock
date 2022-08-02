@@ -44,14 +44,16 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
   - [Argument matchers](#argument-matchers)
-  - [Overriding default matcher](#overriding-default-matcher)
+  - [Mock options](#mock-options)
+    - [Strictness](#strictness)
+    - [Concrete matcher](#concrete-matcher)
+    - [Defaults](#defaults)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
-  - [Can I mock an existing object/function?](#can-i-mock-an-existing-objectfunction)
+  - [Can I partially mock an existing object/function?](#can-i-partially-mock-an-existing-objectfunction)
   - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
-  - [Why does accessing an unused method throw?](#why-does-accessing-an-unused-method-throw)
   - [Can I spread/enumerate a mock?](#can-i-spreadenumerate-a-mock)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
 
@@ -270,6 +272,12 @@ console.log(fn(
 ); // 'matched!'
 ```
 
+You can mix argument matchers with concrete arguments:
+
+```typescript
+when(() => fn(42, It.isObject())).thenReturn('matched');
+```
+
 Available matchers:
 - `deepEquals` - the default, uses deep equality,
 - `is` - uses `Object.is` for comparison,
@@ -325,22 +333,65 @@ console.log(fn(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
 ```
 
-### Overriding default matcher
+### Mock options
 
-You can override the default matcher that will be used when setting expectations with non-matcher values e.g. `42` or `{ foo: "bar" }`.
+#### Strictness
 
-```ts
-import { mock, when, It, setDefaults } from 'strong-mock';
+strong-mock has a few levels of "strictness" that control what values are returned when an unexpected property is accessed or an unexpected call is made. The strictness can be configured for each mock, or for all mocks with `setDefaults`.
+
+```typescript
+import { mock, when } from 'strong-mock';
+import { Strictness } from './options';
+
+type Foo = {
+  bar: (value: number) => number;
+}
+
+// This is the default.
+const strictFoo = mock<Foo>({ strictness: Strictness.STRICT });
+
+// Accessing properties with no expectations is fine.
+strictFoo.bar;
+// Throws "Didn't expect bar(42) to be called".
+strictFoo.bar(42);
+
+const superStrictFoo = mock<Foo>({ strictness: Strictness.SUPER_STRICT });
+
+// Throws "Didn't expect property bar to be accessed".
+superStrictFoo.bar;
+// Throws "Didn't expect property bar to be accessed".
+superStrictFoo.bar(42);
+```
+
+#### Concrete matcher
+
+You can set the matcher that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. Passing in a [matcher argument](#argument-matchers) will always take priority.
+
+```typescript
+import { mock, when, It } from 'strong-mock';
 
 // Use strict equality instead of deep equality.
-setDefaults({
-  matcher: It.is
-})
-
-const fn = mock<(x: number[]) => boolean>();
+const fn = mock<(x: number[]) => boolean>({ concreteMatcher: It.is });
 when(() => fn([1, 2, 3])).thenReturn(true);
 
 fn([1, 2, 3]); // throws because different arrays
+```
+
+#### Defaults
+
+Mock options can be set for all mocks with `setDefaults`.
+
+```typescript
+import { mock, when, setDefaults, Strictness } from 'strong-mock';
+
+setDefaults({
+  strictness: Strictness.SUPER_STRICT
+});
+
+// Uses the new default.
+const superStrictMock = mock<() => void>();
+// Overrides the default.
+const strictMock = mock<() => void>({ strictness: Strictness.STRICT });
 ```
 
 ## FAQ
@@ -353,9 +404,9 @@ This design decision has a few reasons behind it. First, it forces you to be awa
 
 Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them then you might want to look into splitting the code to only depend on things it really needs.
 
-### Can I mock an existing object/function?
+### Can I partially mock an existing object/function?
 
-No, although you can pass its type to `mock()` and set expectations on it as you would with a type.
+No, passing a concrete implementation to `mock()` will be the same as passing a type: all properties will be mocked, and you have to set expectations on the ones that will be accessed.
 
 ### How do I set expectations on setters?
 
@@ -383,52 +434,6 @@ console.log(foo.bar(23)); // 'called 23'
 
 The function in `thenReturn()` will be type checked against the actual interface, so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
 
-### Why does accessing an unused method throw?
-
-Any unexpected property access will throw an error, even if the property is a method, and you never call it. This can sometimes be inconvenient if your code e.g. destructures your mock and only calls parts of it inside your test.
-
-```typescript
-interface Foo {
-  bar: () => number;
-  baz: () => number;
-}
-
-function doFoo(foo: Foo, { callBaz }: { callBaz: boolean }) {
-  // Will throw here with unexpected access on `baz`.
-  const { bar, baz } = foo;
- 
-  bar();
-
-  if (callBaz) {
-    baz();
-  }
-}
-
-const foo = mock<Foo>();
-when(() => foo.bar()).thenReturn(42);
-
-// Throws with unexpected access on `baz`.
-doFoo(foo, { callBaz: false });
-```
-
-To work around this, either change your code to avoid destructuring
-
-```typescript
-function doFoo(foo: Foo, callBaz: boolean) {
-  foo.bar();
-
-  if (callBaz) {
-    foo.baz();
-  }
-}
-```
-
-or set a dummy expectation on the methods you're not interested in during the test.
-
-```typescript
-when(() => foo.baz()).thenThrow('should not be called').anyTimes();
-```
-
 ### Can I spread/enumerate a mock?
 
 Yes, and you will only get the properties that have expectations on them.
@@ -445,7 +450,6 @@ console.log(foo2.bar); // 42
 console.log(foo2.baz); // undefined
 ```
 
-
 ### How can I ignore `undefined` keys when setting expectations on objects?
 
 Use the `It.deepEquals` matcher explicitly inside `when` and pass `{ strict: false }`:
@@ -453,15 +457,17 @@ Use the `It.deepEquals` matcher explicitly inside `when` and pass `{ strict: fal
 ```ts
 const fn = mock<(x: { foo: string }) => boolean>();
 
-when(() => fn(It.deepEquals({ foo: "bar" }, { strict: false }))).thenReturn(true);
+when(() => fn(
+  It.deepEquals({ foo: "bar" }, { strict: false }))
+).thenReturn(true);
 
 fn({ foo: "bar", baz: undefined }) === true
 ```
 
-You can also set this behavior to be the default by using [`setDefaults`](#overriding-default-matcher):
+You can set this behavior to be the default by configuring the [concrete matcher](#concrete-matcher), and set it on all mocks using [setDefaults](#defaults):
 
 ```ts
 setDefaults({
-  matcher: (expected) => It.deepEquals(expected, { strict: false })
+  concreteMatcher: (expected) => It.deepEquals(expected, { strict: false })
 });
 ```
