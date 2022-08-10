@@ -47,39 +47,57 @@ export class FlexibleRepository implements ExpectationRepository {
     const expectations = this.expectations.get(property);
 
     if (expectations && expectations.length) {
-      // We record that an expected property access has happened, but an
-      // unexpected call could still happen later.
-      this.recordExpected(property, undefined);
-
-      const propertyExpectation = expectations.find((e) =>
-        e.expectation.matches(undefined)
+      return this.handlePropertyWithMatchingExpectations(
+        property,
+        expectations
       );
-
-      if (propertyExpectation) {
-        this.countAndConsume(propertyExpectation);
-
-        return propertyExpectation.expectation.returnValue;
-      }
-
-      return {
-        value: (...args: any[]) => {
-          const callExpectation = expectations.find((e) =>
-            e.expectation.matches(args)
-          );
-
-          if (callExpectation) {
-            this.recordExpected(property, args);
-            this.countAndConsume(callExpectation);
-
-            // TODO: this is duplicated in stub
-            return returnOrThrow(callExpectation.expectation.returnValue);
-          }
-
-          return this.getValueForUnexpectedCall(property, args);
-        },
-      };
     }
 
+    return this.handlePropertyWithNoExpectations(property);
+  }
+
+  private handlePropertyWithMatchingExpectations = (
+    property: Property,
+    expectations: CountableExpectation[]
+  ) => {
+    // Avoid recording call stats for function calls, since the property is an
+    // internal detail.
+    if (property !== ApplyProp) {
+      // An unexpected call could still happen later, if the property returns a
+      // function that will not match the given args.
+      this.recordExpected(property, undefined);
+    }
+
+    const propertyExpectation = expectations.find((e) =>
+      e.expectation.matches(undefined)
+    );
+
+    if (propertyExpectation) {
+      this.countAndConsume(propertyExpectation);
+
+      return propertyExpectation.expectation.returnValue;
+    }
+
+    return {
+      value: (...args: any[]) => {
+        const callExpectation = expectations.find((e) =>
+          e.expectation.matches(args)
+        );
+
+        if (callExpectation) {
+          this.recordExpected(property, args);
+          this.countAndConsume(callExpectation);
+
+          // TODO: this is duplicated in stub
+          return returnOrThrow(callExpectation.expectation.returnValue);
+        }
+
+        return this.getValueForUnexpectedCall(property, args);
+      },
+    };
+  };
+
+  private handlePropertyWithNoExpectations = (property: Property) => {
     switch (property) {
       case 'toString':
         return { value: () => 'mock' };
@@ -106,7 +124,7 @@ export class FlexibleRepository implements ExpectationRepository {
       default:
         return this.getValueForUnexpectedAccess(property);
     }
-  }
+  };
 
   getAllProperties(): Property[] {
     return Array.from(this.expectations.keys());

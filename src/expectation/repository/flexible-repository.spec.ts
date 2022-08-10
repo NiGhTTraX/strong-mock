@@ -174,7 +174,7 @@ describe('FlexibleRepository', () => {
       expect(repo.getCallStats()).toEqual(callStats);
     });
 
-    it('it should record function calls', () => {
+    it('it should record method calls', () => {
       const repo = new FlexibleRepository();
       const expectation = new MatchingCallExpectation('foo', { value: 23 });
       repo.add(expectation);
@@ -185,6 +185,21 @@ describe('FlexibleRepository', () => {
         expected: new Map([
           ['foo', [{ arguments: undefined }, { arguments: [1, 2] }]],
         ]),
+        unexpected: new Map(),
+      };
+
+      expect(repo.getCallStats()).toEqual(callStats);
+    });
+
+    it('it should record function calls', () => {
+      const repo = new FlexibleRepository();
+      const expectation = new MatchingCallExpectation(ApplyProp, { value: 23 });
+      repo.add(expectation);
+
+      repo.get(ApplyProp).value(1, 2);
+
+      const callStats: CallStats = {
+        expected: new Map([[ApplyProp, [{ arguments: [1, 2] }]]]),
         unexpected: new Map(),
       };
 
