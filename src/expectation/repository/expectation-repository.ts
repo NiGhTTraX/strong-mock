@@ -1,5 +1,5 @@
-import { Expectation, ReturnValue } from '../expectation';
 import { Property } from '../../proxy';
+import { Expectation, ReturnValue } from '../expectation';
 
 export type Call = {
   arguments: any[] | undefined;
@@ -37,7 +37,7 @@ export interface ExpectationRepository {
   /**
    * Get a return value for the given property.
    *
-   * The value might be a non-callable e.g. a number or a string or it might
+   * The value might be a non-callable e.g. a number or a string, or it might
    * be a function that, upon receiving arguments, will start a new search and
    * return a value again.
    *
@@ -58,6 +58,22 @@ export interface ExpectationRepository {
    * get('getData').value(1, 2, '3', false, NaN) === 42
    */
   get(property: Property): ReturnValue;
+
+  /**
+   * Get a return value for a function call.
+   *
+   * Note: this will only be invoked if the mocked type is a function. For
+   * method property calls {@link get} will be called instead.
+   *
+   * The list of expectations should be consulted from first to last when
+   * getting a return value. If none of them match it is up to the
+   * implementation to decide what to do.
+   *
+   * @example
+   * add(new Expectation(ApplyProp, [1, 2], 23);
+   * apply(1, 2) === 23
+   */
+  apply(args: unknown[]): unknown;
 
   /**
    * Get all the properties that have expectations.

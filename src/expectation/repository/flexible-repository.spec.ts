@@ -196,7 +196,7 @@ describe('FlexibleRepository', () => {
       const expectation = new MatchingCallExpectation(ApplyProp, { value: 23 });
       repo.add(expectation);
 
-      repo.get(ApplyProp).value(1, 2);
+      repo.apply([1, 2]);
 
       const callStats: CallStats = {
         expected: new Map([[ApplyProp, [{ arguments: [1, 2] }]]]),
@@ -305,7 +305,7 @@ describe('FlexibleRepository', () => {
     it('should throw if no apply expectations', () => {
       const repo = new FlexibleRepository();
 
-      expect(() => repo.get(ApplyProp).value(1, 2, 3)).toThrow(UnexpectedCall);
+      expect(() => repo.apply([1, 2, 3])).toThrow(UnexpectedCall);
     });
 
     it('should throw after a property expectation is fulfilled', () => {

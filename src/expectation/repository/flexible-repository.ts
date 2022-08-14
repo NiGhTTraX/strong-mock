@@ -43,7 +43,9 @@ export class FlexibleRepository implements ExpectationRepository {
     this.unexpectedCallStats.clear();
   }
 
-  get(property: Property): ReturnValue {
+  apply = (args: unknown[]): unknown => this.get(ApplyProp).value(...args);
+
+  get(property: Property): any {
     const expectations = this.expectations.get(property);
 
     if (expectations && expectations.length) {

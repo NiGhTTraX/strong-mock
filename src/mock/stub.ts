@@ -68,10 +68,7 @@ export const createStub = <T>(
     },
     apply: (args: any[]) => {
       if (getCurrentMode() === Mode.CALL) {
-        const fn = repo.get(ApplyProp);
-
-        // This is not using `returnOrThrow` because the repo will use it.
-        return fn.value(...args);
+        return repo.apply(args);
       }
 
       setActiveMock(stub);

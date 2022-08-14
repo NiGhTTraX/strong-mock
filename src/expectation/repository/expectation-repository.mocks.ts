@@ -30,4 +30,8 @@ export class OneIncomingExpectationRepository implements ExpectationRepository {
   }
 
   getCallStats = () => ({ expected: new Map(), unexpected: new Map() });
+
+  apply(): never {
+    throw new Error('not implemented');
+  }
 }

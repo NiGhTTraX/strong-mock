@@ -261,7 +261,7 @@ describe('createStub', () => {
     const callMode = () => Mode.CALL;
 
     it('should get matching expectation for apply', () => {
-      SM.when(repo.get(ApplyProp)).thenReturn({ value: () => 42 });
+      SM.when(repo.apply([1])).thenReturn(42);
 
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
