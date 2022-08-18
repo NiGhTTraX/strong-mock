@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.0...v8.0.0-beta.1) (2022-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* The default matcher option previously available only in
+`setDefaults` has been renamed to `concreteMatcher`.
+* The default strictness now avoids immediately throwing
+on unexpected property access. This should lead to improved error
+messages, and less breaking on common code patterns e.g. destructuring.
+
+If you want the old behavior use:
+
+```
+import { setDefaults, Strictness } from 'strong-mock';
+
+setDefaults({ strictness: Strictness.SUPER_STRICT });
+```
+* You can no longer pass a custom expectation repository
+or a custom expectation factory to the `mock()` function. These options
+weren't documented very well and just bloated the API.
+
+### Features
+
+* `verify` and `verifyAll` now respect the strictness option ([c93c7be](https://github.com/NiGhTTraX/strong-mock/commit/c93c7becbf0a22391f56600a85137a0cfc4be367))
+* Add strictness option to improve unexpected call errors ([71bb975](https://github.com/NiGhTTraX/strong-mock/commit/71bb975e1af9a5b748303a07a90dd43e03fc96fd))
+* Allow concrete matcher to be configured for each mock ([32c82ba](https://github.com/NiGhTTraX/strong-mock/commit/32c82baa1afab573d8a3dcdf1f2543fe5d56fc0a))
+* Allow strictness to be configured for each mock ([c34bacc](https://github.com/NiGhTTraX/strong-mock/commit/c34baccef154a8f868a65048561c4ef4d37ba705))
+* Control mock strictness through setDefaults ([6590713](https://github.com/NiGhTTraX/strong-mock/commit/6590713c91be1b278bc060f543ec514b17c2fedf))
+
+
+### Bug Fixes
+
+* Don't record property call stats for function calls ([de204a5](https://github.com/NiGhTTraX/strong-mock/commit/de204a5cb91325bf317195339a77133a4fed4af5))
+* Print callback syntax in expectation error message ([0bf9633](https://github.com/NiGhTTraX/strong-mock/commit/0bf9633c10b0c7c8260d637f4b66be6b8af15d90))
+
+
+* Remove mock options ([8bf2d2d](https://github.com/NiGhTTraX/strong-mock/commit/8bf2d2d09bde714df73bda79240a7a1774ca067f))
+
 ## [8.0.0-beta.0](https://github.com/NiGhTTraX/strong-mock/compare/v7.3.0...v8.0.0-beta.0) (2022-07-15)
 
 
