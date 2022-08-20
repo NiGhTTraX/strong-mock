@@ -143,7 +143,15 @@ describe('e2e', () => {
     expect(mock1(mock2)).toBeTruthy();
   });
 
-  describe('ignoring arguments', () => {
+  it('', () => {
+    const fn = mock<(x?: number) => number>({ exactParams: true });
+
+    when(() => fn()).thenReturn(42);
+
+    expect(() => fn(100)).toThrow();
+  });
+
+  describe('matching arguments', () => {
     it('should support matching anything', () => {
       const fn = mock<Fn>();
 

@@ -30,7 +30,7 @@ describe('errors', () => {
         spyExpectationFactory
       );
 
-      pendingExpectation.start(SM.instance(repo), SM.instance(matcher));
+      pendingExpectation.start(SM.instance(repo), SM.instance(matcher), false);
       pendingExpectation.args = [1, 2, 3];
       pendingExpectation.property = 'bar';
 
@@ -47,7 +47,7 @@ describe('errors', () => {
         spyExpectationFactory
       );
 
-      pendingExpectation.start(SM.instance(repo), SM.instance(matcher));
+      pendingExpectation.start(SM.instance(repo), SM.instance(matcher), false);
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 

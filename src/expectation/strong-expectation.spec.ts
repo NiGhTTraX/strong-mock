@@ -18,42 +18,65 @@ describe('StrongExpectation', () => {
     expect(expectation.matches([1])).toBeFalsy();
   });
 
-  it('should match optional args against undefined', () => {
-    const expectation = new StrongExpectation(
-      'bar',
-      [It.deepEquals(undefined)],
-      {
-        value: 23,
-      }
-    );
+  describe('non exact params', () => {
+    it('should match missing args against undefined', () => {
+      const expectation = new StrongExpectation(
+        'bar',
+        [It.deepEquals(undefined)],
+        {
+          value: 23,
+        }
+      );
 
-    expect(expectation.matches([])).toBeTruthy();
-  });
-
-  it('should match passed in optional args', () => {
-    const expectation = new StrongExpectation('bar', [], { value: 23 });
-
-    expect(expectation.matches([42])).toBeTruthy();
-  });
-
-  it('should not match missing expected optional arg', () => {
-    const expectation = new StrongExpectation('bar', [It.deepEquals(23)], {
-      value: 23,
+      expect(expectation.matches([])).toBeTruthy();
     });
 
-    expect(expectation.matches([])).toBeFalsy();
+    it('should match extra args', () => {
+      const expectation = new StrongExpectation('bar', [], { value: 23 });
+
+      expect(expectation.matches([42])).toBeTruthy();
+    });
+
+    it('should not match less args', () => {
+      const expectation = new StrongExpectation('bar', [It.deepEquals(23)], {
+        value: 23,
+      });
+
+      expect(expectation.matches([])).toBeFalsy();
+    });
+
+    it('should not match expected undefined verses received defined arg', () => {
+      const expectation = new StrongExpectation(
+        'bar',
+        [It.deepEquals(undefined)],
+        {
+          value: 23,
+        }
+      );
+
+      expect(expectation.matches([42])).toBeFalsy();
+    });
   });
 
-  it('should not match defined expected undefined optional arg', () => {
-    const expectation = new StrongExpectation(
-      'bar',
-      [It.deepEquals(undefined)],
-      {
-        value: 23,
-      }
-    );
+  describe('exact params', () => {
+    it('should not match more args', () => {
+      const expectation = new StrongExpectation('bar', [], { value: 23 }, true);
 
-    expect(expectation.matches([42])).toBeFalsy();
+      expect(expectation.matches([42])).toBeFalsy();
+    });
+
+    it('should not match less args', () => {
+      const expectation = new StrongExpectation(
+        'bar',
+        [It.deepEquals(23)],
+        {
+          value: 23,
+        },
+        true
+      );
+
+      expect(expectation.matches([])).toBeFalsy();
+    });
   });
 
   it('should print when, returns and invocation count', () => {

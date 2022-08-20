@@ -24,7 +24,8 @@ export class StrongExpectation implements Expectation {
   constructor(
     public property: Property,
     public args: Matcher[] | undefined,
-    public returnValue: ReturnValue
+    public returnValue: ReturnValue,
+    private exactParams: boolean = false
   ) {}
 
   setInvocationCount(min: number, max = 1) {
@@ -53,6 +54,12 @@ export class StrongExpectation implements Expectation {
 
     if (!received) {
       return false;
+    }
+
+    if (this.exactParams) {
+      if (this.args.length !== received.length) {
+        return false;
+      }
     }
 
     return this.args.every((arg, i) => arg.matches(received[i]));

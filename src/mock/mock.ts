@@ -16,13 +16,15 @@ const strongExpectationFactory: ExpectationFactory = (
   property,
   args,
   returnValue,
-  concreteMatcher
+  concreteMatcher,
+  exactParams
 ) =>
   new StrongExpectation(
     property,
     // Wrap every non-matcher in the default matcher.
     args?.map((arg) => (isMatcher(arg) ? arg : concreteMatcher(arg))),
-    returnValue
+    returnValue,
+    exactParams
   );
 
 export enum Mode {
@@ -46,6 +48,8 @@ export const setMode = (mode: Mode) => {
  * @param options.strictness Controls what happens when a property is accessed,
  *   or a call is made, and there are no expectations set for it.
  * @param options.concreteMatcher The matcher that will be used when one isn't specified explicitly.
+ * @param options.exactParams Controls whether the number of received arguments has to
+ *   match the expectation.
  *
  * @example
  * const fn = mock<() => number>();
@@ -57,6 +61,7 @@ export const setMode = (mode: Mode) => {
 export const mock = <T>({
   strictness,
   concreteMatcher,
+  exactParams,
 }: MockOptions = {}): Mock<T> => {
   const pendingExpectation = new RepoSideEffectPendingExpectation(
     strongExpectationFactory
@@ -65,6 +70,7 @@ export const mock = <T>({
   const options: StrongMockDefaults = {
     strictness: strictness ?? currentDefaults.strictness,
     concreteMatcher: concreteMatcher ?? currentDefaults.concreteMatcher,
+    exactParams: exactParams ?? currentDefaults.exactParams,
   };
 
   const repository = new FlexibleRepository(options.strictness);
@@ -73,7 +79,8 @@ export const mock = <T>({
     repository,
     pendingExpectation,
     () => currentMode,
-    options.concreteMatcher
+    options.concreteMatcher,
+    options.exactParams
   );
 
   setMockState(stub, {

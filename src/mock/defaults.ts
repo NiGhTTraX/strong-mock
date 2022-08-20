@@ -6,6 +6,7 @@ export type StrongMockDefaults = Required<MockOptions>;
 const defaults: StrongMockDefaults = {
   concreteMatcher: It.deepEquals,
   strictness: Strictness.STRICT,
+  exactParams: false,
 };
 
 export let currentDefaults: StrongMockDefaults = defaults;

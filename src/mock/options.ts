@@ -52,6 +52,24 @@ export interface MockOptions {
   strictness?: Strictness;
 
   /**
+   * If `true`, the number of received arguments in a function/method call has to
+   * match the number of arguments set in the expectation.
+   *
+   * If `false`, extra parameters are considered optional and checked by the
+   * TypeScript compiler instead.
+   *
+   * You may want to set this to `true` if you're not using TypeScript,
+   * or if you want to be extra strict.
+   *
+   * @example
+   * const fn = mock<(value?: number) => number>({ exactParams: true });
+   * when(() => fn()).thenReturn(42);
+   *
+   * fn(100) // throws with exactParams, returns 42 without
+   */
+  exactParams?: boolean;
+
+  /**
    * The matcher that will be used when one isn't specified explicitly.
    *
    * The most common use case is replacing the default {@link It.deepEquals}

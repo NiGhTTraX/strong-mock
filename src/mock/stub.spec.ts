@@ -26,7 +26,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub(1, 2, 3);
@@ -47,7 +48,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.call(null, 1, 2, 3);
@@ -68,7 +70,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.apply(null, [1, 2, 3]);
@@ -89,7 +92,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       Reflect.apply(stub, null, [1, 2, 3]);
@@ -110,7 +114,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.bind(null, 1, 2)(3);
@@ -131,7 +136,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.bar(1, 2, 3);
@@ -152,7 +158,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.bar.call(null, 1, 2, 3);
@@ -173,7 +180,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.bar.apply(null, [1, 2, 3]);
@@ -194,7 +202,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       stub.bar.bind(null, 1, 2)(3);
@@ -215,7 +224,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
@@ -231,7 +241,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(() => ({ ...stub })).toThrow();
@@ -246,7 +257,8 @@ describe('createStub', () => {
         repo,
         pendingExpectation,
         expectMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(() => ({ ...stub.bar })).toThrow();
@@ -267,7 +279,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(fn(1)).toEqual(42);
@@ -280,7 +293,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(foo.bar(1)).toEqual(42);
@@ -293,7 +307,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(foo.bar).toEqual(42);
@@ -306,7 +321,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect(() => foo.bar).toThrow('foo');
@@ -319,7 +335,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       await expect(foo.bar).resolves.toEqual('foo');
@@ -336,7 +353,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       await expect(foo.bar).rejects.toThrow('foo');
@@ -355,7 +373,8 @@ describe('createStub', () => {
         SM.instance(repo),
         unusedPendingExpectation,
         callMode,
-        It.deepEquals
+        It.deepEquals,
+        false
       );
 
       expect({ ...foo }).toEqual({ foo: 1, bar: 2, [baz]: 3 });

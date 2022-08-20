@@ -46,6 +46,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Argument matchers](#argument-matchers)
   - [Mock options](#mock-options)
     - [Strictness](#strictness)
+    - [Exact params](#exact-params)
     - [Concrete matcher](#concrete-matcher)
     - [Defaults](#defaults)
 - [FAQ](#faq)
@@ -365,6 +366,38 @@ const superStrictFoo = mock<Foo>({
 superStrictFoo.bar;
 // Throws "Didn't expect property bar to be accessed".
 superStrictFoo.bar(42);
+```
+
+#### Exact params
+
+By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type safe, the TypeScript compiler will never allow expecting less arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [argument matchers](#argument-matchers).
+
+```typescript
+import { mock } from 'strong-mock';
+
+const fn = mock<(value?: number) => number>();
+
+when(() => fn()).thenReturn(42).twice();
+
+// Since the expectation doesn't expect any arguments,
+// both of the following are fine
+console.log(fn()); // 42
+console.log(fn(1)); // 42
+```
+
+If you're not using TypeScript, or you want to be super strict, you can set `exactParams: true` when creating a mock, or via [setDefaults](#defaults).
+
+```typescript
+import { mock } from 'strong-mock';
+
+const fn = mock<(optionalValue?: number) => number>({
+  exactParams: true
+});
+
+when(() => fn()).thenReturn(42).twice();
+
+console.log(fn()); // 42
+console.log(fn(1)); // throws
 ```
 
 #### Concrete matcher

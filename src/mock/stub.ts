@@ -38,7 +38,8 @@ export const createStub = <T>(
   repo: ExpectationRepository,
   pendingExpectation: PendingExpectation,
   getCurrentMode: () => Mode,
-  concreteMatcher: ConcreteMatcher
+  concreteMatcher: ConcreteMatcher,
+  exactParams: boolean
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {
@@ -48,7 +49,7 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start(repo, concreteMatcher);
+      pendingExpectation.start(repo, concreteMatcher, exactParams);
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.property = property;
 
@@ -73,7 +74,7 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start(repo, concreteMatcher);
+      pendingExpectation.start(repo, concreteMatcher, exactParams);
       // eslint-disable-next-line no-param-reassign
       pendingExpectation.property = ApplyProp;
       // eslint-disable-next-line no-param-reassign
