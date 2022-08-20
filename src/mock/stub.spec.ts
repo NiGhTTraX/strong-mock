@@ -30,58 +30,6 @@ describe('createStub', () => {
       stub(1, 2, 3);
     });
 
-    it('should intercept fn.call(this, ...args)', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.call(null, 1, 2, 3);
-    });
-
-    it('should intercept fn.apply(this, [...args])', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.apply(null, [1, 2, 3]);
-    });
-
-    it('should intercept Reflect.apply(fn, this, [...args])', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      Reflect.apply(stub, null, [1, 2, 3]);
-    });
-
-    it('should intercept fn.bind(this, ...args)', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.bind(null, 1, 2)(3);
-    });
-
     it('should intercept foo.bar(...args)', () => {
       const stub = createStub<Foo>(
         SM.instance(repo),
@@ -93,45 +41,6 @@ describe('createStub', () => {
       SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar(1, 2, 3);
-    });
-
-    it('should intercept foo.bar.call(this, ...args)', () => {
-      const stub = createStub<Foo>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.bar.call(null, 1, 2, 3);
-    });
-
-    it('should intercept foo.bar.apply(this, [...args])', () => {
-      const stub = createStub<Foo>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.bar.apply(null, [1, 2, 3]);
-    });
-
-    it('should intercept foo.bar.bind(this, ...args)', () => {
-      const stub = createStub<Foo>(
-        SM.instance(repo),
-        SM.instance(pendingExpectation),
-        expectMode
-      );
-
-      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
-
-      stub.bar.bind(null, 1, 2)(3);
     });
 
     it('should throw on nested access', () => {
