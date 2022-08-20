@@ -348,14 +348,18 @@ type Foo = {
 }
 
 // This is the default.
-const strictFoo = mock<Foo>({ strictness: Strictness.STRICT });
+const strictFoo = mock<Foo>({
+  strictness: Strictness.STRICT
+});
 
 // Accessing properties with no expectations is fine.
 strictFoo.bar;
 // Throws "Didn't expect bar(42) to be called".
 strictFoo.bar(42);
 
-const superStrictFoo = mock<Foo>({ strictness: Strictness.SUPER_STRICT });
+const superStrictFoo = mock<Foo>({
+  strictness: Strictness.SUPER_STRICT
+});
 
 // Throws "Didn't expect property bar to be accessed".
 superStrictFoo.bar;
@@ -371,7 +375,9 @@ You can set the matcher that will be used in expectations with concrete values e
 import { mock, when, It } from 'strong-mock';
 
 // Use strict equality instead of deep equality.
-const fn = mock<(x: number[]) => boolean>({ concreteMatcher: It.is });
+const fn = mock<(x: number[]) => boolean>({
+  concreteMatcher: It.is
+});
 when(() => fn([1, 2, 3])).thenReturn(true);
 
 fn([1, 2, 3]); // throws because different arrays
