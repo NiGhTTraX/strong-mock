@@ -1,7 +1,7 @@
 import { printExpected } from 'jest-matcher-utils';
 import { It, verify, when } from '../src';
 import { UnexpectedCall, UnmetExpectations } from '../src/errors';
-import { mock } from '../src/mock/mock';
+import { mock } from '../src';
 import { expectAnsilessEqual } from './ansiless';
 import { Fn } from './fixtures';
 
