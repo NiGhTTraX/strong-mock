@@ -1,10 +1,9 @@
-import { Expectation, ReturnValue } from './expectation';
-import { ExpectationRepository } from './repository/expectation-repository';
+import { Property } from '../proxy';
 import {
   ExpectationFactory,
   PendingExpectation,
 } from '../when/pending-expectation';
-import { Property } from '../proxy';
+import { Expectation, ReturnValue } from './expectation';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   // eslint-disable-next-line no-empty-function
@@ -63,8 +62,6 @@ export class SpyPendingExpectation implements PendingExpectation {
 
   public propertyCalledWith: Property | undefined;
 
-  public startCalledWith: ExpectationRepository | undefined;
-
   set args(args: any[] | undefined) {
     this.argsCalledWith = args;
   }
@@ -82,9 +79,8 @@ export class SpyPendingExpectation implements PendingExpectation {
     this.propertyCalledWith = value;
   }
 
-  start(repo: ExpectationRepository) {
-    this.startCalledWith = repo;
-  }
+  // eslint-disable-next-line no-empty-function
+  start() {}
 }
 
 export class MatchingPropertyExpectation implements Expectation {

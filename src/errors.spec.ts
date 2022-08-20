@@ -27,10 +27,13 @@ describe('errors', () => {
       const repo = SM.mock<ExpectationRepository>();
       const matcher = SM.mock<ConcreteMatcher>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory
+        spyExpectationFactory,
+        SM.instance(repo),
+        SM.instance(matcher),
+        false
       );
 
-      pendingExpectation.start(SM.instance(repo), SM.instance(matcher), false);
+      pendingExpectation.start();
       pendingExpectation.args = [1, 2, 3];
       pendingExpectation.property = 'bar';
 
@@ -44,10 +47,13 @@ describe('errors', () => {
       const repo = SM.mock<ExpectationRepository>();
       const matcher = SM.mock<ConcreteMatcher>();
       const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory
+        spyExpectationFactory,
+        SM.instance(repo),
+        SM.instance(matcher),
+        false
       );
 
-      pendingExpectation.start(SM.instance(repo), SM.instance(matcher), false);
+      pendingExpectation.start();
       pendingExpectation.args = undefined;
       pendingExpectation.property = 'bar';
 

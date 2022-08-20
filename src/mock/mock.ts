@@ -63,10 +63,6 @@ export const mock = <T>({
   concreteMatcher,
   exactParams,
 }: MockOptions = {}): Mock<T> => {
-  const pendingExpectation = new RepoSideEffectPendingExpectation(
-    strongExpectationFactory
-  );
-
   const options: StrongMockDefaults = {
     strictness: strictness ?? currentDefaults.strictness,
     concreteMatcher: concreteMatcher ?? currentDefaults.concreteMatcher,
@@ -75,13 +71,14 @@ export const mock = <T>({
 
   const repository = new FlexibleRepository(options.strictness);
 
-  const stub = createStub<T>(
+  const pendingExpectation = new RepoSideEffectPendingExpectation(
+    strongExpectationFactory,
     repository,
-    pendingExpectation,
-    () => currentMode,
     options.concreteMatcher,
     options.exactParams
   );
+
+  const stub = createStub<T>(repository, pendingExpectation, () => currentMode);
 
   setMockState(stub, {
     repository,

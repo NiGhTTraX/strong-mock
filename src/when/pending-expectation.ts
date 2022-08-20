@@ -13,13 +13,13 @@ export type ExpectationFactory = (
   exactParams: boolean
 ) => Expectation;
 
+/**
+ * An expectation has to be built incrementally, starting first with the property
+ * being accessed inside {@link createStub}, then any arguments passed to it, and ending
+ * it with the returned value from {@link createReturns}.
+ */
 export interface PendingExpectation {
-  // TODO: get rid of repo
-  start(
-    repo: ExpectationRepository,
-    concreteMatcher: ConcreteMatcher,
-    exactParams: boolean
-  ): void;
+  start(): void;
 
   finish(returnValue: ReturnValue): Expectation;
 
@@ -35,33 +35,27 @@ export interface PendingExpectation {
   toJSON(): string;
 }
 
+// TODO: remove side effect
 export class RepoSideEffectPendingExpectation implements PendingExpectation {
-  private _repo: ExpectationRepository | undefined;
-
-  private _concreteMatcher: ConcreteMatcher | undefined;
-
   private _args: any[] | undefined;
+
+  private started: boolean = false;
 
   private _property: Property = '';
 
-  private _exactParams: boolean | undefined;
+  constructor(
+    private createExpectation: ExpectationFactory,
+    private repo: ExpectationRepository,
+    private concreteMatcher: ConcreteMatcher,
+    private exactParams: boolean
+  ) {}
 
-  constructor(private createExpectation: ExpectationFactory) {}
-
-  start(
-    repo: ExpectationRepository,
-    concreteMatcher: ConcreteMatcher,
-    exactParams: boolean
-  ) {
-    if (this._repo) {
+  start() {
+    if (this.started) {
       throw new UnfinishedExpectation(this);
     }
 
-    this.clear();
-
-    this._repo = repo;
-    this._concreteMatcher = concreteMatcher;
-    this._exactParams = exactParams;
+    this.started = true;
   }
 
   set property(value: Property) {
@@ -73,11 +67,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
   }
 
   finish(returnValue: ReturnValue): Expectation {
-    if (
-      !this._repo ||
-      !this._concreteMatcher ||
-      this._exactParams === undefined
-    ) {
+    if (!this.started) {
       throw new MissingWhen();
     }
 
@@ -85,10 +75,10 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
       this._property,
       this._args,
       returnValue,
-      this._concreteMatcher,
-      this._exactParams
+      this.concreteMatcher,
+      this.exactParams
     );
-    this._repo.add(expectation);
+    this.repo.add(expectation);
 
     this.clear();
 
@@ -96,9 +86,7 @@ export class RepoSideEffectPendingExpectation implements PendingExpectation {
   }
 
   clear() {
-    this._repo = undefined;
-    this._args = undefined;
-    this._property = '';
+    this.started = false;
   }
 
   toJSON() {
