@@ -3,7 +3,7 @@ import { FlexibleRepository } from '../expectation/repository/flexible-repositor
 import { StrongExpectation } from '../expectation/strong-expectation';
 import {
   ExpectationFactory,
-  RepoSideEffectPendingExpectation,
+  PendingExpectationWithFactory,
 } from '../when/pending-expectation';
 import { currentDefaults, StrongMockDefaults } from './defaults';
 import { setMockState } from './map';
@@ -71,9 +71,8 @@ export const mock = <T>({
 
   const repository = new FlexibleRepository(options.strictness);
 
-  const pendingExpectation = new RepoSideEffectPendingExpectation(
+  const pendingExpectation = new PendingExpectationWithFactory(
     strongExpectationFactory,
-    repository,
     options.concreteMatcher,
     options.exactParams
   );

@@ -14,28 +14,22 @@ import {
   spyExpectationFactory,
   SpyPendingExpectation,
 } from './expectation/expectation.mocks';
-import {
-  CallMap,
-  ExpectationRepository,
-} from './expectation/repository/expectation-repository';
+import { CallMap } from './expectation/repository/expectation-repository';
 import { ConcreteMatcher } from './mock/options';
-import { RepoSideEffectPendingExpectation } from './when/pending-expectation';
+import { PendingExpectationWithFactory } from './when/pending-expectation';
 
 describe('errors', () => {
   describe('PendingExpectation', () => {
     it('should print call', () => {
-      const repo = SM.mock<ExpectationRepository>();
       const matcher = SM.mock<ConcreteMatcher>();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
+      const pendingExpectation = new PendingExpectationWithFactory(
         spyExpectationFactory,
-        SM.instance(repo),
         SM.instance(matcher),
         false
       );
 
-      pendingExpectation.start();
-      pendingExpectation.args = [1, 2, 3];
-      pendingExpectation.property = 'bar';
+      pendingExpectation.setArgs([1, 2, 3]);
+      pendingExpectation.setProperty('bar');
 
       expectAnsilessEqual(
         pendingExpectation.toJSON(),
@@ -44,18 +38,15 @@ describe('errors', () => {
     });
 
     it('should print property access', () => {
-      const repo = SM.mock<ExpectationRepository>();
       const matcher = SM.mock<ConcreteMatcher>();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
+      const pendingExpectation = new PendingExpectationWithFactory(
         spyExpectationFactory,
-        SM.instance(repo),
         SM.instance(matcher),
         false
       );
 
-      pendingExpectation.start();
-      pendingExpectation.args = undefined;
-      pendingExpectation.property = 'bar';
+      pendingExpectation.setArgs(undefined);
+      pendingExpectation.setProperty('bar');
 
       expectAnsilessEqual(pendingExpectation.toJSON(), `when(() => mock.bar)`);
     });
@@ -64,8 +55,8 @@ describe('errors', () => {
   describe('UnfinishedExpectation', () => {
     it('should print the pending expectation', () => {
       const pendingExpectation = new SpyPendingExpectation();
-      pendingExpectation.args = [1, 2, 3];
-      pendingExpectation.property = 'bar';
+      pendingExpectation.setArgs([1, 2, 3]);
+      pendingExpectation.setProperty('bar');
       pendingExpectation.toJSON = () => 'foobar';
 
       expectAnsilessContain(

@@ -33,7 +33,7 @@ export const when = <R>(expectation: () => R): Stub<R> => {
   expectation();
   setMode(Mode.CALL);
 
-  const { pendingExpectation } = getMockState(getActiveMock());
+  const { pendingExpectation, repository } = getMockState(getActiveMock());
 
-  return createReturns<R>(pendingExpectation);
+  return createReturns<R>(pendingExpectation, repository);
 };

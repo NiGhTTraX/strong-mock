@@ -46,18 +46,14 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start();
-      // eslint-disable-next-line no-param-reassign
-      pendingExpectation.property = property;
+      pendingExpectation.setProperty(property);
 
       return createProxy({
         property: (childProp: Property) => {
-          pendingExpectation.clear();
           throw new NestedWhen(property, childProp);
         },
         apply: (args: any[]) => {
-          // eslint-disable-next-line no-param-reassign
-          pendingExpectation.args = args;
+          pendingExpectation.setArgs(args);
         },
         ownKeys: () => {
           throw new Error('Spreading during an expectation is not supported.');
@@ -71,11 +67,8 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.start();
-      // eslint-disable-next-line no-param-reassign
-      pendingExpectation.property = ApplyProp;
-      // eslint-disable-next-line no-param-reassign
-      pendingExpectation.args = args;
+      pendingExpectation.setProperty(ApplyProp);
+      pendingExpectation.setArgs(args);
 
       return undefined;
     },

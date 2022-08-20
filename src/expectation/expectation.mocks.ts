@@ -56,31 +56,22 @@ export class SpyPendingExpectation implements PendingExpectation {
 
   public argsCalledWith: any[] | undefined;
 
-  public clearCalled = false;
-
   public finishCalledWith: ReturnValue | undefined;
 
   public propertyCalledWith: Property | undefined;
 
-  set args(args: any[] | undefined) {
-    this.argsCalledWith = args;
+  setProperty(value: Property) {
+    this.propertyCalledWith = value;
   }
 
-  clear() {
-    this.clearCalled = true;
+  setArgs(args: any[] | undefined) {
+    this.argsCalledWith = args;
   }
 
   finish(returnValue: ReturnValue) {
     this.finishCalledWith = returnValue;
     return new OneUseAlwaysMatchingExpectation();
   }
-
-  set property(value: Property) {
-    this.propertyCalledWith = value;
-  }
-
-  // eslint-disable-next-line no-empty-function
-  start() {}
 }
 
 export class MatchingPropertyExpectation implements Expectation {

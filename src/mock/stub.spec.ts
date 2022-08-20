@@ -1,229 +1,170 @@
+// noinspection JSVoidFunctionReturnValueUsed
+
 import { Baz, Fn, Foo } from '../../tests/fixtures';
 import { SM } from '../../tests/old';
 import { NestedWhen } from '../errors';
 import { ApplyProp } from '../expectation/expectation';
-import { spyExpectationFactory } from '../expectation/expectation.mocks';
-import { It } from '../expectation/it';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { OneIncomingExpectationRepository } from '../expectation/repository/expectation-repository.mocks';
-import {
-  PendingExpectation,
-  RepoSideEffectPendingExpectation,
-} from '../when/pending-expectation';
+import { PendingExpectation } from '../when/pending-expectation';
 import { Mode } from './mock';
 import { createStub } from './stub';
 
 describe('createStub', () => {
   describe('recording', () => {
+    // TODO: this smells because we're not using one of the parameters in all these tests
+    const repo = SM.mock<ExpectationRepository>();
+    const pendingExpectation = SM.mock<PendingExpectation>();
+
     const expectMode = () => Mode.EXPECT;
 
     it('should intercept fn(...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub(1, 2, 3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual(ApplyProp);
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept fn.call(this, ...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.call(null, 1, 2, 3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual(ApplyProp);
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept fn.apply(this, [...args])', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.apply(null, [1, 2, 3]);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual(ApplyProp);
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept Reflect.apply(fn, this, [...args])', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       Reflect.apply(stub, null, [1, 2, 3]);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual(ApplyProp);
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept fn.bind(this, ...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bind(null, 1, 2)(3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual(ApplyProp);
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept foo.bar(...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Foo>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar(1, 2, 3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual('bar');
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept foo.bar.call(this, ...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Foo>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar.call(null, 1, 2, 3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual('bar');
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept foo.bar.apply(this, [...args])', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Foo>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar.apply(null, [1, 2, 3]);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual('bar');
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should intercept foo.bar.bind(this, ...args)', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Foo>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
+      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar.bind(null, 1, 2)(3);
-
-      pendingExpectation.finish({ value: 23 });
-
-      expect(repo.expectation?.property).toEqual('bar');
-      expect(repo.expectation?.args).toEqual([1, 2, 3]);
-      expect(repo.expectation?.returnValue.value).toEqual(23);
     });
 
     it('should throw on nested access', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Baz>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Baz>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('foo')).thenReturn().twice();
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
       expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
     });
 
     it('should throw when spreading', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Fn>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Fn>(repo, pendingExpectation, expectMode);
 
       expect(() => ({ ...stub })).toThrow();
     });
 
     it('should throw when spreading a property', () => {
-      const repo = new OneIncomingExpectationRepository();
-      const pendingExpectation = new RepoSideEffectPendingExpectation(
-        spyExpectationFactory,
-        repo,
-        It.deepEquals,
-        false
+      const stub = createStub<Foo>(
+        SM.instance(repo),
+        SM.instance(pendingExpectation),
+        expectMode
       );
-      const stub = createStub<Foo>(repo, pendingExpectation, expectMode);
+
+      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
 
       expect(() => ({ ...stub.bar })).toThrow();
     });

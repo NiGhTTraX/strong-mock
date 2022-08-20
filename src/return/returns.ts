@@ -1,4 +1,5 @@
 import { ReturnValue } from '../expectation/expectation';
+import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { PendingExpectation } from '../when/pending-expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
 
@@ -84,15 +85,14 @@ export type Stub<T> = [T] extends [Promise<infer U>]
   ? PromiseStub<U, T>
   : NonPromiseStub<T>;
 
-/**
- * Set a return value for the currently pending expectation.
- */
 const finishPendingExpectation = (
   returnValue: ReturnValue,
-  pendingExpectation: PendingExpectation
+  pendingExpectation: PendingExpectation,
+  repo: ExpectationRepository
 ) => {
   const finishedExpectation = pendingExpectation.finish(returnValue);
-  pendingExpectation.clear();
+
+  repo.add(finishedExpectation);
 
   return createInvocationCount(finishedExpectation);
 };
@@ -110,7 +110,8 @@ const getError = (errorOrMessage: Error | string | undefined): Error => {
 };
 
 export const createReturns = <R>(
-  pendingExpectation: PendingExpectation
+  pendingExpectation: PendingExpectation,
+  repository: ExpectationRepository
 ): Stub<R> => {
   const nonPromiseStub: NonPromiseStub<any> = {
     // TODO: merge this with the promise version
@@ -120,12 +121,14 @@ export const createReturns = <R>(
       ): InvocationCount =>
         finishPendingExpectation(
           { value: returnValue, isError: false, isPromise: false },
-          pendingExpectation
+          pendingExpectation,
+          repository
         ),
     thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
       finishPendingExpectation(
         { value: getError(errorOrMessage), isError: true, isPromise: false },
-        pendingExpectation
+        pendingExpectation,
+        repository
       ),
   };
 
@@ -139,7 +142,8 @@ export const createReturns = <R>(
           // promise thenReturn and a normal thenReturn.
           isPromise: false,
         },
-        pendingExpectation
+        pendingExpectation,
+        repository
       ),
 
     thenResolve: (promiseValue: any): InvocationCount =>
@@ -149,7 +153,8 @@ export const createReturns = <R>(
           isError: false,
           isPromise: true,
         },
-        pendingExpectation
+        pendingExpectation,
+        repository
       ),
 
     thenReject: (errorOrMessage?: Error | string): InvocationCount =>
@@ -159,7 +164,8 @@ export const createReturns = <R>(
           isError: true,
           isPromise: true,
         },
-        pendingExpectation
+        pendingExpectation,
+        repository
       ),
   };
 
