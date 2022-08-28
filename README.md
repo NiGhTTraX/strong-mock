@@ -44,11 +44,11 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
   - [Argument matchers](#argument-matchers)
-  - [Mock options](#mock-options)
-    - [Strictness](#strictness)
-    - [Exact params](#exact-params)
-    - [Concrete matcher](#concrete-matcher)
-    - [Defaults](#defaults)
+- [Mock options](#mock-options)
+  - [Strictness](#strictness)
+  - [Exact params](#exact-params)
+  - [Concrete matcher](#concrete-matcher)
+  - [Defaults](#defaults)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Can I partially mock an existing object/function?](#can-i-partially-mock-an-existing-objectfunction)
@@ -334,9 +334,9 @@ console.log(fn(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
 ```
 
-### Mock options
+## Mock options
 
-#### Strictness
+### Strictness
 
 strong-mock has a few levels of "strictness" that control what values are returned when an unexpected property is accessed or an unexpected call is made. The strictness can be configured for each mock, or for all mocks with `setDefaults`.
 
@@ -368,7 +368,7 @@ superStrictFoo.bar;
 superStrictFoo.bar(42);
 ```
 
-#### Exact params
+### Exact params
 
 By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type safe, the TypeScript compiler will never allow expecting less arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [argument matchers](#argument-matchers).
 
@@ -400,7 +400,7 @@ console.log(fn()); // 42
 console.log(fn(1)); // throws
 ```
 
-#### Concrete matcher
+### Concrete matcher
 
 You can set the matcher that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. Passing in a [matcher argument](#argument-matchers) will always take priority.
 
@@ -416,7 +416,7 @@ when(() => fn([1, 2, 3])).thenReturn(true);
 fn([1, 2, 3]); // throws because different arrays
 ```
 
-#### Defaults
+### Defaults
 
 Mock options can be set for all mocks with `setDefaults`.
 
