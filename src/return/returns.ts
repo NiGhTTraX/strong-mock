@@ -1,9 +1,9 @@
-import { ReturnValue } from '../expectation/repository/return-value';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import { ReturnValue } from '../expectation/repository/return-value';
 import { PendingExpectation } from '../when/pending-expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';
 
-type PromiseStub<R, P> = {
+export type PromiseStub<R, P> = {
   /**
    * Set the return value for the current call.
    *
@@ -49,7 +49,7 @@ type PromiseStub<R, P> = {
   thenReject(): InvocationCount;
 };
 
-type NonPromiseStub<R> = {
+export type NonPromiseStub<R> = {
   /**
    * Set the return value for the current call.
    *
@@ -80,11 +80,6 @@ type NonPromiseStub<R> = {
   thenThrow(): InvocationCount;
 };
 
-// Wrap T in a tuple to prevent distribution in case it's a union.
-export type Stub<T> = [T] extends [Promise<infer U>]
-  ? PromiseStub<U, T>
-  : NonPromiseStub<T>;
-
 const finishPendingExpectation = (
   returnValue: ReturnValue,
   pendingExpectation: PendingExpectation,
@@ -109,67 +104,42 @@ const getError = (errorOrMessage: Error | string | undefined): Error => {
   return new Error();
 };
 
-export const createReturns = <R>(
+export const createReturns = (
   pendingExpectation: PendingExpectation,
   repository: ExpectationRepository
-): Stub<R> => {
-  const nonPromiseStub: NonPromiseStub<any> = {
-    // TODO: merge this with the promise version
-    thenReturn:
-      /* istanbul ignore next: because this is overwritten by the promise version */ (
-        returnValue: any
-      ): InvocationCount =>
-        finishPendingExpectation(
-          { value: returnValue, isError: false, isPromise: false },
-          pendingExpectation,
-          repository
-        ),
-    thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(
-        { value: getError(errorOrMessage), isError: true, isPromise: false },
-        pendingExpectation,
-        repository
-      ),
-  };
+) => ({
+  thenReturn: (returnValue: any): InvocationCount =>
+    finishPendingExpectation(
+      // This will handle both thenReturn(23) and thenReturn(Promise.resolve(3)).
+      { value: returnValue, isError: false, isPromise: false },
+      pendingExpectation,
+      repository
+    ),
+  thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
+    finishPendingExpectation(
+      { value: getError(errorOrMessage), isError: true, isPromise: false },
+      pendingExpectation,
+      repository
+    ),
+  thenResolve: (promiseValue: any): InvocationCount =>
+    finishPendingExpectation(
+      {
+        value: promiseValue,
+        isError: false,
+        isPromise: true,
+      },
+      pendingExpectation,
+      repository
+    ),
 
-  const promiseStub: PromiseStub<any, any> = {
-    thenReturn: (promise: Promise<any>): InvocationCount =>
-      finishPendingExpectation(
-        {
-          value: promise,
-          isError: false,
-          // We're setting this to false because we can't distinguish between a
-          // promise thenReturn and a normal thenReturn.
-          isPromise: false,
-        },
-        pendingExpectation,
-        repository
-      ),
-
-    thenResolve: (promiseValue: any): InvocationCount =>
-      finishPendingExpectation(
-        {
-          value: promiseValue,
-          isError: false,
-          isPromise: true,
-        },
-        pendingExpectation,
-        repository
-      ),
-
-    thenReject: (errorOrMessage?: Error | string): InvocationCount =>
-      finishPendingExpectation(
-        {
-          value: getError(errorOrMessage),
-          isError: true,
-          isPromise: true,
-        },
-        pendingExpectation,
-        repository
-      ),
-  };
-
-  // @ts-expect-error because the return type is a conditional, and we're merging
-  // both branches here
-  return { ...nonPromiseStub, ...promiseStub };
-};
+  thenReject: (errorOrMessage?: Error | string): InvocationCount =>
+    finishPendingExpectation(
+      {
+        value: getError(errorOrMessage),
+        isError: true,
+        isPromise: true,
+      },
+      pendingExpectation,
+      repository
+    ),
+});

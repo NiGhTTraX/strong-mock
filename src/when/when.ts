@@ -1,7 +1,11 @@
 import { getActiveMock, getMockState } from '../mock/map';
 import { Mode, setMode } from '../mock/mock';
-import { createReturns, Stub } from '../return/returns';
+import { createReturns, NonPromiseStub, PromiseStub } from '../return/returns';
 
+interface When {
+  <R>(expectation: () => Promise<R>): PromiseStub<R, Promise<R>>;
+  <R>(expectation: () => R): NonPromiseStub<R>;
+}
 /**
  * Set an expectation on a mock.
  *
@@ -27,13 +31,12 @@ import { createReturns, Stub } from '../return/returns';
  * const fn = mock<(x: number) => Promise<number>();
  * when(() => fn(23)).thenResolve(42);
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const when = <R>(expectation: () => R): Stub<R> => {
+export const when: When = <R>(expectation: () => R) => {
   setMode(Mode.EXPECT);
   expectation();
   setMode(Mode.CALL);
 
   const { pendingExpectation, repository } = getMockState(getActiveMock());
 
-  return createReturns<R>(pendingExpectation, repository);
+  return createReturns(pendingExpectation, repository);
 };

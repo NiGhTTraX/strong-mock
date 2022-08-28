@@ -23,7 +23,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<number>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenReturn(23);
@@ -40,10 +40,9 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<number>(
-      SM.instance(pendingExpectation),
-      SM.instance(repo)
-    ).thenThrow(error);
+    createReturns(SM.instance(pendingExpectation), SM.instance(repo)).thenThrow(
+      error
+    );
   });
 
   it('should set an empty exception', () => {
@@ -55,7 +54,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<number>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenThrow();
@@ -70,10 +69,9 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<number>(
-      SM.instance(pendingExpectation),
-      SM.instance(repo)
-    ).thenThrow('foobar');
+    createReturns(SM.instance(pendingExpectation), SM.instance(repo)).thenThrow(
+      'foobar'
+    );
   });
 
   it('should set a return promise', async () => {
@@ -87,7 +85,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<Promise<number>>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenReturn(promise);
@@ -102,7 +100,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<Promise<number>>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenResolve(23);
@@ -119,7 +117,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<Promise<number>>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenReject(error);
@@ -134,7 +132,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<Promise<number>>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenReject();
@@ -149,7 +147,7 @@ describe('returns', () => {
       })
     ).thenReturn(expectation);
 
-    createReturns<Promise<number>>(
+    createReturns(
       SM.instance(pendingExpectation),
       SM.instance(repo)
     ).thenReject('foobar');
