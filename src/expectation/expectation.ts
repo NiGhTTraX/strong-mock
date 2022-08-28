@@ -1,11 +1,6 @@
 import { Property } from '../proxy';
 import { Matcher } from './matcher';
-
-export type ReturnValue = {
-  value: any;
-  isPromise?: boolean;
-  isError?: boolean;
-};
+import { ReturnValue } from './repository/return-value';
 
 /**
  * Compare received arguments against matchers.

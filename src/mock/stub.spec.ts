@@ -99,7 +99,7 @@ describe('createStub', () => {
     });
 
     it('should get matching expectation for method', () => {
-      SM.when(repo.get('bar')).thenReturn({ value: () => 42 });
+      SM.when(repo.get('bar')).thenReturn(() => 42);
 
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
@@ -111,7 +111,7 @@ describe('createStub', () => {
     });
 
     it('should get matching expectation for property', () => {
-      SM.when(repo.get('bar')).thenReturn({ value: 42 });
+      SM.when(repo.get('bar')).thenReturn(42);
 
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
@@ -122,54 +122,14 @@ describe('createStub', () => {
       expect(foo.bar).toEqual(42);
     });
 
-    it('should throw matching property error expectation', () => {
-      SM.when(repo.get('bar')).thenReturn({ value: 'foo', isError: true });
-
-      const foo = createStub<{ bar: number }>(
-        SM.instance(repo),
-        unusedPendingExpectation,
-        callMode
-      );
-
-      expect(() => foo.bar).toThrow('foo');
-    });
-
-    it('should resolve matching property promise expectation', async () => {
-      SM.when(repo.get('bar')).thenReturn({ value: 'foo', isPromise: true });
-
-      const foo = createStub<{ bar: number }>(
-        SM.instance(repo),
-        unusedPendingExpectation,
-        callMode
-      );
-
-      await expect(foo.bar).resolves.toEqual('foo');
-    });
-
-    it('should reject matching property error promise expectation', async () => {
-      SM.when(repo.get('bar')).thenReturn({
-        value: new Error('foo'),
-        isPromise: true,
-        isError: true,
-      });
-
-      const foo = createStub<{ bar: number }>(
-        SM.instance(repo),
-        unusedPendingExpectation,
-        callMode
-      );
-
-      await expect(foo.bar).rejects.toThrow('foo');
-    });
-
     it('should be spreadable', () => {
       const baz = Symbol('baz');
       const keys = ['foo', 'bar', baz];
 
       SM.when(repo.getAllProperties()).thenReturn(keys).times(4);
-      SM.when(repo.get('foo')).thenReturn({ value: 1 });
-      SM.when(repo.get('bar')).thenReturn({ value: 2 });
-      SM.when(repo.get(baz)).thenReturn({ value: 3 });
+      SM.when(repo.get('foo')).thenReturn(1);
+      SM.when(repo.get('bar')).thenReturn(2);
+      SM.when(repo.get(baz)).thenReturn(3);
 
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),

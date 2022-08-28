@@ -1,5 +1,5 @@
 import { Property } from '../../proxy';
-import { Expectation, ReturnValue } from '../expectation';
+import { Expectation } from '../expectation';
 
 export type Call = {
   arguments: any[] | undefined;
@@ -47,17 +47,17 @@ export interface ExpectationRepository {
    *
    * @example
    * add(new Expectation('getData', [1, 2], 23);
-   * get('getData').value(1, 2) === 23
+   * get('getData')(1, 2) === 23
    *
    * @example
    * add(new Expectation('hasData', undefined, true);
-   * get('hasData').value === true
+   * get('hasData') === true
    *
    * @example
    * add(new Expectation('getData', undefined, () => 42);
-   * get('getData').value(1, 2, '3', false, NaN) === 42
+   * get('getData')(1, 2, '3', false, NaN) === 42
    */
-  get(property: Property): ReturnValue;
+  get(property: Property): unknown;
 
   /**
    * Get a return value for a function call.

@@ -1,10 +1,10 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
 import { Strictness } from '../../mock/options';
-import { returnOrThrow } from '../../mock/stub';
 import { Property } from '../../proxy';
-import { ApplyProp, Expectation, ReturnValue } from '../expectation';
+import { ApplyProp, Expectation } from '../expectation';
 import { MATCHER_SYMBOL } from '../matcher';
 import { CallMap, ExpectationRepository } from './expectation-repository';
+import { unboxReturnValue } from './return-value';
 
 type CountableExpectation = {
   expectation: Expectation;
@@ -43,8 +43,10 @@ export class FlexibleRepository implements ExpectationRepository {
     this.unexpectedCallStats.clear();
   }
 
-  apply = (args: unknown[]): unknown => this.get(ApplyProp).value(...args);
+  apply = (args: unknown[]): unknown => this.get(ApplyProp)(...args);
 
+  // TODO: this returns any, but the interface returns unknown
+  //   unknown causes errors in apply tests, and any causes bugs in bootstrapped SM
   get(property: Property): any {
     const expectations = this.expectations.get(property);
 
@@ -77,52 +79,47 @@ export class FlexibleRepository implements ExpectationRepository {
     if (propertyExpectation) {
       this.countAndConsume(propertyExpectation);
 
-      return propertyExpectation.expectation.returnValue;
+      return unboxReturnValue(propertyExpectation.expectation.returnValue);
     }
 
-    return {
-      value: (...args: any[]) => {
-        const callExpectation = expectations.find((e) =>
-          e.expectation.matches(args)
-        );
+    return (...args: any[]) => {
+      const callExpectation = expectations.find((e) =>
+        e.expectation.matches(args)
+      );
 
-        if (callExpectation) {
-          this.recordExpected(property, args);
-          this.countAndConsume(callExpectation);
+      if (callExpectation) {
+        this.recordExpected(property, args);
+        this.countAndConsume(callExpectation);
 
-          // TODO: this is duplicated in stub
-          return returnOrThrow(callExpectation.expectation.returnValue);
-        }
+        return unboxReturnValue(callExpectation.expectation.returnValue);
+      }
 
-        return this.getValueForUnexpectedCall(property, args);
-      },
+      return this.getValueForUnexpectedCall(property, args);
     };
   };
 
   private handlePropertyWithNoExpectations = (property: Property) => {
     switch (property) {
       case 'toString':
-        return { value: () => 'mock' };
+        return () => 'mock';
       case '@@toStringTag':
       case Symbol.toStringTag:
       case 'name':
-        return { value: 'mock' };
+        return 'mock';
 
       // pretty-format
       case '$$typeof':
       case 'constructor':
       case '@@__IMMUTABLE_ITERABLE__@@':
       case '@@__IMMUTABLE_RECORD__@@':
-        return { value: null };
+        return null;
 
       case MATCHER_SYMBOL:
-        return { value: false };
+        return false;
 
       case ApplyProp:
-        return {
-          value: (...args: any[]) =>
-            this.getValueForUnexpectedCall(property, args),
-        };
+        return (...args: any[]) =>
+          this.getValueForUnexpectedCall(property, args);
       default:
         return this.getValueForUnexpectedAccess(property);
     }
@@ -187,19 +184,17 @@ export class FlexibleRepository implements ExpectationRepository {
     throw new UnexpectedCall(property, args, this.getUnmet());
   }
 
-  private getValueForUnexpectedAccess(property: Property): ReturnValue {
+  private getValueForUnexpectedAccess(property: Property): unknown {
     if (this.strictness === Strictness.SUPER_STRICT) {
       this.recordUnexpected(property, undefined);
 
       throw new UnexpectedAccess(property, this.getUnmet());
     }
 
-    return {
-      value: (...args: unknown[]) => {
-        this.recordUnexpected(property, args);
+    return (...args: unknown[]) => {
+      this.recordUnexpected(property, args);
 
-        throw new UnexpectedCall(property, args, this.getUnmet());
-      },
+      throw new UnexpectedCall(property, args, this.getUnmet());
     };
   }
 }

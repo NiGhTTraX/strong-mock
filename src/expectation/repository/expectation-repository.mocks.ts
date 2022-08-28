@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { Property } from '../../proxy';
-import { Expectation, ReturnValue } from '../expectation';
+import { Expectation } from '../expectation';
 import { ExpectationRepository } from './expectation-repository';
+import { ReturnValue } from './return-value';
 
 export class OneIncomingExpectationRepository implements ExpectationRepository {
   public expectation: Expectation | undefined;

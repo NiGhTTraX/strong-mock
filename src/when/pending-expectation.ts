@@ -1,5 +1,6 @@
 import { MissingWhen, UnfinishedExpectation } from '../errors';
-import { Expectation, ReturnValue } from '../expectation/expectation';
+import { Expectation } from '../expectation/expectation';
+import { ReturnValue } from '../expectation/repository/return-value';
 import { ConcreteMatcher } from '../mock/options';
 import { printWhen } from '../print';
 import { Property } from '../proxy';

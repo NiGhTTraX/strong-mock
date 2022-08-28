@@ -3,7 +3,8 @@ import {
   ExpectationFactory,
   PendingExpectation,
 } from '../when/pending-expectation';
-import { Expectation, ReturnValue } from './expectation';
+import { Expectation } from './expectation';
+import { ReturnValue } from './repository/return-value';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   // eslint-disable-next-line no-empty-function

@@ -1,4 +1,4 @@
-import { ReturnValue } from '../expectation/expectation';
+import { ReturnValue } from '../expectation/repository/return-value';
 import { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { PendingExpectation } from '../when/pending-expectation';
 import { createInvocationCount, InvocationCount } from './invocation-count';

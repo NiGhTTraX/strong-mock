@@ -15,7 +15,7 @@ describe('FlexibleRepository', () => {
       const repo = new FlexibleRepository();
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
-      expect(repo.get('foo').value).toEqual(23);
+      expect(repo.get('foo')).toEqual(23);
     });
 
     it('should match the expectations in order', () => {
@@ -23,8 +23,8 @@ describe('FlexibleRepository', () => {
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('foo', { value: 42 }));
 
-      expect(repo.get('foo').value).toEqual(23);
-      expect(repo.get('foo').value).toEqual(42);
+      expect(repo.get('foo')).toEqual(23);
+      expect(repo.get('foo')).toEqual(42);
     });
 
     it('should keep matching an expectation until it is fulfilled', () => {
@@ -35,9 +35,9 @@ describe('FlexibleRepository', () => {
       expectation.setInvocationCount(2, 3);
       repo.add(expectation);
 
-      expect(repo.get('foo').value).toEqual(23);
-      expect(repo.get('foo').value).toEqual(23);
-      expect(repo.get('foo').value).toEqual(23);
+      expect(repo.get('foo')).toEqual(23);
+      expect(repo.get('foo')).toEqual(23);
+      expect(repo.get('foo')).toEqual(23);
     });
   });
 
@@ -46,7 +46,7 @@ describe('FlexibleRepository', () => {
       const repo = new FlexibleRepository();
       repo.add(new MatchingCallExpectation('foo', { value: 23 }));
 
-      expect(repo.get('foo').value()).toEqual(23);
+      expect(repo.get('foo')()).toEqual(23);
     });
 
     it('should match the expectations in order', () => {
@@ -54,8 +54,8 @@ describe('FlexibleRepository', () => {
       repo.add(new MatchingCallExpectation('foo', { value: 23 }));
       repo.add(new MatchingCallExpectation('foo', { value: 42 }));
 
-      expect(repo.get('foo').value()).toEqual(23);
-      expect(repo.get('foo').value()).toEqual(42);
+      expect(repo.get('foo')()).toEqual(23);
+      expect(repo.get('foo')()).toEqual(42);
     });
 
     it('should match property expectations before function expectations', () => {
@@ -67,8 +67,8 @@ describe('FlexibleRepository', () => {
         })
       );
 
-      expect(repo.get('foo').value()).toEqual({ value: 2 });
-      expect(repo.get('foo').value()).toEqual(1);
+      expect(repo.get('foo')()).toEqual({ value: 2 });
+      expect(repo.get('foo')()).toEqual(1);
     });
 
     it('should keep matching an expectation until it is fulfilled', () => {
@@ -77,9 +77,9 @@ describe('FlexibleRepository', () => {
       expectation.setInvocationCount(2, 3);
       repo.add(expectation);
 
-      expect(repo.get('foo').value()).toEqual(23);
-      expect(repo.get('foo').value()).toEqual(23);
-      expect(repo.get('foo').value()).toEqual(23);
+      expect(repo.get('foo')()).toEqual(23);
+      expect(repo.get('foo')()).toEqual(23);
+      expect(repo.get('foo')()).toEqual(23);
     });
 
     it('should throw if the value is an error', () => {
@@ -90,7 +90,7 @@ describe('FlexibleRepository', () => {
       });
       repo.add(expectation);
 
-      expect(() => repo.get('foo').value()).toThrow();
+      expect(() => repo.get('foo')()).toThrow();
     });
   });
 
@@ -179,7 +179,7 @@ describe('FlexibleRepository', () => {
       const expectation = new MatchingCallExpectation('foo', { value: 23 });
       repo.add(expectation);
 
-      repo.get('foo').value(1, 2);
+      repo.get('foo')(1, 2);
 
       const callStats: CallStats = {
         expected: new Map([
@@ -239,9 +239,9 @@ describe('FlexibleRepository', () => {
   describe('stringify', () => {
     it('should return values for toString and friends', () => {
       const repo = new FlexibleRepository();
-      expect(repo.get('toString').value()).toBeTruthy();
-      expect(repo.get('@@toStringTag').value).toBeTruthy();
-      expect(repo.get(Symbol.toStringTag).value).toBeTruthy();
+      expect(repo.get('toString')()).toBeTruthy();
+      expect(repo.get('@@toStringTag')).toBeTruthy();
+      expect(repo.get(Symbol.toStringTag)).toBeTruthy();
     });
 
     it('should match expectations for toString and friends', () => {
@@ -267,12 +267,10 @@ describe('FlexibleRepository', () => {
         })
       );
 
-      expect(repo.get('toString').value()).toEqual('not a mock');
-      expect(repo.get('toString').value()).toEqual('I said not a mock');
-      expect(repo.get('@@toStringTag').value).toEqual('totally not a mock');
-      expect(repo.get(Symbol.toStringTag).value).toEqual(
-        'absolutely not a mock'
-      );
+      expect(repo.get('toString')()).toEqual('not a mock');
+      expect(repo.get('toString')()).toEqual('I said not a mock');
+      expect(repo.get('@@toStringTag')).toEqual('totally not a mock');
+      expect(repo.get(Symbol.toStringTag)).toEqual('absolutely not a mock');
     });
   });
 
@@ -299,7 +297,7 @@ describe('FlexibleRepository', () => {
 
       repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
-      expect(() => repo.get('foo').value(3, 4)).toThrow(UnexpectedCall);
+      expect(() => repo.get('foo')(3, 4)).toThrow(UnexpectedCall);
     });
 
     it('should throw if no apply expectations', () => {
@@ -321,7 +319,7 @@ describe('FlexibleRepository', () => {
       const repo = new FlexibleRepository();
 
       repo.add(new MatchingCallExpectation('foo', { value: 23 }));
-      repo.get('foo').value(1, 2);
+      repo.get('foo')(1, 2);
 
       expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
     });
@@ -345,7 +343,7 @@ describe('FlexibleRepository', () => {
       repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
       try {
-        repo.get('foo').value(1, 2, 3);
+        repo.get('foo')(1, 2, 3);
         // eslint-disable-next-line no-empty
       } catch (e) {}
 
@@ -363,16 +361,55 @@ describe('FlexibleRepository', () => {
 
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
-      expect(repo.get('foo').value).toEqual(23);
+      expect(repo.get('foo')).toEqual(23);
     });
 
     it('should return a function that throws unexpected call for properties with no expectations', () => {
       const repo = new FlexibleRepository(Strictness.STRICT);
 
-      const { value } = repo.get('foo');
+      const value = repo.get('foo');
 
       expect(value).toBeInstanceOf(Function);
       expect(() => value(1, 2, 3)).toThrow(UnexpectedCall);
+    });
+
+    it('should first consume the matching property expectation and then return a throwing function', () => {
+      const repo = new FlexibleRepository(Strictness.STRICT);
+
+      repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+
+      expect(repo.get('foo')).toEqual(23);
+
+      expect(repo.get('foo')).toBeInstanceOf(Function);
+      expect(() => repo.get('foo')(1, 2, 3)).toThrow(UnexpectedCall);
+    });
+
+    it('should throw for an unexpected call', () => {
+      const repo = new FlexibleRepository(Strictness.STRICT);
+      repo.add({
+        property: 'foo',
+        args: [],
+        returnValue: { value: true },
+        min: 1,
+        max: 1,
+        matches: () => false,
+        toJSON: () => 'bla',
+        setInvocationCount() {},
+      });
+
+      const value = repo.get('foo');
+
+      expect(value).toBeInstanceOf(Function);
+      expect(() => value(1, 2, 3)).toThrow();
+    });
+
+    it('should throw for an unexpected call', () => {
+      const repo = new FlexibleRepository(Strictness.STRICT);
+
+      const value = repo.get(ApplyProp);
+
+      expect(value).toBeInstanceOf(Function);
+      expect(() => value(1, 2, 3)).toThrow();
     });
 
     it('should not record the unexpected property access', () => {
@@ -386,11 +423,42 @@ describe('FlexibleRepository', () => {
     it('should record the unexpected call', () => {
       const repo = new FlexibleRepository(Strictness.STRICT);
 
-      expect(() => repo.get('foo').value(1, 2, 3)).toThrow();
+      expect(() => repo.get('foo')(1, 2, 3)).toThrow();
 
       expect(repo.getCallStats().unexpected.get('foo')).toEqual([
         { arguments: [1, 2, 3] },
       ]);
     });
+  });
+
+  it('should throw matching property error expectation', () => {
+    const repo = new FlexibleRepository();
+    repo.add(
+      new MatchingPropertyExpectation('foo', { value: 'bar', isError: true })
+    );
+
+    expect(() => repo.get('foo')).toThrow('bar');
+  });
+
+  it('should resolve matching property promise expectation', async () => {
+    const repo = new FlexibleRepository();
+    repo.add(
+      new MatchingPropertyExpectation('foo', { value: 'bar', isPromise: true })
+    );
+
+    expect(await repo.get('foo')).toEqual('bar');
+  });
+
+  it('should reject matching property error promise expectation', async () => {
+    const repo = new FlexibleRepository();
+    repo.add(
+      new MatchingPropertyExpectation('foo', {
+        value: 'bar',
+        isPromise: true,
+        isError: true,
+      })
+    );
+
+    await expect(() => repo.get('foo')).rejects.toThrow('bar');
   });
 });
