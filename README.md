@@ -64,7 +64,7 @@ console.log(foo.bar(23)); // 'I am strong!'
 
 ### Type safety
 
-The created mock matches the mocked type so all expectations are type safe. Moreover, refactorings in an IDE will also cover your expectations.
+The mock expectations will share the same type guarantees as your production code, and you can safely refactor in an IDE knowing that all usages will be updated.
 
 ![Renaming production code and test code](media/rename-refactor.gif)
 
@@ -86,7 +86,7 @@ fn(4, 5, 6);
 
 ### Type safe argument matchers
 
-Optional argument matchers allow you to create complex expectations, while still maintaining type safety.
+You can use argument matchers to partially match values, or create complex expectations, while still maintaining type safety.
 
 ![Type safe matcher showing a type error](media/type-safe-matchers.png)
 
@@ -126,11 +126,9 @@ console.log(foo.bar(23)); // awesome
 console.log(foo.bar(23)); // even more awesome
 ```
 
-By default, each call is expected to be called only once. You can expect a call to be made multiple times using the [invocation count](#setting-invocation-count-expectations) helpers.
-
 ### Setting invocation count expectations
 
-You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
+By default, each call is expected to be called only once. You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
 
 ```typescript
 const fn = mock<(x: number) => number>();
@@ -142,6 +140,8 @@ console.log(fn(1)); // 1
 console.log(fn(1)); // 1
 console.log(fn(1)); // throws because the expectation is finished
 ```
+
+You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
 
 ### Mocking interfaces
 
@@ -161,8 +161,6 @@ when(() => foo.baz).thenReturn(100);
 console.log(foo.bar(23)); // 'awesome'
 console.log(foo.baz); // 100
 ```
-
-Since the mock is type safe the compiler will guarantee that you're only mocking things that actually exist on the interface.
 
 ### Mocking functions
 
@@ -205,18 +203,16 @@ when(() => fn(1)).thenThrow();
 when(() => fnWithPromise(1)).thenReject();
 ```
 
-You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
-
 ### Verifying expectations
 
-Calling `verify(mock)` will make sure that all expectations set on `mock` have been met. If not, the function will throw an error and print the unmet expectations.
+Calling `verify(myMock)` will make sure that all expectations set on the mock have been met, and that no additional calls have been made.
 
 ```typescript
 const fn = mock<(x: number) => number>();
 
 when(() => fn(1)).thenReturn(1).between(2, 10);
 
-verify(fn); // throws
+verify(fn); // throws UnmetExpectations
 ```
 
 It will also throw if any unexpected calls happened that were maybe caught in the code under test.
@@ -230,10 +226,16 @@ try {
   // your code might transition to an error state here
 }
 
-verify(fn); // throws
+verify(fn); // throws UnexpectedCalls
 ```
 
-It is recommended that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code did not silently catch any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks e.g. in an `afterEach` hook.
+It is recommended that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code did not silently catch any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks.
+
+```typescript
+afterEach(() => {
+  verifyAll();
+})
+```
 
 ![verify error](./media/verify.png)
 
@@ -251,11 +253,17 @@ reset(fn);
 fn(1); // throws
 ```
 
-If you create common mocks that are shared by multiple tests you should reset them before using them e.g. in a `beforeEach` hook. You can use `resetAll()` to reset all existing mocks.
+If you create common mocks that are shared by multiple tests you should reset them before each test. You can use `resetAll()` to reset all existing mocks.
+
+```typescript
+beforeEach(() => {
+  resetAll();
+})
+```
 
 ### Argument matchers
 
-Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks. In those cases you can use argument matchers to either ignore some arguments or use custom matchers to check them.
+Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks, or maybe you want to match just a property from an argument.
 
 ```typescript
 const fn = mock<
@@ -294,7 +302,7 @@ The following table illustrates the differences between the equality matchers:
 
 | expected           | actual               | `It.is`   | `It.deepEquals` | `It.deepEquals({ strict: false })` |
 |--------------------|----------------------|-----------|-----------------|------------------------------------|
-| `"foo"`            | `"bar"`              | equal     | equal           | equal                              |
+| `"foo"`            | `"foo"`              | equal     | equal           | equal                              |
 | `{ foo: "bar" }`   | `{ foo: "bar" }`     | not equal | equal           | equal                              |
 | `{ }`              | `{ foo: undefined }` | not equal | not equal       | equal                              |
 | `new (class {})()` | `new (class {})()`   | not equal | not equal       | equal                              |
@@ -338,11 +346,10 @@ console.log(matcher.value?.(3)); // 4
 
 ### Strictness
 
-strong-mock has a few levels of "strictness" that control what values are returned when an unexpected property is accessed or an unexpected call is made. The strictness can be configured for each mock, or for all mocks with `setDefaults`.
+strong-mock has a few levels of "strictness" that control what values are returned when an unexpected property is accessed or an unexpected call is made. The strictness can be configured for each mock, or for all mocks with [setDefaults](#defaults).
 
 ```typescript
-import { mock, when } from 'strong-mock';
-import { Strictness } from './options';
+import { mock, when, Strictness } from 'strong-mock';
 
 type Foo = {
   bar: (value: number) => number;
@@ -413,7 +420,7 @@ const fn = mock<(x: number[]) => boolean>({
 });
 when(() => fn([1, 2, 3])).thenReturn(true);
 
-fn([1, 2, 3]); // throws because different arrays
+fn([1, 2, 3]); // throws because different array instances
 ```
 
 ### Defaults
@@ -441,7 +448,7 @@ This library is different from other mocking/spying libraries you might have use
 
 This design decision has a few reasons behind it. First, it forces you to be aware of what your code needs from its dependencies. Spying libraries encourage checking those needs at the end of the test after the code has already called the mocks. This can lead to tests missing dependency calls that just happen to not throw any error at runtime with the dummy values that the spies return.
 
-Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them then you might want to look into splitting the code to only depend on things it really needs.
+Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them, then you might want to look into splitting the code to only depend on things it really needs.
 
 ### Can I partially mock an existing object/function?
 
@@ -453,7 +460,7 @@ You currently can't do that. Please use a normal method instead e.g. `setFoo()` 
 
 ### Why do I have to set a return value even if it's `undefined`?
 
-To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())` and you later changed `fn()` to return a `number` then your expectation would become incorrect and the compiler couldn't check that for you.
+To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())`, and you later changed `fn()` to return a `number`, then your expectation would become incorrect and the compiler couldn't check that for you.
 
 ### How do I provide a function for the mock to call?
 
