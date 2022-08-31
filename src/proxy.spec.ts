@@ -26,7 +26,7 @@ describe('proxy', () => {
   it('should trap fn.call(this)', () => {
     SM.when(traps.apply([])).thenReturn(42);
 
-    const proxy = createProxy<() => void>(SM.instance(traps));
+    const proxy = createProxy<() => number>(SM.instance(traps));
 
     expect(proxy.call(null)).toEqual(42);
   });
@@ -42,7 +42,7 @@ describe('proxy', () => {
   it('should trap fn.apply(this)', () => {
     SM.when(traps.apply([])).thenReturn(42);
 
-    const proxy = createProxy<() => void>(SM.instance(traps));
+    const proxy = createProxy<() => number>(SM.instance(traps));
 
     expect(proxy.apply(null)).toEqual(42);
   });
