@@ -6,7 +6,7 @@ import {
   MatchingPropertyExpectation,
   NotMatchingExpectation,
 } from '../expectation.mocks';
-import { CallStats } from './expectation-repository';
+import type { CallStats } from './expectation-repository';
 import { FlexibleRepository } from './flexible-repository';
 
 describe('FlexibleRepository', () => {

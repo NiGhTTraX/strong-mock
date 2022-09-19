@@ -1,7 +1,7 @@
 import { UnexpectedCalls, UnmetExpectations } from '../errors';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { getAllMocks, getMockState } from '../mock/map';
-import { Mock } from '../mock/mock';
+import type { Mock } from '../mock/mock';
 
 export const verifyRepo = (repository: ExpectationRepository) => {
   const unmetExpectations = repository.getUnmet();

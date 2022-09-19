@@ -1,6 +1,8 @@
-import { Bar, Fn, Foo, uniqueSymbol } from '../tests/fixtures';
+import type { Bar, Fn, Foo } from '../tests/fixtures';
+import { uniqueSymbol } from '../tests/fixtures';
 import { SM } from '../tests/old';
-import { createProxy, ProxyTraps } from './proxy';
+import type { ProxyTraps } from './proxy';
+import { createProxy } from './proxy';
 
 describe('proxy', () => {
   const traps = SM.mock<ProxyTraps>();

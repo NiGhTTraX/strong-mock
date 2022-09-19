@@ -1,13 +1,12 @@
 import { isMatcher } from '../expectation/matcher';
 import { FlexibleRepository } from '../expectation/repository/flexible-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
-import {
-  ExpectationFactory,
-  PendingExpectationWithFactory,
-} from '../when/pending-expectation';
-import { currentDefaults, StrongMockDefaults } from './defaults';
+import type { ExpectationFactory } from '../when/pending-expectation';
+import { PendingExpectationWithFactory } from '../when/pending-expectation';
+import type { StrongMockDefaults } from './defaults';
+import { currentDefaults } from './defaults';
 import { setMockState } from './map';
-import { MockOptions } from './options';
+import type { MockOptions } from './options';
 import { createStub } from './stub';
 
 export type Mock<T> = T;

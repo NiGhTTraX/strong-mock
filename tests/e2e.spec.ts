@@ -1,9 +1,8 @@
 import { printExpected } from 'jest-matcher-utils';
-import { It, verify, when } from '../src';
+import { It, mock, verify, when } from '../src';
 import { UnexpectedCall, UnmetExpectations } from '../src/errors';
-import { mock } from '../src';
 import { expectAnsilessEqual } from './ansiless';
-import { Fn } from './fixtures';
+import type { Fn } from './fixtures';
 
 describe('e2e', () => {
   describe('function', () => {

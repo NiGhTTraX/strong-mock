@@ -7,5 +7,6 @@ module.exports = {
     'prettier/prettier': 'error',
     'max-classes-per-file': 0,
     'class-methods-use-this': 0,
+    '@typescript-eslint/consistent-type-imports': 'error',
   },
 };

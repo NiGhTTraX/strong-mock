@@ -2,7 +2,7 @@
 import { SM } from '../../tests/old';
 import { UnexpectedCalls, UnmetExpectations } from '../errors';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { mock, verify, when } from '../index';
 import { resetAll } from './reset';
 import { verifyAll, verifyRepo } from './verify';

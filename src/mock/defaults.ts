@@ -1,5 +1,6 @@
 import { It } from '../expectation/it';
-import { MockOptions, Strictness } from './options';
+import type { MockOptions } from './options';
+import { Strictness } from './options';
 
 export type StrongMockDefaults = Required<MockOptions>;
 

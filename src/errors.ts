@@ -1,9 +1,9 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
-import { Expectation } from './expectation/expectation';
-import { CallMap } from './expectation/repository/expectation-repository';
+import type { Expectation } from './expectation/expectation';
+import type { CallMap } from './expectation/repository/expectation-repository';
 import { printCall, printProperty, printRemainingExpectations } from './print';
-import { Property } from './proxy';
-import { PendingExpectation } from './when/pending-expectation';
+import type { Property } from './proxy';
+import type { PendingExpectation } from './when/pending-expectation';
 
 export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {

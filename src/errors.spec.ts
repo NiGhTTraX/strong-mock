@@ -9,13 +9,13 @@ import {
   UnfinishedExpectation,
   UnmetExpectations,
 } from './errors';
-import { Expectation } from './expectation/expectation';
+import type { Expectation } from './expectation/expectation';
 import {
   spyExpectationFactory,
   SpyPendingExpectation,
 } from './expectation/expectation.mocks';
-import { CallMap } from './expectation/repository/expectation-repository';
-import { ConcreteMatcher } from './mock/options';
+import type { CallMap } from './expectation/repository/expectation-repository';
+import type { ConcreteMatcher } from './mock/options';
 import { PendingExpectationWithFactory } from './when/pending-expectation';
 
 describe('errors', () => {

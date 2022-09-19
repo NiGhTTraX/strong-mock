@@ -1,7 +1,8 @@
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { ReturnValue } from '../expectation/repository/return-value';
-import { PendingExpectation } from '../when/pending-expectation';
-import { createInvocationCount, InvocationCount } from './invocation-count';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { ReturnValue } from '../expectation/repository/return-value';
+import type { PendingExpectation } from '../when/pending-expectation';
+import type { InvocationCount } from './invocation-count';
+import { createInvocationCount } from './invocation-count';
 
 export type PromiseStub<R, P> = {
   /**

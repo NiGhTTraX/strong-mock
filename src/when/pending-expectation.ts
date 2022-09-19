@@ -1,9 +1,9 @@
 import { MissingWhen, UnfinishedExpectation } from '../errors';
-import { Expectation } from '../expectation/expectation';
-import { ReturnValue } from '../expectation/repository/return-value';
-import { ConcreteMatcher } from '../mock/options';
+import type { Expectation } from '../expectation/expectation';
+import type { ReturnValue } from '../expectation/repository/return-value';
+import type { ConcreteMatcher } from '../mock/options';
 import { printWhen } from '../print';
-import { Property } from '../proxy';
+import type { Property } from '../proxy';
 
 /**
  * An expectation has to be built incrementally, starting first with the property

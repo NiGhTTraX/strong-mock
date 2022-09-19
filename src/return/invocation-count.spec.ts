@@ -1,4 +1,4 @@
-import { Expectation } from '../expectation/expectation';
+import type { Expectation } from '../expectation/expectation';
 import { createInvocationCount } from './invocation-count';
 import { SM } from '../../tests/old';
 

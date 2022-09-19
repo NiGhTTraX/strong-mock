@@ -7,7 +7,8 @@ import {
   omitBy,
 } from 'lodash';
 import { printArg } from '../print';
-import { isMatcher, Matcher, MATCHER_SYMBOL, TypeMatcher } from './matcher';
+import type { Matcher, TypeMatcher } from './matcher';
+import { isMatcher, MATCHER_SYMBOL } from './matcher';
 
 /**
  * Match a custom predicate.

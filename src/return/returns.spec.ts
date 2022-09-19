@@ -1,7 +1,7 @@
 import { SM } from '../../tests/old';
 import { OneUseAlwaysMatchingExpectation } from '../expectation/expectation.mocks';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { PendingExpectation } from '../when/pending-expectation';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { PendingExpectation } from '../when/pending-expectation';
 import { createReturns } from './returns';
 
 describe('returns', () => {

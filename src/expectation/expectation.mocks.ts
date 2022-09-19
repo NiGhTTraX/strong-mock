@@ -1,10 +1,10 @@
-import { Property } from '../proxy';
-import {
+import type { Property } from '../proxy';
+import type {
   ExpectationFactory,
   PendingExpectation,
 } from '../when/pending-expectation';
-import { Expectation } from './expectation';
-import { ReturnValue } from './repository/return-value';
+import type { Expectation } from './expectation';
+import type { ReturnValue } from './repository/return-value';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   // eslint-disable-next-line no-empty-function

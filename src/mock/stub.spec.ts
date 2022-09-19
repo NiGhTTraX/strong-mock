@@ -1,11 +1,11 @@
 // noinspection JSVoidFunctionReturnValueUsed
 
-import { Baz, Fn, Foo } from '../../tests/fixtures';
+import type { Baz, Fn, Foo } from '../../tests/fixtures';
 import { SM } from '../../tests/old';
 import { NestedWhen } from '../errors';
 import { ApplyProp } from '../expectation/expectation';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { PendingExpectation } from '../when/pending-expectation';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { PendingExpectation } from '../when/pending-expectation';
 import { Mode } from './mock';
 import { createStub } from './stub';
 

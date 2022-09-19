@@ -1,8 +1,8 @@
 import { NotAMock } from '../errors';
-import { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { PendingExpectation } from '../when/pending-expectation';
-import { StrongMockDefaults } from './defaults';
-import { Mock } from './mock';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
+import type { PendingExpectation } from '../when/pending-expectation';
+import type { StrongMockDefaults } from './defaults';
+import type { Mock } from './mock';
 
 /**
  * Since `when` doesn't receive the mock subject (because we can't make it

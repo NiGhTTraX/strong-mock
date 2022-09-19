@@ -1,9 +1,10 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
 import { Strictness } from '../../mock/options';
-import { Property } from '../../proxy';
-import { ApplyProp, Expectation } from '../expectation';
+import type { Property } from '../../proxy';
+import type { Expectation } from '../expectation';
+import { ApplyProp } from '../expectation';
 import { MATCHER_SYMBOL } from '../matcher';
-import { CallMap, ExpectationRepository } from './expectation-repository';
+import type { CallMap, ExpectationRepository } from './expectation-repository';
 import { unboxReturnValue } from './return-value';
 
 type CountableExpectation = {
