@@ -8,4 +8,4 @@ export { setDefaults } from './mock/defaults';
 
 export type { Matcher } from './expectation/matcher';
 export type { MockOptions } from './mock/options';
-export { Strictness } from './mock/options';
+export { UnexpectedProperty } from './mock/options';

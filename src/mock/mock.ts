@@ -44,11 +44,12 @@ const getMode = () => currentMode;
  *
  * @param options Configure the options for this specific mock, overriding any
  *   defaults that were set with {@link setDefaults}.
- * @param options.strictness Controls what happens when a property is accessed,
- *   or a call is made, and there are no expectations set for it.
- * @param options.concreteMatcher The matcher that will be used when one isn't specified explicitly.
- * @param options.exactParams Controls whether the number of received arguments has to
- *   match the expectation.
+ * @param options.unexpectedProperty Controls what happens when an unexpected
+ *   property is accessed.
+ * @param options.concreteMatcher The matcher that will be used when one isn't
+ *   specified explicitly.
+ * @param options.exactParams Controls whether the number of received arguments
+ *   has to match the expectation.
  *
  * @example
  * const fn = mock<() => number>();
@@ -58,17 +59,18 @@ const getMode = () => currentMode;
  * fn() === 23;
  */
 export const mock = <T>({
-  strictness,
+  unexpectedProperty,
   concreteMatcher,
   exactParams,
 }: MockOptions = {}): Mock<T> => {
   const options: StrongMockDefaults = {
-    strictness: strictness ?? currentDefaults.strictness,
+    unexpectedProperty:
+      unexpectedProperty ?? currentDefaults.unexpectedProperty,
     concreteMatcher: concreteMatcher ?? currentDefaults.concreteMatcher,
     exactParams: exactParams ?? currentDefaults.exactParams,
   };
 
-  const repository = new FlexibleRepository(options.strictness);
+  const repository = new FlexibleRepository(options.unexpectedProperty);
 
   const pendingExpectation = new PendingExpectationWithFactory(
     strongExpectationFactory,

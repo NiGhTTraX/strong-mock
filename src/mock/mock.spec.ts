@@ -2,7 +2,7 @@ import { UnexpectedAccess } from '../errors';
 import { It } from '../expectation/it';
 import { when } from '../when/when';
 import { mock } from './mock';
-import { Strictness } from './options';
+import { UnexpectedProperty } from './options';
 
 describe('mock', () => {
   it('should override concrete matcher', () => {
@@ -15,9 +15,9 @@ describe('mock', () => {
     expect(fn('not-value')).toBeTruthy();
   });
 
-  it('should override strictness', () => {
+  it('should override unexpectedProperty', () => {
     const foo = mock<{ bar: () => number }>({
-      strictness: Strictness.SUPER_STRICT,
+      unexpectedProperty: UnexpectedProperty.THROW,
     });
 
     expect(() => foo.bar()).toThrow(UnexpectedAccess);

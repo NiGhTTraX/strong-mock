@@ -2,7 +2,7 @@ import { UnexpectedAccess, UnexpectedCall } from '../errors';
 import { It, when } from '../index';
 import { setDefaults } from './defaults';
 import { mock } from './mock';
-import { Strictness } from './options';
+import { UnexpectedProperty } from './options';
 
 describe('defaults', () => {
   beforeEach(() => {
@@ -47,18 +47,24 @@ describe('defaults', () => {
     expect(fn(-1)).toBeTruthy();
   });
 
-  it('should override the strictness', () => {
-    setDefaults({ strictness: Strictness.SUPER_STRICT });
+  it('should override the unexpectedProperty option', () => {
+    setDefaults({
+      unexpectedProperty: UnexpectedProperty.THROW,
+    });
 
     const foo = mock<{ bar: () => number }>();
 
     expect(() => foo.bar()).toThrow(UnexpectedAccess);
   });
 
-  it('should not override the strictness if set on the mock', () => {
-    setDefaults({ strictness: Strictness.SUPER_STRICT });
+  it('should not override the unexpectedProperty option if set on the mock', () => {
+    setDefaults({
+      unexpectedProperty: UnexpectedProperty.THROW,
+    });
 
-    const foo = mock<{ bar: () => number }>({ strictness: Strictness.STRICT });
+    const foo = mock<{ bar: () => number }>({
+      unexpectedProperty: UnexpectedProperty.CALL_THROW,
+    });
 
     expect(() => foo.bar()).toThrow(UnexpectedCall);
   });

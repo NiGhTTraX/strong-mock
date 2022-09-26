@@ -1,5 +1,5 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
-import { Strictness } from '../../mock/options';
+import { UnexpectedProperty } from '../../mock/options';
 import { ApplyProp } from '../expectation';
 import {
   MatchingCallExpectation,
@@ -285,149 +285,151 @@ describe('FlexibleRepository', () => {
     });
   });
 
-  describe('super strict', () => {
-    it('should throw if no property expectations match', () => {
-      const repo = new FlexibleRepository();
+  describe('default return value', () => {
+    describe('THROW', () => {
+      it('should throw if no property expectations match', () => {
+        const repo = new FlexibleRepository();
 
-      expect(() => repo.get('whatever')).toThrow(UnexpectedAccess);
-    });
-
-    it('should throw if no call expectations match', () => {
-      const repo = new FlexibleRepository();
-
-      repo.add(new NotMatchingExpectation('foo', { value: 23 }));
-
-      expect(() => repo.get('foo')(3, 4)).toThrow(UnexpectedCall);
-    });
-
-    it('should throw if no apply expectations', () => {
-      const repo = new FlexibleRepository();
-
-      expect(() => repo.apply([1, 2, 3])).toThrow(UnexpectedCall);
-    });
-
-    it('should throw after a property expectation is fulfilled', () => {
-      const repo = new FlexibleRepository();
-
-      repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
-      repo.get('foo');
-
-      expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
-    });
-
-    it('should throw after a function expectation is fulfilled', () => {
-      const repo = new FlexibleRepository();
-
-      repo.add(new MatchingCallExpectation('foo', { value: 23 }));
-      repo.get('foo')(1, 2);
-
-      expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
-    });
-
-    it('should record calls for unexpected access', () => {
-      const repo = new FlexibleRepository();
-      try {
-        repo.get('foo');
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
-      const callStats: CallStats = {
-        expected: new Map(),
-        unexpected: new Map([['foo', [{ arguments: undefined }]]]),
-      };
-      expect(repo.getCallStats()).toEqual(callStats);
-    });
-
-    it('should record calls for unexpected call', () => {
-      const repo = new FlexibleRepository();
-      repo.add(new NotMatchingExpectation('foo', { value: 23 }));
-
-      try {
-        repo.get('foo')(1, 2, 3);
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
-      const callStats: CallStats = {
-        expected: new Map([['foo', [{ arguments: undefined }]]]),
-        unexpected: new Map([['foo', [{ arguments: [1, 2, 3] }]]]),
-      };
-      expect(repo.getCallStats()).toEqual(callStats);
-    });
-  });
-
-  describe('medium strict', () => {
-    it('should return the matching property expectation', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
-
-      repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
-
-      expect(repo.get('foo')).toEqual(23);
-    });
-
-    it('should return a function that throws unexpected call for properties with no expectations', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
-
-      const value = repo.get('foo');
-
-      expect(value).toBeInstanceOf(Function);
-      expect(() => value(1, 2, 3)).toThrow(UnexpectedCall);
-    });
-
-    it('should first consume the matching property expectation and then return a throwing function', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
-
-      repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
-
-      expect(repo.get('foo')).toEqual(23);
-
-      expect(repo.get('foo')).toBeInstanceOf(Function);
-      expect(() => repo.get('foo')(1, 2, 3)).toThrow(UnexpectedCall);
-    });
-
-    it('should throw for an unexpected call', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
-      repo.add({
-        property: 'foo',
-        args: [],
-        returnValue: { value: true },
-        min: 1,
-        max: 1,
-        matches: () => false,
-        toJSON: () => 'bla',
-        setInvocationCount() {},
+        expect(() => repo.get('whatever')).toThrow(UnexpectedAccess);
       });
 
-      const value = repo.get('foo');
+      it('should throw if no call expectations match', () => {
+        const repo = new FlexibleRepository();
 
-      expect(value).toBeInstanceOf(Function);
-      expect(() => value(1, 2, 3)).toThrow();
+        repo.add(new NotMatchingExpectation('foo', { value: 23 }));
+
+        expect(() => repo.get('foo')(3, 4)).toThrow(UnexpectedCall);
+      });
+
+      it('should throw if no apply expectations', () => {
+        const repo = new FlexibleRepository();
+
+        expect(() => repo.apply([1, 2, 3])).toThrow(UnexpectedCall);
+      });
+
+      it('should throw after a property expectation is fulfilled', () => {
+        const repo = new FlexibleRepository();
+
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
+        repo.get('foo');
+
+        expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
+      });
+
+      it('should throw after a function expectation is fulfilled', () => {
+        const repo = new FlexibleRepository();
+
+        repo.add(new MatchingCallExpectation('foo', { value: 23 }));
+        repo.get('foo')(1, 2);
+
+        expect(() => repo.get('foo')).toThrow(UnexpectedAccess);
+      });
+
+      it('should record calls for unexpected access', () => {
+        const repo = new FlexibleRepository();
+        try {
+          repo.get('foo');
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
+
+        const callStats: CallStats = {
+          expected: new Map(),
+          unexpected: new Map([['foo', [{ arguments: undefined }]]]),
+        };
+        expect(repo.getCallStats()).toEqual(callStats);
+      });
+
+      it('should record calls for unexpected call', () => {
+        const repo = new FlexibleRepository();
+        repo.add(new NotMatchingExpectation('foo', { value: 23 }));
+
+        try {
+          repo.get('foo')(1, 2, 3);
+          // eslint-disable-next-line no-empty
+        } catch (e) {}
+
+        const callStats: CallStats = {
+          expected: new Map([['foo', [{ arguments: undefined }]]]),
+          unexpected: new Map([['foo', [{ arguments: [1, 2, 3] }]]]),
+        };
+        expect(repo.getCallStats()).toEqual(callStats);
+      });
     });
 
-    it('should throw for an unexpected call', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
+    describe('CALL_THROW', () => {
+      it('should return the matching property expectation', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
 
-      const value = repo.get(ApplyProp);
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
-      expect(value).toBeInstanceOf(Function);
-      expect(() => value(1, 2, 3)).toThrow();
-    });
+        expect(repo.get('foo')).toEqual(23);
+      });
 
-    it('should not record the unexpected property access', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
+      it('should return a function that throws unexpected call for properties with no expectations', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
 
-      repo.get('foo');
+        const value = repo.get('foo');
 
-      expect(repo.getCallStats().unexpected.size).toEqual(0);
-    });
+        expect(value).toBeInstanceOf(Function);
+        expect(() => value(1, 2, 3)).toThrow(UnexpectedCall);
+      });
 
-    it('should record the unexpected call', () => {
-      const repo = new FlexibleRepository(Strictness.STRICT);
+      it('should first consume the matching property expectation and then return a throwing function', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
 
-      expect(() => repo.get('foo')(1, 2, 3)).toThrow();
+        repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
-      expect(repo.getCallStats().unexpected.get('foo')).toEqual([
-        { arguments: [1, 2, 3] },
-      ]);
+        expect(repo.get('foo')).toEqual(23);
+
+        expect(repo.get('foo')).toBeInstanceOf(Function);
+        expect(() => repo.get('foo')(1, 2, 3)).toThrow(UnexpectedCall);
+      });
+
+      it('should throw for an unexpected call', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        repo.add({
+          property: 'foo',
+          args: [],
+          returnValue: { value: true },
+          min: 1,
+          max: 1,
+          matches: () => false,
+          toJSON: () => 'bla',
+          setInvocationCount() {},
+        });
+
+        const value = repo.get('foo');
+
+        expect(value).toBeInstanceOf(Function);
+        expect(() => value(1, 2, 3)).toThrow();
+      });
+
+      it('should throw for an unexpected call', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+
+        const value = repo.get(ApplyProp);
+
+        expect(value).toBeInstanceOf(Function);
+        expect(() => value(1, 2, 3)).toThrow();
+      });
+
+      it('should not record the unexpected property access', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+
+        repo.get('foo');
+
+        expect(repo.getCallStats().unexpected.size).toEqual(0);
+      });
+
+      it('should record the unexpected call', () => {
+        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+
+        expect(() => repo.get('foo')(1, 2, 3)).toThrow();
+
+        expect(repo.getCallStats().unexpected.get('foo')).toEqual([
+          { arguments: [1, 2, 3] },
+        ]);
+      });
     });
   });
 

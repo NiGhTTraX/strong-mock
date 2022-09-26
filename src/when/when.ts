@@ -7,6 +7,7 @@ interface When {
   <R>(expectation: () => Promise<R>): PromiseStub<R, Promise<R>>;
   <R>(expectation: () => R): NonPromiseStub<R>;
 }
+
 /**
  * Set an expectation on a mock.
  *

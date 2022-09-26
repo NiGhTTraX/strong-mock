@@ -45,10 +45,9 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Resetting expectations](#resetting-expectations)
   - [Argument matchers](#argument-matchers)
 - [Mock options](#mock-options)
-  - [Strictness](#strictness)
+  - [Unexpected property return value](#unexpected-property-return-value)
   - [Exact params](#exact-params)
   - [Concrete matcher](#concrete-matcher)
-  - [Defaults](#defaults)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Can I partially mock an existing object/function?](#can-i-partially-mock-an-existing-objectfunction)
@@ -344,35 +343,50 @@ console.log(matcher.value?.(3)); // 4
 
 ## Mock options
 
-### Strictness
-
-strong-mock has a few levels of "strictness" that control what values are returned when an unexpected property is accessed or an unexpected call is made. The strictness can be configured for each mock, or for all mocks with [setDefaults](#defaults).
+The following options can be set per mock, or globally with `setDefaults`.
 
 ```typescript
-import { mock, when, Strictness } from 'strong-mock';
+import { mock, when, setDefaults } from 'strong-mock';
+
+setDefaults({
+  exactParams: true
+});
+
+// Uses the new default.
+const superStrictMock = mock<() => void>();
+// Overrides the default.
+const strictMock = mock<() => void>({ exactParams: false });
+```
+
+### Unexpected property return value
+
+You can control what happens whenever an unexpected property is accessed, or an unexpected call is made.
+
+```typescript
+import { mock, when, UnexpectedProperty } from 'strong-mock';
 
 type Foo = {
   bar: (value: number) => number;
 }
 
 // This is the default.
-const strictFoo = mock<Foo>({
-  strictness: Strictness.STRICT
+const callsThrow = mock<Foo>({
+  unexpectedProperty: UnexpectedProperty.CALL_THROW
 });
 
 // Accessing properties with no expectations is fine.
-strictFoo.bar;
+callsThrow.bar;
 // Throws "Didn't expect bar(42) to be called".
-strictFoo.bar(42);
+callsThrow.bar(42);
 
-const superStrictFoo = mock<Foo>({
-  strictness: Strictness.SUPER_STRICT
+const propertiesThrow = mock<Foo>({
+  unexpectedProperty: UnexpectedProperty.THROW
 });
 
 // Throws "Didn't expect property bar to be accessed".
-superStrictFoo.bar;
+propertiesThrow.bar;
 // Throws "Didn't expect property bar to be accessed".
-superStrictFoo.bar(42);
+propertiesThrow.bar(42);
 ```
 
 ### Exact params
@@ -392,7 +406,7 @@ console.log(fn()); // 42
 console.log(fn(1)); // 42
 ```
 
-If you're not using TypeScript, or you want to be super strict, you can set `exactParams: true` when creating a mock, or via [setDefaults](#defaults).
+If you're not using TypeScript, or you want to be super strict, you can set `exactParams: true`.
 
 ```typescript
 import { mock } from 'strong-mock';
@@ -421,23 +435,6 @@ const fn = mock<(x: number[]) => boolean>({
 when(() => fn([1, 2, 3])).thenReturn(true);
 
 fn([1, 2, 3]); // throws because different array instances
-```
-
-### Defaults
-
-Mock options can be set for all mocks with `setDefaults`.
-
-```typescript
-import { mock, when, setDefaults, Strictness } from 'strong-mock';
-
-setDefaults({
-  strictness: Strictness.SUPER_STRICT
-});
-
-// Uses the new default.
-const superStrictMock = mock<() => void>();
-// Overrides the default.
-const strictMock = mock<() => void>({ strictness: Strictness.STRICT });
 ```
 
 ## FAQ
@@ -510,7 +507,7 @@ when(() => fn(
 fn({ foo: "bar", baz: undefined }) === true
 ```
 
-You can set this behavior to be the default by configuring the [concrete matcher](#concrete-matcher), and set it on all mocks using [setDefaults](#defaults):
+You can set this behavior to be the default by configuring the [concrete matcher](#concrete-matcher).
 
 ```ts
 setDefaults({

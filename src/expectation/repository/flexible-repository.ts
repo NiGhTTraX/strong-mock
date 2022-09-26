@@ -1,5 +1,5 @@
 import { UnexpectedAccess, UnexpectedCall } from '../../errors';
-import { Strictness } from '../../mock/options';
+import { UnexpectedProperty } from '../../mock/options';
 import type { Property } from '../../proxy';
 import type { Expectation } from '../expectation';
 import { ApplyProp } from '../expectation';
@@ -13,10 +13,13 @@ type CountableExpectation = {
 };
 
 /**
- * An expectation repository for configurable levels of strictness.
+ * An expectation repository with a configurable behavior for
+ * unexpected property access.
  */
 export class FlexibleRepository implements ExpectationRepository {
-  constructor(private strictness: Strictness = Strictness.SUPER_STRICT) {}
+  constructor(
+    private unexpectedProperty: UnexpectedProperty = UnexpectedProperty.THROW
+  ) {}
 
   protected readonly expectations = new Map<Property, CountableExpectation[]>();
 
@@ -186,7 +189,7 @@ export class FlexibleRepository implements ExpectationRepository {
   }
 
   private getValueForUnexpectedAccess(property: Property): unknown {
-    if (this.strictness === Strictness.SUPER_STRICT) {
+    if (this.unexpectedProperty === UnexpectedProperty.THROW) {
       this.recordUnexpected(property, undefined);
 
       throw new UnexpectedAccess(property, this.getUnmet());

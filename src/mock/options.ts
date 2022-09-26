@@ -2,54 +2,65 @@ import type { Matcher } from '../expectation/matcher';
 
 export type ConcreteMatcher = <T>(expected: T) => Matcher;
 
-/**
- * Controls what happens when a property is accessed, or a call is made,
- * and there are no expectations set for it.
- */
-export enum Strictness {
+export enum UnexpectedProperty {
   /**
-   * Any property that's accessed, or any call that's made, without a matching
-   * expectation, will throw immediately.
+   * Throw an error immediately.
    *
    * @example
-   * type Service = { foo: (x: number) => number };
-   * const service = mock<Service>();
-   *
-   * // This will throw.
+   * // Will throw "Didn't expect foo to be accessed".
    * const { foo } = service;
    *
    * // Will throw "Didn't expect foo to be accessed",
    * // without printing the arguments.
    * foo(42);
    */
-  SUPER_STRICT,
+  THROW,
+
   /**
-   * Properties with unmatched expectations will return functions that will
-   * throw if called. This can be useful if your code destructures a function
-   * but never calls it.
+   * Return a function that will throw if called. This can be useful if your
+   * code destructures a function but never calls it.
    *
    * It will also improve error messages for unexpected calls because arguments
    * will be captured instead of throwing immediately on the property access.
    *
-   * @example
-   * type Service = { foo: (x: number) => number };
-   * const service = mock<Service>();
+   * The function will be returned even if the property is not supposed to be a
+   * function. This could cause weird behavior at runtime, when your code expects
+   * e.g. a number and gets a function instead.
    *
-   * // This will not throw.
+   * @example
+   * // This will NOT throw.
    * const { foo } = service;
+   *
+   * // This will NOT throw, and might produce unexpected results.
+   * foo > 0
    *
    * // Will throw "Didn't expect foo(42) to be called".
    * foo(42);
    */
-  STRICT,
+  CALL_THROW,
 }
 
 export interface MockOptions {
   /**
-   * Controls what happens when a property is accessed, or a call is made,
-   * and there are no expectations set for it.
+   * Controls what should be returned for a property with no expectations.
+   *
+   * A property with no expectations is a property that has no `when`
+   * expectations set on it. It can also be a property that ran out of `when`
+   * expectations.
+   *
+   * The default is to return a function that will throw when called.
+   *
+   * @example
+   * const foo = mock<{ bar: () => number }>();
+   * foo.bar() // unexpected property access
+   *
+   * @example
+   * const foo = mock<{ bar: () => number }>();
+   * when(() => foo.bar()).thenReturn(42);
+   * foo.bar() === 42
+   * foo.bar() // unexpected property access
    */
-  strictness?: Strictness;
+  unexpectedProperty?: UnexpectedProperty;
 
   /**
    * If `true`, the number of received arguments in a function/method call has to
