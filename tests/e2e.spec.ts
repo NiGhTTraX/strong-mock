@@ -142,7 +142,7 @@ describe('e2e', () => {
     expect(mock1(mock2)).toBeTruthy();
   });
 
-  it('', () => {
+  it('should override exactParams', () => {
     const fn = mock<(x?: number) => number>({ exactParams: true });
 
     when(() => fn()).thenReturn(42);
