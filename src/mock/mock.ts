@@ -31,8 +31,7 @@ export enum Mode {
   CALL,
 }
 
-export let currentMode: Mode = Mode.CALL;
-
+let currentMode: Mode = Mode.CALL;
 export const setMode = (mode: Mode) => {
   currentMode = mode;
 };
