@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0-beta.2](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.1...v8.0.0-beta.2) (2022-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* The `strictness` option has been renamed to
+`unexpectedProperty` to better illustrate its intent.
+
+### Features
+
+* Add `exactParams` option ([31acbbe](https://github.com/NiGhTTraX/strong-mock/commit/31acbbec7601d136e8b3860ba04868a633551b21))
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-matcher-utils to v28 ([33fe92a](https://github.com/NiGhTTraX/strong-mock/commit/33fe92aef8e8f1d0d0db25f7eca6deec13ddbc8d))
+* Don't treat `any` returns as promises ([9304492](https://github.com/NiGhTTraX/strong-mock/commit/93044921e1717a571fbb298b9adfcdba6c3b03c9))
+
+
+* Rename option ([db9cc06](https://github.com/NiGhTTraX/strong-mock/commit/db9cc06f266f2900bfbf96737518d55b3b8536c7))
+
 ## [8.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.0...v8.0.0-beta.1) (2022-08-18)
 
 
