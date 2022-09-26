@@ -36,6 +36,7 @@ export let currentMode: Mode = Mode.CALL;
 export const setMode = (mode: Mode) => {
   currentMode = mode;
 };
+const getMode = () => currentMode;
 
 /**
  * Create a type safe mock.
@@ -76,7 +77,7 @@ export const mock = <T>({
     options.exactParams
   );
 
-  const stub = createStub<T>(repository, pendingExpectation, () => currentMode);
+  const stub = createStub<T>(repository, pendingExpectation, getMode);
 
   setMockState(stub, {
     repository,
