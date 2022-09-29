@@ -423,18 +423,23 @@ console.log(fn(1)); // throws
 
 ### Concrete matcher
 
-You can set the matcher that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. Passing in a [matcher argument](#argument-matchers) will always take priority.
+You can configure the [matcher](#argument-matchers) that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. This matcher can always be overwritten inside an expectation with another matcher.
 
 ```typescript
 import { mock, when, It } from 'strong-mock';
 
 // Use strict equality instead of deep equality.
-const fn = mock<(x: number[]) => boolean>({
+const fn = mock<(x: number[], y: string) => boolean>({
   concreteMatcher: It.is
 });
-when(() => fn([1, 2, 3])).thenReturn(true);
+when(() => fn([1, 2, 3], 'foo')).thenReturn(true);
 
-fn([1, 2, 3]); // throws because different array instances
+fn([1, 2, 3], 'foo'); // throws because different array instances
+
+const arr = [1, 2, 3];
+// The matcher will only apply to non-matcher arguments.
+when(() => fn(arr, It.isString())).thenReturn(true);
+console.log(fn(arr, 'any string')); // true
 ```
 
 ## FAQ
