@@ -127,7 +127,7 @@ console.log(foo.bar(23)); // even more awesome
 
 ### Setting invocation count expectations
 
-By default, each call is expected to be called only once. You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
+By default, each call is expected to be made only once. You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
 
 ```typescript
 const fn = mock<(x: number) => number>();
@@ -177,7 +177,7 @@ console.log(fn(1)); // 2
 
 ### Mocking promises
 
-If you're mocking something that returns a promise then you'll be able to use the promise helpers to set the return value.
+If you're mocking something that returns a promise then you'll be able to use the `thenResolve` promise helper to set the return value.
 
 ```typescript
 type Fn = (x: number) => Promise<number>;
@@ -191,15 +191,21 @@ console.log(await fn()); // 2
 
 ### Throwing errors
 
+Use `thenThrow` or `thenReject` to throw an `Error` instance. You can customize the error message, or even pass a derived class.
+
 ```typescript
 type Fn = (x: number) => void;
 type FnWithPromise = (x: number) => Promise<void>;
 
+class MyError extends Error {}
+
 const fn = mock<Fn>();
 const fnWithPromise = mock<FnWithPromise>();
 
+// All of these will throw an Error instance.
 when(() => fn(1)).thenThrow();
-when(() => fnWithPromise(1)).thenReject();
+when(() => fn(2)).thenThrow(MyError);
+when(() => fnWithPromise(1)).thenReject('oops');
 ```
 
 ### Verifying expectations
