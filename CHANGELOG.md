@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [8.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.2...v8.0.0) (2022-10-02)
 
+This is a major release with many new features, some breaking changes, and a lot of changes under the hood. See the [migration guide](MIGRATION.md).
+
+### ⚠ BREAKING CHANGES
+
+* You no longer have to remember to call `instance`
+  before passing the mock to the code under test, because we removed it!
+  The object returned by `mock()` can now be passed directly to your code.
+* Expectations now have to be wrapped in a callback
+  inside `when`. This change is necessary to remove the `instance`
+  function.
+* The default matcher option previously available only in
+  `setDefaults` has been renamed to `concreteMatcher`.
+* The default behavior now avoids immediately throwing
+  on unexpected property access. This should lead to improved error
+  messages, and less breaking on common code patterns e.g. destructuring. You can configure this with the `unexpectedProperty` option.
+* You can no longer pass a custom expectation repository
+  or a custom expectation factory to the `mock()` function. These options
+  weren't documented very well and just bloated the API.
+
+### Features
+
+* Add `exactParams` option ([31acbbe](https://github.com/NiGhTTraX/strong-mock/commit/31acbbec7601d136e8b3860ba04868a633551b21))
+* Add `unexpectedProperty` option
+* Allow concrete matcher to be configured for each mock ([32c82ba](https://github.com/NiGhTTraX/strong-mock/commit/32c82baa1afab573d8a3dcdf1f2543fe5d56fc0a))
+
+### Bug Fixes
+
+* Don't treat `any` returns as promises ([9304492](https://github.com/NiGhTTraX/strong-mock/commit/93044921e1717a571fbb298b9adfcdba6c3b03c9))
+
 ## [8.0.0-beta.2](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.1...v8.0.0-beta.2) (2022-09-26)
 
 
