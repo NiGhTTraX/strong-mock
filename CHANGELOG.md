@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.2...v8.0.0) (2022-10-02)
+
 ## [8.0.0-beta.2](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.1...v8.0.0-beta.2) (2022-09-26)
 
 
