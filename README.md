@@ -509,7 +509,7 @@ console.log(foo2.baz); // undefined
 Use the `It.deepEquals` matcher explicitly inside `when` and pass `{ strict: false }`:
 
 ```ts
-const fn = mock<(x: { foo: string }) => boolean>();
+const fn = mock<(x: { foo: string, bar?: string }) => boolean>();
 
 when(() => fn(
   It.deepEquals({ foo: "bar" }, { strict: false }))
