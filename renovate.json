@@ -4,5 +4,6 @@
   ],
   "rangeStrategy": "replace",
   "automerge": true,
+  "automergeType": "branch",
   "ignoreDeps": ["strong-mock"]
 }
