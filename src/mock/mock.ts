@@ -32,6 +32,7 @@ export enum Mode {
 }
 
 let currentMode: Mode = Mode.CALL;
+
 export const setMode = (mode: Mode) => {
   currentMode = mode;
 };
