@@ -222,6 +222,7 @@ describe('FlexibleRepository', () => {
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
       repo.get('foo');
+
       try {
         repo.get('foo');
         // eslint-disable-next-line no-empty
@@ -327,6 +328,7 @@ describe('FlexibleRepository', () => {
 
       it('should record calls for unexpected access', () => {
         const repo = new FlexibleRepository();
+
         try {
           repo.get('foo');
           // eslint-disable-next-line no-empty

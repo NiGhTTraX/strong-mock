@@ -71,6 +71,7 @@ export class SpyPendingExpectation implements PendingExpectation {
 
   finish(returnValue: ReturnValue) {
     this.finishCalledWith = returnValue;
+
     return new OneUseAlwaysMatchingExpectation();
   }
 }

@@ -140,6 +140,7 @@ describe('proxy', () => {
     const proxy = createProxy<{}>(SM.instance(traps));
 
     const keys: string[] = [];
+
     // eslint-disable-next-line no-restricted-syntax,@typescript-eslint/no-unused-vars,guard-for-in
     for (const key in proxy) {
       // noinspection JSUnfilteredForInLoop
