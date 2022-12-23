@@ -24,14 +24,21 @@ export type PromiseStub<R, P> = {
    *
    * @param promiseValue This needs to be of the same type as the value inside
    *   the promise returned by the `when` callback.
+   *
+   * @example
+   * when(() => fn()).thenResolve('foo');
    */
   thenResolve(promiseValue: R): InvocationCount;
 
   /**
    * Make the current call reject with the given error.
    *
-   * @param error An `Error` instance. If you want to reject with a non error
-   *   then use the `thenReturn` method.
+   * @param error An `Error` instance. You can pass just a message, and
+   *   it will be wrapped in an `Error` instance. If you want to reject with
+   *   a non error then use the {@link thenReturn} method.
+   *
+   * @example
+   * when(() => fn()).thenReject(new Error('oops'));
    */
   thenReject(error: Error): InvocationCount;
 
@@ -41,6 +48,9 @@ export type PromiseStub<R, P> = {
    * @param message Will be wrapped in `new Error()`. If you want to reject
    *   with a custom error then pass it here instead of the message. If you
    *   want to reject with a non error then use `thenReturn`.
+   *
+   * @example
+   * when(() => fn()).thenReject('oops');
    */
   thenReject(message: string): InvocationCount;
 
