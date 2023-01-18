@@ -111,6 +111,11 @@ export class FlexibleRepository implements ExpectationRepository {
       case 'name':
         return 'mock';
 
+      // Promise.resolve() tries to see if it's a "thenable".
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables
+      case 'then':
+        return undefined;
+
       // pretty-format
       case '$$typeof':
       case 'constructor':

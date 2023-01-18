@@ -142,6 +142,19 @@ describe('e2e', () => {
     expect(mock1(mock2)).toBeTruthy();
   });
 
+  it('should work inside a promise', async () => {
+    type Foo = {
+      bar: () => number;
+    };
+
+    const foo = mock<Foo>();
+    when(() => foo.bar()).thenReturn(42);
+
+    // noinspection ES6RedundantAwait
+    const f = await Promise.resolve(foo);
+    expect(f.bar()).toEqual(42);
+  });
+
   it('should override exactParams', () => {
     const fn = mock<(x?: number) => number>({ exactParams: true });
 

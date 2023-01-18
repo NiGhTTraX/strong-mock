@@ -275,6 +275,25 @@ describe('FlexibleRepository', () => {
     });
   });
 
+  describe('promise', () => {
+    it('should not look like a thenable', () => {
+      const repo = new FlexibleRepository();
+
+      expect(repo.get('then')).toBeUndefined();
+    });
+
+    it('should match expectations for then', () => {
+      const repo = new FlexibleRepository();
+      repo.add(
+        new MatchingPropertyExpectation('then', {
+          value: 42,
+        })
+      );
+
+      expect(repo.get('then')).toEqual(42);
+    });
+  });
+
   describe('getAllProperties', () => {
     it('should return all the properties that have expectations', () => {
       const repo = new FlexibleRepository();
