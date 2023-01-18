@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.0.1](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0...v8.0.1) (2023-01-18)
+
+
+### Bug Fixes
+
+* Allow mocks to be inside Promises ([3144722](https://github.com/NiGhTTraX/strong-mock/commit/3144722d45b2a298920d37a756168ac56779fb2b)), closes [#321](https://github.com/NiGhTTraX/strong-mock/issues/321)
+* **deps:** update dependency jest-matcher-utils to ~29.3.0 ([929d16e](https://github.com/NiGhTTraX/strong-mock/commit/929d16e7d1ee6bd9ecbae1f863459a629067891a))
+
 ## [8.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.0-beta.2...v8.0.0) (2022-10-02)
 
 This is a major release with many new features, some breaking changes, and a lot of changes under the hood. See the [migration guide](MIGRATION.md).
