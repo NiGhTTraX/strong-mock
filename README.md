@@ -186,7 +186,7 @@ const fn = mock<Fn>();
 
 when(() => fn(1)).thenResolve(2);
 
-console.log(await fn()); // 2
+console.log(await fn(1)); // 2
 ```
 
 ### Throwing errors
