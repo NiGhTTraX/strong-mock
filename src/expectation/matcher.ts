@@ -55,3 +55,14 @@ export type TypeMatcher<T> = T & Matcher;
 export function isMatcher(f: unknown): f is Matcher {
   return !!(f && (<Matcher>f)[MATCHER_SYMBOL]);
 }
+
+export const getMatcherDiffs = (
+  matchers: Matcher[],
+  args: any[]
+): { actual?: unknown[]; expected?: unknown[] } => {
+  const matcherDiffs = matchers.map((matcher, i) => matcher.getDiff(args[i]));
+  const actual = matcherDiffs?.map((d) => d.actual);
+  const expected = matcherDiffs?.map((d) => d.expected);
+
+  return { actual, expected };
+};

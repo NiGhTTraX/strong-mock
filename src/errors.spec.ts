@@ -158,6 +158,41 @@ foobar`
       // Yeah, funky way to do a negated ansiless contains.
       expect(() => expectAnsilessContain(error.message, `bar`)).toThrow();
     });
+
+    it("should contain actual and expected values when there's a single expectation remaining", () => {
+      const matcher = It.matches(() => false, {
+        getDiff: () => ({ actual: 'actual', expected: 'expected' }),
+      });
+
+      const expectation = new StrongExpectation('foo', [matcher, matcher], {
+        value: ':irrelevant:',
+      });
+
+      const error = new UnexpectedCall(
+        'foo',
+        ['any arg', 'any arg'],
+        [expectation]
+      );
+
+      expect(error.matcherResult).toEqual({
+        actual: ['actual', 'actual'],
+        expected: ['expected', 'expected'],
+      });
+    });
+
+    it('should not contain actual and expected values when the expectation has no expected args', () => {
+      const expectation = new StrongExpectation('foo', [], {
+        value: ':irrelevant:',
+      });
+
+      const error = new UnexpectedCall(
+        'foo',
+        ['any arg', 'any arg'],
+        [expectation]
+      );
+
+      expect(error.matcherResult).toBeUndefined();
+    });
   });
 
   describe('UnexpectedCalls', () => {

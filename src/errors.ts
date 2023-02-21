@@ -1,5 +1,6 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
+import { getMatcherDiffs } from './expectation/matcher';
 import type { CallMap } from './expectation/repository/expectation-repository';
 import {
   printCall,
@@ -42,7 +43,16 @@ ${printRemainingExpectations(expectations)}`);
   }
 }
 
-export class UnexpectedCall extends Error {
+type MatcherResult = { expected: unknown; actual: unknown };
+
+// This is taken from jest.
+interface MatcherError {
+  matcherResult?: MatcherResult;
+}
+
+export class UnexpectedCall extends Error implements MatcherError {
+  public matcherResult?: MatcherResult;
+
   constructor(
     property: Property,
     args: unknown[],
@@ -62,8 +72,26 @@ export class UnexpectedCall extends Error {
 
 Remaining expectations:
 ${printDiffForAllExpectations(propertyExpectations, args)}`);
+
+      // If we have a single expectation we can attach the actual/expected args
+      // to the error instance, so that an IDE may show its own diff for them.
+      if (
+        propertyExpectations.length === 1 &&
+        propertyExpectations[0].args?.length
+      ) {
+        const { actual, expected } = getMatcherDiffs(
+          propertyExpectations[0].args,
+          args
+        );
+        this.matcherResult = {
+          actual,
+          expected,
+        };
+      }
     } else {
-      super(header);
+      super(`${header}
+      
+No remaining expectations.`);
     }
   }
 }

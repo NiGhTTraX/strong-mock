@@ -7,7 +7,7 @@ import {
 } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
-import { isMatcher } from './expectation/matcher';
+import { getMatcherDiffs, isMatcher } from './expectation/matcher';
 import type { ReturnValue } from './expectation/repository/return-value';
 import type { Property } from './proxy';
 
@@ -83,13 +83,8 @@ export const printExpectationDiff = (e: Expectation, args: any[]) => {
     return '';
   }
 
-  const matcherDiffs = e.args?.map((matcher, j) => matcher.getDiff(args[j]));
-
-  const diff = printDiff(
-    matcherDiffs?.map((d) => d.expected),
-    matcherDiffs?.map((d) => d.actual),
-    { omitAnnotationLines: true }
-  );
+  const { actual, expected } = getMatcherDiffs(e.args, args);
+  const diff = printDiff(expected, actual, { omitAnnotationLines: true });
 
   if (!diff) {
     return '';
