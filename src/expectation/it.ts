@@ -6,7 +6,6 @@ import {
   isUndefined,
   omitBy,
 } from 'lodash';
-import { printArg } from '../print';
 import type { Matcher, TypeMatcher } from './matcher';
 import { isMatcher, MATCHER_SYMBOL } from './matcher';
 
@@ -83,7 +82,7 @@ const deepEquals = <T>(
       return isEqual(removeUndefined(actual), removeUndefined(expected));
     },
     {
-      toJSON: () => printArg(expected),
+      toJSON: () => printExpected(expected),
       getDiff: (actual) => ({ actual, expected }),
     }
   );

@@ -1,4 +1,4 @@
-import { EXPECTED_COLOR } from 'jest-matcher-utils';
+import { DIM_COLOR, EXPECTED_COLOR, RECEIVED_COLOR } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import { getMatcherDiffs } from './expectation/matcher';
 import type { CallMap } from './expectation/repository/expectation-repository';
@@ -58,9 +58,8 @@ export class UnexpectedCall extends Error implements MatcherError {
     args: unknown[],
     expectations: Expectation[]
   ) {
-    const header = `Didn't expect mock${printCall(
-      property,
-      args
+    const header = `Didn't expect mock${RECEIVED_COLOR(
+      printCall(property, args, true)
     )} to be called.`;
 
     const propertyExpectations = expectations.filter(
@@ -68,10 +67,12 @@ export class UnexpectedCall extends Error implements MatcherError {
     );
 
     if (propertyExpectations.length) {
-      super(`${header}
+      super(
+        DIM_COLOR(`${header}
 
 Remaining expectations:
-${printDiffForAllExpectations(propertyExpectations, args)}`);
+${printDiffForAllExpectations(propertyExpectations, args)}`)
+      );
 
       // If we have a single expectation we can attach the actual/expected args
       // to the error instance, so that an IDE may show its own diff for them.
@@ -117,8 +118,8 @@ export class UnmetExpectations extends Error {
  * into a single call.
  *
  * @example
- * mergeCalls({ foo: [{ arguments: undefined }, { arguments: [1, 2, 3] }] }
- * // returns { foo: [{ arguments: [1, 2, 3] } }
+ * mergeCalls({ getData: [{ arguments: undefined }, { arguments: [1, 2, 3] }] }
+ * // returns { getData: [{ arguments: [1, 2, 3] } }
  */
 const mergeCalls = (callMap: CallMap): CallMap =>
   new Map(

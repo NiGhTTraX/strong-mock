@@ -162,22 +162,22 @@ describe('print', () => {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
-      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
-        value: ':irrelevant:',
+      const expectation = new StrongExpectation('prop', [matcher], {
+        value: 'return',
       });
 
       const args = ['bar'];
 
       expectAnsilessEqual(
         printDiffForAllExpectations([expectation, expectation], args),
-        `when(() => mock.:irrelevant:(matches(() => false))).thenReturn(":irrelevant:").between(1, 1)
+        `when(() => mock.prop(matches(() => false))).thenReturn("return").between(1, 1)
 - Expected
 + Received
 
 -   "foo",
 +   "bar"
 
-when(() => mock.:irrelevant:(matches(() => false))).thenReturn(":irrelevant:").between(1, 1)
+when(() => mock.prop(matches(() => false))).thenReturn("return").between(1, 1)
 - Expected
 + Received
 
