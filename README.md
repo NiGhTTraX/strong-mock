@@ -51,9 +51,9 @@ console.log(foo.bar(23)); // 'I am strong!'
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Why do I get a `Didn't expect mock to be called` error?](#why-do-i-get-a-didnt-expect-mock-to-be-called-error)
+  - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [Can I partially mock an existing object/function?](#can-i-partially-mock-an-existing-objectfunction)
   - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
-  - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Can I spread/enumerate a mock?](#can-i-spreadenumerate-a-mock)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
@@ -469,6 +469,10 @@ If you run into any of these cases, feel free to [open an issue](https://github.
 
 Unfortunately, this is not always possible, such as with the React example above. You might have to adjust your code slightly to work around the checks your code, or some library, is doing. With React, simply putting the mock inside an object e.g. `setState({ foo: theMock })` will avoid the `typeof` check and work as expected.
 
+### Why do I have to set a return value even if it's `undefined`?
+
+To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())`, and you later changed `fn()` to return a `number`, then your expectation would become incorrect and the compiler couldn't check that for you.
+
 ### Can I partially mock an existing object/function?
 
 No, passing a concrete implementation to `mock()` will be the same as passing a type: all properties will be mocked, and you have to set expectations on the ones that will be accessed.
@@ -476,10 +480,6 @@ No, passing a concrete implementation to `mock()` will be the same as passing a 
 ### How do I set expectations on setters?
 
 You currently can't do that. Please use a normal method instead e.g. `setFoo()` vs `set foo()`.
-
-### Why do I have to set a return value even if it's `undefined`?
-
-To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())`, and you later changed `fn()` to return a `number`, then your expectation would become incorrect and the compiler couldn't check that for you.
 
 ### How do I provide a function for the mock to call?
 
