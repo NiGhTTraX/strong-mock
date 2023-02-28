@@ -525,3 +525,9 @@ setDefaults({
   concreteMatcher: (expected) => It.deepEquals(expected, { strict: false })
 });
 ```
+
+### I get `Didn't expect mock(null) to be called` error with React's setState
+
+All strong-mock values are a function because [Proxy target](https://github.com/NiGhTTraX/strong-mock/blob/d70b6cc0e1cdd8cf5f071646dc10cc64272a8272/src/proxy.ts#L55) is set to a function, and React's setState assumes that any function passed to it is an update function that it needs to evaluate to get the updated state. Unfortunately, [this is required for strong-mock](https://github.com/NiGhTTraX/strong-mock/issues/322#issuecomment-1442109349).
+
+To alleviate this problem, you can either fake the object directly without using strong-mock (or using it only for selected properties), or change `setState` invocation to accept a valid update function instead of a mock object: `setState(() => mock)`.
