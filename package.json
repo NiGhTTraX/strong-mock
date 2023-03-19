@@ -35,9 +35,9 @@
     "lodash": "~4.17.0"
   },
   "devDependencies": {
-    "@nighttrax/eslint-config-ts": "~11.0.0",
-    "@tdd-buffet/jest-config": "~5.0.1",
-    "@tdd-buffet/tsconfig": "~1.0.0",
+    "@nighttrax/eslint-config-ts": "~12.0.0-alpha.0",
+    "@tdd-buffet/jest-config": "~5.0.2",
+    "@tdd-buffet/tsconfig": "~1.0.4",
     "@types/jest": "~29.5.0",
     "@types/node": "~18.15.0",
     "@types/lodash": "~4.14.0",
@@ -49,6 +49,6 @@
     "strip-ansi": "~6.0.0",
     "strong-mock": "~6.0.0",
     "tslib": "~2.5.0",
-    "typescript": "~4.9.0"
+    "typescript": "~5.0.2"
   }
 }
