@@ -43,9 +43,10 @@ it('type safety', () => {
     when(() => fnp()).thenThrow;
 
     // any should not enable the promise helpers
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fnany = mock<() => any>();
     when(() => fnany()).thenReturn(23);
-    // @ts-expect-error
+    // @ts-expect-error because the resolve helper is not expected
     when(() => fnany()).thenResolve(23);
   }
 

@@ -23,14 +23,14 @@ export interface Expectation {
   /**
    * How many times should this expectation match?
    */
-  setInvocationCount(min: number, max: number): void;
+  setInvocationCount: (min: number, max: number) => void;
 
-  matches(args: any[] | undefined): boolean;
+  matches: (args: unknown[] | undefined) => boolean;
 
   /**
    * Used by `pretty-format`.
    */
-  toJSON(): string;
+  toJSON: () => string;
 }
 
 /**

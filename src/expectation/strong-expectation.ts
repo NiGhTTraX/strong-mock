@@ -18,9 +18,9 @@ import type { ReturnValue } from './repository/return-value';
 export class StrongExpectation implements Expectation {
   private matched = 0;
 
-  public min: number = 1;
+  public min = 1;
 
-  public max: number = 1;
+  public max = 1;
 
   constructor(
     public property: Property,

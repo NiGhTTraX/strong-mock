@@ -1,7 +1,6 @@
 {
   "extends": "@tdd-buffet/tsconfig",
   "compilerOptions": {
-    "importsNotUsedAsValues": "error",
     "declaration": false,
     "types": ["jest", "node"]
   },

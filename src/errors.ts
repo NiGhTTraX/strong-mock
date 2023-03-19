@@ -38,7 +38,11 @@ ${printRemainingExpectations(expectations)}`);
 }
 
 export class UnexpectedCall extends Error {
-  constructor(property: Property, args: any[], expectations: Expectation[]) {
+  constructor(
+    property: Property,
+    args: unknown[],
+    expectations: Expectation[]
+  ) {
     super(`Didn't expect ${EXPECTED_COLOR(
       `mock${printCall(property, args)}`
     )} to be called.

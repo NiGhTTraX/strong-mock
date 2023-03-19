@@ -99,9 +99,9 @@ describe('proxy', () => {
     const proxy = createProxy<() => void>(SM.instance(traps));
 
     expect(proxy.toString()).toEqual('1');
-    // @ts-expect-error
+    // @ts-expect-error because the proxy target type above can't be indexed
     expect(proxy[Symbol.toStringTag]()).toEqual('2');
-    // @ts-expect-error
+    // @ts-expect-error because the proxy target type above can't be indexed
     expect(proxy['@@toStringTag']()).toEqual('3');
   });
 
@@ -112,7 +112,7 @@ describe('proxy', () => {
     SM.when(traps.property('b')).thenReturn(2);
     SM.when(traps.property(c)).thenReturn(3);
 
-    const proxy = createProxy<{}>(SM.instance(traps));
+    const proxy = createProxy<object>(SM.instance(traps));
 
     expect({ ...proxy }).toEqual({ a: 1, b: 2, [c]: 3 });
   });
@@ -121,7 +121,7 @@ describe('proxy', () => {
     const c = Symbol('c');
     SM.when(traps.ownKeys()).thenReturn(['a', 'b', c]);
 
-    const proxy = createProxy<{}>(SM.instance(traps));
+    const proxy = createProxy<object>(SM.instance(traps));
 
     expect(Reflect.ownKeys(proxy)).toEqual(['a', 'b', c]);
   });
@@ -129,7 +129,7 @@ describe('proxy', () => {
   it('should trap Object.keys', () => {
     SM.when(traps.ownKeys()).thenReturn(['a', 'b']).times(3);
 
-    const proxy = createProxy<{}>(SM.instance(traps));
+    const proxy = createProxy<object>(SM.instance(traps));
 
     expect(Object.keys(proxy)).toEqual(['a', 'b']);
   });
@@ -137,7 +137,7 @@ describe('proxy', () => {
   it('should trap for..in', () => {
     SM.when(traps.ownKeys()).thenReturn(['a', 'b']).times(3);
 
-    const proxy = createProxy<{}>(SM.instance(traps));
+    const proxy = createProxy<object>(SM.instance(traps));
 
     const keys: string[] = [];
 
@@ -153,7 +153,7 @@ describe('proxy', () => {
   it('should trap getOwnPropertyDescriptor', () => {
     SM.when(traps.ownKeys()).thenReturn(['foo']).twice();
 
-    const proxy = createProxy<{}>(SM.instance(traps));
+    const proxy = createProxy<object>(SM.instance(traps));
 
     expect(Object.getOwnPropertyDescriptor(proxy, 'foo')).toBeDefined();
     expect(Object.getOwnPropertyDescriptor(proxy, 'bar')).toBeUndefined();

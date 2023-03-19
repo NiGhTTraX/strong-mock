@@ -11,7 +11,7 @@ export type Matcher = {
   /**
    * Used by `pretty-format`.
    */
-  toJSON(): string;
+  toJSON: () => string;
 };
 
 /**

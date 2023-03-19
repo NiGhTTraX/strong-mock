@@ -62,7 +62,7 @@ describe('e2e', () => {
   describe('interface', () => {
     it('should set expectation on method', () => {
       interface Foo {
-        bar(x: number): number;
+        bar: (x: number) => number;
       }
 
       const foo = mock<Foo>();
@@ -74,7 +74,7 @@ describe('e2e', () => {
 
     it('should set expectation on method to throw', () => {
       interface Foo {
-        bar(x: number): number;
+        bar: (x: number) => number;
       }
 
       const foo = mock<Foo>();
@@ -134,7 +134,7 @@ describe('e2e', () => {
   });
 
   it('should match other mocks', () => {
-    const mock1 = mock<(x: any) => boolean>();
+    const mock1 = mock<(x: unknown) => boolean>();
     const mock2 = mock();
 
     when(() => mock1(mock2)).thenReturn(true);

@@ -214,7 +214,7 @@ const isString = ({
  * @example
  * It.isArray([It.isString({ containing: 'foobar' })])
  */
-const isArray = <T extends any[]>(containing?: T): TypeMatcher<T> =>
+const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
   matches(
     (actual) => {
       if (!Array.isArray(actual)) {

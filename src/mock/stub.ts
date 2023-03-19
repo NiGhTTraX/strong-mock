@@ -27,7 +27,7 @@ export const createStub = <T>(
         property: (childProp: Property) => {
           throw new NestedWhen(property, childProp);
         },
-        apply: (args: any[]) => {
+        apply: (args: unknown[]) => {
           pendingExpectation.setArgs(args);
         },
         ownKeys: () => {
@@ -35,7 +35,7 @@ export const createStub = <T>(
         },
       });
     },
-    apply: (args: any[]) => {
+    apply: (args: unknown[]) => {
       if (getCurrentMode() === Mode.CALL) {
         return repo.apply(args);
       }

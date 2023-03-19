@@ -4,10 +4,11 @@ import type {
   PendingExpectation,
 } from '../when/pending-expectation';
 import type { Expectation } from './expectation';
+import type { Matcher } from './matcher';
 import type { ReturnValue } from './repository/return-value';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
-  // eslint-disable-next-line no-empty-function
+  // eslint-disable-next-line no-empty-function,@typescript-eslint/no-empty-function
   setInvocationCount = () => {};
 
   toJSON = () => 'always matching';
@@ -39,7 +40,7 @@ export class SpyExpectation implements Expectation {
 
   constructor(
     public property: Property,
-    public args: any[] | undefined,
+    public args: Matcher[] | undefined,
     public returnValue: ReturnValue
   ) {}
 
@@ -55,7 +56,7 @@ export const spyExpectationFactory: ExpectationFactory = (
 export class SpyPendingExpectation implements PendingExpectation {
   toJSON = () => 'spy pending expectation';
 
-  public argsCalledWith: any[] | undefined;
+  public argsCalledWith: unknown[] | undefined;
 
   public finishCalledWith: ReturnValue | undefined;
 
@@ -65,7 +66,7 @@ export class SpyPendingExpectation implements PendingExpectation {
     this.propertyCalledWith = value;
   }
 
-  setArgs(args: any[] | undefined) {
+  setArgs(args: unknown[] | undefined) {
     this.argsCalledWith = args;
   }
 
@@ -85,7 +86,7 @@ export class MatchingPropertyExpectation implements Expectation {
 
   min = 1;
 
-  matches = (args: any[] | undefined) => args === undefined;
+  matches = (args: unknown[] | undefined) => args === undefined;
 
   setInvocationCount(min: number, max: number) {
     this.min = min;
@@ -109,7 +110,7 @@ export class MatchingCallExpectation implements Expectation {
     this.max = max;
   }
 
-  matches = (args: any[] | undefined) => !!args;
+  matches = (args: unknown[] | undefined) => !!args;
 
   toJSON = () => 'matching call';
 }

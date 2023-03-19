@@ -17,7 +17,7 @@ export type PromiseStub<R, P> = {
    * @example
    * when(() => fn()).thenReturn(Promise.reject({ foo: 'bar' });
    */
-  thenReturn(value: P): InvocationCount;
+  thenReturn: (value: P) => InvocationCount;
 
   /**
    * Set the return value for the current call.
@@ -28,7 +28,7 @@ export type PromiseStub<R, P> = {
    * @example
    * when(() => fn()).thenResolve('foo');
    */
-  thenResolve(promiseValue: R): InvocationCount;
+  thenResolve: (promiseValue: R) => InvocationCount;
 
   /**
    * Make the current call reject with the given error.
@@ -40,24 +40,9 @@ export type PromiseStub<R, P> = {
    * @example
    * when(() => fn()).thenReject(new Error('oops'));
    */
-  thenReject(error: Error): InvocationCount;
-
-  /**
-   * Make the current call reject with an error with the given message.
-   *
-   * @param message Will be wrapped in `new Error()`. If you want to reject
-   *   with a custom error then pass it here instead of the message. If you
-   *   want to reject with a non error then use `thenReturn`.
-   *
-   * @example
-   * when(() => fn()).thenReject('oops');
-   */
-  thenReject(message: string): InvocationCount;
-
-  /**
-   * Make the current call reject with `new Error()`.
-   */
-  thenReject(): InvocationCount;
+  thenReject: ((error: Error) => InvocationCount) &
+    ((message: string) => InvocationCount) &
+    (() => InvocationCount);
 };
 
 export type NonPromiseStub<R> = {
@@ -67,7 +52,7 @@ export type NonPromiseStub<R> = {
    * @param returnValue This needs to be of the same type as the value returned
    *   by the `when` callback.
    */
-  thenReturn(returnValue: R): InvocationCount;
+  thenReturn: (returnValue: R) => InvocationCount;
 
   /**
    * Make the current call throw the given error.
@@ -75,20 +60,9 @@ export type NonPromiseStub<R> = {
    * @param error The error instance. If you want to throw a simple `Error`
    *   you can pass just the message.
    */
-  thenThrow(error: Error): InvocationCount;
-
-  /**
-   * Make the current call throw an error with the given message.
-   *
-   * @param message Will be wrapped in `new Error()`. If you want to throw
-   *   a custom error pass it here instead of the message.
-   */
-  thenThrow(message: string): InvocationCount;
-
-  /**
-   * Make the current call throw `new Error()`.
-   */
-  thenThrow(): InvocationCount;
+  thenThrow: ((error: Error) => InvocationCount) &
+    ((message: string) => InvocationCount) &
+    (() => InvocationCount);
 };
 
 const finishPendingExpectation = (

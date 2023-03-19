@@ -11,16 +11,16 @@ import type { Property } from '../proxy';
  * it with the returned value from {@link createReturns}.
  */
 export interface PendingExpectation {
-  setProperty(prop: Property): void;
+  setProperty: (prop: Property) => void;
 
-  setArgs(args: any[] | undefined): void;
+  setArgs: (args: unknown[] | undefined) => void;
 
-  finish(returnValue: ReturnValue): Expectation;
+  finish: (returnValue: ReturnValue) => Expectation;
 
   /**
    * Used by `pretty-format`.
    */
-  toJSON(): string;
+  toJSON: () => string;
 }
 
 export type ExpectationFactory = (
@@ -32,7 +32,7 @@ export type ExpectationFactory = (
 ) => Expectation;
 
 export class PendingExpectationWithFactory implements PendingExpectation {
-  private args: any[] | undefined;
+  private args: unknown[] | undefined;
 
   private property: Property | undefined;
 
@@ -50,7 +50,7 @@ export class PendingExpectationWithFactory implements PendingExpectation {
     this.property = value;
   }
 
-  setArgs(value: any[] | undefined) {
+  setArgs(value: unknown[] | undefined) {
     this.args = value;
   }
 

@@ -32,7 +32,7 @@ export interface ProxyTraps {
    * Reflect.apply(fn, this, [...args])
    * ```
    */
-  apply: (args: any[]) => unknown;
+  apply: (args: unknown[]) => unknown;
 
   /**
    * Called when getting the proxy's own enumerable keys.
@@ -51,28 +51,28 @@ export interface ProxyTraps {
 }
 
 export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
-  // eslint-disable-next-line no-empty-function
+  // eslint-disable-next-line no-empty-function,@typescript-eslint/no-empty-function
   new Proxy(/* istanbul ignore next */ () => {}, {
     get: (target, prop: string | symbol) => {
       if (prop === 'bind') {
-        return (thisArg: any, ...args: any[]) =>
-          (...moreArgs: any[]) =>
+        return (thisArg: unknown, ...args: unknown[]) =>
+          (...moreArgs: unknown[]) =>
             traps.apply([...args, ...moreArgs]);
       }
 
       if (prop === 'apply') {
-        return (thisArg: any, args: any[] | undefined) =>
+        return (thisArg: unknown, args: unknown[] | undefined) =>
           traps.apply(args || []);
       }
 
       if (prop === 'call') {
-        return (thisArg: any, ...args: any[]) => traps.apply(args);
+        return (thisArg: unknown, ...args: unknown[]) => traps.apply(args);
       }
 
       return traps.property(prop);
     },
 
-    apply: (target, thisArg: any, args: any[]) => traps.apply(args),
+    apply: (target, thisArg: unknown, args: unknown[]) => traps.apply(args),
 
     ownKeys: () => traps.ownKeys(),
 

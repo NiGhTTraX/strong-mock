@@ -32,7 +32,7 @@ export type CallStats = {
 };
 
 export interface ExpectationRepository {
-  add(expectation: Expectation): void;
+  add: (expectation: Expectation) => void;
 
   /**
    * Get a return value for the given property.
@@ -57,7 +57,7 @@ export interface ExpectationRepository {
    * add(new Expectation('getData', undefined, () => 42);
    * get('getData')(1, 2, '3', false, NaN) === 42
    */
-  get(property: Property): unknown;
+  get: (property: Property) => unknown;
 
   /**
    * Get a return value for a function call.
@@ -73,7 +73,7 @@ export interface ExpectationRepository {
    * add(new Expectation(ApplyProp, [1, 2], 23);
    * apply(1, 2) === 23
    */
-  apply(args: unknown[]): unknown;
+  apply: (args: unknown[]) => unknown;
 
   /**
    * Get all the properties that have expectations.
@@ -82,20 +82,20 @@ export interface ExpectationRepository {
    * add(new Expectation('foo', undefined, 23));
    * getAllProperties() === ['foo']
    */
-  getAllProperties(): Property[];
+  getAllProperties: () => Property[];
 
   /**
    * Remove any expectations and clear the call stats.
    */
-  clear(): void;
+  clear: () => void;
 
   /**
    * Return all unmet expectations.
    */
-  getUnmet(): Expectation[];
+  getUnmet: () => Expectation[];
 
   /**
    * Return all the calls that have been made so far.
    */
-  getCallStats(): CallStats;
+  getCallStats: () => CallStats;
 }
