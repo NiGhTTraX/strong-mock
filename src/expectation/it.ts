@@ -3,6 +3,7 @@ import {
   isEqual,
   isMatchWith,
   isObjectLike,
+  isPlainObject,
   isUndefined,
   omitBy,
 } from 'lodash';
@@ -136,8 +137,12 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
   partial?: K
 ): TypeMatcher<T> =>
   matches(
-    (actual) =>
-      isMatchWith(actual, partial || {}, (argValue, partialValue) => {
+    (actual) => {
+      if (!isPlainObject(actual)) {
+        return false;
+      }
+
+      return isMatchWith(actual, partial || {}, (argValue, partialValue) => {
         if (isMatcher(partialValue)) {
           return partialValue.matches(argValue);
         }

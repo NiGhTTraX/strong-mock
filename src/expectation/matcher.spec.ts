@@ -599,7 +599,16 @@ describe('It', () => {
   });
 
   describe('isObject', () => {
+    it('should not match non objects', () => {
+      expect(It.isObject().matches('not an object')).toBeFalsy();
+      expect(It.isObject().matches([])).toBeFalsy();
+      expect(It.isObject().matches(null)).toBeFalsy();
+      expect(It.isObject().matches(undefined)).toBeFalsy();
+      expect(It.isObject().matches(new (class {})())).toBeFalsy();
+    });
+
     it('should match any object with empty object', () => {
+      expect(It.isObject().matches({})).toBeTruthy();
       expect(
         It.isObject().matches({
           foo: 'bar',
