@@ -1,5 +1,5 @@
-import { It } from './it';
 import { expectAnsilessEqual } from '../../tests/ansiless';
+import { It } from './it';
 
 describe('It', () => {
   describe('deepEquals', () => {
@@ -423,12 +423,51 @@ describe('It', () => {
       expectAnsilessEqual(It.isString().toJSON(), 'string');
       expectAnsilessEqual(
         It.isString({ containing: 'foo' }).toJSON(),
-        'string("foo")'
+        "string('foo')"
       );
       expectAnsilessEqual(
         It.isString({ matching: /bar/ }).toJSON(),
         'string(/bar/)'
       );
+    });
+
+    it("should print diff when there's a match", () => {
+      expect(It.isString().getDiff('foo')).toEqual({
+        actual: 'foo',
+        expected: 'foo',
+      });
+
+      expect(It.isString({ containing: 'foo' }).getDiff('foobar')).toEqual({
+        actual: 'foobar',
+        expected: 'foobar',
+      });
+
+      expect(It.isString({ matching: /foo/ }).getDiff('foobar')).toEqual({
+        actual: 'foobar',
+        expected: 'foobar',
+      });
+    });
+
+    it("should print diff when there's a mismatch", () => {
+      expect(It.isString().getDiff(42)).toEqual({
+        actual: '42 (number)',
+        expected: 'string',
+      });
+
+      expect(It.isString({ containing: 'foo' }).getDiff(42)).toEqual({
+        actual: '42 (number)',
+        expected: 'string',
+      });
+
+      expect(It.isString({ containing: 'foo' }).getDiff('bar')).toEqual({
+        actual: 'bar',
+        expected: "string containing 'foo'",
+      });
+
+      expect(It.isString({ matching: /foo/ }).getDiff('bar')).toEqual({
+        actual: 'bar',
+        expected: 'string matching /foo/',
+      });
     });
   });
 

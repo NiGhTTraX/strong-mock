@@ -197,10 +197,46 @@ const isString = ({
       return matching?.test(actual) ?? true;
     },
     {
-      toJSON: () =>
-        containing || matching
-          ? `string(${printExpected(containing || matching)})`
-          : 'string',
+      toJSON: () => {
+        if (containing) {
+          return `string('${containing}')`;
+        }
+
+        if (matching) {
+          return `string(${matching})`;
+        }
+
+        return 'string';
+      },
+      getDiff: (actual) => {
+        if (typeof actual !== 'string') {
+          return {
+            expected: 'string',
+            actual: `${actual} (${typeof actual})`,
+          };
+        }
+
+        if (containing) {
+          if (actual.indexOf(containing) === -1) {
+            return {
+              expected: `string containing '${containing}'`,
+              actual,
+            };
+          }
+        }
+
+        if (matching) {
+          if (!matching.test(actual)) {
+            return {
+              expected: `string matching ${matching}`,
+              actual,
+            };
+          }
+        }
+
+        // Return the actual value twice to get a 0-diff.
+        return { expected: actual, actual };
+      },
     }
   );
 };
