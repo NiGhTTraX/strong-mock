@@ -286,6 +286,28 @@ const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
     {
       toJSON: () =>
         containing ? `array(${printExpected(containing)})` : 'array',
+      getDiff: (actual) => {
+        if (!Array.isArray(actual)) {
+          return { actual: `${actual} (${typeof actual})`, expected: 'array' };
+        }
+
+        if (containing) {
+          return {
+            actual,
+            expected: `array containing [${containing
+              .map((value) => {
+                if (isMatcher(value)) {
+                  return value.toJSON();
+                }
+
+                return value;
+              })
+              .join(', ')}]`,
+          };
+        }
+
+        return { actual, expected: 'array' };
+      },
     }
   );
 

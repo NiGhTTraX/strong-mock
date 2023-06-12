@@ -529,6 +529,32 @@ describe('It', () => {
       expectAnsilessEqual(It.isArray().toJSON(), 'array');
       expectAnsilessEqual(It.isArray([1, 2, 3]).toJSON(), 'array([1, 2, 3])');
     });
+
+    it('should print diff', () => {
+      expect(It.isArray().getDiff(42)).toEqual({
+        expected: 'array',
+        actual: '42 (number)',
+      });
+
+      expect(It.isArray([1, 2]).getDiff([2])).toEqual({
+        expected: 'array containing [1, 2]',
+        actual: [2],
+      });
+    });
+
+    it('should print diff with stringified nested matchers', () => {
+      const matcher = It.matches(() => false, {
+        toJSON: () => 'something',
+        getDiff: () => {
+          throw new Error();
+        },
+      });
+
+      expect(It.isArray([matcher, matcher]).getDiff([2])).toEqual({
+        expected: 'array containing [something, something]',
+        actual: [2],
+      });
+    });
   });
 
   describe('matches', () => {
