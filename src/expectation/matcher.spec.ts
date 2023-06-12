@@ -616,6 +616,17 @@ describe('It', () => {
       ).toBeTruthy();
     });
 
+    it('should match objects with non string keys', () => {
+      const foo = Symbol('foo');
+
+      expect(
+        It.isObject({ [foo]: 'bar' }).matches({ [foo]: 'bar' })
+      ).toBeTruthy();
+      expect(
+        It.isObject({ [foo]: 'bar' }).matches({ [foo]: 'baz' })
+      ).toBeFalsy();
+    });
+
     it('should deep match nested objects', () => {
       expect(
         It.isObject({ foo: { bar: { baz: 42 } } }).matches({
@@ -626,6 +637,28 @@ describe('It', () => {
       expect(
         It.isObject({ foo: { bar: { baz: 43 } } }).matches({
           foo: { bar: { baz: 42, bazzz: 23 } },
+        })
+      ).toBeFalsy();
+    });
+
+    it('should not deep match object like values', () => {
+      class Foo {
+        foo = 'bar';
+      }
+      expect(It.isObject({ foo: 'bar' }).matches(new Foo())).toBeFalsy();
+      expect(It.isObject({ 0: 1 }).matches([1])).toBeFalsy();
+    });
+
+    it('should deep match nested objects with arrays', () => {
+      expect(
+        It.isObject({ foo: [1, 2, 3] }).matches({
+          foo: [1, 2, 3],
+        })
+      ).toBeTruthy();
+
+      expect(
+        It.isObject({ foo: [1, 2] }).matches({
+          foo: [1, 2, 3],
         })
       ).toBeFalsy();
     });

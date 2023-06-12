@@ -1,7 +1,6 @@
 import { printExpected } from 'jest-matcher-utils';
 import {
   isEqual,
-  isMatchWith,
   isObjectLike,
   isPlainObject,
   isUndefined,
@@ -116,12 +115,35 @@ type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T;
 
+const isMatch = (actual: object, expected: object): boolean =>
+  Reflect.ownKeys(expected).every((key) => {
+    // @ts-expect-error
+    const right = expected[key];
+    // @ts-expect-error
+    const left = actual?.[key];
+
+    if (!left) {
+      return false;
+    }
+
+    if (isMatcher(right)) {
+      return right.matches(left);
+    }
+
+    if (isPlainObject(right)) {
+      return isMatch(left, right);
+    }
+
+    return isEqual(left, right);
+  });
+
 /**
  * Recursively match an object.
  *
  * Supports nested matcher.
  *
- * @param partial An optional subset of the expected objected.
+ * @param partial An optional subset of the expected object.
+ *   Object like values, e.g. classes and arrays, will not be matched against this.
  *
  * @example
  * const fn = mock<(foo: { x: number, y: number }) => number>();
@@ -142,15 +164,15 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
         return false;
       }
 
-      return isMatchWith(actual, partial || {}, (argValue, partialValue) => {
-        if (isMatcher(partialValue)) {
-          return partialValue.matches(argValue);
-        }
+      if (!partial) {
+        return true;
+      }
 
-        // Let lodash handle it otherwise.
-        return undefined;
-      }),
-    { toJSON: () => (partial ? `object(${printExpected(partial)})` : 'object') }
+      return isMatch(actual, partial);
+    },
+    {
+      toJSON: () => (partial ? `object(${printExpected(partial)})` : 'object'),
+    }
   );
 
 /**
