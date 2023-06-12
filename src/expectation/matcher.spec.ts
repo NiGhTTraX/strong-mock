@@ -263,6 +263,30 @@ describe('It', () => {
         '{"foo": {"bar": [1, 2, 3]}}'
       );
     });
+
+    it("should get diff when there's a match", () => {
+      expect(It.deepEquals(1).getDiff(1)).toEqual({
+        actual: 1,
+        expected: 1,
+      });
+
+      expect(It.deepEquals({ foo: 'bar' }).getDiff({ foo: 'bar' })).toEqual({
+        actual: { foo: 'bar' },
+        expected: { foo: 'bar' },
+      });
+    });
+
+    it("should get diff when there's a mismatch", () => {
+      expect(It.deepEquals(1).getDiff(2)).toEqual({
+        actual: 2,
+        expected: 1,
+      });
+
+      expect(It.deepEquals({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
+        actual: { foo: 'baz' },
+        expected: { foo: 'bar' },
+      });
+    });
   });
 
   describe('is', () => {
@@ -622,9 +646,13 @@ describe('It', () => {
       expect(
         It.isObject({ [foo]: 'bar' }).matches({ [foo]: 'bar' })
       ).toBeTruthy();
+      expect(It.isObject({ 100: 'bar' }).matches({ 100: 'bar' })).toBeTruthy();
+
       expect(
         It.isObject({ [foo]: 'bar' }).matches({ [foo]: 'baz' })
       ).toBeFalsy();
+      expect(It.isObject({ 100: 'bar' }).matches({ 100: 'baz' })).toBeFalsy();
+      expect(It.isObject({ 100: 'bar' }).matches({ 101: 'bar' })).toBeFalsy();
     });
 
     it('should deep match nested objects', () => {
@@ -685,6 +713,17 @@ describe('It', () => {
       ).toBeFalsy();
     });
 
+    it('should handle non string keys when matching nested matchers', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+      const foo = Symbol('foo');
+
+      expect(
+        It.isObject({ [foo]: matcher }).matches({ [foo]: 'actual' })
+      ).toBeFalsy();
+    });
+
     it('should pretty print', () => {
       expectAnsilessEqual(It.isObject().toJSON(), `object`);
     });
@@ -694,6 +733,85 @@ describe('It', () => {
         It.isObject({ foo: 'bar' }).toJSON(),
         `object({"foo": "bar"})`
       );
+    });
+
+    it("should return diff when there's a match", () => {
+      expect(It.isObject().getDiff({})).toEqual({
+        expected: 'object',
+        actual: 'object',
+      });
+
+      expect(It.isObject().getDiff({ foo: 'bar' })).toEqual({
+        actual: 'object',
+        expected: 'object',
+      });
+
+      expect(It.isObject({ foo: 'bar' }).getDiff({ foo: 'bar' })).toEqual({
+        expected: { foo: 'bar' },
+        actual: { foo: 'bar' },
+      });
+    });
+
+    it("should return diff when there's a mismatch", () => {
+      expect(It.isObject().getDiff('not object')).toEqual({
+        expected: 'object',
+        actual: 'not object',
+      });
+
+      expect(It.isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
+        actual: { foo: 'baz' },
+        expected: { foo: 'bar' },
+      });
+    });
+
+    it('should collect diffs from nested matchers', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+
+      expect(It.isObject({ foo: matcher }).getDiff({ foo: 'actual' })).toEqual({
+        actual: { foo: 'a' },
+        expected: { foo: 'e' },
+      });
+
+      expect(
+        It.isObject({ foo: { bar: matcher } }).getDiff({
+          foo: { bar: 'actual' },
+        })
+      ).toEqual({
+        actual: { foo: { bar: 'a' } },
+        expected: { foo: { bar: 'e' } },
+      });
+    });
+
+    it('should handle missing keys when collecting diffs', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+
+      expect(It.isObject({ foo: matcher }).getDiff({})).toEqual({
+        actual: { foo: 'a' },
+        expected: { foo: 'e' },
+      });
+
+      expect(It.isObject({}).getDiff({ foo: 'bar' })).toEqual({
+        actual: {},
+        expected: {},
+      });
+    });
+
+    it('should handle non string keys when collecting diffs', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+      const foo = Symbol('foo');
+
+      expect(
+        It.isObject({ [foo]: matcher }).getDiff({ [foo]: 'actual' })
+      ).toEqual({
+        actual: { [foo]: 'a' },
+        expected: { [foo]: 'e' },
+      });
     });
   });
 

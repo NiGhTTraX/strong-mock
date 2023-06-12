@@ -56,9 +56,10 @@ it('type safety', () => {
     // @ts-expect-error wrong matcher type
     number(It.isString());
 
-    const nestedObject = (x: { foo: { bar: number; baz: string } }) => x;
+    const nestedObject = (x: { foo: { bar: number; 42: string } }) => x;
     nestedObject(It.isObject());
     nestedObject(It.isObject({ foo: { bar: 23 } }));
+    nestedObject(It.isObject({ foo: { 42: 'baz' } }));
     nestedObject(
       // @ts-expect-error wrong nested property type
       It.isObject({ foo: { bar: 'boo' } })

@@ -6,6 +6,7 @@ import {
   isUndefined,
   omitBy,
 } from 'lodash';
+import type { Property } from '../proxy';
 import type { Matcher, TypeMatcher } from './matcher';
 import { isMatcher, MATCHER_SYMBOL } from './matcher';
 
@@ -67,7 +68,8 @@ const removeUndefined = (object: any): any => {
  *   non `Object` instances with different constructors as not equal. Setting
  *   this to `false` will consider the objects in both cases as equal.
  *
- * @see It.is A matcher that uses strict equality.
+ * @see {@link It.isObject} or {@link It.isArray} if you want to nest matchers.
+ * @see {@link It.is} if you want to use strict equality.
  */
 const deepEquals = <T>(
   expected: T,
@@ -111,16 +113,55 @@ const is = <T = unknown>(expected: T): TypeMatcher<T> =>
 const isAny = (): TypeMatcher<any> =>
   matches(() => true, { toJSON: () => 'anything' });
 
-type DeepPartial<T> = T extends object
+type ObjectType = Record<Property, unknown>;
+
+type DeepPartial<T> = T extends ObjectType
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T;
 
-const isMatch = (actual: object, expected: object): boolean =>
+const looksLikeObject = (value: unknown): value is ObjectType =>
+  isPlainObject(value);
+
+const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
+  Object.fromEntries(
+    Reflect.ownKeys(expected).map((key) => {
+      const right = expected[key];
+      const left = looksLikeObject(actual) ? actual[key] : actual;
+
+      if (isMatcher(right)) {
+        return [key, right.getDiff(left).expected];
+      }
+
+      if (looksLikeObject(right)) {
+        return [key, getExpectedObjectDiff(left, right)];
+      }
+
+      return [key, right];
+    })
+  );
+
+const getActualObjectDiff = (actual: unknown, expected: ObjectType): object =>
+  Object.fromEntries(
+    Reflect.ownKeys(expected).map((key) => {
+      const right = expected[key];
+      const left = looksLikeObject(actual) ? actual[key] : actual;
+
+      if (isMatcher(right)) {
+        return [key, right.getDiff(left).actual];
+      }
+
+      if (looksLikeObject(right)) {
+        return [key, getActualObjectDiff(left, right)];
+      }
+
+      return [key, left];
+    })
+  );
+
+const isMatch = (actual: unknown, expected: ObjectType): boolean =>
   Reflect.ownKeys(expected).every((key) => {
-    // @ts-expect-error
     const right = expected[key];
-    // @ts-expect-error
-    const left = actual?.[key];
+    const left = looksLikeObject(actual) ? actual[key] : actual;
 
     if (!left) {
       return false;
@@ -130,7 +171,7 @@ const isMatch = (actual: object, expected: object): boolean =>
       return right.matches(left);
     }
 
-    if (isPlainObject(right)) {
+    if (looksLikeObject(right)) {
       return isMatch(left, right);
     }
 
@@ -155,7 +196,7 @@ const isMatch = (actual: object, expected: object): boolean =>
  * @example
  * It.isObject({ foo: It.isString() })
  */
-const isObject = <T extends object, K extends DeepPartial<T>>(
+const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
   partial?: K
 ): TypeMatcher<T> =>
   matches(
@@ -172,6 +213,19 @@ const isObject = <T extends object, K extends DeepPartial<T>>(
     },
     {
       toJSON: () => (partial ? `object(${printExpected(partial)})` : 'object'),
+      getDiff: (actual) => {
+        if (!partial) {
+          return {
+            expected: 'object',
+            actual: isPlainObject(actual) ? 'object' : 'not object',
+          };
+        }
+
+        return {
+          actual: getActualObjectDiff(actual, partial),
+          expected: getExpectedObjectDiff(actual, partial),
+        };
+      },
     }
   );
 
