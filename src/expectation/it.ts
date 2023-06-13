@@ -283,6 +283,7 @@ const willCapture = <T = unknown>(
       return true;
     },
     toJSON: () => name ?? 'captures',
+    getDiff: (actual) => ({ actual, expected: actual }),
     get value(): T | undefined {
       return capturedValue;
     },

@@ -626,5 +626,17 @@ describe('It', () => {
       expect(It.willCapture().toJSON()).toEqual('captures');
       expect(It.willCapture('custom').toJSON()).toEqual('custom');
     });
+
+    it('should print diff', () => {
+      expect(It.willCapture().getDiff('foo')).toEqual({
+        actual: 'foo',
+        expected: 'foo',
+      });
+
+      expect(It.willCapture('captor').getDiff('foo')).toEqual({
+        actual: 'foo',
+        expected: 'foo',
+      });
+    });
   });
 });
