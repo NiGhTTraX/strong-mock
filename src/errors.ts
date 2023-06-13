@@ -1,7 +1,12 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import type { CallMap } from './expectation/repository/expectation-repository';
-import { printCall, printProperty, printRemainingExpectations } from './print';
+import {
+  printCall,
+  printDiffForAllExpectations,
+  printProperty,
+  printRemainingExpectations,
+} from './print';
 import type { Property } from './proxy';
 import type { PendingExpectation } from './when/pending-expectation';
 
@@ -43,11 +48,23 @@ export class UnexpectedCall extends Error {
     args: unknown[],
     expectations: Expectation[]
   ) {
-    super(`Didn't expect ${EXPECTED_COLOR(
-      `mock${printCall(property, args)}`
-    )} to be called.
+    const header = `Didn't expect mock${printCall(
+      property,
+      args
+    )} to be called.`;
 
-${printRemainingExpectations(expectations)}`);
+    const propertyExpectations = expectations.filter(
+      (e) => e.property === property
+    );
+
+    if (propertyExpectations.length) {
+      super(`${header}
+
+Remaining expectations:
+${printDiffForAllExpectations(propertyExpectations, args)}`);
+    } else {
+      super(header);
+    }
   }
 }
 

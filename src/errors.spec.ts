@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 import { SM } from '../tests/old';
 import {
@@ -14,7 +13,9 @@ import {
   spyExpectationFactory,
   SpyPendingExpectation,
 } from './expectation/expectation.mocks';
+import { It } from './expectation/it';
 import type { CallMap } from './expectation/repository/expectation-repository';
+import { StrongExpectation } from './expectation/strong-expectation';
 import type { ConcreteMatcher } from './mock/options';
 import { PendingExpectationWithFactory } from './when/pending-expectation';
 
@@ -117,29 +118,45 @@ foobar`
   });
 
   describe('UnexpectedCall', () => {
-    it('should print the property and the existing expectations', () => {
-      const e1 = SM.mock<Expectation>();
-      const e2 = SM.mock<Expectation>();
-      SM.when(e1.toJSON()).thenReturn('e1');
-      SM.when(e2.toJSON()).thenReturn('e2');
-
-      const error = new UnexpectedCall(
-        'bar',
-        [1, 2, 3],
-        [SM.instance(e1), SM.instance(e2)]
-      );
+    it('should print the call', () => {
+      const error = new UnexpectedCall('bar', [1, 2, 3], []);
 
       expectAnsilessContain(
         error.message,
         `Didn't expect mock.bar(1, 2, 3) to be called.`
       );
+    });
 
-      expectAnsilessContain(
-        error.message,
-        `Remaining unmet expectations:
- - e1
- - e2`
-      );
+    it('should print the diff', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: (actual) => ({ actual, expected: 'foo' }),
+      });
+
+      const expectation = new StrongExpectation('bar', [matcher], {
+        value: ':irrelevant:',
+      });
+
+      const error = new UnexpectedCall('bar', [1, 2, 3], [expectation]);
+
+      expectAnsilessContain(error.message, `Expected`);
+    });
+
+    it('should print the diff only for expectations for the same property', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: (actual) => ({ actual, expected: 'foo' }),
+      });
+
+      const e1 = new StrongExpectation('foo', [matcher], {
+        value: ':irrelevant:',
+      });
+      const e2 = new StrongExpectation('bar', [matcher], {
+        value: ':irrelevant:',
+      });
+
+      const error = new UnexpectedCall('foo', [1, 2, 3], [e1, e2]);
+
+      // Yeah, funky way to do a negated ansiless contains.
+      expect(() => expectAnsilessContain(error.message, `bar`)).toThrow();
     });
   });
 

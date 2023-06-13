@@ -1,8 +1,15 @@
 /* eslint-disable class-methods-use-this */
+import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 import { ApplyProp } from './expectation/expectation';
 import { It } from './expectation/it';
-import { printCall, printProperty, printReturns } from './print';
-import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import { StrongExpectation } from './expectation/strong-expectation';
+import {
+  printCall,
+  printDiffForAllExpectations,
+  printExpectationDiff,
+  printProperty,
+  printReturns,
+} from './print';
 
 describe('print', () => {
   describe('printProperty', () => {
@@ -102,6 +109,80 @@ describe('print', () => {
           1
         ),
         `.thenReject([Error: foobar])`
+      );
+    });
+  });
+
+  describe('printExpectationDiff', () => {
+    it('should print the diff when we have single expectation', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: (actual) => ({ actual, expected: 'foo' }),
+      });
+
+      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
+        value: ':irrelevant:',
+      });
+
+      const args = ['bar'];
+
+      expectAnsilessEqual(
+        printExpectationDiff(expectation, args),
+        `-   "foo",
++   "bar"`
+      );
+    });
+    it('should print the diff for an expectation with no received args', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: (actual) => ({ actual, expected: 'foo' }),
+      });
+
+      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
+        value: ':irrelevant:',
+      });
+
+      expectAnsilessEqual(
+        printExpectationDiff(expectation, []),
+        `-   "foo",
++   undefined`
+      );
+    });
+
+    it('should not print the diff for an expectation with no expected args', () => {
+      const expectation = new StrongExpectation(':irrelevant:', [], {
+        value: ':irrelevant:',
+      });
+
+      expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
+    });
+  });
+
+  describe('printDiffForAllExpectations', () => {
+    it('should print the diff when we have multiple expectations', () => {
+      const matcher = It.matches(() => false, {
+        getDiff: (actual) => ({ actual, expected: 'foo' }),
+      });
+
+      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
+        value: ':irrelevant:',
+      });
+
+      const args = ['bar'];
+
+      expectAnsilessEqual(
+        printDiffForAllExpectations([expectation, expectation], args),
+        `when(() => mock.:irrelevant:(matches(() => false))).thenReturn(":irrelevant:").between(1, 1)
+- Expected
++ Received
+
+-   "foo",
++   "bar"
+
+when(() => mock.:irrelevant:(matches(() => false))).thenReturn(":irrelevant:").between(1, 1)
+- Expected
++ Received
+
+-   "foo",
++   "bar"`
       );
     });
   });

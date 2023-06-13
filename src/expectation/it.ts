@@ -17,6 +17,11 @@ import { isMatcher, MATCHER_SYMBOL } from './matcher';
  * @param toJSON An optional function that should return a string that will be
  *   used when the matcher needs to be printed in an error message. By default,
  *   it stringifies `cb`.
+ * @param getDiff An optional function that will be called when printing the
+ *   diff between a matcher from an expectation and the received arguments. You
+ *   can format both the received and the expected values according to your
+ *   matcher's logic. By default, the `toJSON` method will be used to format
+ *   the expected value, while the received value will be returned as-is.
  *
  * @example
  * const fn = mock<(x: number) => number>();
@@ -27,12 +32,16 @@ import { isMatcher, MATCHER_SYMBOL } from './matcher';
  */
 const matches = <T>(
   cb: (actual: T) => boolean,
-  { toJSON = () => `matches(${cb.toString()})` }: { toJSON?: () => string } = {}
+  {
+    toJSON = () => `matches(${cb.toString()})`,
+    getDiff = (actual) => ({ actual, expected: toJSON() }),
+  }: Partial<Pick<Matcher, 'toJSON' | 'getDiff'>> = {}
 ): TypeMatcher<T> => {
   const matcher: Matcher = {
     [MATCHER_SYMBOL]: true,
-    matches: (arg: T) => cb(arg),
+    matches: (actual: T) => cb(actual),
     toJSON,
+    getDiff,
   };
 
   return matcher as any;
@@ -73,7 +82,10 @@ const deepEquals = <T>(
 
       return isEqual(removeUndefined(actual), removeUndefined(expected));
     },
-    { toJSON: () => printArg(expected) }
+    {
+      toJSON: () => printArg(expected),
+      getDiff: (actual) => ({ actual, expected }),
+    }
   );
 
 /**
