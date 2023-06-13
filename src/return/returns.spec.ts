@@ -74,7 +74,7 @@ describe('returns', () => {
     );
   });
 
-  it('should set a return promise', async () => {
+  it('should set a return promise', () => {
     const promise = Promise.resolve(23);
 
     SM.when(

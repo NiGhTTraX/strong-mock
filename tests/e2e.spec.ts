@@ -96,7 +96,7 @@ describe('e2e', () => {
     });
   });
 
-  it('should set expectation with invocation count', async () => {
+  it('should set expectation with invocation count', () => {
     const fn = mock<() => number>();
     when(() => fn())
       .thenReturn(42)
