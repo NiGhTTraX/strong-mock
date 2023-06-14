@@ -14,6 +14,9 @@ dependencies:
   lodash:
     specifier: ~4.17.0
     version: 4.17.21
+  strip-ansi:
+    specifier: ~6.0.0
+    version: 6.0.1
 
 devDependencies:
   '@nighttrax/eslint-config-ts':
@@ -49,9 +52,6 @@ devDependencies:
   standard-version:
     specifier: ~9.5.0
     version: 9.5.0
-  strip-ansi:
-    specifier: ~6.0.0
-    version: 6.0.1
   strong-mock:
     specifier: ~6.0.0
     version: 6.0.0
@@ -2485,7 +2485,6 @@ packages:
   /ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
-    dev: true
 
   /ansi-styles@2.2.1:
     resolution: {integrity: sha512-kmCevFghRiWM7HB5zTPULl4r9bVFSWjz62MhqizDGUrq2NWuNMQyuv4tHHoKJHs69M/MF64lEcHdYIocrdWQYA==}
@@ -7944,7 +7943,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       ansi-regex: 5.0.1
-    dev: true
 
   /strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}

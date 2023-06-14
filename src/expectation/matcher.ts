@@ -58,11 +58,11 @@ export function isMatcher(f: unknown): f is Matcher {
 
 export const getMatcherDiffs = (
   matchers: Matcher[],
-  args: any[]
-): { actual?: unknown[]; expected?: unknown[] } => {
+  args: unknown[]
+): { actual: unknown[]; expected: unknown[] } => {
   const matcherDiffs = matchers.map((matcher, i) => matcher.getDiff(args[i]));
-  const actual = matcherDiffs?.map((d) => d.actual);
-  const expected = matcherDiffs?.map((d) => d.expected);
+  const actual = matcherDiffs.map((d) => d.actual);
+  const expected = matcherDiffs.map((d) => d.expected);
 
   return { actual, expected };
 };

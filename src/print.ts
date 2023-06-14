@@ -5,6 +5,7 @@ import {
   printReceived,
   RECEIVED_COLOR,
 } from 'jest-matcher-utils';
+import stripAnsi from 'strip-ansi';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
 import { getMatcherDiffs, isMatcher } from './expectation/matcher';
@@ -87,28 +88,59 @@ export const printRemainingExpectations = (expectations: Expectation[]) =>
  - ${expectations.map((e) => e.toJSON()).join('\n - ')}`
     : 'There are no remaining unmet expectations.';
 
-export const printExpectationDiff = (e: Expectation, args: any[]) => {
+export const printArgsDiff = (
+  expected: unknown[],
+  actual: unknown[]
+): string => {
+  const diff = printDiff(expected, actual, { omitAnnotationLines: true });
+
+  /* istanbul-ignore-next this is not expected in practice */
+  if (!diff) {
+    return '';
+  }
+
+  const ansilessDiffLines = stripAnsi(diff).split('\n');
+  let relevantDiffLines: string[];
+
+  // Strip Array [ ... ] surroundings.
+  if (!expected.length) {
+    // - Array []
+    // + Array [
+    //   ...
+    // ]
+    relevantDiffLines = ansilessDiffLines.slice(2, -1);
+  } else if (!actual.length) {
+    // - Array [
+    //   ...
+    // ]
+    // + Array []
+    relevantDiffLines = ansilessDiffLines.slice(1, -2);
+  } else {
+    // Array [
+    //   ...
+    // ]
+    relevantDiffLines = ansilessDiffLines.slice(1, -1);
+  }
+
+  // Strip the trailing comma.
+  const lastLine = relevantDiffLines[relevantDiffLines.length - 1].slice(0, -1);
+
+  return [...relevantDiffLines.slice(0, -1), lastLine].join('\n');
+};
+
+export const printExpectationDiff = (e: Expectation, args: unknown[]) => {
   if (!e.args?.length) {
     return '';
   }
 
   const { actual, expected } = getMatcherDiffs(e.args, args);
-  const diff = printDiff(expected, actual, { omitAnnotationLines: true });
 
-  if (!diff) {
-    return '';
-  }
-
-  const diffLines = diff.split('\n').slice(1, -1);
-
-  return `${diffLines.slice(0, -1).join('\n')}\n${diffLines[
-    diffLines.length - 1
-  ].slice(0, -6)}`;
+  return printArgsDiff(expected, actual);
 };
 
 export const printDiffForAllExpectations = (
   expectations: Expectation[],
-  actual: any[]
+  actual: unknown[]
 ) =>
   expectations
     .map((e) => {
