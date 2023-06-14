@@ -2,7 +2,7 @@ import { diff as printDiff } from 'jest-diff';
 import { DIM_COLOR, EXPECTED_COLOR, RECEIVED_COLOR } from 'jest-matcher-utils';
 import stripAnsi from 'strip-ansi';
 import type { Expectation } from '../expectation/expectation';
-import { getMatcherDiffs } from '../expectation/matcher';
+import { getMatcherDiffs } from '../matchers/matcher';
 import { printCall } from '../print';
 import type { Property } from '../proxy';
 

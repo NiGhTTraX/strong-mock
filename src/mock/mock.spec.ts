@@ -1,5 +1,6 @@
 import { UnexpectedAccess } from '../errors/unexpected-access';
-import { It } from '../expectation/it';
+
+import { It } from '../matchers/it';
 import { when } from '../when/when';
 import { mock } from './mock';
 import { UnexpectedProperty } from './options';

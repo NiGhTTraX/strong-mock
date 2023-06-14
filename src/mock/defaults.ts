@@ -1,11 +1,11 @@
-import { It } from '../expectation/it';
+import { deepEquals } from '../matchers/deep-equals';
 import type { MockOptions } from './options';
 import { UnexpectedProperty } from './options';
 
 export type StrongMockDefaults = Required<MockOptions>;
 
 const defaults: StrongMockDefaults = {
-  concreteMatcher: It.deepEquals,
+  concreteMatcher: deepEquals,
   unexpectedProperty: UnexpectedProperty.CALL_THROW,
   exactParams: false,
 };

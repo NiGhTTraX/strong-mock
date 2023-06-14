@@ -66,3 +66,43 @@ export const getMatcherDiffs = (
 
   return { actual, expected };
 };
+
+/**
+ * Match a custom predicate.
+ *
+ * @param cb Will receive the value and returns whether it matches.
+ * @param toJSON An optional function that should return a string that will be
+ *   used when the matcher needs to be printed in an error message. By default,
+ *   it stringifies `cb`.
+ * @param getDiff An optional function that will be called when printing the
+ *   diff between a matcher from an expectation and the received arguments. You
+ *   can format both the received and the expected values according to your
+ *   matcher's logic. By default, the `toJSON` method will be used to format
+ *   the expected value, while the received value will be returned as-is.
+ *
+ * @example
+ * const fn = mock<(x: number) => number>();
+ * when(() => fn(It.matches(x => x >= 0))).returns(42);
+ *
+ * fn(2) === 42
+ * fn(-1) // throws
+ */
+export const matches = <T>(
+  cb: (actual: T) => boolean,
+  {
+    toJSON = () => `matches(${cb.toString()})`,
+    getDiff = (actual) => ({
+      actual,
+      expected: toJSON(),
+    }),
+  }: Partial<Pick<Matcher, 'toJSON' | 'getDiff'>> = {}
+): TypeMatcher<T> => {
+  const matcher: Matcher = {
+    [MATCHER_SYMBOL]: true,
+    matches: (actual: T) => cb(actual),
+    toJSON,
+    getDiff,
+  };
+
+  return matcher as any;
+};

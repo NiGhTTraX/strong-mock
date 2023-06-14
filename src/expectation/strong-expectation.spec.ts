@@ -1,5 +1,6 @@
 import { expectAnsilessEqual } from '../../tests/ansiless';
-import { It } from './it';
+
+import { It } from '../matchers/it';
 import { StrongExpectation } from './strong-expectation';
 
 describe('StrongExpectation', () => {

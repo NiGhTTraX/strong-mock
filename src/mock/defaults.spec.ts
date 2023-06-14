@@ -1,6 +1,7 @@
 import { UnexpectedAccess } from '../errors/unexpected-access';
 import { UnexpectedCall } from '../errors/unexpected-call';
-import { It, when } from '../index';
+import { when } from '../index';
+import { It } from '../matchers/it';
 import { setDefaults } from './defaults';
 import { mock } from './mock';
 import { UnexpectedProperty } from './options';

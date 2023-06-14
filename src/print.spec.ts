@@ -5,8 +5,9 @@ import {
   printExpectationDiff,
 } from './errors/unexpected-call';
 import { ApplyProp } from './expectation/expectation';
-import { It } from './expectation/it';
 import { StrongExpectation } from './expectation/strong-expectation';
+
+import { It } from './matchers/it';
 import { printCall, printProperty, printReturns } from './print';
 
 describe('print', () => {

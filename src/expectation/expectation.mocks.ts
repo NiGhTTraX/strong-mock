@@ -1,10 +1,10 @@
+import type { Matcher } from '../matchers/matcher';
 import type { Property } from '../proxy';
 import type {
   ExpectationFactory,
   PendingExpectation,
 } from '../when/pending-expectation';
 import type { Expectation } from './expectation';
-import type { Matcher } from './matcher';
 import type { ReturnValue } from './repository/return-value';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {

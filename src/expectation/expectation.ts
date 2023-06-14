@@ -1,5 +1,5 @@
+import type { Matcher } from '../matchers/matcher';
 import type { Property } from '../proxy';
-import type { Matcher } from './matcher';
 import type { ReturnValue } from './repository/return-value';
 
 /**

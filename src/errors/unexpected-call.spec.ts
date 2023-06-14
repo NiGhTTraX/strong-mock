@@ -2,8 +2,9 @@ import {
   expectAnsilessContain,
   expectAnsilessEqual,
 } from '../../tests/ansiless';
-import { It } from '../expectation/it';
 import { StrongExpectation } from '../expectation/strong-expectation';
+
+import { It } from '../matchers/it';
 import { printArgsDiff, UnexpectedCall } from './unexpected-call';
 
 describe('UnexpectedCall', () => {

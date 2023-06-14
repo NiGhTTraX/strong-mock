@@ -1,6 +1,6 @@
-import { isMatcher } from '../expectation/matcher';
 import { FlexibleRepository } from '../expectation/repository/flexible-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
+import { isMatcher } from '../matchers/matcher';
 import type { ExpectationFactory } from '../when/pending-expectation';
 import { PendingExpectationWithFactory } from '../when/pending-expectation';
 import type { StrongMockDefaults } from './defaults';

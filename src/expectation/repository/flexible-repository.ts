@@ -1,10 +1,10 @@
 import { UnexpectedAccess } from '../../errors/unexpected-access';
 import { UnexpectedCall } from '../../errors/unexpected-call';
+import { MATCHER_SYMBOL } from '../../matchers/matcher';
 import { UnexpectedProperty } from '../../mock/options';
 import type { Property } from '../../proxy';
 import type { Expectation } from '../expectation';
 import { ApplyProp } from '../expectation';
-import { MATCHER_SYMBOL } from '../matcher';
 import type { CallMap, ExpectationRepository } from './expectation-repository';
 import { unboxReturnValue } from './return-value';
 

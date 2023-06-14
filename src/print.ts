@@ -5,8 +5,8 @@ import {
 } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
-import { isMatcher } from './expectation/matcher';
 import type { ReturnValue } from './expectation/repository/return-value';
+import { isMatcher } from './matchers/matcher';
 import type { Property } from './proxy';
 
 export const printProperty = (property: Property) => {

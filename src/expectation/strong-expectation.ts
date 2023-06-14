@@ -1,7 +1,7 @@
+import type { Matcher } from '../matchers/matcher';
 import { printExpectation } from '../print';
 import type { Property } from '../proxy';
 import type { Expectation } from './expectation';
-import type { Matcher } from './matcher';
 import type { ReturnValue } from './repository/return-value';
 
 /**

@@ -1,4 +1,4 @@
-import type { Matcher } from '../expectation/matcher';
+import type { Matcher } from '../matchers/matcher';
 
 export type ConcreteMatcher = <T>(expected: T) => Matcher;
 
