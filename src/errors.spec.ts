@@ -1,17 +1,8 @@
 import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 import { SM } from '../tests/old';
-import {
-  NestedWhen,
-  UnexpectedAccess,
-  UnexpectedCalls,
-  UnfinishedExpectation,
-  UnmetExpectations,
-} from './errors';
+import { UnexpectedAccess, UnexpectedCalls, UnmetExpectations } from './errors';
 import type { Expectation } from './expectation/expectation';
-import {
-  spyExpectationFactory,
-  SpyPendingExpectation,
-} from './expectation/expectation.mocks';
+import { spyExpectationFactory } from './expectation/expectation.mocks';
 import type { CallMap } from './expectation/repository/expectation-repository';
 import type { ConcreteMatcher } from './mock/options';
 import { PendingExpectationWithFactory } from './when/pending-expectation';
@@ -47,22 +38,6 @@ describe('errors', () => {
       pendingExpectation.setProperty('bar');
 
       expectAnsilessEqual(pendingExpectation.toJSON(), `when(() => mock.bar)`);
-    });
-  });
-
-  describe('UnfinishedExpectation', () => {
-    it('should print the pending expectation', () => {
-      const pendingExpectation = new SpyPendingExpectation();
-      pendingExpectation.setArgs([1, 2, 3]);
-      pendingExpectation.setProperty('bar');
-      pendingExpectation.toJSON = () => 'foobar';
-
-      expectAnsilessContain(
-        new UnfinishedExpectation(pendingExpectation).message,
-        `There is an unfinished pending expectation:
-
-foobar`
-      );
     });
   });
 
@@ -151,18 +126,6 @@ foobar`
         `Remaining unmet expectations:
  - e1
  - e2`
-      );
-    });
-  });
-
-  describe('NestedWhen', () => {
-    it('should print the nested property', () => {
-      const error = new NestedWhen('foo', Symbol('bar'));
-
-      expectAnsilessContain(error.message, `when(() => parentMock.foo)`);
-      expectAnsilessContain(
-        error.message,
-        `when(() => childMock[Symbol(bar)])`
       );
     });
   });

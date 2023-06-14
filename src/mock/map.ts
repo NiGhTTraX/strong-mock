@@ -1,4 +1,4 @@
-import { NotAMock } from '../errors';
+import { NotAMock } from '../errors/api';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import type { PendingExpectation } from '../when/pending-expectation';
 import type { StrongMockDefaults } from './defaults';

@@ -1,4 +1,4 @@
-import { NestedWhen } from '../errors';
+import { NestedWhen } from '../errors/api';
 import { ApplyProp } from '../expectation/expectation';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import type { Property } from '../proxy';

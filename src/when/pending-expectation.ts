@@ -1,4 +1,4 @@
-import { MissingWhen, UnfinishedExpectation } from '../errors';
+import { MissingWhen, UnfinishedExpectation } from '../errors/api';
 import type { Expectation } from '../expectation/expectation';
 import type { ReturnValue } from '../expectation/repository/return-value';
 import type { ConcreteMatcher } from '../mock/options';

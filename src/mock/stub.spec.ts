@@ -2,7 +2,8 @@
 
 import type { Baz, Fn, Foo } from '../../tests/fixtures';
 import { SM } from '../../tests/old';
-import { NestedWhen } from '../errors';
+
+import { NestedWhen } from '../errors/api';
 import { ApplyProp } from '../expectation/expectation';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import type { PendingExpectation } from '../when/pending-expectation';

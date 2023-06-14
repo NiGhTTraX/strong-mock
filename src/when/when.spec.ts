@@ -1,5 +1,5 @@
 import { mock, when } from '..';
-import { MissingWhen, UnfinishedExpectation } from '../errors';
+import { MissingWhen, UnfinishedExpectation } from '../errors/api';
 import { clearActiveMock } from '../mock/map';
 
 describe('e2e', () => {
