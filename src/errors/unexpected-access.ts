@@ -1,7 +1,7 @@
 import { EXPECTED_COLOR } from 'jest-matcher-utils';
-import type { Expectation } from './expectation/expectation';
-import { printProperty, printRemainingExpectations } from './print';
-import type { Property } from './proxy';
+import type { Expectation } from '../expectation/expectation';
+import { printProperty, printRemainingExpectations } from '../print';
+import type { Property } from '../proxy';
 
 export class UnexpectedAccess extends Error {
   constructor(property: Property, expectations: Expectation[]) {

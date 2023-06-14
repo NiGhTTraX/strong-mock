@@ -1,4 +1,4 @@
-import { UnexpectedAccess } from '../errors';
+import { UnexpectedAccess } from '../errors/unexpected-access';
 import { It } from '../expectation/it';
 import { when } from '../when/when';
 import { mock } from './mock';
