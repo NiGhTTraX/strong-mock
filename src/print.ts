@@ -1,14 +1,11 @@
-import { diff as printDiff } from 'jest-diff';
 import {
   EXPECTED_COLOR,
   printExpected,
   printReceived,
-  RECEIVED_COLOR,
 } from 'jest-matcher-utils';
-import stripAnsi from 'strip-ansi';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
-import { getMatcherDiffs, isMatcher } from './expectation/matcher';
+import { isMatcher } from './expectation/matcher';
 import type { ReturnValue } from './expectation/repository/return-value';
 import type { Property } from './proxy';
 
@@ -87,74 +84,3 @@ export const printRemainingExpectations = (expectations: Expectation[]) =>
     ? `Remaining unmet expectations:
  - ${expectations.map((e) => e.toJSON()).join('\n - ')}`
     : 'There are no remaining unmet expectations.';
-
-export const printArgsDiff = (
-  expected: unknown[],
-  actual: unknown[]
-): string => {
-  const diff = printDiff(expected, actual, { omitAnnotationLines: true });
-
-  /* istanbul-ignore-next this is not expected in practice */
-  if (!diff) {
-    return '';
-  }
-
-  const ansilessDiffLines = stripAnsi(diff).split('\n');
-  let relevantDiffLines: string[];
-
-  // Strip Array [ ... ] surroundings.
-  if (!expected.length) {
-    // - Array []
-    // + Array [
-    //   ...
-    // ]
-    relevantDiffLines = ansilessDiffLines.slice(2, -1);
-  } else if (!actual.length) {
-    // - Array [
-    //   ...
-    // ]
-    // + Array []
-    relevantDiffLines = ansilessDiffLines.slice(1, -2);
-  } else {
-    // Array [
-    //   ...
-    // ]
-    relevantDiffLines = ansilessDiffLines.slice(1, -1);
-  }
-
-  // Strip the trailing comma.
-  const lastLine = relevantDiffLines[relevantDiffLines.length - 1].slice(0, -1);
-
-  return [...relevantDiffLines.slice(0, -1), lastLine].join('\n');
-};
-
-export const printExpectationDiff = (e: Expectation, args: unknown[]) => {
-  if (!e.args?.length) {
-    return '';
-  }
-
-  const { actual, expected } = getMatcherDiffs(e.args, args);
-
-  return printArgsDiff(expected, actual);
-};
-
-export const printDiffForAllExpectations = (
-  expectations: Expectation[],
-  actual: unknown[]
-) =>
-  expectations
-    .map((e) => {
-      const diff = printExpectationDiff(e, actual);
-
-      if (diff) {
-        return `${e.toJSON()}
-${EXPECTED_COLOR('- Expected')}
-${RECEIVED_COLOR('+ Received')}
-
-${diff}`;
-      }
-
-      return undefined;
-    })
-    .filter((x) => x)
-    .join('\n\n');

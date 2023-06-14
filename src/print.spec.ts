@@ -1,16 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import {
+  printDiffForAllExpectations,
+  printExpectationDiff,
+} from './errors/unexpected-call';
 import { ApplyProp } from './expectation/expectation';
 import { It } from './expectation/it';
 import { StrongExpectation } from './expectation/strong-expectation';
-import {
-  printArgsDiff,
-  printCall,
-  printDiffForAllExpectations,
-  printExpectationDiff,
-  printProperty,
-  printReturns,
-} from './print';
+import { printCall, printProperty, printReturns } from './print';
 
 describe('print', () => {
   describe('printProperty', () => {
@@ -154,87 +151,6 @@ describe('print', () => {
       });
 
       expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
-    });
-  });
-
-  describe('printArgsDiff', () => {
-    it('should print diff for mismatching primitive pair', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['foo'], ['bar']),
-        `-   "foo",
-+   "bar"`
-      );
-    });
-
-    it('should print diff for mismatching primitive pair at the end', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['foo', 'bar'], ['foo', 'baz']),
-        `    "foo",
--   "bar",
-+   "baz"`
-      );
-    });
-
-    it('should print diff for mismatching primitive pair at the beginning', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['foo', 'bar'], ['bar', 'bar']),
-        `-   "foo",
-+   "bar",
-    "bar"`
-      );
-    });
-
-    it('should print diff for mismatching consecutive primitive pairs', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['one', 'two'], ['three', 'four']),
-        `-   "one",
--   "two",
-+   "three",
-+   "four"`
-      );
-    });
-
-    it('should print diff for mismatching object pair', () => {
-      expectAnsilessEqual(
-        printArgsDiff([{ foo: 'bar' }], [{ foo: 'baz' }]),
-        `    Object {
--     "foo": "bar",
-+     "foo": "baz",
-    }`
-      );
-    });
-
-    it('should print diff for mismatching array pair', () => {
-      expectAnsilessEqual(
-        printArgsDiff([['foo']], [['bar']]),
-        `    Array [
--     "foo",
-+     "bar",
-    ]`
-      );
-    });
-
-    it('should print diff for missing args', () => {
-      expectAnsilessEqual(printArgsDiff(['foo'], []), `-   "foo"`);
-      expectAnsilessEqual(printArgsDiff([], ['foo']), `+   "foo"`);
-    });
-
-    it('should print diff for undefined args', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['foo'], [undefined]),
-        `-   "foo",
-+   undefined`
-      );
-    });
-
-    it('should print diff for mismatching types', () => {
-      expectAnsilessEqual(
-        printArgsDiff(['foo'], [{ foo: 'bar' }]),
-        `-   "foo",
-+   Object {
-+     "foo": "bar",
-+   }`
-      );
     });
   });
 

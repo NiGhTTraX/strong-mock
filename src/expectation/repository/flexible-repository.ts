@@ -1,4 +1,5 @@
-import { UnexpectedAccess, UnexpectedCall } from '../../errors';
+import { UnexpectedAccess } from '../../errors';
+import { UnexpectedCall } from '../../errors/unexpected-call';
 import { UnexpectedProperty } from '../../mock/options';
 import type { Property } from '../../proxy';
 import type { Expectation } from '../expectation';
