@@ -1,4 +1,4 @@
-import { UnexpectedCalls, UnmetExpectations } from '../errors';
+import { UnexpectedCalls, UnmetExpectations } from '../errors/verify';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { getAllMocks, getMockState } from '../mock/map';
 import type { Mock } from '../mock/mock';

@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { SM } from '../../tests/old';
-import { UnexpectedCalls, UnmetExpectations } from '../errors';
+import { UnexpectedCalls, UnmetExpectations } from '../errors/verify';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import { mock, verify, when } from '../index';
