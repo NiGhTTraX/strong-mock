@@ -53,7 +53,22 @@ export const printArgsDiff = (
   // Strip the trailing comma.
   const lastLine = relevantDiffLines[relevantDiffLines.length - 1].slice(0, -1);
 
-  return [...relevantDiffLines.slice(0, -1), lastLine].join('\n');
+  const coloredDiffLines = [...relevantDiffLines.slice(0, -1), lastLine].map(
+    (line) => {
+      const first = line.charAt(0);
+
+      switch (first) {
+        case '-':
+          return EXPECTED_COLOR(line);
+        case '+':
+          return RECEIVED_COLOR(line);
+        default:
+          return line;
+      }
+    }
+  );
+
+  return coloredDiffLines.join('\n');
 };
 
 export const printExpectationDiff = (e: Expectation, args: unknown[]) => {
