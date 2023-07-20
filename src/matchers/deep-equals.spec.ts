@@ -246,19 +246,7 @@ describe('deepEquals', () => {
     );
   });
 
-  it("should get diff when there's a match", () => {
-    expect(It.deepEquals(1).getDiff(1)).toEqual({
-      actual: 1,
-      expected: 1,
-    });
-
-    expect(It.deepEquals({ foo: 'bar' }).getDiff({ foo: 'bar' })).toEqual({
-      actual: { foo: 'bar' },
-      expected: { foo: 'bar' },
-    });
-  });
-
-  it("should get diff when there's a mismatch", () => {
+  it('should return diff', () => {
     expect(It.deepEquals(1).getDiff(2)).toEqual({
       actual: 2,
       expected: 1,

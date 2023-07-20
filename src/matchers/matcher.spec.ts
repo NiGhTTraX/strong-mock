@@ -26,12 +26,12 @@ describe('matches', () => {
     expect(matcher.getDiff(42)).toEqual({ actual: 'a', expected: 'e' });
   });
 
-  it('should call getDiff if the matcher succeeds', () => {
+  it('should not call getDiff if the matcher succeeds', () => {
     const matcher = It.matches(() => true, {
       getDiff: () => ({ actual: 'a', expected: 'e' }),
     });
 
-    expect(matcher.getDiff(42)).toEqual({ actual: 'a', expected: 'e' });
+    expect(matcher.getDiff(42)).toEqual({ actual: 42, expected: 42 });
   });
 
   it('should use toJSON as the default getDiff', () => {

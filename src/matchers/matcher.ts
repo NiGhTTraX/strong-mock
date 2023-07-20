@@ -1,15 +1,18 @@
 export const MATCHER_SYMBOL = Symbol('matcher');
 
+type GetDiff = (actual: any) => { actual: any; expected: any };
+
 /**
- * You should use {@link It.matches} to create this type.
+ * You MUST use {@link It.matches} to create this branded type.
  */
 export type Matcher = {
+  [MATCHER_SYMBOL]: boolean;
+
   /**
-   * Will be called with a value to match against.
+   * Will be called with the received value and should return whether it matches
+   * the expectation.
    */
   matches: (actual: any) => boolean;
-
-  [MATCHER_SYMBOL]: boolean;
 
   /**
    * Will be called when printing the diff between an expectation and the
@@ -21,24 +24,40 @@ export type Matcher = {
    * @param actual The actual value received by this matcher, same as the one
    *   in `matches`.
    *
-   * @returns an {actual, expected} pair that will be diffed visually in the
+   * @returns {actual, expected} pair that will be diffed visually in the
    *   error message.
    *
    * @example
    * const neverMatcher = It.matches(() => false, {
-   *   getDiff: () => ({ actual: 'something, expected: 'never' })
+   *   getDiff: (actual) => ({ actual, expected: 'never' })
    * });
-   * // Will end up printing:
-   * - Expected
-   * + Received
    *
-   *   - 'something'
-   *   + 'never
+   * when(() => fn(neverMatcher)).thenReturn(42);
+   *
+   * fn(42);
+   *
+   * // Will end up printing:
+   * // - Expected
+   * // + Received
+   * //
+   * //   - 42
+   * //   + 'never'
    */
-  getDiff: (actual: any) => { actual: any; expected: any };
+  getDiff: GetDiff;
 
   /**
-   * Used by `pretty-format`.
+   * Will be called when printing arguments for an unexpected or unmet expectation.
+   *
+   * @example
+   * const neverMatcher = It.matches(() => false, {
+   *   toJSON: () => 'never'
+   * });
+   * when(() => fn(neverMatcher)).thenReturn(42);
+   *
+   * fn(42);
+   *
+   * // Will end up printing:
+   * // when(() => fn('never'))
    */
   toJSON: () => string;
 };
@@ -50,7 +69,7 @@ export type Matcher = {
 export type TypeMatcher<T> = T & Matcher;
 
 /**
- * Used to test if an expectation on an argument is a custom matcher.
+ * Used to test if an expectation is an argument is a custom matcher.
  */
 export function isMatcher(f: unknown): f is Matcher {
   return !!(f && (<Matcher>f)[MATCHER_SYMBOL]);
@@ -68,17 +87,19 @@ export const getMatcherDiffs = (
 };
 
 /**
- * Match a custom predicate.
+ * Create a custom matcher.
  *
- * @param cb Will receive the value and returns whether it matches.
+ * @param cb Will receive the actual value and returns whether it matches the expectation.
  * @param toJSON An optional function that should return a string that will be
  *   used when the matcher needs to be printed in an error message. By default,
  *   it stringifies `cb`.
  * @param getDiff An optional function that will be called when printing the
- *   diff between a matcher from an expectation and the received arguments. You
- *   can format both the received and the expected values according to your
- *   matcher's logic. By default, the `toJSON` method will be used to format
- *   the expected value, while the received value will be returned as-is.
+ *   diff for a failed expectation. It will only be called if there's a mismatch
+ *   between the expected and received values i.e. `cb(actual)` fails.
+ *   You can format both the received and the expected values according to your
+ *   matcher's logic.
+ *   By default, the `toJSON` method will be used to format the expected value,
+ *   while the received value will be returned as-is.
  *
  * @example
  * const fn = mock<(x: number) => number>();
@@ -101,7 +122,16 @@ export const matches = <T>(
     [MATCHER_SYMBOL]: true,
     matches: (actual: T) => cb(actual),
     toJSON,
-    getDiff,
+    getDiff: (actual) => {
+      if (cb(actual)) {
+        return {
+          actual,
+          expected: actual,
+        };
+      }
+
+      return getDiff(actual);
+    },
   };
 
   return matcher as any;

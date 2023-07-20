@@ -50,35 +50,23 @@ export const isString = ({
         return 'string';
       },
       getDiff: (actual) => {
-        if (typeof actual !== 'string') {
+        if (containing) {
           return {
-            expected: 'string',
-            actual: `${actual} (${typeof actual})`,
+            expected: `string containing '${containing}'`,
+            actual,
           };
         }
 
-        if (containing) {
-          if (actual.indexOf(containing) === -1) {
-            return {
-              expected: `string containing '${containing}'`,
-              actual,
-            };
-          }
-        }
-
         if (matching) {
-          if (!matching.test(actual)) {
-            return {
-              expected: `string matching ${matching}`,
-              actual,
-            };
-          }
+          return {
+            expected: `string matching ${matching}`,
+            actual,
+          };
         }
 
-        // Return the actual value twice to get a 0-diff.
         return {
-          expected: actual,
-          actual,
+          expected: 'string',
+          actual: `${actual} (${typeof actual})`,
         };
       },
     }

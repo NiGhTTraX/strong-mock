@@ -113,24 +113,7 @@ describe('isObject', () => {
     );
   });
 
-  it("should return diff when there's a match", () => {
-    expect(It.isObject().getDiff({})).toEqual({
-      expected: 'object',
-      actual: 'object',
-    });
-
-    expect(It.isObject().getDiff({ foo: 'bar' })).toEqual({
-      actual: 'object',
-      expected: 'object',
-    });
-
-    expect(It.isObject({ foo: 'bar' }).getDiff({ foo: 'bar' })).toEqual({
-      expected: { foo: 'bar' },
-      actual: { foo: 'bar' },
-    });
-  });
-
-  it("should return diff when there's a mismatch", () => {
+  it('should return diff', () => {
     expect(It.isObject().getDiff('not object')).toEqual({
       expected: 'object',
       actual: 'not object',
@@ -170,11 +153,6 @@ describe('isObject', () => {
     expect(It.isObject({ foo: matcher }).getDiff({})).toEqual({
       actual: { foo: 'a' },
       expected: { foo: 'e' },
-    });
-
-    expect(It.isObject({}).getDiff({ foo: 'bar' })).toEqual({
-      actual: {},
-      expected: {},
     });
   });
 

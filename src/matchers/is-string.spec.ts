@@ -41,32 +41,15 @@ describe('isString', () => {
     );
   });
 
-  it("should print diff when there's a match", () => {
-    expect(It.isString().getDiff('foo')).toEqual({
-      actual: 'foo',
-      expected: 'foo',
-    });
-
-    expect(It.isString({ containing: 'foo' }).getDiff('foobar')).toEqual({
-      actual: 'foobar',
-      expected: 'foobar',
-    });
-
-    expect(It.isString({ matching: /foo/ }).getDiff('foobar')).toEqual({
-      actual: 'foobar',
-      expected: 'foobar',
-    });
-  });
-
-  it("should print diff when there's a mismatch", () => {
+  it('should return diff', () => {
     expect(It.isString().getDiff(42)).toEqual({
       actual: '42 (number)',
       expected: 'string',
     });
 
     expect(It.isString({ containing: 'foo' }).getDiff(42)).toEqual({
-      actual: '42 (number)',
-      expected: 'string',
+      actual: 42,
+      expected: "string containing 'foo'",
     });
 
     expect(It.isString({ containing: 'foo' }).getDiff('bar')).toEqual({
