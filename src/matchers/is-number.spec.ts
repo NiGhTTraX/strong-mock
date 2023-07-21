@@ -48,4 +48,16 @@ describe('isNumber', () => {
   it('should pretty print', () => {
     expect(isNumber().toJSON()).toEqual('number');
   });
+
+  it('should return diff', () => {
+    expect(isNumber().getDiff('NaN')).toEqual({
+      expected: 'number',
+      actual: '"NaN" (string)',
+    });
+
+    expect(isNumber().getDiff({ foo: 'bar' })).toEqual({
+      expected: 'number',
+      actual: '{"foo": "bar"} (object)',
+    });
+  });
 });
