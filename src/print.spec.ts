@@ -6,8 +6,9 @@ import {
 } from './errors/unexpected-call';
 import { ApplyProp } from './expectation/expectation';
 import { StrongExpectation } from './expectation/strong-expectation';
+import { isAny } from './matchers/is-any';
+import { matches } from './matchers/matcher';
 
-import { It } from './matchers/it';
 import { printCall, printProperty, printReturns } from './print';
 
 describe('print', () => {
@@ -50,7 +51,7 @@ describe('print', () => {
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
-        printCall('bar', [It.isAny(), It.matches(() => true)]),
+        printCall('bar', [isAny(), matches(() => true)]),
         `.bar(anything, matches(() => true))`
       );
     });
@@ -114,7 +115,7 @@ describe('print', () => {
 
   describe('printExpectationDiff', () => {
     it('should print the diff when we have single expectation', () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
@@ -131,7 +132,7 @@ describe('print', () => {
       );
     });
     it('should print the diff for an expectation with no received args', () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
@@ -157,7 +158,7 @@ describe('print', () => {
 
   describe('printDiffForAllExpectations', () => {
     it('should print the diff when we have multiple expectations', () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 

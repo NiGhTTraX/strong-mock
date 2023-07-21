@@ -3,8 +3,8 @@ import {
   expectAnsilessEqual,
 } from '../../tests/ansiless';
 import { StrongExpectation } from '../expectation/strong-expectation';
+import { matches } from '../matchers/matcher';
 
-import { It } from '../matchers/it';
 import { printArgsDiff, UnexpectedCall } from './unexpected-call';
 
 describe('UnexpectedCall', () => {
@@ -19,7 +19,7 @@ describe('UnexpectedCall', () => {
     });
 
     it('should print the diff', () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
@@ -33,7 +33,7 @@ describe('UnexpectedCall', () => {
     });
 
     it('should print the diff only for expectations for the same property', () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
@@ -51,7 +51,7 @@ describe('UnexpectedCall', () => {
     });
 
     it("should contain actual and expected values when there's a single expectation remaining", () => {
-      const matcher = It.matches(() => false, {
+      const matcher = matches(() => false, {
         getDiff: () => ({ actual: 'actual', expected: 'expected' }),
       });
 

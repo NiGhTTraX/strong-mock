@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { mock, when } from '../src';
-import { It } from '../src/matchers/it';
+import { It, mock, when } from '../src';
 
 it('type safety', () => {
   function mockSafety() {

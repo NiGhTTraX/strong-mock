@@ -1,25 +1,17 @@
-import { deepEquals } from './deep-equals';
-import { is } from './is';
-import { isAny } from './is-any';
-import { isArray } from './is-array';
-import { isNumber } from './is-number';
-import { isObject } from './is-object';
-import { isString } from './is-string';
-import { matches } from './matcher';
-import { willCapture } from './will-capture';
+export { deepEquals } from './deep-equals';
 
-/**
- * Contains argument matchers that can be used to ignore arguments in an
- * expectation or to match complex arguments.
- */
-export const It = {
-  matches,
-  deepEquals,
-  is,
-  isAny,
-  isObject,
-  isNumber,
-  isString,
-  isArray,
-  willCapture,
-};
+export { is } from './is';
+
+export { isAny } from './is-any';
+
+export { isArray } from './is-array';
+
+export { isNumber } from './is-number';
+
+export { isObject } from './is-object';
+
+export { isString } from './is-string';
+
+export { matches } from './matcher';
+
+export { willCapture } from './will-capture';

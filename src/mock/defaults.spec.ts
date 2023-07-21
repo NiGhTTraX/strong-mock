@@ -1,7 +1,7 @@
 import { UnexpectedAccess } from '../errors/unexpected-access';
 import { UnexpectedCall } from '../errors/unexpected-call';
 import { when } from '../index';
-import { It } from '../matchers/it';
+import { matches } from '../matchers/matcher';
 import { setDefaults } from './defaults';
 import { mock } from './mock';
 import { UnexpectedProperty } from './options';
@@ -13,7 +13,7 @@ describe('defaults', () => {
 
   it('should override the matcher for non matcher values', () => {
     setDefaults({
-      concreteMatcher: () => It.matches(() => true),
+      concreteMatcher: () => matches(() => true),
     });
 
     const fn = mock<(x: number) => boolean>();
@@ -25,23 +25,23 @@ describe('defaults', () => {
 
   it('should not override the matcher for matcher values', () => {
     setDefaults({
-      concreteMatcher: () => It.matches(() => true),
+      concreteMatcher: () => matches(() => true),
     });
 
     const fn = mock<(x: number) => boolean>();
 
-    when(() => fn(It.matches((x) => x === 1))).thenReturn(true);
+    when(() => fn(matches((x) => x === 1))).thenReturn(true);
 
     expect(() => fn(-1)).toThrow();
   });
 
   it('should not override the matcher if set on the mock', () => {
     setDefaults({
-      concreteMatcher: () => It.matches(() => false),
+      concreteMatcher: () => matches(() => false),
     });
 
     const fn = mock<(x: number) => boolean>({
-      concreteMatcher: () => It.matches(() => true),
+      concreteMatcher: () => matches(() => true),
     });
 
     when(() => fn(42)).thenReturn(true);
@@ -73,7 +73,7 @@ describe('defaults', () => {
 
   it('should not stack', () => {
     setDefaults({
-      concreteMatcher: () => It.matches(() => true),
+      concreteMatcher: () => matches(() => true),
     });
 
     setDefaults({});

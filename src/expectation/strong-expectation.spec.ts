@@ -1,6 +1,6 @@
 import { expectAnsilessEqual } from '../../tests/ansiless';
+import { deepEquals } from '../matchers/deep-equals';
 
-import { It } from '../matchers/it';
 import { StrongExpectation } from './strong-expectation';
 
 describe('StrongExpectation', () => {
@@ -23,7 +23,7 @@ describe('StrongExpectation', () => {
     it('should match missing args against undefined', () => {
       const expectation = new StrongExpectation(
         'bar',
-        [It.deepEquals(undefined)],
+        [deepEquals(undefined)],
         {
           value: 23,
         }
@@ -39,7 +39,7 @@ describe('StrongExpectation', () => {
     });
 
     it('should not match less args', () => {
-      const expectation = new StrongExpectation('bar', [It.deepEquals(23)], {
+      const expectation = new StrongExpectation('bar', [deepEquals(23)], {
         value: 23,
       });
 
@@ -49,7 +49,7 @@ describe('StrongExpectation', () => {
     it('should not match expected undefined verses received defined arg', () => {
       const expectation = new StrongExpectation(
         'bar',
-        [It.deepEquals(undefined)],
+        [deepEquals(undefined)],
         {
           value: 23,
         }
@@ -69,7 +69,7 @@ describe('StrongExpectation', () => {
     it('should not match less args', () => {
       const expectation = new StrongExpectation(
         'bar',
-        [It.deepEquals(23)],
+        [deepEquals(23)],
         {
           value: 23,
         },
@@ -83,7 +83,7 @@ describe('StrongExpectation', () => {
   it('should print when, returns and invocation count', () => {
     const expectation = new StrongExpectation(
       'baz',
-      [It.deepEquals(4), It.deepEquals(5), It.deepEquals(6)],
+      [deepEquals(4), deepEquals(5), deepEquals(6)],
       {
         value: 42,
       }

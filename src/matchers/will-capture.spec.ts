@@ -1,8 +1,8 @@
-import { It } from './it';
+import { willCapture } from './will-capture';
 
 describe('willCapture', () => {
   it('should match anything', () => {
-    const matcher = It.willCapture();
+    const matcher = willCapture();
 
     expect(matcher.matches(23)).toBeTruthy();
     expect(matcher.matches(0)).toBeTruthy();
@@ -12,7 +12,7 @@ describe('willCapture', () => {
   });
 
   it('should store the incoming argument', () => {
-    const matcher = It.willCapture<number>();
+    const matcher = willCapture<number>();
 
     expect(matcher.value).toBeUndefined();
 
@@ -22,8 +22,8 @@ describe('willCapture', () => {
   });
 
   it('should store the incoming argument per matcher', () => {
-    const matcher1 = It.willCapture<number>();
-    const matcher2 = It.willCapture<number>();
+    const matcher1 = willCapture<number>();
+    const matcher2 = willCapture<number>();
 
     matcher1.matches(1);
     matcher2.matches(2);
@@ -33,17 +33,17 @@ describe('willCapture', () => {
   });
 
   it('should pretty print', () => {
-    expect(It.willCapture().toJSON()).toEqual('captures');
-    expect(It.willCapture('custom').toJSON()).toEqual('custom');
+    expect(willCapture().toJSON()).toEqual('captures');
+    expect(willCapture('custom').toJSON()).toEqual('custom');
   });
 
   it('should print diff', () => {
-    expect(It.willCapture().getDiff('foo')).toEqual({
+    expect(willCapture().getDiff('foo')).toEqual({
       actual: 'foo',
       expected: 'foo',
     });
 
-    expect(It.willCapture('captor').getDiff('foo')).toEqual({
+    expect(willCapture('captor').getDiff('foo')).toEqual({
       actual: 'foo',
       expected: 'foo',
     });

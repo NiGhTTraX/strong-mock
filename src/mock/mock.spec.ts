@@ -1,6 +1,6 @@
 import { UnexpectedAccess } from '../errors/unexpected-access';
+import { matches } from '../matchers/matcher';
 
-import { It } from '../matchers/it';
 import { when } from '../when/when';
 import { mock } from './mock';
 import { UnexpectedProperty } from './options';
@@ -8,7 +8,7 @@ import { UnexpectedProperty } from './options';
 describe('mock', () => {
   it('should override concrete matcher', () => {
     const fn = mock<(value: string) => boolean>({
-      concreteMatcher: () => It.matches(() => true),
+      concreteMatcher: () => matches(() => true),
     });
 
     when(() => fn('value')).thenReturn(true);
