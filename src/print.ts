@@ -21,7 +21,7 @@ export const printProperty = (property: Property) => {
   return `.${property}`;
 };
 
-const printArg = (arg: unknown, received = false): string => {
+export const printArg = (arg: unknown, received = false): string => {
   // Call toJSON on matchers directly to avoid wrapping strings returned by them in quotes.
   if (isMatcher(arg)) {
     return arg.toJSON();

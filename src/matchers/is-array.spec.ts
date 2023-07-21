@@ -69,6 +69,16 @@ describe('isArray', () => {
       actual: '42 (number)',
     });
 
+    expect(isArray().getDiff({ foo: 'bar' })).toEqual({
+      expected: 'array',
+      actual: '{"foo": "bar"} (object)',
+    });
+
+    expect(isArray([1, 2]).getDiff(42)).toEqual({
+      expected: 'array containing [1, 2]',
+      actual: 42,
+    });
+
     expect(isArray([1, 2]).getDiff([2])).toEqual({
       expected: 'array containing [1, 2]',
       actual: [2],
