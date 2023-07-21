@@ -11,4 +11,7 @@ import { matches } from './matcher';
  * fn(23, 'foobar') === 1
  */
 export const isAny = (): TypeMatcher<any> =>
-  matches(() => true, { toJSON: () => 'anything' });
+  matches(() => true, {
+    toJSON: () => 'anything',
+    getDiff: (actual) => ({ actual, expected: actual }),
+  });

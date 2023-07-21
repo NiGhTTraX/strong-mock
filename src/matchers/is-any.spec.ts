@@ -32,4 +32,8 @@ describe('isAny', () => {
   it('should pretty print', () => {
     expect(isAny().toJSON()).toEqual('anything');
   });
+
+  it('should return diff', () => {
+    expect(isAny().getDiff(42)).toEqual({ actual: 42, expected: 42 });
+  });
 });
