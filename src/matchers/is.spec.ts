@@ -40,4 +40,16 @@ describe('is', () => {
       '{"foo": {"bar": [1, 2, 3]}}'
     );
   });
+
+  it('should return diff', () => {
+    expect(is(42).getDiff(-1)).toEqual({
+      expected: 42,
+      actual: -1,
+    });
+
+    expect(is({ foo: 'bar' }).getDiff('baz')).toEqual({
+      expected: { foo: 'bar' },
+      actual: 'baz',
+    });
+  });
 });
