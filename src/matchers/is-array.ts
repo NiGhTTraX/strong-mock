@@ -1,6 +1,4 @@
-import { printExpected } from 'jest-matcher-utils';
-import stripAnsi from 'strip-ansi';
-import { printArg } from '../print';
+import { printValue } from '../print';
 import { deepEquals } from './deep-equals';
 import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
@@ -48,8 +46,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
       );
     },
     {
-      toJSON: () =>
-        containing ? `array(${printExpected(containing)})` : 'array',
+      toJSON: () => (containing ? `array(${printValue(containing)})` : 'array'),
       getDiff: (actual) => {
         if (containing) {
           return {
@@ -67,7 +64,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
         }
 
         return {
-          actual: `${stripAnsi(printArg(actual, true))} (${typeof actual})`,
+          actual: `${printValue(actual)} (${typeof actual})`,
           expected: 'Matcher<array>',
         };
       },

@@ -111,7 +111,7 @@ export class UnexpectedCall extends Error implements MatcherError {
     expectations: Expectation[]
   ) {
     const header = `Didn't expect mock${RECEIVED_COLOR(
-      printCall(property, args, true)
+      printCall(property, args)
     )} to be called.`;
 
     const propertyExpectations = expectations.filter(
@@ -142,9 +142,11 @@ ${printDiffForAllExpectations(propertyExpectations, args)}`)
         };
       }
     } else {
-      super(`${header}
+      super(
+        DIM_COLOR(`${header}
       
-No remaining expectations.`);
+No remaining expectations.`)
+      );
     }
   }
 }

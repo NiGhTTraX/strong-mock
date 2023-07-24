@@ -1,8 +1,4 @@
-import {
-  EXPECTED_COLOR,
-  printExpected,
-  printReceived,
-} from 'jest-matcher-utils';
+import { EXPECTED_COLOR, stringify } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
 import type { ReturnValue } from './expectation/repository/return-value';
@@ -21,21 +17,17 @@ export const printProperty = (property: Property) => {
   return `.${property}`;
 };
 
-export const printArg = (arg: unknown, received = false): string => {
+export const printValue = (arg: unknown): string => {
   // Call toJSON on matchers directly to avoid wrapping strings returned by them in quotes.
   if (isMatcher(arg)) {
     return arg.toJSON();
   }
 
-  return received ? printReceived(arg) : printExpected(arg);
+  return stringify(arg);
 };
 
-export const printCall = (
-  property: Property,
-  args: any[],
-  received = false // TODO: fix boolean trap
-) => {
-  const prettyArgs = args.map((arg) => printArg(arg, received)).join(', ');
+export const printCall = (property: Property, args: any[]) => {
+  const prettyArgs = args.map((arg) => printValue(arg)).join(', ');
   const prettyProperty = printProperty(property);
 
   return `${prettyProperty}(${prettyArgs})`;
@@ -60,7 +52,7 @@ export const printReturns = (
     thenPrefix += 'thenReturn';
   }
 
-  return `.${thenPrefix}(${printReceived(value)}).between(${min}, ${max})`;
+  return `.${thenPrefix}(${printValue(value)}).between(${min}, ${max})`;
 };
 
 export const printWhen = (property: Property, args: any[] | undefined) => {

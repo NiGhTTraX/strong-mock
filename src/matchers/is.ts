@@ -1,4 +1,4 @@
-import { printExpected } from 'jest-matcher-utils';
+import { printValue } from '../print';
 import type { TypeMatcher } from './matcher';
 import { matches } from './matcher';
 
@@ -11,6 +11,6 @@ import { matches } from './matcher';
  */
 export const is = <T = unknown>(expected: T): TypeMatcher<T> =>
   matches((actual) => Object.is(actual, expected), {
-    toJSON: () => `${printExpected(expected)}`,
+    toJSON: () => `${printValue(expected)}`,
     getDiff: (actual) => ({ actual, expected }),
   });

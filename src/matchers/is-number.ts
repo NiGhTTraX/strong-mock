@@ -1,5 +1,4 @@
-import stripAnsi from 'strip-ansi';
-import { printArg } from '../print';
+import { printValue } from '../print';
 import type { TypeMatcher } from './matcher';
 import { matches } from './matcher';
 
@@ -17,7 +16,7 @@ export const isNumber = (): TypeMatcher<number> =>
   matches((actual) => typeof actual === 'number' && !Number.isNaN(actual), {
     toJSON: () => 'Matcher<number>',
     getDiff: (actual) => ({
-      actual: `${stripAnsi(printArg(actual, true))} (${typeof actual})`,
+      actual: `${printValue(actual)} (${typeof actual})`,
       expected: 'Matcher<number>',
     }),
   });

@@ -1,5 +1,5 @@
-import { printExpected } from 'jest-matcher-utils';
 import { isEqual, isObjectLike, isUndefined, omitBy } from 'lodash';
+import { printValue } from '../print';
 import type { TypeMatcher } from './matcher';
 import { matches } from './matcher';
 
@@ -44,7 +44,7 @@ export const deepEquals = <T>(
       return isEqual(removeUndefined(actual), removeUndefined(expected));
     },
     {
-      toJSON: () => printExpected(expected),
+      toJSON: () => printValue(expected),
       getDiff: (actual) => ({
         actual,
         expected,

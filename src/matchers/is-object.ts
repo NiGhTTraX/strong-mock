@@ -1,7 +1,5 @@
-import { printExpected } from 'jest-matcher-utils';
 import { isEqual, isPlainObject } from 'lodash';
-import stripAnsi from 'strip-ansi';
-import { printArg } from '../print';
+import { printValue } from '../print';
 import type { Property } from '../proxy';
 import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
@@ -101,12 +99,12 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
     },
     {
       toJSON: () =>
-        partial ? `Matcher<object>(${printExpected(partial)})` : 'object',
+        partial ? `Matcher<object>(${printValue(partial)})` : 'object',
       getDiff: (actual) => {
         if (!partial) {
           return {
             expected: 'Matcher<object>',
-            actual: `${stripAnsi(printArg(actual))} (${
+            actual: `${printValue(actual)} (${
               isPlainObject(actual) ? 'object' : 'not object'
             })`,
           };
