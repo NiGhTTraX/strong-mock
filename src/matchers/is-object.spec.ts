@@ -45,6 +45,12 @@ describe('isObject', () => {
         foo: { bar: { baz: 42, bazzz: 23 } },
       })
     ).toBeFalsy();
+
+    expect(isObject({ foo: 'bar' }).matches('not object')).toBeFalsy();
+
+    expect(
+      isObject({ foo: { bar: { baz: 42 } } }).matches({ foo: { bar: 42 } })
+    ).toBeFalsy();
   });
 
   it('should not deep match object like values', () => {
@@ -115,9 +121,23 @@ describe('isObject', () => {
       actual: '"not object" (not object)',
     });
 
+    expect(isObject({ foo: 'bar' }).getDiff('not object')).toEqual({
+      expected: { foo: 'bar' },
+      actual: 'not object',
+    });
+
     expect(isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
       actual: { foo: 'baz' },
       expected: { foo: 'bar' },
+    });
+
+    expect(
+      isObject({
+        foo: { bar: matches(() => false, { toJSON: () => 'matcher' }) },
+      }).getDiff({ foo: {} })
+    ).toEqual({
+      actual: { foo: {} },
+      expected: { foo: { bar: 'matcher' } },
     });
   });
 

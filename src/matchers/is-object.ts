@@ -5,16 +5,28 @@ import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
 
 type ObjectType = Record<Property, unknown>;
+
 type DeepPartial<T> = T extends ObjectType
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T;
+
 const looksLikeObject = (value: unknown): value is ObjectType =>
   isPlainObject(value);
+
 const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
   Object.fromEntries(
     Reflect.ownKeys(expected).map((key) => {
       const right = expected[key];
-      const left = looksLikeObject(actual) ? actual[key] : actual;
+
+      if (!looksLikeObject(actual)) {
+        if (isMatcher(right)) {
+          return [key, right.toJSON()];
+        }
+
+        return [key, right];
+      }
+
+      const left = actual[key];
 
       if (isMatcher(right)) {
         return [key, right.getDiff(left).expected];
@@ -27,11 +39,19 @@ const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
       return [key, right];
     })
   );
-const getActualObjectDiff = (actual: unknown, expected: ObjectType): object =>
-  Object.fromEntries(
+
+const getActualObjectDiff = (
+  actual: unknown,
+  expected: ObjectType
+): unknown => {
+  if (!looksLikeObject(actual)) {
+    return actual;
+  }
+
+  return Object.fromEntries(
     Reflect.ownKeys(expected).map((key) => {
       const right = expected[key];
-      const left = looksLikeObject(actual) ? actual[key] : actual;
+      const left = actual[key];
 
       if (isMatcher(right)) {
         return [key, right.getDiff(left).actual];
@@ -44,10 +64,12 @@ const getActualObjectDiff = (actual: unknown, expected: ObjectType): object =>
       return [key, left];
     })
   );
+};
+
 const isMatch = (actual: unknown, expected: ObjectType): boolean =>
   Reflect.ownKeys(expected).every((key) => {
     const right = expected[key];
-    const left = looksLikeObject(actual) ? actual[key] : actual;
+    const left = looksLikeObject(actual) ? actual[key] : undefined;
 
     if (!left) {
       return false;
