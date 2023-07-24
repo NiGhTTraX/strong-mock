@@ -111,7 +111,7 @@ export const getMatcherDiffs = (
 export const matches = <T>(
   cb: (actual: T) => boolean,
   {
-    toJSON = () => `matches(${cb.toString()})`,
+    toJSON = () => `Matcher(${cb.toString()})`,
     getDiff = (actual) => ({
       actual,
       expected: toJSON(),

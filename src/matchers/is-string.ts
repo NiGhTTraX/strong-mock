@@ -40,32 +40,32 @@ export const isString = ({
     {
       toJSON: () => {
         if (containing) {
-          return `string('${containing}')`;
+          return `Matcher<string>('${containing}')`;
         }
 
         if (matching) {
-          return `string(${matching})`;
+          return `Matcher<string>(${matching})`;
         }
 
-        return 'string';
+        return 'Matcher<string>';
       },
       getDiff: (actual) => {
         if (containing) {
           return {
-            expected: `string containing '${containing}'`,
+            expected: `Matcher<string>('${containing}')`,
             actual,
           };
         }
 
         if (matching) {
           return {
-            expected: `string matching ${matching}`,
+            expected: `Matcher<string>(${matching})`,
             actual,
           };
         }
 
         return {
-          expected: 'string',
+          expected: 'Matcher<string>',
           actual: `${actual} (${typeof actual})`,
         };
       },

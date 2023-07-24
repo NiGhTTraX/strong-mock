@@ -29,36 +29,36 @@ describe('isString', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(isString().toJSON(), 'string');
+    expectAnsilessEqual(isString().toJSON(), 'Matcher<string>');
     expectAnsilessEqual(
       isString({ containing: 'foo' }).toJSON(),
-      "string('foo')"
+      "Matcher<string>('foo')"
     );
     expectAnsilessEqual(
       isString({ matching: /bar/ }).toJSON(),
-      'string(/bar/)'
+      'Matcher<string>(/bar/)'
     );
   });
 
   it('should return diff', () => {
     expect(isString().getDiff(42)).toEqual({
       actual: '42 (number)',
-      expected: 'string',
+      expected: 'Matcher<string>',
     });
 
     expect(isString({ containing: 'foo' }).getDiff(42)).toEqual({
       actual: 42,
-      expected: "string containing 'foo'",
+      expected: "Matcher<string>('foo')",
     });
 
     expect(isString({ containing: 'foo' }).getDiff('bar')).toEqual({
       actual: 'bar',
-      expected: "string containing 'foo'",
+      expected: "Matcher<string>('foo')",
     });
 
     expect(isString({ matching: /foo/ }).getDiff('bar')).toEqual({
       actual: 'bar',
-      expected: 'string matching /foo/',
+      expected: 'Matcher<string>(/foo/)',
     });
   });
 });

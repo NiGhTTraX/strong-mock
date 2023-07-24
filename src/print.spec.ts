@@ -6,7 +6,6 @@ import {
 } from './errors/unexpected-call';
 import { ApplyProp } from './expectation/expectation';
 import { StrongExpectation } from './expectation/strong-expectation';
-import { isAny } from './matchers/is-any';
 import { matches } from './matchers/matcher';
 
 import { printCall, printProperty, printReturns } from './print';
@@ -51,8 +50,8 @@ describe('print', () => {
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
-        printCall('bar', [isAny(), matches(() => true)]),
-        `.bar(anything, matches(() => true))`
+        printCall('bar', [matches(() => true, { toJSON: () => 'matcher' })]),
+        `.bar(matcher)`
       );
     });
 
@@ -160,6 +159,7 @@ describe('print', () => {
     it('should print the diff when we have multiple expectations', () => {
       const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
+        toJSON: () => 'matcher',
       });
 
       const expectation = new StrongExpectation('prop', [matcher], {
@@ -170,14 +170,14 @@ describe('print', () => {
 
       expectAnsilessEqual(
         printDiffForAllExpectations([expectation, expectation], args),
-        `when(() => mock.prop(matches(() => false))).thenReturn("return").between(1, 1)
+        `when(() => mock.prop(matcher)).thenReturn("return").between(1, 1)
 - Expected
 + Received
 
 -   "foo",
 +   "bar"
 
-when(() => mock.prop(matches(() => false))).thenReturn("return").between(1, 1)
+when(() => mock.prop(matcher)).thenReturn("return").between(1, 1)
 - Expected
 + Received
 

@@ -46,17 +46,17 @@ describe('isNumber', () => {
   });
 
   it('should pretty print', () => {
-    expect(isNumber().toJSON()).toEqual('number');
+    expect(isNumber().toJSON()).toEqual('Matcher<number>');
   });
 
   it('should return diff', () => {
     expect(isNumber().getDiff('NaN')).toEqual({
-      expected: 'number',
+      expected: 'Matcher<number>',
       actual: '"NaN" (string)',
     });
 
     expect(isNumber().getDiff({ foo: 'bar' })).toEqual({
-      expected: 'number',
+      expected: 'Matcher<number>',
       actual: '{"foo": "bar"} (object)',
     });
   });

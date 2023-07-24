@@ -33,7 +33,7 @@ describe('willCapture', () => {
   });
 
   it('should pretty print', () => {
-    expect(willCapture().toJSON()).toEqual('captures');
+    expect(willCapture().toJSON()).toEqual('Matcher(captures)');
     expect(willCapture('custom').toJSON()).toEqual('custom');
   });
 

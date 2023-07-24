@@ -54,7 +54,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
         if (containing) {
           return {
             actual,
-            expected: `array containing [${containing
+            expected: `Matcher<array>([${containing
               .map((value) => {
                 if (isMatcher(value)) {
                   return value.toJSON();
@@ -62,13 +62,13 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
 
                 return value;
               })
-              .join(', ')}]`,
+              .join(', ')}])`,
           };
         }
 
         return {
           actual: `${stripAnsi(printArg(actual, true))} (${typeof actual})`,
-          expected: 'array',
+          expected: 'Matcher<array>',
         };
       },
     }

@@ -9,7 +9,7 @@ describe('matches', () => {
   });
 
   it('should pretty print', () => {
-    expect(matches(() => true).toJSON()).toEqual('matches(() => true)');
+    expect(matches(() => true).toJSON()).toEqual('Matcher(() => true)');
   });
 
   it('should pretty print with custom message', () => {

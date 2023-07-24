@@ -65,22 +65,22 @@ describe('isArray', () => {
 
   it('should print diff', () => {
     expect(isArray().getDiff(42)).toEqual({
-      expected: 'array',
+      expected: 'Matcher<array>',
       actual: '42 (number)',
     });
 
     expect(isArray().getDiff({ foo: 'bar' })).toEqual({
-      expected: 'array',
+      expected: 'Matcher<array>',
       actual: '{"foo": "bar"} (object)',
     });
 
     expect(isArray([1, 2]).getDiff(42)).toEqual({
-      expected: 'array containing [1, 2]',
+      expected: 'Matcher<array>([1, 2])',
       actual: 42,
     });
 
     expect(isArray([1, 2]).getDiff([2])).toEqual({
-      expected: 'array containing [1, 2]',
+      expected: 'Matcher<array>([1, 2])',
       actual: [2],
     });
   });
@@ -94,7 +94,7 @@ describe('isArray', () => {
     });
 
     expect(isArray([matcher, matcher]).getDiff([2])).toEqual({
-      expected: 'array containing [something, something]',
+      expected: 'Matcher<array>([something, something])',
       actual: [2],
     });
   });
