@@ -105,14 +105,14 @@ describe('isObject', () => {
   it('should pretty print the partial object', () => {
     expectAnsilessEqual(
       isObject({ foo: 'bar' }).toJSON(),
-      `object({"foo": "bar"})`
+      `Matcher<object>({"foo": "bar"})`
     );
   });
 
   it('should return diff', () => {
     expect(isObject().getDiff('not object')).toEqual({
-      expected: 'object',
-      actual: 'not object',
+      expected: 'Matcher<object>',
+      actual: '"not object" (not object)',
     });
 
     expect(isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({

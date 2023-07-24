@@ -1,5 +1,7 @@
 import { printExpected } from 'jest-matcher-utils';
 import { isEqual, isPlainObject } from 'lodash';
+import stripAnsi from 'strip-ansi';
+import { printArg } from '../print';
 import type { Property } from '../proxy';
 import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
@@ -65,15 +67,15 @@ const isMatch = (actual: unknown, expected: ObjectType): boolean =>
   });
 
 /**
- * Recursively match an object.
+ * Match any plain object.
  *
- * Supports nested matcher.
+ * Object like values, e.g. classes and arrays, will not be matched against this.
  *
- * @param partial An optional subset of the expected object.
- *   Object like values, e.g. classes and arrays, will not be matched against this.
+ * @param partial An optional subset of the expected object that will be
+ *   recursively matched. Supports nested matcher.
  *
  * @example
- * const fn = mock<(foo: { x: number, y: number }) => number>();
+ * const fn = mock<(pos: { x: number, y: number }) => number>();
  * when(() => fn(It.isObject({ x: 23 }))).returns(42);
  *
  * fn({ x: 100, y: 200 }) // throws
@@ -98,12 +100,15 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
       return isMatch(actual, partial);
     },
     {
-      toJSON: () => (partial ? `object(${printExpected(partial)})` : 'object'),
+      toJSON: () =>
+        partial ? `Matcher<object>(${printExpected(partial)})` : 'object',
       getDiff: (actual) => {
         if (!partial) {
           return {
-            expected: 'object',
-            actual: isPlainObject(actual) ? 'object' : 'not object',
+            expected: 'Matcher<object>',
+            actual: `${stripAnsi(printArg(actual))} (${
+              isPlainObject(actual) ? 'object' : 'not object'
+            })`,
           };
         }
 
