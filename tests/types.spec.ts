@@ -100,6 +100,14 @@ it('type safety', () => {
         },
       })
     );
+    objectWithArrays(
+      It.isObject({
+        foo: {
+          // @ts-expect-error arrays should not be made partial
+          bar: [undefined],
+        },
+      })
+    );
 
     const string = (x: string) => string;
     const captureMatcher = It.willCapture<number>();
