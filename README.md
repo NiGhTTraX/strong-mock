@@ -100,6 +100,10 @@ npm i -D strong-mock
 yarn add -D strong-mock
 ```
 
+```shell
+pnpm add -D strong-mock
+```
+
 ## Requirements
 
 strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
