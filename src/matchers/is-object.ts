@@ -1,6 +1,7 @@
-import { isEqual, isPlainObject } from 'lodash';
+import { isPlainObject } from 'lodash';
 import { printValue } from '../print';
 import type { Property } from '../proxy';
+import { deepEquals } from './deep-equals';
 import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
 
@@ -83,16 +84,17 @@ const isMatch = (actual: unknown, expected: ObjectType): boolean =>
       return isMatch(left, right);
     }
 
-    return isEqual(left, right);
+    return deepEquals(right).matches(left);
   });
 
 /**
  * Match any plain object.
  *
- * Object like values, e.g. classes and arrays, will not be matched against this.
+ * Object like values, e.g. classes and arrays, will not be matched.
  *
  * @param partial An optional subset of the expected object that will be
- *   recursively matched. Supports nested matcher.
+ *   recursively matched. Supports nested matcher. Values will be
+ *   compared with {@link deepEquals}.
  *
  * @example
  * const fn = mock<(pos: { x: number, y: number }) => number>();
