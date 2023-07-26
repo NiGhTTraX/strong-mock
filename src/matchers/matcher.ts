@@ -1,17 +1,6 @@
 export const MATCHER_SYMBOL = Symbol('matcher');
 
-/**
- * You MUST use {@link It.matches} to create this branded type.
- */
-export type Matcher = {
-  [MATCHER_SYMBOL]: boolean;
-
-  /**
-   * Will be called with the received value and should return whether it matches
-   * the expectation.
-   */
-  matches: (actual: any) => boolean;
-
+type MatcherOptions = {
   /**
    * Will be called when printing the diff between an expectation and the
    * (mismatching) received arguments.
@@ -22,9 +11,6 @@ export type Matcher = {
    * @param actual The actual value received by this matcher, same as the one
    *   in `matches`.
    *
-   * @returns {actual, expected} pair that will be diffed visually in the
-   *   error message.
-   *
    * @example
    * const neverMatcher = It.matches(() => false, {
    *   getDiff: (actual) => ({ actual, expected: 'never' })
@@ -33,13 +19,11 @@ export type Matcher = {
    * when(() => fn(neverMatcher)).thenReturn(42);
    *
    * fn(42);
-   *
-   * // Will end up printing:
    * // - Expected
    * // + Received
    * //
-   * //   - 42
-   * //   + 'never'
+   * //   - 'never'
+   * //   + 42
    */
   getDiff: (actual: any) => { actual: any; expected: any };
 
@@ -53,11 +37,23 @@ export type Matcher = {
    * when(() => fn(neverMatcher)).thenReturn(42);
    *
    * fn(42);
-   *
-   * // Will end up printing:
-   * // when(() => fn('never'))
+   * // Unmet expectations:
+   * // when(() => fn(never)).thenReturn(42)
    */
   toJSON: () => string;
+};
+
+/**
+ * You MUST use {@link It.matches} to create this branded type.
+ */
+export type Matcher = MatcherOptions & {
+  [MATCHER_SYMBOL]: boolean;
+
+  /**
+   * Will be called with the received value and should return whether it matches
+   * the expectation.
+   */
+  matches: (actual: any) => boolean;
 };
 
 /**
@@ -87,15 +83,13 @@ export const getMatcherDiffs = (
 /**
  * Create a custom matcher.
  *
- * @param cb Will receive the actual value and returns whether it matches the expectation.
+ * @param predicate Will receive the actual value and return whether it matches the expectation.
  * @param toJSON An optional function that should return a string that will be
  *   used when the matcher needs to be printed in an error message. By default,
- *   it stringifies `cb`.
+ *   it stringifies `predicate`.
  * @param getDiff An optional function that will be called when printing the
  *   diff for a failed expectation. It will only be called if there's a mismatch
- *   between the expected and received values i.e. `cb(actual)` fails.
- *   You can format both the received and the expected values according to your
- *   matcher's logic.
+ *   between the expected and received values i.e. `predicate(actual)` fails.
  *   By default, the `toJSON` method will be used to format the expected value,
  *   while the received value will be returned as-is.
  *
@@ -106,54 +100,23 @@ export const getMatcherDiffs = (
  *
  * fn(2) === 42
  * fn(-1) // throws
- *
- * @example
- * // Create a matcher with a custom display name.
- * const matcher = It.matches(() => false, {
- *   toJSON: () => 'CustomMatcher'
- * });
- * when(() => fn(matcher)).thenReturn(42);
- *
- * fn(100);
- * // Unmet expectations:
- * // when(() => fn(CustomMatcher)).thenReturn(42);
- *
- * @example
- * // Create a matcher with a custom differ.
- * const foobar = It.matches<{ foo: string }>(
- *   actual => actual.foo === 'bar',
- *   {
- *     getDiff: actual => ({
- *       expected: { foo: 'bar' },
- *       actual: { foo: actual.foo },
- *     })
- *   }
- * );
- *
- * when(() => fn(foobar)).thenReturn(42);
- * fn({ foo: 'baz', extra: 'stuff' });
- * // + Expected
- * // - Received
- * //
- * //   - foo: 'bar'
- * //   + foo: 'baz'
  */
 export const matches = <T>(
-  cb: (actual: T) => boolean,
+  predicate: (actual: T) => boolean,
   {
-    toJSON = () => `Matcher(${cb.toString()})`,
+    toJSON = () => `Matcher(${predicate.toString()})`,
     getDiff = (actual) => ({
       actual,
       expected: toJSON(),
     }),
-  }: Partial<Pick<Matcher, 'toJSON' | 'getDiff'>> = {}
+  }: Partial<MatcherOptions> = {}
 ): TypeMatcher<T> => {
   const matcher: Matcher = {
     [MATCHER_SYMBOL]: true,
-    matches: (actual: T) => cb(actual),
+    matches: (actual: T) => predicate(actual),
     toJSON,
     getDiff: (actual) => {
-      if (cb(actual)) {
+      if (predicate(actual)) {
         return {
           actual,
           expected: actual,
