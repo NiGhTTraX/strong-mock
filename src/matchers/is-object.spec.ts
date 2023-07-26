@@ -73,6 +73,63 @@ describe('isObject', () => {
         foo: [1, 2, 3],
       })
     ).toBeFalsy();
+
+    expect(
+      isObject({ foo: [1, 2] }).matches({
+        foo: [2, 3],
+      })
+    ).toBeFalsy();
+  });
+
+  it('should deep match nested objects with sets', () => {
+    expect(
+      isObject({ foo: new Set([1, 2, 3]) }).matches({
+        foo: new Set([1, 2, 3]),
+      })
+    ).toBeTruthy();
+
+    expect(
+      isObject({ foo: new Set([1, 2]) }).matches({
+        foo: new Set([1, 2, 3]),
+      })
+    ).toBeFalsy();
+
+    expect(
+      isObject({ foo: new Set([1, 2]) }).matches({
+        foo: new Set([1]),
+      })
+    ).toBeFalsy();
+  });
+
+  it('should deep match nested objects with maps', () => {
+    expect(
+      isObject({
+        foo: new Map([
+          [1, 2],
+          [3, 4],
+        ]),
+      }).matches({
+        foo: new Map([
+          [1, 2],
+          [3, 4],
+        ]),
+      })
+    ).toBeTruthy();
+
+    expect(
+      isObject({ foo: new Map([[1, 2]]) }).matches({
+        foo: new Map([
+          [1, 2],
+          [3, 4],
+        ]),
+      })
+    ).toBeFalsy();
+
+    expect(
+      isObject({ foo: new Map([[1, 2]]) }).matches({
+        foo: new Map([[1, 3]]),
+      })
+    ).toBeFalsy();
   });
 
   it('should match against extra undefined keys', () => {
@@ -129,6 +186,11 @@ describe('isObject', () => {
     expect(isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
       actual: { foo: 'baz' },
       expected: { foo: 'bar' },
+    });
+
+    expect(isObject({ foo: [1, 2] }).getDiff({ foo: [3, 4] })).toEqual({
+      actual: { foo: [3, 4] },
+      expected: { foo: [1, 2] },
     });
 
     expect(
