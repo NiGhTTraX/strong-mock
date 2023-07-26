@@ -102,11 +102,43 @@ export const getMatcherDiffs = (
  *   while the received value will be returned as-is.
  *
  * @example
+ * // Create a matcher for positive numbers.
  * const fn = mock<(x: number) => number>();
- * when(() => fn(It.matches(x => x >= 0))).returns(42);
+ * when(() => fn(It.matches(x => x >= 0))).thenReturn(42);
  *
  * fn(2) === 42
  * fn(-1) // throws
+ *
+ * @example
+ * // Create a matcher with a custom display name.
+ * const matcher = It.matches(() => false, {
+ *   toJSON: () => 'CustomMatcher'
+ * });
+ * when(() => fn(matcher)).thenReturn(42);
+ *
+ * fn(100);
+ * // Unmet expectations:
+ * // when(() => fn(CustomMatcher)).thenReturn(42);
+ *
+ * @example
+ * // Create a matcher with a custom differ.
+ * const foobar = It.matches<{ foo: string }>(
+ *   actual => actual.foo === 'bar',
+ *   {
+ *     getDiff: actual => ({
+ *       expected: { foo: 'bar' },
+ *       actual: { foo: actual.foo },
+ *     })
+ *   }
+ * );
+ *
+ * when(() => fn(foobar)).thenReturn(42);
+ * fn({ foo: 'baz', extra: 'stuff' });
+ * // + Expected
+ * // - Received
+ * //
+ * //   - foo: 'bar'
+ * //   + foo: 'baz'
  */
 export const matches = <T>(
   cb: (actual: T) => boolean,
