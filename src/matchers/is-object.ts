@@ -118,7 +118,7 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
       return isMatch(actual, partial);
     },
     {
-      toJSON: () =>
+      toString: () =>
         partial ? `Matcher<object>(${printValue(partial)})` : 'object',
       getDiff: (actual) => {
         if (!partial) {

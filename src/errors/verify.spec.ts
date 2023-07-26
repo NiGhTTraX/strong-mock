@@ -11,9 +11,9 @@ describe('verify errors', () => {
   describe('UnmetExpectations', () => {
     it('should print all expectations', () => {
       const expectation1 = SM.mock<Expectation>();
-      SM.when(expectation1.toJSON()).thenReturn('e1');
+      SM.when(expectation1.toString()).thenReturn('e1');
       const expectation2 = SM.mock<Expectation>();
-      SM.when(expectation2.toJSON()).thenReturn('e2');
+      SM.when(expectation2.toString()).thenReturn('e2');
 
       const error = new UnmetExpectations([
         SM.instance(expectation1),
@@ -34,8 +34,8 @@ describe('verify errors', () => {
     it('should print the unexpected calls and remaining expectations', () => {
       const e1 = SM.mock<Expectation>();
       const e2 = SM.mock<Expectation>();
-      SM.when(e1.toJSON()).thenReturn('e1');
-      SM.when(e2.toJSON()).thenReturn('e2');
+      SM.when(e1.toString()).thenReturn('e1');
+      SM.when(e2.toString()).thenReturn('e2');
 
       const error = new UnexpectedCalls(
         new Map([

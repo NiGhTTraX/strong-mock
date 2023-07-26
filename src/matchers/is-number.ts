@@ -14,7 +14,7 @@ import { matches } from './matcher';
  */
 export const isNumber = (): TypeMatcher<number> =>
   matches((actual) => typeof actual === 'number' && !Number.isNaN(actual), {
-    toJSON: () => 'Matcher<number>',
+    toString: () => 'Matcher<number>',
     getDiff: (actual) => ({
       actual: `${printValue(actual)} (${typeof actual})`,
       expected: 'Matcher<number>',

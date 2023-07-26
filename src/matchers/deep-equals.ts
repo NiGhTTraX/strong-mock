@@ -44,7 +44,7 @@ export const deepEquals = <T>(
       return isEqual(removeUndefined(actual), removeUndefined(expected));
     },
     {
-      toJSON: () => printValue(expected),
+      toString: () => printValue(expected),
       getDiff: (actual) => ({
         actual,
         expected,

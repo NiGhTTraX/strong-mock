@@ -46,7 +46,8 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
       );
     },
     {
-      toJSON: () => (containing ? `array(${printValue(containing)})` : 'array'),
+      toString: () =>
+        containing ? `array(${printValue(containing)})` : 'array',
       getDiff: (actual) => {
         if (containing) {
           return {
@@ -54,7 +55,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
             expected: `Matcher<array>([${containing
               .map((value) => {
                 if (isMatcher(value)) {
-                  return value.toJSON();
+                  return value.toString();
                 }
 
                 return value;

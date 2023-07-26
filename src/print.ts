@@ -18,9 +18,9 @@ export const printProperty = (property: Property) => {
 };
 
 export const printValue = (arg: unknown): string => {
-  // Call toJSON on matchers directly to avoid wrapping strings returned by them in quotes.
+  // Call toString on matchers directly to avoid wrapping strings returned by them in quotes.
   if (isMatcher(arg)) {
-    return arg.toJSON();
+    return arg.toString();
   }
 
   return stringify(arg);
@@ -74,5 +74,5 @@ export const printExpectation = (
 export const printRemainingExpectations = (expectations: Expectation[]) =>
   expectations.length
     ? `Remaining unmet expectations:
- - ${expectations.map((e) => e.toJSON()).join('\n - ')}`
+ - ${expectations.map((e) => e.toString()).join('\n - ')}`
     : 'There are no remaining unmet expectations.';

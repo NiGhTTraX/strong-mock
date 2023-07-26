@@ -8,7 +8,7 @@ export class UnmetExpectations extends Error {
     super(
       DIM_COLOR(`There are unmet expectations:
 
- - ${expectations.map((e) => e.toJSON()).join('\n - ')}`)
+ - ${expectations.map((e) => e.toString()).join('\n - ')}`)
     );
   }
 }

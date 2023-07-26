@@ -17,10 +17,7 @@ export interface PendingExpectation {
 
   finish: (returnValue: ReturnValue) => Expectation;
 
-  /**
-   * Used by `pretty-format`.
-   */
-  toJSON: () => string;
+  toString: () => string;
 }
 
 export type ExpectationFactory = (
@@ -73,7 +70,7 @@ export class PendingExpectationWithFactory implements PendingExpectation {
     return expectation;
   }
 
-  toJSON() {
+  toString() {
     return printWhen(this.property!, this.args);
   }
 }

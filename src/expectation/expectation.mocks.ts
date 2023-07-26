@@ -11,7 +11,7 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
   // eslint-disable-next-line no-empty-function,@typescript-eslint/no-empty-function
   setInvocationCount = () => {};
 
-  toJSON = () => 'always matching';
+  toString = () => 'always matching';
 
   args = undefined;
 
@@ -36,7 +36,7 @@ export class SpyExpectation implements Expectation {
     this.max = max;
   };
 
-  toJSON = () => 'spy expectation';
+  toString = () => 'spy expectation';
 
   constructor(
     public property: Property,
@@ -54,7 +54,7 @@ export const spyExpectationFactory: ExpectationFactory = (
 ) => new SpyExpectation(property, args, returnValue);
 
 export class SpyPendingExpectation implements PendingExpectation {
-  toJSON = () => 'spy pending expectation';
+  toString = () => 'spy pending expectation';
 
   public argsCalledWith: unknown[] | undefined;
 
@@ -93,7 +93,7 @@ export class MatchingPropertyExpectation implements Expectation {
     this.max = max;
   }
 
-  toJSON = () => 'matching property';
+  toString = () => 'matching property';
 }
 
 export class MatchingCallExpectation implements Expectation {
@@ -112,11 +112,11 @@ export class MatchingCallExpectation implements Expectation {
 
   matches = (args: unknown[] | undefined) => !!args;
 
-  toJSON = () => 'matching call';
+  toString = () => 'matching call';
 }
 
 export class NotMatchingExpectation extends MatchingCallExpectation {
   matches = () => false;
 
-  toJSON = () => 'not matching';
+  toString = () => 'not matching';
 }

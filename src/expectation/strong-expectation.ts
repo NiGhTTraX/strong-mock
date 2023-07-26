@@ -66,7 +66,7 @@ export class StrongExpectation implements Expectation {
     return this.args.every((arg, i) => arg.matches(received[i]));
   }
 
-  toJSON() {
+  toString() {
     return printExpectation(
       this.property,
       this.args,

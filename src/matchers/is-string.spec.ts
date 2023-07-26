@@ -29,13 +29,13 @@ describe('isString', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(isString().toJSON(), 'Matcher<string>');
+    expectAnsilessEqual(isString().toString(), 'Matcher<string>');
     expectAnsilessEqual(
-      isString({ containing: 'foo' }).toJSON(),
+      isString({ containing: 'foo' }).toString(),
       "Matcher<string>('foo')"
     );
     expectAnsilessEqual(
-      isString({ matching: /bar/ }).toJSON(),
+      isString({ matching: /bar/ }).toString(),
       'Matcher<string>(/bar/)'
     );
   });

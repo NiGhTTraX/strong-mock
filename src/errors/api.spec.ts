@@ -8,7 +8,7 @@ describe('API errors', () => {
       const pendingExpectation = new SpyPendingExpectation();
       pendingExpectation.setArgs([1, 2, 3]);
       pendingExpectation.setProperty('bar');
-      pendingExpectation.toJSON = () => 'foobar';
+      pendingExpectation.toString = () => 'foobar';
 
       expectAnsilessContain(
         new UnfinishedExpectation(pendingExpectation).message,

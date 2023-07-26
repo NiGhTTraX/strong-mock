@@ -9,13 +9,13 @@ describe('matches', () => {
   });
 
   it('should pretty print', () => {
-    expect(matches(() => true).toJSON()).toEqual('Matcher(() => true)');
+    expect(matches(() => true).toString()).toEqual('Matcher(() => true)');
   });
 
   it('should pretty print with custom message', () => {
-    expect(matches(() => true, { toJSON: () => 'foobar' }).toJSON()).toEqual(
-      'foobar'
-    );
+    expect(
+      matches(() => true, { toString: () => 'foobar' }).toString()
+    ).toEqual('foobar');
   });
 
   it('should call getDiff if the matcher fails', () => {
@@ -34,8 +34,8 @@ describe('matches', () => {
     expect(matcher.getDiff(42)).toEqual({ actual: 42, expected: 42 });
   });
 
-  it('should use toJSON as the default getDiff', () => {
-    const matcher = matches(() => false, { toJSON: () => 'foobar' });
+  it('should use toString as the default getDiff', () => {
+    const matcher = matches(() => false, { toString: () => 'foobar' });
 
     expect(matcher.getDiff(42)).toEqual({ actual: 42, expected: 'foobar' });
   });

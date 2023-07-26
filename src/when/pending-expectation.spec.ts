@@ -17,7 +17,7 @@ describe('PendingExpectation', () => {
     pendingExpectation.setProperty('bar');
 
     expectAnsilessEqual(
-      pendingExpectation.toJSON(),
+      pendingExpectation.toString(),
       `when(() => mock.bar(1, 2, 3))`
     );
   });
@@ -33,6 +33,6 @@ describe('PendingExpectation', () => {
     pendingExpectation.setArgs(undefined);
     pendingExpectation.setProperty('bar');
 
-    expectAnsilessEqual(pendingExpectation.toJSON(), `when(() => mock.bar)`);
+    expectAnsilessEqual(pendingExpectation.toString(), `when(() => mock.bar)`);
   });
 });

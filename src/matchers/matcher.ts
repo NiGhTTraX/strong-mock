@@ -32,7 +32,7 @@ type MatcherOptions = {
    *
    * @example
    * const neverMatcher = It.matches(() => false, {
-   *   toJSON: () => 'never'
+   *   toString: () => 'never'
    * });
    * when(() => fn(neverMatcher)).thenReturn(42);
    *
@@ -40,7 +40,7 @@ type MatcherOptions = {
    * // Unmet expectations:
    * // when(() => fn(never)).thenReturn(42)
    */
-  toJSON: () => string;
+  toString: () => string;
 };
 
 /**
@@ -84,13 +84,14 @@ export const getMatcherDiffs = (
  * Create a custom matcher.
  *
  * @param predicate Will receive the actual value and return whether it matches the expectation.
- * @param toJSON An optional function that should return a string that will be
+ * @param options
+ * @param options.toString An optional function that should return a string that will be
  *   used when the matcher needs to be printed in an error message. By default,
  *   it stringifies `predicate`.
- * @param getDiff An optional function that will be called when printing the
+ * @param options.getDiff An optional function that will be called when printing the
  *   diff for a failed expectation. It will only be called if there's a mismatch
  *   between the expected and received values i.e. `predicate(actual)` fails.
- *   By default, the `toJSON` method will be used to format the expected value,
+ *   By default, the `toString` method will be used to format the expected value,
  *   while the received value will be returned as-is.
  *
  * @example
@@ -103,18 +104,23 @@ export const getMatcherDiffs = (
  */
 export const matches = <T>(
   predicate: (actual: T) => boolean,
-  {
-    toJSON = () => `Matcher(${predicate.toString()})`,
-    getDiff = (actual) => ({
-      actual,
-      expected: toJSON(),
-    }),
-  }: Partial<MatcherOptions> = {}
+  options?: Partial<MatcherOptions>
 ): TypeMatcher<T> => {
+  // We can't use destructuring with default values because `options` is optional,
+  // so it needs a default value of `{}`, which will come with a native `toString`.
+  const toString =
+    options?.toString ?? (() => `Matcher(${predicate.toString()})`);
+  const getDiff =
+    options?.getDiff ??
+    ((actual) => ({
+      actual,
+      expected: toString(),
+    }));
+
   const matcher: Matcher = {
     [MATCHER_SYMBOL]: true,
     matches: (actual: T) => predicate(actual),
-    toJSON,
+    toString,
     getDiff: (actual) => {
       if (predicate(actual)) {
         return {

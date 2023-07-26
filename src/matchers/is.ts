@@ -11,6 +11,6 @@ import { matches } from './matcher';
  */
 export const is = <T = unknown>(expected: T): TypeMatcher<T> =>
   matches((actual) => Object.is(actual, expected), {
-    toJSON: () => `${printValue(expected)}`,
+    toString: () => `${printValue(expected)}`,
     getDiff: (actual) => ({ actual, expected }),
   });

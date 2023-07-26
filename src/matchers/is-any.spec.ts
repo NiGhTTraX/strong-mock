@@ -30,7 +30,7 @@ describe('isAny', () => {
   });
 
   it('should pretty print', () => {
-    expect(isAny().toJSON()).toEqual('Matcher<any>');
+    expect(isAny().toString()).toEqual('Matcher<any>');
   });
 
   it('should return diff', () => {

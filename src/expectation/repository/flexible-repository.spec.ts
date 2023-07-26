@@ -416,7 +416,7 @@ describe('FlexibleRepository', () => {
           min: 1,
           max: 1,
           matches: () => false,
-          toJSON: () => 'bla',
+          toString: () => 'bla',
           setInvocationCount() {},
         });
 

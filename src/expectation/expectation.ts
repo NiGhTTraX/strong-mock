@@ -27,10 +27,7 @@ export interface Expectation {
 
   matches: (args: unknown[] | undefined) => boolean;
 
-  /**
-   * Used by `pretty-format`.
-   */
-  toJSON: () => string;
+  toString: () => string;
 }
 
 /**

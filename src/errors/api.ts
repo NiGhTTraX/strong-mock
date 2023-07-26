@@ -6,7 +6,7 @@ export class UnfinishedExpectation extends Error {
   constructor(pendingExpectation: PendingExpectation) {
     super(`There is an unfinished pending expectation:
 
-${pendingExpectation.toJSON()}
+${pendingExpectation.toString()}
 
 Please finish it by setting a return value even if the value
 is undefined.`);

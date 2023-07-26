@@ -12,5 +12,5 @@ import { matches } from './matcher';
  */
 export const isAny = (): TypeMatcher<any> =>
   matches(() => true, {
-    toJSON: () => 'Matcher<any>',
+    toString: () => 'Matcher<any>',
   });

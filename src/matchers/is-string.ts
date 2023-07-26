@@ -38,7 +38,7 @@ export const isString = ({
       return matching?.test(actual) ?? true;
     },
     {
-      toJSON: () => {
+      toString: () => {
         if (containing) {
           return `Matcher<string>('${containing}')`;
         }

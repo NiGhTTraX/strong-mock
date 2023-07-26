@@ -59,8 +59,8 @@ describe('isArray', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(isArray().toJSON(), 'array');
-    expectAnsilessEqual(isArray([1, 2, 3]).toJSON(), 'array([1, 2, 3])');
+    expectAnsilessEqual(isArray().toString(), 'array');
+    expectAnsilessEqual(isArray([1, 2, 3]).toString(), 'array([1, 2, 3])');
   });
 
   it('should print diff', () => {
@@ -87,7 +87,7 @@ describe('isArray', () => {
 
   it('should print diff with stringified nested matchers', () => {
     const matcher = matches(() => false, {
-      toJSON: () => 'something',
+      toString: () => 'something',
       getDiff: () => {
         throw new Error();
       },

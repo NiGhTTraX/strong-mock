@@ -162,12 +162,12 @@ describe('isObject', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(isObject().toJSON(), `object`);
+    expectAnsilessEqual(isObject().toString(), `object`);
   });
 
   it('should pretty print the partial object', () => {
     expectAnsilessEqual(
-      isObject({ foo: 'bar' }).toJSON(),
+      isObject({ foo: 'bar' }).toString(),
       `Matcher<object>({"foo": "bar"})`
     );
   });

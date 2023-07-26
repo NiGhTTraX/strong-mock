@@ -46,7 +46,7 @@ describe('isNumber', () => {
   });
 
   it('should pretty print', () => {
-    expect(isNumber().toJSON()).toEqual('Matcher<number>');
+    expect(isNumber().toString()).toEqual('Matcher<number>');
   });
 
   it('should return diff', () => {

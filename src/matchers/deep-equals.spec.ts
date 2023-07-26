@@ -226,9 +226,9 @@ describe('deepEquals', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(deepEquals(23).toJSON(), '23');
+    expectAnsilessEqual(deepEquals(23).toString(), '23');
     expectAnsilessEqual(
-      deepEquals({ foo: { bar: [1, 2, 3] } }).toJSON(),
+      deepEquals({ foo: { bar: [1, 2, 3] } }).toString(),
       '{"foo": {"bar": [1, 2, 3]}}'
     );
   });

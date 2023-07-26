@@ -50,7 +50,7 @@ describe('print', () => {
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
-        printCall('bar', [matches(() => true, { toJSON: () => 'matcher' })]),
+        printCall('bar', [matches(() => true, { toString: () => 'matcher' })]),
         `.bar(matcher)`
       );
     });
@@ -167,7 +167,7 @@ describe('print', () => {
     it('should print the diff when we have multiple expectations', () => {
       const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
-        toJSON: () => 'matcher',
+        toString: () => 'matcher',
       });
 
       const expectation = new StrongExpectation('prop', [matcher], {

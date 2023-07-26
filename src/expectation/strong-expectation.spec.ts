@@ -91,7 +91,7 @@ describe('StrongExpectation', () => {
     expectation.setInvocationCount(2, 3);
 
     expectAnsilessEqual(
-      expectation.toJSON(),
+      expectation.toString(),
       `when(() => mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
     );
   });

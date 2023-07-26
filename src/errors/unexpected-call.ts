@@ -90,7 +90,7 @@ export const printDiffForAllExpectations = (
       const diff = printExpectationDiff(e, actual);
 
       if (diff) {
-        return `${e.toJSON()}
+        return `${e.toString()}
 ${EXPECTED_COLOR('- Expected')}
 ${RECEIVED_COLOR('+ Received')}
 

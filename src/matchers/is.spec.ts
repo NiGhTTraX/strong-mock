@@ -34,9 +34,9 @@ describe('is', () => {
   });
 
   it('should pretty print', () => {
-    expectAnsilessEqual(is(23).toJSON(), '23');
+    expectAnsilessEqual(is(23).toString(), '23');
     expectAnsilessEqual(
-      is({ foo: { bar: [1, 2, 3] } }).toJSON(),
+      is({ foo: { bar: [1, 2, 3] } }).toString(),
       '{"foo": {"bar": [1, 2, 3]}}'
     );
   });
