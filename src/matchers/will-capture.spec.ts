@@ -33,8 +33,8 @@ describe('willCapture', () => {
   });
 
   it('should pretty print', () => {
-    expect(willCapture().toString()).toEqual('Matcher(captures)');
-    expect(willCapture('custom').toString()).toEqual('custom');
+    expect(willCapture().toString()).toEqual('Capture');
+    expect(willCapture('custom').toString()).toEqual('Capture(custom)');
   });
 
   it('should print diff', () => {

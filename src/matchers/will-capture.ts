@@ -34,7 +34,7 @@ export const willCapture = <T = unknown>(
 
       return true;
     },
-    toString: () => name ?? 'Matcher(captures)',
+    toString: () => (name ? `Capture(${name})` : 'Capture'),
     getDiff: (actual) => ({
       actual,
       expected: actual,
