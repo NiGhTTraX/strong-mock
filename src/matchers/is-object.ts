@@ -109,7 +109,7 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
 ): TypeMatcher<T> =>
   matches(
     (actual) => {
-      if (!isPlainObject(actual)) {
+      if (!looksLikeObject(actual)) {
         return false;
       }
 
