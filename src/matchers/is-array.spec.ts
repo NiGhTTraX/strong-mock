@@ -53,9 +53,8 @@ describe('isArray', () => {
         { foo: 'bar' },
       ])
     ).toBeTruthy();
-    expect(
-      isArray([isString({ containing: 'foobar' })]).matches(['foo'])
-    ).toBeFalsy();
+
+    expect(isArray([isString('foobar')]).matches(['foo'])).toBeFalsy();
   });
 
   it('should pretty print', () => {

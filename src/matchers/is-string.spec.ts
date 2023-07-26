@@ -15,29 +15,19 @@ describe('isString', () => {
   });
 
   it('should match a string based on the given pattern', () => {
-    expect(isString({ matching: /foo/ }).matches('foo')).toBeTruthy();
-    expect(isString({ matching: /foo/ }).matches('bar')).toBeFalsy();
+    expect(isString(/foo/).matches('foo')).toBeTruthy();
+    expect(isString(/foo/).matches('bar')).toBeFalsy();
   });
 
   it('should match a string containing the given substring', () => {
-    expect(isString({ containing: 'foo' }).matches('foobar')).toBeTruthy();
-    expect(isString({ containing: 'baz' }).matches('foobar')).toBeFalsy();
-  });
-
-  it('should throw if more than one pattern given', () => {
-    expect(() => isString({ matching: /foo/, containing: 'bar' })).toThrow();
+    expect(isString('foo').matches('foobar')).toBeTruthy();
+    expect(isString('baz').matches('foobar')).toBeFalsy();
   });
 
   it('should pretty print', () => {
     expectAnsilessEqual(isString().toString(), 'Matcher<string>');
-    expectAnsilessEqual(
-      isString({ containing: 'foo' }).toString(),
-      "Matcher<string>('foo')"
-    );
-    expectAnsilessEqual(
-      isString({ matching: /bar/ }).toString(),
-      'Matcher<string>(/bar/)'
-    );
+    expectAnsilessEqual(isString('foo').toString(), 'Matcher<string>(foo)');
+    expectAnsilessEqual(isString(/bar/).toString(), 'Matcher<string>(/bar/)');
   });
 
   it('should return diff', () => {
@@ -46,17 +36,17 @@ describe('isString', () => {
       expected: 'Matcher<string>',
     });
 
-    expect(isString({ containing: 'foo' }).getDiff(42)).toEqual({
+    expect(isString('foo').getDiff(42)).toEqual({
       actual: 42,
-      expected: "Matcher<string>('foo')",
+      expected: 'Matcher<string>(foo)',
     });
 
-    expect(isString({ containing: 'foo' }).getDiff('bar')).toEqual({
+    expect(isString('foo').getDiff('bar')).toEqual({
       actual: 'bar',
-      expected: "Matcher<string>('foo')",
+      expected: 'Matcher<string>(foo)',
     });
 
-    expect(isString({ matching: /foo/ }).getDiff('bar')).toEqual({
+    expect(isString(/foo/).getDiff('bar')).toEqual({
       actual: 'bar',
       expected: 'Matcher<string>(/foo/)',
     });
