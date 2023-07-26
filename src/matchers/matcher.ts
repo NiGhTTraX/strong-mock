@@ -46,7 +46,7 @@ type MatcherOptions = {
 /**
  * You MUST use {@link It.matches} to create this branded type.
  */
-export type Matcher = MatcherOptions & {
+export interface Matcher extends MatcherOptions {
   [MATCHER_SYMBOL]: boolean;
 
   /**
@@ -54,7 +54,7 @@ export type Matcher = MatcherOptions & {
    * the expectation.
    */
   matches: (actual: any) => boolean;
-};
+}
 
 /**
  * This takes the shape of T to satisfy call sites, but strong-mock will only
