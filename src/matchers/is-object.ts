@@ -18,16 +18,8 @@ const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
   Object.fromEntries(
     Reflect.ownKeys(expected).map((key) => {
       const right = expected[key];
-
-      if (!looksLikeObject(actual)) {
-        if (isMatcher(right)) {
-          return [key, right.toJSON()];
-        }
-
-        return [key, right];
-      }
-
-      const left = actual[key];
+      // @ts-expect-error because we're fine with a runtime undefined
+      const left = actual?.[key];
 
       if (isMatcher(right)) {
         return [key, right.getDiff(left).expected];
@@ -53,6 +45,10 @@ const getActualObjectDiff = (
     Reflect.ownKeys(expected).map((key) => {
       const right = expected[key];
       const left = actual[key];
+
+      if (!left) {
+        return [];
+      }
 
       if (isMatcher(right)) {
         return [key, right.getDiff(left).actual];

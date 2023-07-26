@@ -172,77 +172,96 @@ describe('isObject', () => {
     );
   });
 
-  it('should return diff', () => {
-    expect(isObject().getDiff('not object')).toEqual({
-      expected: 'Matcher<object>',
-      actual: '"not object" (not object)',
+  describe('diff', () => {
+    it('should handle non objects', () => {
+      expect(isObject().getDiff('not object')).toEqual({
+        expected: 'Matcher<object>',
+        actual: '"not object" (not object)',
+      });
+
+      expect(isObject({ foo: 'bar' }).getDiff('not object')).toEqual({
+        expected: { foo: 'bar' },
+        actual: 'not object',
+      });
+
+      expect(
+        isObject({ foo: { bar: 'baz' } }).getDiff({ foo: 'not object' })
+      ).toEqual({
+        expected: { foo: { bar: 'baz' } },
+        actual: { foo: 'not object' },
+      });
     });
 
-    expect(isObject({ foo: 'bar' }).getDiff('not object')).toEqual({
-      expected: { foo: 'bar' },
-      actual: 'not object',
+    it('should handle objects', () => {
+      expect(isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
+        actual: { foo: 'baz' },
+        expected: { foo: 'bar' },
+      });
+
+      expect(isObject({ foo: [1, 2] }).getDiff({ foo: [3, 4] })).toEqual({
+        actual: { foo: [3, 4] },
+        expected: { foo: [1, 2] },
+      });
     });
 
-    expect(isObject({ foo: 'bar' }).getDiff({ foo: 'baz' })).toEqual({
-      actual: { foo: 'baz' },
-      expected: { foo: 'bar' },
+    it('should collect diffs from nested matchers', () => {
+      const matcher = matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+
+      expect(isObject({ foo: matcher }).getDiff({ foo: 'actual' })).toEqual({
+        actual: { foo: 'a' },
+        expected: { foo: 'e' },
+      });
+
+      expect(
+        isObject({ foo: { bar: matcher } }).getDiff({
+          foo: { bar: 'actual' },
+        })
+      ).toEqual({
+        actual: { foo: { bar: 'a' } },
+        expected: { foo: { bar: 'e' } },
+      });
     });
 
-    expect(isObject({ foo: [1, 2] }).getDiff({ foo: [3, 4] })).toEqual({
-      actual: { foo: [3, 4] },
-      expected: { foo: [1, 2] },
+    it('should handle missing keys', () => {
+      const matcher = matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+
+      expect(isObject({ foo: 'bar' }).getDiff({})).toEqual({
+        actual: {},
+        expected: { foo: 'bar' },
+      });
+
+      expect(isObject({ foo: { bar: 'baz' } }).getDiff({})).toEqual({
+        actual: {},
+        expected: { foo: { bar: 'baz' } },
+      });
+
+      expect(isObject({ foo: matcher }).getDiff({})).toEqual({
+        actual: {},
+        expected: { foo: 'e' },
+      });
+
+      expect(isObject({ foo: { bar: matcher } }).getDiff({})).toEqual({
+        actual: {},
+        expected: { foo: { bar: 'e' } },
+      });
     });
 
-    expect(
-      isObject({
-        foo: { bar: matches(() => false, { toJSON: () => 'matcher' }) },
-      }).getDiff({ foo: {} })
-    ).toEqual({
-      actual: { foo: {} },
-      expected: { foo: { bar: 'matcher' } },
-    });
-  });
+    it('should handle non string keys', () => {
+      const matcher = matches(() => false, {
+        getDiff: () => ({ actual: 'a', expected: 'e' }),
+      });
+      const foo = Symbol('foo');
 
-  it('should collect diffs from nested matchers', () => {
-    const matcher = matches(() => false, {
-      getDiff: () => ({ actual: 'a', expected: 'e' }),
-    });
-
-    expect(isObject({ foo: matcher }).getDiff({ foo: 'actual' })).toEqual({
-      actual: { foo: 'a' },
-      expected: { foo: 'e' },
-    });
-
-    expect(
-      isObject({ foo: { bar: matcher } }).getDiff({
-        foo: { bar: 'actual' },
-      })
-    ).toEqual({
-      actual: { foo: { bar: 'a' } },
-      expected: { foo: { bar: 'e' } },
-    });
-  });
-
-  it('should handle missing keys when collecting diffs', () => {
-    const matcher = matches(() => false, {
-      getDiff: () => ({ actual: 'a', expected: 'e' }),
-    });
-
-    expect(isObject({ foo: matcher }).getDiff({})).toEqual({
-      actual: { foo: 'a' },
-      expected: { foo: 'e' },
-    });
-  });
-
-  it('should handle non string keys when collecting diffs', () => {
-    const matcher = matches(() => false, {
-      getDiff: () => ({ actual: 'a', expected: 'e' }),
-    });
-    const foo = Symbol('foo');
-
-    expect(isObject({ [foo]: matcher }).getDiff({ [foo]: 'actual' })).toEqual({
-      actual: { [foo]: 'a' },
-      expected: { [foo]: 'e' },
+      expect(isObject({ [foo]: matcher }).getDiff({ [foo]: 'actual' })).toEqual(
+        {
+          actual: { [foo]: 'a' },
+          expected: { [foo]: 'e' },
+        }
+      );
     });
   });
 });
