@@ -1,6 +1,6 @@
 export const MATCHER_SYMBOL = Symbol('matcher');
 
-type MatcherOptions = {
+export type MatcherOptions = {
   /**
    * Will be called when printing the diff between an expectation and the
    * (mismatching) received arguments.

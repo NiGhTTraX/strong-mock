@@ -15,6 +15,6 @@ import * as It from './matchers/it';
  */
 export { It };
 
-export type { Matcher } from './matchers/matcher';
+export type { Matcher, MatcherOptions } from './matchers/matcher';
 export type { MockOptions } from './mock/options';
 export { UnexpectedProperty } from './mock/options';
