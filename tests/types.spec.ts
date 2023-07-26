@@ -64,8 +64,8 @@ it('type safety', () => {
       // @ts-expect-error wrong nested property type
       It.isObject({ foo: { bar: 'boo' } })
     );
-    // TODO: open an issue in TS repo
     // @ts-expect-error because TS can't infer the proper type
+    // See https://github.com/microsoft/TypeScript/issues/55164.
     nestedObject(It.isObject({ foo: It.isObject() }));
 
     const numberArray = (x: number[]) => x;
