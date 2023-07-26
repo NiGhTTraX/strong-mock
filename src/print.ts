@@ -1,4 +1,4 @@
-import { EXPECTED_COLOR, stringify } from 'jest-matcher-utils';
+import { EXPECTED_COLOR, RECEIVED_COLOR, stringify } from 'jest-matcher-utils';
 import type { Expectation } from './expectation/expectation';
 import { ApplyProp } from './expectation/expectation';
 import type { ReturnValue } from './expectation/repository/return-value';
@@ -52,7 +52,9 @@ export const printReturns = (
     thenPrefix += 'thenReturn';
   }
 
-  return `.${thenPrefix}(${printValue(value)}).between(${min}, ${max})`;
+  return `.${thenPrefix}(${RECEIVED_COLOR(
+    printValue(value)
+  )}).between(${min}, ${max})`;
 };
 
 export const printWhen = (property: Property, args: any[] | undefined) => {
