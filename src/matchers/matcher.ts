@@ -1,7 +1,5 @@
 export const MATCHER_SYMBOL = Symbol('matcher');
 
-type GetDiff = (actual: any) => { actual: any; expected: any };
-
 /**
  * You MUST use {@link It.matches} to create this branded type.
  */
@@ -43,7 +41,7 @@ export type Matcher = {
    * //   - 42
    * //   + 'never'
    */
-  getDiff: GetDiff;
+  getDiff: (actual: any) => { actual: any; expected: any };
 
   /**
    * Will be called when printing arguments for an unexpected or unmet expectation.
