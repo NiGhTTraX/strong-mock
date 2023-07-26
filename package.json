@@ -1,13 +1,16 @@
 {
   "name": "strong-mock",
   "version": "8.0.1",
-  "description": "Simple type safe mocking library",
+  "description": "Type safe mocking library for TypeScript",
   "keywords": [
     "tdd",
+    "test",
     "mock",
+    "expectation",
+    "stub",
     "interface",
-    "typescript",
-    "test"
+    "type",
+    "typescript"
   ],
   "repository": {
     "type": "git",

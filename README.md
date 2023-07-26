@@ -2,7 +2,7 @@
 <div align="center">
 <h1>💪 strong-mock</h1>
 
-<p>Simple type safe mocking library</p>
+<p>Type safe mocking library for TypeScript</p>
 </div>
 
 ```typescript
