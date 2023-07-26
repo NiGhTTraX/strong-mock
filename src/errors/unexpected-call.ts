@@ -22,7 +22,7 @@ export const printArgsDiff = (
 ): string => {
   const diff = printDiff(expected, actual, { omitAnnotationLines: true });
 
-  /* istanbul-ignore-next this is not expected in practice */
+  /* istanbul ignore next this is not expected in practice */
   if (!diff) {
     return '';
   }

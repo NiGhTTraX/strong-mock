@@ -153,6 +153,14 @@ describe('print', () => {
 
       expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
     });
+
+    it('should not print the diff for an expectation on a property', () => {
+      const expectation = new StrongExpectation(':irrelevant:', undefined, {
+        value: ':irrelevant:',
+      });
+
+      expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
+    });
   });
 
   describe('printDiffForAllExpectations', () => {

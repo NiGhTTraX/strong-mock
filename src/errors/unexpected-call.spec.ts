@@ -71,16 +71,22 @@ describe('UnexpectedCall', () => {
       });
     });
 
-    it('should not contain actual and expected values when the expectation has no expected args', () => {
+    it('should not contain actual and expected values when the expectation has 0 args', () => {
       const expectation = new StrongExpectation('foo', [], {
         value: ':irrelevant:',
       });
 
-      const error = new UnexpectedCall(
-        'foo',
-        ['any arg', 'any arg'],
-        [expectation]
-      );
+      const error = new UnexpectedCall('foo', [], [expectation]);
+
+      expect(error.matcherResult).toBeUndefined();
+    });
+
+    it('should not contain actual and expected values when the expectation is on a property', () => {
+      const expectation = new StrongExpectation('foo', undefined, {
+        value: ':irrelevant:',
+      });
+
+      const error = new UnexpectedCall('foo', [], [expectation]);
 
       expect(error.matcherResult).toBeUndefined();
     });

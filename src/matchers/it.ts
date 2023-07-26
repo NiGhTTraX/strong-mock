@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export { deepEquals } from './deep-equals';
 
 export { is } from './is';
