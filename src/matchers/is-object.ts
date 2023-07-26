@@ -1,4 +1,4 @@
-import { isPlainObject } from 'lodash';
+import { cloneDeepWith, isPlainObject } from 'lodash';
 import { printValue } from '../print';
 import type { Property } from '../proxy';
 import { deepEquals } from './deep-equals';
@@ -83,6 +83,15 @@ const isMatch = (actual: unknown, expected: ObjectType): boolean =>
     return deepEquals(right).matches(left);
   });
 
+const deepPrintObject = (value: ObjectType) =>
+  cloneDeepWith(value, (value) => {
+    if (isMatcher(value)) {
+      return value.toString();
+    }
+
+    return undefined;
+  });
+
 /**
  * Match any plain object.
  *
@@ -118,8 +127,13 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
       return isMatch(actual, partial);
     },
     {
-      toString: () =>
-        partial ? `Matcher<object>(${printValue(partial)})` : 'object',
+      toString: () => {
+        if (!partial) {
+          return 'Matcher<object>';
+        }
+
+        return `Matcher<object>(${printValue(deepPrintObject(partial))})`;
+      },
       getDiff: (actual) => {
         if (!partial) {
           return {

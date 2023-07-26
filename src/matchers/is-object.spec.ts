@@ -161,15 +161,26 @@ describe('isObject', () => {
     ).toBeFalsy();
   });
 
-  it('should pretty print', () => {
-    expectAnsilessEqual(isObject().toString(), `object`);
-  });
+  describe('print', () => {
+    it('should pretty print when no partial', () => {
+      expectAnsilessEqual(isObject().toString(), `Matcher<object>`);
+    });
 
-  it('should pretty print the partial object', () => {
-    expectAnsilessEqual(
-      isObject({ foo: 'bar' }).toString(),
-      `Matcher<object>({"foo": "bar"})`
-    );
+    it('should pretty print the partial object', () => {
+      expectAnsilessEqual(
+        isObject({ foo: 'bar' }).toString(),
+        `Matcher<object>({"foo": "bar"})`
+      );
+    });
+
+    it('should pretty print the partial object when it contains matchers', () => {
+      expectAnsilessEqual(
+        isObject({
+          foo: matches(() => false, { toString: () => 'matcher' }),
+        }).toString(),
+        `Matcher<object>({"foo": "matcher"})`
+      );
+    });
   });
 
   describe('diff', () => {
