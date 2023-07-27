@@ -190,6 +190,11 @@ describe('isObject', () => {
         actual: '"not object" (not object)',
       });
 
+      expect(isObject().getDiff([1, 2, 3])).toEqual({
+        expected: 'Matcher<object>',
+        actual: '[1, 2, 3] (not object)',
+      });
+
       expect(isObject({ foo: 'bar' }).getDiff('not object')).toEqual({
         expected: { foo: 'bar' },
         actual: 'not object',
@@ -200,6 +205,18 @@ describe('isObject', () => {
       ).toEqual({
         expected: { foo: { bar: 'baz' } },
         actual: { foo: 'not object' },
+      });
+
+      expect(isObject({ foo: 'bar' }).getDiff({ foo: [1, 2, 3] })).toEqual({
+        expected: { foo: 'bar' },
+        actual: { foo: [1, 2, 3] },
+      });
+
+      expect(
+        isObject({ foo: { bar: 'baz' } }).getDiff({ foo: undefined })
+      ).toEqual({
+        expected: { foo: { bar: 'baz' } },
+        actual: { foo: undefined },
       });
     });
 
@@ -231,6 +248,15 @@ describe('isObject', () => {
         })
       ).toEqual({
         actual: { foo: { bar: 'a' } },
+        expected: { foo: { bar: 'e' } },
+      });
+
+      expect(
+        isObject({ foo: { bar: matcher } }).getDiff({
+          foo: undefined,
+        })
+      ).toEqual({
+        actual: { foo: undefined },
         expected: { foo: { bar: 'e' } },
       });
     });
