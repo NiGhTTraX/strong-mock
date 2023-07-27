@@ -110,9 +110,7 @@ export class UnexpectedCall extends Error implements MatcherError {
     args: unknown[],
     expectations: Expectation[]
   ) {
-    const header = `Didn't expect mock${RECEIVED_COLOR(
-      printCall(property, args)
-    )} to be called.`;
+    const header = `Didn't expect ${printCall(property, args)} to be called.`;
 
     const propertyExpectations = expectations.filter(
       (e) => e.property === property

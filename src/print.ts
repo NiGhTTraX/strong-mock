@@ -26,11 +26,19 @@ export const printValue = (arg: unknown): string => {
   return stringify(arg);
 };
 
-export const printCall = (property: Property, args: any[]) => {
-  const prettyArgs = args.map((arg) => printValue(arg)).join(', ');
+const printArgs = (args: any[]) =>
+  args.map((arg) => printValue(arg)).join(', ');
+
+export const printCall = (property: Property, args?: any[]) => {
   const prettyProperty = printProperty(property);
 
-  return `${prettyProperty}(${prettyArgs})`;
+  if (args) {
+    const prettyArgs = printArgs(args);
+
+    return `mock${RECEIVED_COLOR(`${prettyProperty}(${prettyArgs})`)}`;
+  }
+
+  return `mock${RECEIVED_COLOR(`${prettyProperty}`)}`;
 };
 
 export const printReturns = (
@@ -58,8 +66,12 @@ export const printReturns = (
 };
 
 export const printWhen = (property: Property, args: any[] | undefined) => {
+  const prettyProperty = printProperty(property);
+
   if (args) {
-    return `when(() => mock${EXPECTED_COLOR(`${printCall(property, args)}`)})`;
+    return `when(() => mock${EXPECTED_COLOR(
+      `${prettyProperty}(${printArgs(args)})`
+    )})`;
   }
 
   return `when(() => mock${EXPECTED_COLOR(`${printProperty(property)}`)})`;

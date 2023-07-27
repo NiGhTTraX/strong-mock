@@ -1,7 +1,7 @@
-import { DIM_COLOR, RECEIVED_COLOR } from 'jest-matcher-utils';
+import { DIM_COLOR } from 'jest-matcher-utils';
 import type { Expectation } from '../expectation/expectation';
 import type { CallMap } from '../expectation/repository/expectation-repository';
-import { printCall, printProperty, printRemainingExpectations } from '../print';
+import { printCall, printRemainingExpectations } from '../print';
 
 export class UnmetExpectations extends Error {
   constructor(expectations: Expectation[]) {
@@ -39,13 +39,7 @@ export class UnexpectedCalls extends Error {
   constructor(unexpectedCalls: CallMap, expectations: Expectation[]) {
     const printedCalls = Array.from(mergeCalls(unexpectedCalls).entries())
       .map(([property, calls]) =>
-        calls
-          .map((call) =>
-            call.arguments
-              ? `mock${RECEIVED_COLOR(printCall(property, call.arguments))}`
-              : `mock${RECEIVED_COLOR(printProperty(property))}`
-          )
-          .join('\n - ')
+        calls.map((call) => printCall(property, call.arguments)).join('\n - ')
       )
       .join('\n - ');
 

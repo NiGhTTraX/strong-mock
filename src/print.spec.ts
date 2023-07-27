@@ -27,36 +27,36 @@ describe('print', () => {
 
   describe('printCall', () => {
     it('should print method call', () => {
-      expectAnsilessEqual(printCall('bar', [1, 2, 3]), `.bar(1, 2, 3)`);
+      expectAnsilessEqual(printCall('bar', [1, 2, 3]), `mock.bar(1, 2, 3)`);
     });
 
     it('should print function call', () => {
-      expectAnsilessEqual(printCall(ApplyProp, [1, 2, 3]), `(1, 2, 3)`);
+      expectAnsilessEqual(printCall(ApplyProp, [1, 2, 3]), `mock(1, 2, 3)`);
     });
 
     it('should print symbol call', () => {
       expectAnsilessEqual(
         printCall(Symbol('bar'), [1, 2, 3]),
-        `[Symbol(bar)](1, 2, 3)`
+        `mock[Symbol(bar)](1, 2, 3)`
       );
     });
 
     it('should deep print args', () => {
       expectAnsilessEqual(
         printCall('bar', [1, 2, { foo: 'bar' }]),
-        `.bar(1, 2, {"foo": "bar"})`
+        `mock.bar(1, 2, {"foo": "bar"})`
       );
     });
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
         printCall('bar', [matches(() => true, { toString: () => 'matcher' })]),
-        `.bar(matcher)`
+        `mock.bar(matcher)`
       );
     });
 
     it('should print undefined args', () => {
-      expectAnsilessEqual(printCall('bar', [undefined]), `.bar(undefined)`);
+      expectAnsilessEqual(printCall('bar', [undefined]), `mock.bar(undefined)`);
     });
   });
 
