@@ -1,9 +1,4 @@
-import type { Matcher } from '../matchers/matcher';
 import type { Property } from '../proxy';
-import type {
-  ExpectationBuilder,
-  ExpectationFactory,
-} from '../when/expectation-builder';
 import type { Expectation } from './expectation';
 import type { ReturnValue } from './repository/return-value';
 
@@ -24,57 +19,6 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
   returnValue = { value: 42 };
 
   matches = () => true;
-}
-
-export class SpyExpectation implements Expectation {
-  max = -1;
-
-  min = -1;
-
-  setInvocationCount = (min: number, max: number) => {
-    this.min = min;
-    this.max = max;
-  };
-
-  toString = () => 'spy expectation';
-
-  constructor(
-    public property: Property,
-    public args: Matcher[] | undefined,
-    public returnValue: ReturnValue
-  ) {}
-
-  matches = () => false;
-}
-
-export const spyExpectationFactory: ExpectationFactory = (
-  property,
-  args,
-  returnValue
-) => new SpyExpectation(property, args, returnValue);
-
-export class SpyExpectationBuilder implements ExpectationBuilder {
-  toString = () => 'spy pending expectation';
-
-  public argsCalledWith: unknown[] | undefined;
-
-  public finishCalledWith: ReturnValue | undefined;
-
-  public propertyCalledWith: Property | undefined;
-
-  setProperty(value: Property) {
-    this.propertyCalledWith = value;
-  }
-
-  setArgs(args: unknown[] | undefined) {
-    this.argsCalledWith = args;
-  }
-
-  finish(returnValue: ReturnValue) {
-    this.finishCalledWith = returnValue;
-
-    return new OneUseAlwaysMatchingExpectation();
-  }
 }
 
 export class MatchingPropertyExpectation implements Expectation {

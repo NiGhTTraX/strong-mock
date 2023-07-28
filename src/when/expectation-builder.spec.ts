@@ -1,35 +1,44 @@
-import { expectAnsilessEqual } from '../../tests/ansiless';
 import { SM } from '../../tests/old';
-import { spyExpectationFactory } from '../expectation/expectation.mocks';
-import type { ConcreteMatcher } from '../mock/options';
+import { UnfinishedExpectation } from '../errors/api';
+import { NotMatchingExpectation } from '../expectation/expectation.mocks';
+import { matches } from '../matchers/matcher';
+import type { ExpectationFactory } from './expectation-builder';
 import { ExpectationBuilderWithFactory } from './expectation-builder';
 
 describe('ExpectationBuilder', () => {
-  it('should print call', () => {
-    const matcher = SM.mock<ConcreteMatcher>();
+  const factory = SM.mock<ExpectationFactory>();
+  const matcher = matches(() => false);
+  const concreteMatcher = () => matcher;
+
+  it('should finish the expectation', () => {
     const builder = new ExpectationBuilderWithFactory(
-      spyExpectationFactory,
-      SM.instance(matcher),
+      SM.instance(factory),
+      concreteMatcher,
       false
     );
 
+    builder.setProperty('foo');
     builder.setArgs([1, 2, 3]);
-    builder.setProperty('bar');
 
-    expectAnsilessEqual(builder.toString(), `when(() => mock.bar(1, 2, 3))`);
+    const expectation = new NotMatchingExpectation(':irrelevant:', {
+      value: ':irrelevant:',
+    });
+    SM.when(
+      factory('foo', [1, 2, 3], { value: 42 }, concreteMatcher, false)
+    ).thenReturn(expectation);
+
+    expect(builder.finish({ value: 42 })).toEqual(expectation);
   });
 
-  it('should print property access', () => {
-    const matcher = SM.mock<ConcreteMatcher>();
+  it('should throw if unfinished', () => {
     const builder = new ExpectationBuilderWithFactory(
-      spyExpectationFactory,
-      SM.instance(matcher),
+      SM.instance(factory),
+      concreteMatcher,
       false
     );
 
-    builder.setArgs(undefined);
-    builder.setProperty('bar');
+    builder.setProperty('foo');
 
-    expectAnsilessEqual(builder.toString(), `when(() => mock.bar)`);
+    expect(() => builder.setProperty('bar')).toThrow(UnfinishedExpectation);
   });
 });
