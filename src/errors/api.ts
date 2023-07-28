@@ -1,12 +1,11 @@
-import { printProperty } from '../print';
+import { printProperty, printWhen } from '../print';
 import type { Property } from '../proxy';
-import type { ExpectationBuilder } from '../when/expectation-builder';
 
 export class UnfinishedExpectation extends Error {
-  constructor(builder: ExpectationBuilder) {
+  constructor(property: Property, args: any[] | undefined) {
     super(`There is an unfinished pending expectation:
 
-${builder.toString()}
+${printWhen(property, args)}
 
 Please finish it by setting a return value even if the value
 is undefined.`);

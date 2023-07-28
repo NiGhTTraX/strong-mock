@@ -1,20 +1,14 @@
 import { expectAnsilessContain } from '../../tests/ansiless';
-import { SpyExpectationBuilder } from '../expectation/expectation.mocks';
 import { NestedWhen, UnfinishedExpectation } from './api';
 
 describe('API errors', () => {
   describe('UnfinishedExpectation', () => {
     it('should print the pending expectation', () => {
-      const builder = new SpyExpectationBuilder();
-      builder.setArgs([1, 2, 3]);
-      builder.setProperty('bar');
-      builder.toString = () => 'foobar';
-
       expectAnsilessContain(
-        new UnfinishedExpectation(builder).message,
+        new UnfinishedExpectation('bar', [1, 2, 3]).message,
         `There is an unfinished pending expectation:
 
-foobar`
+when(() => mock.bar(1, 2, 3)`
       );
     });
   });

@@ -2,7 +2,6 @@ import { MissingWhen, UnfinishedExpectation } from '../errors/api';
 import type { Expectation } from '../expectation/expectation';
 import type { ReturnValue } from '../expectation/repository/return-value';
 import type { ConcreteMatcher } from '../mock/options';
-import { printWhen } from '../print';
 import type { Property } from '../proxy';
 
 /**
@@ -16,8 +15,6 @@ export interface ExpectationBuilder {
   setArgs: (args: unknown[] | undefined) => void;
 
   finish: (returnValue: ReturnValue) => Expectation;
-
-  toString: () => string;
 }
 
 export type ExpectationFactory = (
@@ -41,7 +38,7 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
 
   setProperty(value: Property) {
     if (this.property) {
-      throw new UnfinishedExpectation(this);
+      throw new UnfinishedExpectation(this.property, this.args);
     }
 
     this.property = value;
@@ -68,9 +65,5 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
     this.args = undefined;
 
     return expectation;
-  }
-
-  toString() {
-    return printWhen(this.property!, this.args);
   }
 }
