@@ -3,14 +3,14 @@ import { ApplyProp } from '../expectation/expectation';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import type { Property } from '../proxy';
 import { createProxy } from '../proxy';
-import type { PendingExpectation } from '../when/pending-expectation';
+import type { ExpectationBuilder } from '../when/expectation-builder';
 import { setActiveMock } from './map';
 import type { Mock } from './mock';
 import { Mode } from './mock';
 
 export const createStub = <T>(
   repo: ExpectationRepository,
-  pendingExpectation: PendingExpectation,
+  builder: ExpectationBuilder,
   getCurrentMode: () => Mode
 ): Mock<T> => {
   const stub = createProxy<T>({
@@ -21,14 +21,14 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.setProperty(property);
+      builder.setProperty(property);
 
       return createProxy({
         property: (childProp: Property) => {
           throw new NestedWhen(property, childProp);
         },
         apply: (args: unknown[]) => {
-          pendingExpectation.setArgs(args);
+          builder.setArgs(args);
         },
         ownKeys: () => {
           throw new Error('Spreading during an expectation is not supported.');
@@ -42,8 +42,8 @@ export const createStub = <T>(
 
       setActiveMock(stub);
 
-      pendingExpectation.setProperty(ApplyProp);
-      pendingExpectation.setArgs(args);
+      builder.setProperty(ApplyProp);
+      builder.setArgs(args);
 
       return undefined;
     },

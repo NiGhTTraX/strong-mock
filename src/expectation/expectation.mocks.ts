@@ -1,9 +1,9 @@
 import type { Matcher } from '../matchers/matcher';
 import type { Property } from '../proxy';
 import type {
+  ExpectationBuilder,
   ExpectationFactory,
-  PendingExpectation,
-} from '../when/pending-expectation';
+} from '../when/expectation-builder';
 import type { Expectation } from './expectation';
 import type { ReturnValue } from './repository/return-value';
 
@@ -53,7 +53,7 @@ export const spyExpectationFactory: ExpectationFactory = (
   returnValue
 ) => new SpyExpectation(property, args, returnValue);
 
-export class SpyPendingExpectation implements PendingExpectation {
+export class SpyExpectationBuilder implements ExpectationBuilder {
   toString = () => 'spy pending expectation';
 
   public argsCalledWith: unknown[] | undefined;

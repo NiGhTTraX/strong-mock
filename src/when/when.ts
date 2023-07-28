@@ -38,7 +38,7 @@ export const when: When = <R>(expectation: () => R) => {
   expectation();
   setMode(Mode.CALL);
 
-  const { pendingExpectation, repository } = getMockState(getActiveMock());
+  const { builder, repository } = getMockState(getActiveMock());
 
-  return createReturns(pendingExpectation, repository);
+  return createReturns(builder, repository);
 };

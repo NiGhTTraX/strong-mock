@@ -10,7 +10,7 @@ import type { Property } from '../proxy';
  * being accessed inside {@link createStub}, then any arguments passed to it, and ending
  * it with the returned value from {@link createReturns}.
  */
-export interface PendingExpectation {
+export interface ExpectationBuilder {
   setProperty: (prop: Property) => void;
 
   setArgs: (args: unknown[] | undefined) => void;
@@ -28,7 +28,7 @@ export type ExpectationFactory = (
   exactParams: boolean
 ) => Expectation;
 
-export class PendingExpectationWithFactory implements PendingExpectation {
+export class ExpectationBuilderWithFactory implements ExpectationBuilder {
   private args: unknown[] | undefined;
 
   private property: Property | undefined;

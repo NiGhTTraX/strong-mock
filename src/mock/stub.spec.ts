@@ -6,7 +6,7 @@ import { SM } from '../../tests/old';
 import { NestedWhen } from '../errors/api';
 import { ApplyProp } from '../expectation/expectation';
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import type { PendingExpectation } from '../when/pending-expectation';
+import type { ExpectationBuilder } from '../when/expectation-builder';
 import { Mode } from './mock';
 import { createStub } from './stub';
 
@@ -14,19 +14,19 @@ describe('createStub', () => {
   describe('recording', () => {
     // TODO: this smells because we're not using one of the parameters in all these tests
     const repo = SM.mock<ExpectationRepository>();
-    const pendingExpectation = SM.mock<PendingExpectation>();
+    const builder = SM.mock<ExpectationBuilder>();
 
     const expectMode = () => Mode.EXPECT;
 
     it('should intercept fn(...args)', () => {
       const stub = createStub<Fn>(
         SM.instance(repo),
-        SM.instance(pendingExpectation),
+        SM.instance(builder),
         expectMode
       );
 
-      SM.when(pendingExpectation.setProperty(ApplyProp)).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
+      SM.when(builder.setProperty(ApplyProp)).thenReturn();
+      SM.when(builder.setArgs([1, 2, 3])).thenReturn();
 
       stub(1, 2, 3);
     });
@@ -34,12 +34,12 @@ describe('createStub', () => {
     it('should intercept foo.bar(...args)', () => {
       const stub = createStub<Foo>(
         SM.instance(repo),
-        SM.instance(pendingExpectation),
+        SM.instance(builder),
         expectMode
       );
 
-      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
-      SM.when(pendingExpectation.setArgs([1, 2, 3])).thenReturn();
+      SM.when(builder.setProperty('bar')).thenReturn();
+      SM.when(builder.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar(1, 2, 3);
     });
@@ -47,11 +47,11 @@ describe('createStub', () => {
     it('should throw on nested access', () => {
       const stub = createStub<Baz>(
         SM.instance(repo),
-        SM.instance(pendingExpectation),
+        SM.instance(builder),
         expectMode
       );
 
-      SM.when(pendingExpectation.setProperty('foo')).thenReturn().twice();
+      SM.when(builder.setProperty('foo')).thenReturn().twice();
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
       expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
@@ -60,7 +60,7 @@ describe('createStub', () => {
     it('should throw when spreading', () => {
       const stub = createStub<Fn>(
         SM.instance(repo),
-        SM.instance(pendingExpectation),
+        SM.instance(builder),
         expectMode
       );
 
@@ -70,11 +70,11 @@ describe('createStub', () => {
     it('should throw when spreading a property', () => {
       const stub = createStub<Foo>(
         SM.instance(repo),
-        SM.instance(pendingExpectation),
+        SM.instance(builder),
         expectMode
       );
 
-      SM.when(pendingExpectation.setProperty('bar')).thenReturn();
+      SM.when(builder.setProperty('bar')).thenReturn();
 
       expect(() => ({ ...stub.bar })).toThrow();
     });
@@ -83,7 +83,7 @@ describe('createStub', () => {
   describe('not recording', () => {
     const repo = SM.mock<ExpectationRepository>();
     // TODO: this smells because we're not using one of the parameters in all these tests
-    const unusedPendingExpectation = SM.mock<PendingExpectation>();
+    const unusedBuilder = SM.mock<ExpectationBuilder>();
 
     const callMode = () => Mode.CALL;
 
@@ -92,7 +92,7 @@ describe('createStub', () => {
 
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
-        unusedPendingExpectation,
+        unusedBuilder,
         callMode
       );
 
@@ -104,7 +104,7 @@ describe('createStub', () => {
 
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
-        unusedPendingExpectation,
+        unusedBuilder,
         callMode
       );
 
@@ -116,7 +116,7 @@ describe('createStub', () => {
 
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
-        unusedPendingExpectation,
+        unusedBuilder,
         callMode
       );
 
@@ -134,7 +134,7 @@ describe('createStub', () => {
 
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),
-        unusedPendingExpectation,
+        unusedBuilder,
         callMode
       );
 

@@ -1,6 +1,6 @@
 import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
 import type { ReturnValue } from '../expectation/repository/return-value';
-import type { PendingExpectation } from '../when/pending-expectation';
+import type { ExpectationBuilder } from '../when/expectation-builder';
 import type { InvocationCount } from './invocation-count';
 import { createInvocationCount } from './invocation-count';
 
@@ -65,12 +65,12 @@ export type NonPromiseStub<R> = {
     (() => InvocationCount);
 };
 
-const finishPendingExpectation = (
+const finishExpectation = (
   returnValue: ReturnValue,
-  pendingExpectation: PendingExpectation,
+  builder: ExpectationBuilder,
   repo: ExpectationRepository
 ) => {
-  const finishedExpectation = pendingExpectation.finish(returnValue);
+  const finishedExpectation = builder.finish(returnValue);
 
   repo.add(finishedExpectation);
 
@@ -90,41 +90,41 @@ const getError = (errorOrMessage: Error | string | undefined): Error => {
 };
 
 export const createReturns = (
-  pendingExpectation: PendingExpectation,
+  builder: ExpectationBuilder,
   repository: ExpectationRepository
 ) => ({
   thenReturn: (returnValue: any): InvocationCount =>
-    finishPendingExpectation(
+    finishExpectation(
       // This will handle both thenReturn(23) and thenReturn(Promise.resolve(3)).
       { value: returnValue, isError: false, isPromise: false },
-      pendingExpectation,
+      builder,
       repository
     ),
   thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
-    finishPendingExpectation(
+    finishExpectation(
       { value: getError(errorOrMessage), isError: true, isPromise: false },
-      pendingExpectation,
+      builder,
       repository
     ),
   thenResolve: (promiseValue: any): InvocationCount =>
-    finishPendingExpectation(
+    finishExpectation(
       {
         value: promiseValue,
         isError: false,
         isPromise: true,
       },
-      pendingExpectation,
+      builder,
       repository
     ),
 
   thenReject: (errorOrMessage?: Error | string): InvocationCount =>
-    finishPendingExpectation(
+    finishExpectation(
       {
         value: getError(errorOrMessage),
         isError: true,
         isPromise: true,
       },
-      pendingExpectation,
+      builder,
       repository
     ),
 });

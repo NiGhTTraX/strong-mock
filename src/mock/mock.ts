@@ -1,8 +1,8 @@
 import { FlexibleRepository } from '../expectation/repository/flexible-repository';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import { isMatcher } from '../matchers/matcher';
-import type { ExpectationFactory } from '../when/pending-expectation';
-import { PendingExpectationWithFactory } from '../when/pending-expectation';
+import type { ExpectationFactory } from '../when/expectation-builder';
+import { ExpectationBuilderWithFactory } from '../when/expectation-builder';
 import type { StrongMockDefaults } from './defaults';
 import { currentDefaults } from './defaults';
 import { setMockState } from './map';
@@ -73,17 +73,17 @@ export const mock = <T>({
 
   const repository = new FlexibleRepository(options.unexpectedProperty);
 
-  const pendingExpectation = new PendingExpectationWithFactory(
+  const builder = new ExpectationBuilderWithFactory(
     strongExpectationFactory,
     options.concreteMatcher,
     options.exactParams
   );
 
-  const stub = createStub<T>(repository, pendingExpectation, getMode);
+  const stub = createStub<T>(repository, builder, getMode);
 
   setMockState(stub, {
     repository,
-    pendingExpectation,
+    builder,
     options,
   });
 
