@@ -174,11 +174,20 @@ describe('isObject', () => {
     });
 
     it('should pretty print the partial object when it contains matchers', () => {
+      const matcher = matches(() => false, { toString: () => 'matcher' });
+
       expectAnsilessEqual(
         isObject({
-          foo: matches(() => false, { toString: () => 'matcher' }),
+          foo: matcher,
         }).toString(),
         `Matcher<object>({"foo": "matcher"})`
+      );
+
+      expectAnsilessEqual(
+        isObject({
+          foo: { bar: matcher },
+        }).toString(),
+        `Matcher<object>({"foo": {"bar": "matcher"}})`
       );
     });
   });
