@@ -196,12 +196,12 @@ describe('isObject', () => {
     it('should handle non objects', () => {
       expect(isObject().getDiff('not object')).toEqual({
         expected: 'Matcher<object>',
-        actual: '"not object" (not object)',
+        actual: '"not object"',
       });
 
       expect(isObject().getDiff([1, 2, 3])).toEqual({
         expected: 'Matcher<object>',
-        actual: '[1, 2, 3] (not object)',
+        actual: '[1, 2, 3]',
       });
 
       expect(isObject({ foo: 'bar' }).getDiff('not object')).toEqual({

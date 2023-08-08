@@ -138,9 +138,7 @@ export const isObject = <T extends ObjectType, K extends DeepPartial<T>>(
         if (!partial) {
           return {
             expected: 'Matcher<object>',
-            actual: `${printValue(actual)} (${
-              isPlainObject(actual) ? 'object' : 'not object'
-            })`,
+            actual: `${printValue(actual)}`,
           };
         }
 
