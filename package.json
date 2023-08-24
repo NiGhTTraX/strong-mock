@@ -49,6 +49,6 @@
     "strip-ansi": "~6.0.0",
     "strong-mock": "~6.0.0",
     "tslib": "~2.6.0",
-    "typescript": "~5.1.0"
+    "typescript": "~5.2.0"
   }
 }
