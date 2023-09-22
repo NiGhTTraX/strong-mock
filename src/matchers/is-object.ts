@@ -98,7 +98,7 @@ const deepPrintObject = (value: ObjectType) =>
  * Object like values, e.g. classes and arrays, will not be matched.
  *
  * @param partial An optional subset of the expected object that will be
- *   recursively matched. Supports nested matcher. Values will be
+ *   recursively matched. Supports nested matchers. Values will be
  *   compared with {@link deepEquals}.
  *
  * @example
