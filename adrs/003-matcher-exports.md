@@ -2,7 +2,7 @@
 
 ## Context
 
-strong-mock exports a number of argument matchers that can be used to build complex expectations. This ADR covers the export strategy for all the matchers.
+strong-mock exports a number of matchers that can be used to build complex expectations. This ADR covers the export strategy for all the matchers.
 
 ## Decision drivers
 

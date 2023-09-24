@@ -10,7 +10,7 @@ export { setDefaults } from './mock/defaults';
 import * as It from './matchers/it';
 
 /**
- * Contains argument matchers that can be used to ignore arguments in an
+ * Contains matchers that can be used to ignore arguments in an
  * expectation or to match complex arguments.
  */
 export { It };

@@ -29,8 +29,8 @@ console.log(foo.bar(23)); // 'I am strong!'
 
 - [Features](#features)
   - [Type safety](#type-safety)
-  - [Useful error messages](#useful-error-messages)
-  - [Type safe argument matchers](#type-safe-argument-matchers)
+  - [Matchers](#matchers)
+  - [Awesome error messages](#awesome-error-messages)
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [API](#api)
@@ -43,7 +43,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Throwing errors](#throwing-errors)
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
-  - [Argument matchers](#argument-matchers)
+  - [Matchers](#matchers-1)
 - [Mock options](#mock-options)
   - [Unexpected property return value](#unexpected-property-return-value)
   - [Exact params](#exact-params)
@@ -52,10 +52,10 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
   - [Why do I get a `Didn't expect mock to be called` error?](#why-do-i-get-a-didnt-expect-mock-to-be-called-error)
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
-  - [Can I partially mock an existing object/function?](#can-i-partially-mock-an-existing-objectfunction)
+  - [Can I partially mock a concrete implementation?](#can-i-partially-mock-a-concrete-implementation)
   - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
-  - [Can I spread/enumerate a mock?](#can-i-spreadenumerate-a-mock)
+  - [Can I spread or enumerate a mock?](#can-i-spread-or-enumerate-a-mock)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -68,27 +68,34 @@ The mock expectations will share the same type guarantees as your production cod
 
 ![Renaming production code and test code](media/rename-refactor.gif)
 
-### Useful error messages
+### Matchers
 
-Error messages include the property that has been accessed, any arguments passed to it and any remaining unmet expectations.
+You can use matchers to partially match values, or create complex expectations, while still maintaining type safety.
+
+![Type safe matcher showing a type error](media/type-safe-matchers.png)
+
+### Awesome error messages
+
+Failed expectations will print a visual diff, and even integrate with the IDE.
 
 ```typescript
 import { mock, when } from 'strong-mock';
 
-const fn = mock<(a: number, b: number, c: number) => number>();
+const fn = mock<(pos: { x: number; y: number }) => boolean>();
 
-when(() => fn(1, 2, 3)).thenReturn(42);
+when(() =>
+  fn(
+    It.isObject({
+      x: It.isNumber(),
+      y: It.matches<number>((y) => y > 0)
+    })
+  )
+).thenReturn(true);
 
-fn(4, 5, 6);
+fn({ x: 1, y: -1 });
 ```
 
-![Test output showing details about mock expectations](media/error-messages.png)
-
-### Type safe argument matchers
-
-You can use argument matchers to partially match values, or create complex expectations, while still maintaining type safety.
-
-![Type safe matcher showing a type error](media/type-safe-matchers.png)
+![Test output from the IDE showing details about a failed mock expectation](media/error-messages.png)
 
 ## Installation
 
@@ -112,7 +119,7 @@ strong-mock requires an environment that supports the [ES6 Proxy object](https:/
 
 ### Setting expectations
 
-Expectations are set by calling the mock inside a `when` callback and finishing it by setting a return value.
+Expectations are set by calling the mock inside a `when` callback and setting a return value.
 
 ```typescript
 when(() => foo.bar(23)).thenReturn('awesome');
@@ -271,7 +278,7 @@ beforeEach(() => {
 })
 ```
 
-### Argument matchers
+### Matchers
 
 Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks, or maybe you want to match just a property from an argument.
 
@@ -291,7 +298,7 @@ console.log(fn(
 ); // 'matched!'
 ```
 
-You can mix argument matchers with concrete arguments:
+You can mix matchers with concrete arguments:
 
 ```typescript
 when(() => fn(42, It.isObject())).thenReturn('matched');
@@ -402,7 +409,7 @@ propertiesThrow.bar(42);
 
 ### Exact params
 
-By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type safe, the TypeScript compiler will never allow expecting less arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [argument matchers](#argument-matchers).
+By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type safe, the TypeScript compiler will never allow expecting less arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [matchers](#matchers-1).
 
 ```typescript
 import { mock } from 'strong-mock';
@@ -434,7 +441,7 @@ console.log(fn(1)); // throws
 
 ### Concrete matcher
 
-You can configure the [matcher](#argument-matchers) that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. This matcher can always be overwritten inside an expectation with another matcher.
+You can configure the [matcher](#matchers-1) that will be used in expectations with concrete values e.g. `42` or `{ foo: "bar" }`. This matcher can always be overwritten inside an expectation with another matcher.
 
 ```typescript
 import { mock, when, It } from 'strong-mock';
@@ -465,7 +472,7 @@ Secondly, it will highlight potential design problems such as violations of the 
 
 ### Why do I get a `Didn't expect mock to be called` error?
 
-This error happens when your code under test calls a method from the mock, or the mock itself if it's a function, that didn't have a matching expectation. It could be that the arguments received didn't match the ones set in the expectation (see [argument matchers](#argument-matchers)), or the call was made more than the allowed number of times (see [invocation count expectations](#setting-invocation-count-expectations)).
+This error happens when your code under test calls a method from the mock, or the mock itself if it's a function, that didn't have a matching expectation. It could be that the arguments received didn't match the ones set in the expectation (see [matchers](#matchers-1)), or the call was made more than the allowed number of times (see [invocation count expectations](#setting-invocation-count-expectations)).
 
 In rare cases, the code under test may try to inspect the mock by accessing special properties on it. For instance, React's `setState(state)` accepts 2 types of values: functions and everything else. To differentiate between the 2 types, React will internally do a `typeof` check. All mocks created by strong-mock return `'function'` for this check, so React will try to call them in case you pass them directly to `setState`. This might lead to the `Didn't expect mock(...) to be called` error, as the mock receives the previous state and doesn't find an expectation for it.
 
@@ -477,7 +484,7 @@ Unfortunately, this is not always possible, such as with the React example above
 
 To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())`, and you later changed `fn()` to return a `number`, then your expectation would become incorrect and the compiler couldn't check that for you.
 
-### Can I partially mock an existing object/function?
+### Can I partially mock a concrete implementation?
 
 No, passing a concrete implementation to `mock()` will be the same as passing a type: all properties will be mocked, and you have to set expectations on the ones that will be accessed.
 
@@ -503,7 +510,7 @@ console.log(foo.bar(23)); // 'called 23'
 
 The function in `thenReturn()` will be type checked against the actual interface, so you can make sure you're passing in an implementation that makes sense. Moreover, refactoring the interface will also refactor the expectation (in a capable IDE).
 
-### Can I spread/enumerate a mock?
+### Can I spread or enumerate a mock?
 
 Yes, and you will only get the properties that have expectations on them.
 
