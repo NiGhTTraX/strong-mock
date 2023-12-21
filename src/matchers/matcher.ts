@@ -1,5 +1,7 @@
 export const MATCHER_SYMBOL = Symbol('matcher');
 
+export type MatcherDiffer = (actual: any) => { actual: any; expected: any };
+
 export type MatcherOptions = {
   /**
    * Will be called when printing the diff between an expectation and the
@@ -25,7 +27,7 @@ export type MatcherOptions = {
    * //   - 'never'
    * //   + 42
    */
-  getDiff: (actual: any) => { actual: any; expected: any };
+  getDiff: MatcherDiffer;
 
   /**
    * Will be called when printing arguments for an unexpected or unmet expectation.
