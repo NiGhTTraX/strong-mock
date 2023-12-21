@@ -55,18 +55,22 @@ it('type safety', () => {
     number(It.isAny());
     // @ts-expect-error wrong matcher type
     number(It.isString());
+    // @ts-expect-error wrong matcher type
+    number(It.isPlainObject());
+    // @ts-expect-error wrong matcher type
+    number(It.isArray());
 
     const nestedObject = (x: { foo: { bar: number; 42: string } }) => x;
-    nestedObject(It.isObject());
-    nestedObject(It.isObject({ foo: { bar: 23 } }));
-    nestedObject(It.isObject({ foo: { 42: 'baz' } }));
+    nestedObject(It.isPlainObject());
+    nestedObject(It.isPartial({ foo: { bar: 23 } }));
+    nestedObject(It.isPartial({ foo: { 42: 'baz' } }));
     nestedObject(
       // @ts-expect-error wrong nested property type
-      It.isObject({ foo: { bar: 'boo' } })
+      It.isPartial({ foo: { bar: 'boo' } })
     );
     // @ts-expect-error because TS can't infer the proper type
     // See https://github.com/microsoft/TypeScript/issues/55164.
-    nestedObject(It.isObject({ foo: It.isObject() }));
+    nestedObject(It.isPartial({ foo: It.isPartial() }));
 
     const numberArray = (x: number[]) => x;
     numberArray(It.isArray());
@@ -78,22 +82,22 @@ it('type safety', () => {
     numberArray(It.isArray([It.isString()]));
 
     const object = (x: { foo: number }) => x;
-    object(It.isObject({ foo: It.isNumber() }));
+    object(It.isPartial({ foo: It.isNumber() }));
     object(
       // @ts-expect-error wrong nested matcher type
-      It.isObject({ foo: It.isString() })
+      It.isPartial({ foo: It.isString() })
     );
 
     const objectWithArrays = (x: { foo: { bar: number[] } }) => x;
     objectWithArrays(
-      It.isObject({
+      It.isPartial({
         foo: {
           bar: It.isArray([It.isNumber()]),
         },
       })
     );
     objectWithArrays(
-      It.isObject({
+      It.isPartial({
         foo: {
           // @ts-expect-error wrong nexted matcher type
           bar: It.isArray([It.isString()]),
@@ -101,13 +105,35 @@ it('type safety', () => {
       })
     );
     objectWithArrays(
-      It.isObject({
+      It.isPartial({
         foo: {
           // @ts-expect-error arrays should not be made partial
           bar: [undefined],
         },
       })
     );
+
+    const objectLikeValues = (data: {
+      map: Map<unknown, unknown>;
+      set: Set<unknown>;
+      arr: Array<unknown>;
+    }) => {};
+    objectLikeValues({
+      // @ts-expect-error Maps are not objects
+      map: It.isPlainObject(),
+      // @ts-expect-error Sets are not objects
+      set: It.isPlainObject(),
+      // @ts-expect-error Arrays are not objects
+      arr: It.isPlainObject(),
+    });
+    objectLikeValues({
+      // @ts-expect-error Maps are not objects
+      map: It.isPartial({}),
+      // @ts-expect-error Sets are not objects
+      set: It.isPartial({}),
+      // @ts-expect-error Arrays are not objects
+      arr: It.isPartial({}),
+    });
 
     const string = (x: string) => string;
     const captureMatcher = It.willCapture<number>();

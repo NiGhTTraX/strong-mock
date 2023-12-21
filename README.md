@@ -85,7 +85,7 @@ const fn = mock<(pos: { x: number; y: number }) => boolean>();
 
 when(() =>
   fn(
-    It.isObject({
+    It.isPartial({
       x: It.isNumber(),
       y: It.matches<number>((y) => y > 0)
     })
@@ -289,7 +289,7 @@ const fn = mock<
 
 when(() => fn(
   It.isAny(),
-  It.isObject({ values: [1, 2, 3] })
+  It.isPartial({ values: [1, 2, 3] })
 )).thenReturn('matched!');
 
 console.log(fn(
@@ -301,7 +301,7 @@ console.log(fn(
 You can mix matchers with concrete arguments:
 
 ```typescript
-when(() => fn(42, It.isObject())).thenReturn('matched');
+when(() => fn(42, It.isPlainObject())).thenReturn('matched');
 ```
 
 Available matchers:
@@ -311,7 +311,8 @@ Available matchers:
 - `isNumber` - matches any number,
 - `isString` - matches any string, can search for substrings and patterns,
 - `isArray` - matches any array, can search for subsets,
-- `isObject` - matches any object, can search for partial objects,
+- `isPlainObject` - matches any plain object,
+- `isPartial` - recursively matches a subset of an object,
 - `matches` - build your own matcher,
 - `willCapture` - matches anything and stores the received value.
 
@@ -324,12 +325,12 @@ The following table illustrates the differences between the equality matchers:
 | `{ }`              | `{ foo: undefined }` | not equal | not equal       | equal                              |
 | `new (class {})()` | `new (class {})()`   | not equal | not equal       | equal                              |
 
-Some matchers, like `isObject` and `isArray` support nesting matchers:
+Some matchers, like `isPartial` and `isArray` support nesting matchers:
 
 ```typescript
-It.isObject({ foo: It.isString() })
+It.isPartial({ foo: It.isString() })
 
-It.isArray([ It.isObject({
+It.isArray([ It.isPartial({
   foo: It.isString({ matching: /foo/ })
 })])
 ```

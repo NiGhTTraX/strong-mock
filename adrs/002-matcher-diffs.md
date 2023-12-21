@@ -89,7 +89,7 @@ This ADR aims to cover printing arguments that match the expected values as part
 
 - matchers must handle the case where the received value matches the expected value and return a representation of the received value according to the matcher's definition
 - except for `deepEquals` and `is`, all matchers will hide some part of the received value in the diff, potentially making debugging harder; the full values will always be present at the top of the error message, but with large diffs that might be easy to miss
-- increases matcher complexity, as values can be formatted naively e.g. `object` for `isObject`, or in a more complex way e.g. showing only the partial match for `isObject(partial)`
+- increases matcher complexity, as values can be formatted naively e.g. `object` for `isPartial`, or in a more complex way e.g. showing only the partial match for `isPartial(partial)`
 - increases duplication between `toString` and `getDiff`
 
 ### State of the art

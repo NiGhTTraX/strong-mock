@@ -9,7 +9,9 @@ export { isArray } from './is-array';
 
 export { isNumber } from './is-number';
 
-export { isObject } from './is-object';
+export { isPlainObject } from './is-plain-object';
+
+export { isPartial } from './is-partial';
 
 export { isString } from './is-string';
 

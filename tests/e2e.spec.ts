@@ -190,7 +190,7 @@ describe('e2e', () => {
     it('should support deep matching objects', () => {
       const fn = mock<(x: { foo: { bar: string; baz: number } }) => number>();
 
-      when(() => fn(It.isObject({ foo: { bar: 'bar' } }))).thenReturn(23);
+      when(() => fn(It.isPartial({ foo: { bar: 'bar' } }))).thenReturn(23);
 
       expect(() => fn({ foo: { bar: 'baz', baz: 42 } })).toThrow(
         UnexpectedCall
