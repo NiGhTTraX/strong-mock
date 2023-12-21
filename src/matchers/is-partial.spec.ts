@@ -97,13 +97,13 @@ describe('isPartial', () => {
         expected: { foo: 'bar' },
         actual: 'not object',
         expectedDiff: { foo: 'bar' },
-        actualDiff: { foo: undefined },
+        actualDiff: 'not object',
       },
       {
         expected: { foo: { bar: 'baz' } },
         actual: { foo: 'not object' },
         expectedDiff: { foo: { bar: 'baz' } },
-        actualDiff: { foo: { bar: undefined } },
+        actualDiff: { foo: 'not object' },
       },
     ]);
   });
@@ -198,11 +198,99 @@ describe('isPartial', () => {
         expectedDiff: { foo: { bar: { baz: 'expected' } } },
         actualDiff: { foo: { bar: { baz: 'not expected' } } },
       },
+    ]);
+  });
+
+  it('should handle missing keys', () => {
+    diffTests([
+      {
+        expected: { foo: 42 },
+        actual: {},
+        expectedDiff: { foo: 42 },
+        actualDiff: {},
+      },
+      {
+        expected: { foo: { bar: 42 } },
+        actual: {},
+        expectedDiff: { foo: { bar: 42 } },
+        actualDiff: {},
+      },
+      {
+        expected: { foo: { bar: 42 } },
+        actual: { foo: {} },
+        expectedDiff: { foo: { bar: 42 } },
+        actualDiff: { foo: {} },
+      },
+      {
+        expected: { foo: { bar: 42 } },
+        actual: { foo: undefined },
+        expectedDiff: { foo: { bar: 42 } },
+        actualDiff: { foo: undefined },
+      },
       {
         expected: { foo: { bar: { baz: 42 } } },
         actual: { foo: { bar: {} } },
         expectedDiff: { foo: { bar: { baz: 42 } } },
         actualDiff: { foo: { bar: {} } },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: { foo: { bar: undefined } },
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: { foo: { bar: undefined } },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: { foo: { bar: false } },
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: { foo: { bar: false } },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: { foo: { bar: '' } },
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: { foo: { bar: '' } },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: { foo: { bar: 'bla' } },
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: { foo: { bar: 'bla' } },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: { foo: undefined },
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: { foo: undefined },
+      },
+      {
+        expected: { foo: { bar: { baz: 42 } } },
+        actual: undefined,
+        expectedDiff: { foo: { bar: { baz: 42 } } },
+        actualDiff: undefined,
+      },
+    ]);
+  });
+
+  it('should handle extra keys', () => {
+    diffTests([
+      {
+        expected: { foo: 42 },
+        actual: { foo: -1, bar: 2 },
+        expectedDiff: { foo: 42 },
+        actualDiff: { foo: -1 },
+      },
+      {
+        expected: { foo: { bar: 42 } },
+        actual: { foo: { bar: 1, baz: 2 } },
+        expectedDiff: { foo: { bar: 42 } },
+        actualDiff: { foo: { bar: 1 } },
+      },
+      {
+        expected: { foo: 42 },
+        actual: { foo: { bar: 1, baz: 2 } },
+        expectedDiff: { foo: 42 },
+        actualDiff: { foo: { bar: 1, baz: 2 } },
       },
     ]);
   });

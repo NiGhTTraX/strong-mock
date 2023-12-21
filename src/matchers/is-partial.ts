@@ -33,9 +33,22 @@ const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
     })
   );
 
-const getActualObjectDiff = (actual: unknown, expected: ObjectType): unknown =>
-  Object.fromEntries(
-    getKeys(expected).map((key) => {
+const getActualObjectDiff = (
+  actual: unknown,
+  expected: ObjectType
+): unknown => {
+  const actualKeys = getKeys(actual);
+  const expectedKeys = new Set(getKeys(expected));
+  const commonKeys = actualKeys.filter((key) => expectedKeys.has(key));
+
+  if (!commonKeys.length) {
+    // When we don't have any common keys we return the whole object
+    // so the user can inspect what's in there.
+    return actual;
+  }
+
+  return Object.fromEntries(
+    commonKeys.map((key) => {
       const expectedValue = getKey(expected, key);
       const actualValue = getKey(actual, key);
 
@@ -50,6 +63,7 @@ const getActualObjectDiff = (actual: unknown, expected: ObjectType): unknown =>
       return [key, actualValue];
     })
   );
+};
 
 const getKeys = (value: unknown): Property[] => {
   if (typeof value === 'object' && value !== null) {
