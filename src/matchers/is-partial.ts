@@ -103,7 +103,8 @@ const deepPrintObject = (value: ObjectType) =>
  * @param partial A subset of the expected object that will be recursively matched.
  *   Supports nested matchers.
  *   Concrete values will be compared with {@link deepEquals}.
- *   Note that a `{}` partial will match ANY value.
+ *   Note that a `{}` partial will match ANY value including non-objects.
+ *   Use {@link isPlainObject} if you want to match any plain object.
  *
  * @example
  * const fn = mock<(pos: { x: number, y: number }) => number>();
