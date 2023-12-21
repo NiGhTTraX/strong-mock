@@ -41,7 +41,7 @@ This ADR aims to cover printing arguments that match the expected values as part
 
 - recommendation vs requirement: the decision should either be easy to follow, or easy to enforce, so that all matchers, both built-in and user-made, can produce consistent diffs
 - printing the expectation vs printing the diff: the expectation will always use `toString` to give a pretty representation of the expected arguments, so in the example above it will show `string` for the `isString` matcher; the diff that follows should take this into consideration from the point of view of repeating information or presenting different information
-- the competition: people coming from other libraries should not abandon their habits of understanding an error message
+- state of the art: people coming from other libraries should not abandon their habits of understanding an error message
 
 ## Considered options
 
@@ -92,7 +92,7 @@ This ADR aims to cover printing arguments that match the expected values as part
 - increases matcher complexity, as values can be formatted naively e.g. `object` for `isObject`, or in a more complex way e.g. showing only the partial match for `isObject(partial)`
 - increases duplication between `toString` and `getDiff`
 
-### The competition
+### State of the art
 
 - jest: prints received value
 

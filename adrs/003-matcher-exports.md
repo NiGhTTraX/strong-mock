@@ -8,7 +8,7 @@ strong-mock exports a number of matchers that can be used to build complex expec
 
 - auto-import experience: users should not have to manually type imports
 - docstrings: hovering over an individual docstring should bring up its docs
-- the competition: people coming from other libraries should not abandon their habits of constructing assertions
+- state of the art: people coming from other libraries should not abandon their habits of constructing assertions
 
 ## Considered options
 
@@ -44,7 +44,7 @@ when(() => fn(isAny()))
 
 - can lead to a poor auto-import experience since some of the matcher names clash with common libraries e.g. lodash
 
-### The competition
+### State of the art
 
 - jest: all matchers are nested under the `expect` namespace
 - sinon: all matchers are nested under the `sinon.match` namespace
