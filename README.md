@@ -64,7 +64,7 @@ console.log(foo.bar(23)); // 'I am strong!'
 
 ### Type safety
 
-The mock expectations will share the same type guarantees as your production code, and you can safely refactor in an IDE knowing that all usages will be updated.
+The mocks will share the same types as your production code, and you can safely refactor in an IDE knowing that all usages will be updated.
 
 ![Renaming production code and test code](media/rename-refactor.gif)
 
@@ -72,7 +72,7 @@ The mock expectations will share the same type guarantees as your production cod
 
 You can use matchers to partially match values, or create complex expectations, while still maintaining type safety.
 
-![Type safe matcher showing a type error](media/type-safe-matchers.png)
+![Type safe matchers](media/type-safe-matchers.png)
 
 ### Awesome error messages
 
@@ -96,6 +96,25 @@ fn({ x: 1, y: -1 });
 ```
 
 ![Test output from the IDE showing details about a failed mock expectation](media/error-messages.png)
+
+### Works with Promises and Errors
+
+```typescript
+import { mock, when } from 'strong-mock';
+
+const fn = mock<(id: number) => Promise<string>>();
+
+when(() => fn(42)).thenResolve('foo');
+when(() => fn(-1)).thenReject('oops');
+
+console.log(await fn(42)); // foo
+
+try {
+  await fn(-1);
+} catch (e) {
+  console.log(e.message); // oops
+}
+```
 
 ## Installation
 
