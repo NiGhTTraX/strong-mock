@@ -45,6 +45,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Verifying expectations](#verifying-expectations)
   - [Resetting expectations](#resetting-expectations)
   - [Matchers](#matchers-1)
+    - [Creating your own matcher](#creating-your-own-matcher)
 - [Mock options](#mock-options)
   - [Unexpected property return value](#unexpected-property-return-value)
   - [Exact params](#exact-params)
@@ -334,8 +335,8 @@ Available matchers:
 - `isArray` - matches any array, can search for subsets,
 - `isPlainObject` - matches any plain object,
 - `isPartial` - recursively matches a subset of an object,
-- `matches` - build your own matcher,
-- `willCapture` - matches anything and stores the received value.
+- `willCapture` - matches anything and stores the received value,
+- `matches` - [build your own matcher](#creating-your-own-matcher).
 
 The following table illustrates the differences between the equality matchers:
 
@@ -356,17 +357,6 @@ It.isArray([ It.isPartial({
 })])
 ```
 
-You can create arbitrarily complex and type safe matchers with `It.matches(cb)`:
-
-```typescript
-const fn = mock<(x: number, y: number[]) => string>();
-
-when(() => fn(
-  It.matches(x => x > 0),
-  It.matches(y => y.includes(42))
-)).thenReturn('matched');
-```
-
 `It.willCapture` is a special matcher that will match any value and store it, so you can access it outside an expectation. This could be useful to capture a callback and then test it separately.
 
 ```ts
@@ -380,6 +370,57 @@ when(() => fn(matcher)).thenReturn(42);
 console.log(fn(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
 ```
+
+#### Creating your own matcher
+
+You can create arbitrarily complex and type safe matchers with `It.matches()`:
+
+```typescript
+const fn = mock<(x: number, y: string) => string>();
+
+when(() => fn(
+  It.matches(x => x > 0),
+  It.matches(y => y.startsWith('foo'))
+)).thenReturn('matched');
+```
+
+The types are automatically inferred, but you can also specify them explicitly through the generic parameter, which is useful if you want to create reusable matchers:
+
+```typescript
+const startsWith = (expected: string) => It.matches<string>(
+  actual => actual.startsWith(expected)
+);
+
+when(() => fn(42, startsWith('foo'))).thenReturn('matched');
+
+fn(42, 'foobar') // 'matched'
+```
+
+You can also customize how the matcher is printed in error messages, and how the diff is printed:
+
+```typescript
+const closeTo = (expected: number, precision = 0.01) => It.matches<number>(
+  actual => Math.abs(expected - actual) <= precision,
+  {
+    toString: () => `closeTo(${expected}, ${precision})`,
+    getDiff: (actual) => {
+      const diff = Math.abs(expected - actual);
+      const sign = diff < 0 ? '-' : '+';
+      
+      return {
+        actual: `${actual} (${sign}${diff})`,
+        expected: `${expected} ±${precision}`,
+      };
+    }
+  }
+);
+
+when(() => fn(closeTo(1), 'foo')).thenReturn('matched');
+
+fn(2, 'foo');
+```
+
+![Error message for custom matcher](media/custom-matcher.png)
 
 ## Mock options
 
