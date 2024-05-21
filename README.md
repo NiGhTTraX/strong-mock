@@ -51,12 +51,13 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Concrete matcher](#concrete-matcher)
 - [FAQ](#faq)
   - [Why do I have to set all expectations first?](#why-do-i-have-to-set-all-expectations-first)
-  - [Why do I get a `Didn't expect mock to be called` error?](#why-do-i-get-a-didnt-expect-mock-to-be-called-error)
   - [Why do I have to set a return value even if it's `undefined`?](#why-do-i-have-to-set-a-return-value-even-if-its-undefined)
+  - [Why do I get a `Didn't expect mock to be called` error?](#why-do-i-get-a-didnt-expect-mock-to-be-called-error)
   - [Can I partially mock a concrete implementation?](#can-i-partially-mock-a-concrete-implementation)
   - [How do I set expectations on setters?](#how-do-i-set-expectations-on-setters)
   - [How do I provide a function for the mock to call?](#how-do-i-provide-a-function-for-the-mock-to-call)
   - [Can I spread or enumerate a mock?](#can-i-spread-or-enumerate-a-mock)
+  - [Why does `typeof mock()` return `function`?](#why-does-typeof-mock-return-function)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
