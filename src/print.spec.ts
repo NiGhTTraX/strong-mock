@@ -3,7 +3,7 @@ import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 import {
   printDiffForAllExpectations,
   printExpectationDiff,
-} from './errors/unexpected-call';
+} from './errors/diff';
 import { ApplyProp } from './expectation/expectation';
 import { StrongExpectation } from './expectation/strong-expectation';
 import { matches } from './matchers/matcher';
