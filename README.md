@@ -31,6 +31,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Type safety](#type-safety)
   - [Matchers](#matchers)
   - [Awesome error messages](#awesome-error-messages)
+  - [Works with Promises and Errors](#works-with-promises-and-errors)
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [API](#api)
@@ -270,10 +271,10 @@ It is recommended that you call `verify()` on your mocks at the end of every tes
 ```typescript
 afterEach(() => {
   verifyAll();
-})
+});
 ```
 
-![verify error](./media/verify.png)
+![verify error](media/verify.png)
 
 ### Resetting expectations
 
@@ -294,7 +295,7 @@ If you create common mocks that are shared by multiple tests you should reset th
 ```typescript
 beforeEach(() => {
   resetAll();
-})
+});
 ```
 
 ### Matchers
@@ -490,19 +491,17 @@ This design decision has a few reasons behind it. First, it forces you to be awa
 
 Secondly, it will highlight potential design problems such as violations of the SOLID principles. If you find yourself duplicating expectations between tests and passing dummy values to them because your test is not concerned with them, then you might want to look into splitting the code to only depend on things it really needs.
 
-### Why do I get a `Didn't expect mock to be called` error?
-
-This error happens when your code under test calls a method from the mock, or the mock itself if it's a function, that didn't have a matching expectation. It could be that the arguments received didn't match the ones set in the expectation (see [matchers](#matchers-1)), or the call was made more than the allowed number of times (see [invocation count expectations](#setting-invocation-count-expectations)).
-
-In rare cases, the code under test may try to inspect the mock by accessing special properties on it. For instance, React's `setState(state)` accepts 2 types of values: functions and everything else. To differentiate between the 2 types, React will internally do a `typeof` check. All mocks created by strong-mock return `'function'` for this check, so React will try to call them in case you pass them directly to `setState`. This might lead to the `Didn't expect mock(...) to be called` error, as the mock receives the previous state and doesn't find an expectation for it.
-
-If you run into any of these cases, feel free to [open an issue](https://github.com/NiGhTTraX/strong-mock/issues) with a minimal reproduction. Most of the time the issue can be fixed by returning stubbed values for these special properties.
-
-Unfortunately, this is not always possible, such as with the React example above. You might have to adjust your code slightly to work around the checks your code, or some library, is doing. With React, simply putting the mock inside an object e.g. `setState({ foo: theMock })` will avoid the `typeof` check and work as expected.
-
 ### Why do I have to set a return value even if it's `undefined`?
 
 To make side effects explicit and to prevent future refactoring headaches. If you had just `when(() => fn())`, and you later changed `fn()` to return a `number`, then your expectation would become incorrect and the compiler couldn't check that for you.
+
+### Why do I get a `Didn't expect mock to be called` error?
+
+This error happens when your code under test calls a mock that didn't have a matching expectation. It could be that the arguments received didn't match the ones set in the expectation (see [matchers](#matchers-1)), or the call was made more than the allowed number of times (see [invocation count expectations](#setting-invocation-count-expectations)).
+
+In rare cases, the code under test may try to inspect the mock by accessing special properties on it. For instance, wrapping a mock in `Promise.resolve()` will try to access a `.then` property on it. strong-mock returns stub values for most of these, but if you find another one feel free to [open an issue](https://github.com/NiGhTTraX/strong-mock/issues) with a minimal reproduction.
+
+Unfortunately, not all of these cases can be covered with stub values, and you may have to slightly adjust your code to work around this issue.
 
 ### Can I partially mock a concrete implementation?
 
@@ -545,6 +544,10 @@ const foo2 = { ...foo };
 console.log(foo2.bar); // 42
 console.log(foo2.baz); // undefined
 ```
+
+### Why does `typeof mock()` return `function`?
+
+All mocks and methods on them are functions in order to intercept function calls.
 
 ### How can I ignore `undefined` keys when setting expectations on objects?
 
