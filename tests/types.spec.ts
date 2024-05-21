@@ -136,6 +136,21 @@ it('type safety', () => {
     });
 
     const string = (x: string) => string;
+
+    const startsWith = (expected: string) =>
+      It.matches<string>((actual) => actual.startsWith(expected));
+    string(startsWith('foo'));
+
+    It.matches<string>(() => true, {
+      toString: () => 'foo',
+      getDiff: (actual) => ({ actual: actual.toLowerCase(), expected: 'foo' }),
+    });
+
+    It.matches<string>(() => true, {
+      toString: () => 'foo',
+      getDiff: (actual) => ({ actual: actual + 1, expected: 'foo' }),
+    });
+
     const captureMatcher = It.willCapture<number>();
     // The incoming value can be of any type.
     captureMatcher.matches('aaa');
