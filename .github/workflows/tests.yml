@@ -10,14 +10,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: latest
 
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -33,4 +33,4 @@ jobs:
         run: pnpm run build
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
