@@ -119,17 +119,17 @@ const deepPrintObject = (value: unknown) =>
  *
  * @example
  * const fn = mock<(pos: { x: number, y: number }) => number>();
- * when(() => fn(It.isPartial({ x: 23 }))).returns(42);
+ * when(() => fn(It.containsObject({ x: 23 }))).returns(42);
  *
  * fn({ x: 23, y: 200 }) // returns 42
  *
  * @example
- * It.isPartial({ foo: It.isString() })
+ * It.containsObject({ foo: It.isString() })
  */
 // T is not constrained to ObjectType because of
 // https://github.com/microsoft/TypeScript/issues/57810,
 // but K is to avoid inferring non-object partials
-export const isPartial = <T, K extends DeepPartial<T>>(
+export const containsObject = <T, K extends DeepPartial<T>>(
   partial: K extends ObjectType ? K : never
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {

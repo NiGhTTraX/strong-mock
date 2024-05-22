@@ -1,6 +1,6 @@
 import { expectAnsilessEqual } from '../../tests/ansiless';
+import { containsObject } from './contains-object';
 import { isArray } from './is-array';
-import { isPartial } from './is-partial';
 import { isString } from './is-string';
 import { matches } from './matcher';
 
@@ -48,7 +48,7 @@ describe('isArray', () => {
 
   it('should match nested matchers', () => {
     expect(
-      isArray([isString(), isPartial({ foo: 'bar' })]).matches([
+      isArray([isString(), containsObject({ foo: 'bar' })]).matches([
         'foo',
         { foo: 'bar' },
       ])

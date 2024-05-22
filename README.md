@@ -89,7 +89,7 @@ const fn = mock<(pos: { x: number; y: number }) => boolean>();
 
 when(() =>
   fn(
-    It.isPartial({
+    It.containsObject({
       x: It.isNumber(),
       y: It.matches<number>((y) => y > 0)
     })
@@ -312,7 +312,7 @@ const fn = mock<
 
 when(() => fn(
   It.isAny(),
-  It.isPartial({ values: [1, 2, 3] })
+  It.containsObject({ values: [1, 2, 3] })
 )).thenReturn('matched!');
 
 console.log(fn(
@@ -335,7 +335,7 @@ Available matchers:
 - `isString` - matches any string, can search for substrings and patterns,
 - `isArray` - matches any array, can search for subsets,
 - `isPlainObject` - matches any plain object,
-- `isPartial` - recursively matches a subset of an object,
+- `containsObject` - recursively matches a subset of an object,
 - `willCapture` - matches anything and stores the received value,
 - `matches` - [build your own matcher](#creating-your-own-matcher).
 
@@ -348,12 +348,12 @@ The following table illustrates the differences between the equality matchers:
 | `{ }`              | `{ foo: undefined }` | not equal | not equal       | equal                              |
 | `new (class {})()` | `new (class {})()`   | not equal | not equal       | equal                              |
 
-Some matchers, like `isPartial` and `isArray` support nesting matchers:
+Some matchers, like `containsObject` and `isArray` support nesting matchers:
 
 ```typescript
-It.isPartial({ foo: It.isString() })
+It.containsObject({ foo: It.isString() })
 
-It.isArray([ It.isPartial({
+It.isArray([ It.containsObject({
   foo: It.isString({ matching: /foo/ })
 })])
 ```

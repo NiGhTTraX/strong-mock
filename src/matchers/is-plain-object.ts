@@ -10,7 +10,7 @@ type ObjectType = Record<Property, unknown>;
  * Matches any plain object e.g. object literals or objects created with `Object.create()`.
  *
  * Classes, arrays, maps, sets etc. are not considered plain objects.
- * You can use {@link isPartial} or {@link matches} to match those.
+ * You can use {@link containsObject} or {@link matches} to match those.
  *
  * @example
  * const fn = mock<({ foo: string }) => number>();

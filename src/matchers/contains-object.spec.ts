@@ -1,8 +1,8 @@
 import { expectAnsilessEqual } from '../../tests/ansiless';
 import { SM } from '../../tests/old';
 import type { Property } from '../proxy';
+import { containsObject } from './contains-object';
 import { isArray } from './is-array';
-import { isPartial } from './is-partial';
 import { isString } from './is-string';
 import type { MatcherDiffer } from './matcher';
 import { matches } from './matcher';
@@ -18,8 +18,8 @@ const expectDiff = ({
   expectedDiff: Record<Property, unknown>;
   actualDiff: unknown;
 }) => {
-  expect(isPartial(expected).matches(actual)).toBeFalsy();
-  expect(isPartial(expected).getDiff(actual)).toEqual({
+  expect(containsObject(expected).matches(actual)).toBeFalsy();
+  expect(containsObject(expected).getDiff(actual)).toEqual({
     actual: actualDiff,
     expected: expectedDiff,
   });
@@ -43,29 +43,17 @@ const diffTests = (tests: Test[]) => {
   );
 };
 
-describe('isPartial', () => {
-  it('should match anything with an empty partial', () => {
-    expect(isPartial({}).matches(42)).toBeTruthy();
-    expect(isPartial({}).matches('foo')).toBeTruthy();
-    expect(isPartial({}).matches(true)).toBeTruthy();
-    expect(isPartial({}).matches(null)).toBeTruthy();
-    expect(isPartial({}).matches(undefined)).toBeTruthy();
-    expect(isPartial({}).matches([])).toBeTruthy();
-    expect(isPartial({}).matches({})).toBeTruthy();
-    expect(isPartial({}).matches(new Map())).toBeTruthy();
-    expect(isPartial({}).matches(new Set())).toBeTruthy();
-  });
-
+describe('containsObject', () => {
   it('should match a subset of the actual keys', () => {
-    expect(isPartial({ foo: 'bar' }).matches({ foo: 'bar' })).toBeTruthy();
+    expect(containsObject({ foo: 'bar' }).matches({ foo: 'bar' })).toBeTruthy();
     expect(
-      isPartial({ foo: 'bar' }).matches({ foo: 'bar', extra: 1 })
+      containsObject({ foo: 'bar' }).matches({ foo: 'bar', extra: 1 })
     ).toBeTruthy();
     expect(
-      isPartial({ one: 1, two: 2 }).matches({ one: 1, two: 2 })
+      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2 })
     ).toBeTruthy();
     expect(
-      isPartial({ one: 1, two: 2 }).matches({ one: 1, two: 2, three: 3 })
+      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2, three: 3 })
     ).toBeTruthy();
 
     diffTests([
@@ -109,12 +97,12 @@ describe('isPartial', () => {
   });
 
   it('should handle falsy values', () => {
-    expect(isPartial({ foo: false }).matches({ foo: false })).toBeTruthy();
-    expect(isPartial({ foo: null }).matches({ foo: null })).toBeTruthy();
+    expect(containsObject({ foo: false }).matches({ foo: false })).toBeTruthy();
+    expect(containsObject({ foo: null }).matches({ foo: null })).toBeTruthy();
     expect(
-      isPartial({ foo: undefined }).matches({ foo: undefined })
+      containsObject({ foo: undefined }).matches({ foo: undefined })
     ).toBeTruthy();
-    expect(isPartial({ foo: '' }).matches({ foo: '' })).toBeTruthy();
+    expect(containsObject({ foo: '' }).matches({ foo: '' })).toBeTruthy();
 
     diffTests([
       {
@@ -159,8 +147,10 @@ describe('isPartial', () => {
   it('should match non string keys', () => {
     const foo = Symbol('foo');
 
-    expect(isPartial({ [foo]: 'bar' }).matches({ [foo]: 'bar' })).toBeTruthy();
-    expect(isPartial({ 100: 'bar' }).matches({ 100: 'bar' })).toBeTruthy();
+    expect(
+      containsObject({ [foo]: 'bar' }).matches({ [foo]: 'bar' })
+    ).toBeTruthy();
+    expect(containsObject({ 100: 'bar' }).matches({ 100: 'bar' })).toBeTruthy();
 
     diffTests([
       {
@@ -180,7 +170,7 @@ describe('isPartial', () => {
 
   it('should match nested keys', () => {
     expect(
-      isPartial({ foo: { bar: { baz: 42 } } }).matches({
+      containsObject({ foo: { bar: { baz: 42 } } }).matches({
         foo: { bar: { baz: 42 } },
       })
     ).toBeTruthy();
@@ -302,7 +292,7 @@ describe('isPartial', () => {
     const NotBar = class {
       foo = 'not bar';
     };
-    expect(isPartial({ foo: 'bar' }).matches(new Bar())).toBeTruthy();
+    expect(containsObject({ foo: 'bar' }).matches(new Bar())).toBeTruthy();
     diffTests([
       {
         expected: { foo: 'bar' },
@@ -330,9 +320,9 @@ describe('isPartial', () => {
       },
     ]);
 
-    expect(isPartial({ 0: 'bar' }).matches(['bar'])).toBeTruthy();
-    expect(isPartial({ 0: 'bar' }).matches(['bar', 'baz'])).toBeTruthy();
-    expect(isPartial({ 0: 0, 2: 2 }).matches([0, 1, 2])).toBeTruthy();
+    expect(containsObject({ 0: 'bar' }).matches(['bar'])).toBeTruthy();
+    expect(containsObject({ 0: 'bar' }).matches(['bar', 'baz'])).toBeTruthy();
+    expect(containsObject({ 0: 0, 2: 2 }).matches([0, 1, 2])).toBeTruthy();
     diffTests([
       {
         expected: { 0: 'bar' },
@@ -356,9 +346,11 @@ describe('isPartial', () => {
   });
 
   it('should not recursively match non plain objects', () => {
-    expect(isPartial({ foo: [1, 2] }).matches({ foo: [1, 2] })).toBeTruthy();
     expect(
-      isPartial({ foo: new Map([['foo', 'bar']]) }).matches({
+      containsObject({ foo: [1, 2] }).matches({ foo: [1, 2] })
+    ).toBeTruthy();
+    expect(
+      containsObject({ foo: new Map([['foo', 'bar']]) }).matches({
         foo: new Map([['foo', 'bar']]),
       })
     ).toBeTruthy();
@@ -397,9 +389,11 @@ describe('isPartial', () => {
   });
 
   it('should match nested matchers', () => {
-    expect(isPartial({ foo: isString() }).matches({ foo: 'bar' })).toBeTruthy();
     expect(
-      isPartial({ foo: isArray([isString()]) }).matches({
+      containsObject({ foo: isString() }).matches({ foo: 'bar' })
+    ).toBeTruthy();
+    expect(
+      containsObject({ foo: isArray([isString()]) }).matches({
         foo: ['bar'],
       })
     ).toBeTruthy();
@@ -454,7 +448,7 @@ describe('isPartial', () => {
   describe('print', () => {
     it('should pretty print the partial object', () => {
       expectAnsilessEqual(
-        isPartial({ foo: 'bar' }).toString(),
+        containsObject({ foo: 'bar' }).toString(),
         `Matcher<object>({"foo": "bar"})`
       );
     });
@@ -463,14 +457,14 @@ describe('isPartial', () => {
       const matcher = matches(() => false, { toString: () => 'matcher' });
 
       expectAnsilessEqual(
-        isPartial({
+        containsObject({
           foo: matcher,
         }).toString(),
         `Matcher<object>({"foo": "matcher"})`
       );
 
       expectAnsilessEqual(
-        isPartial({
+        containsObject({
           foo: { bar: matcher },
         }).toString(),
         `Matcher<object>({"foo": {"bar": "matcher"}})`

@@ -11,7 +11,7 @@ export { isNumber } from './is-number';
 
 export { isPlainObject } from './is-plain-object';
 
-export { isPartial } from './is-partial';
+export { containsObject } from './contains-object';
 
 export { isString } from './is-string';
 

@@ -24,7 +24,7 @@ const removeUndefined = (object: any): any => {
  *   non `Object` instances with different constructors as not equal. Setting
  *   this to `false` will consider the objects in both cases as equal.
  *
- * @see {@link It.isPartial} or {@link It.isArray} if you want to nest matchers.
+ * @see {@link It.containsObject} or {@link It.isArray} if you want to nest matchers.
  * @see {@link It.is} if you want to use strict equality.
  */
 export const deepEquals = <T>(
