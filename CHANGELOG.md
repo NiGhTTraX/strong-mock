@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0-beta.2](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.1...v9.0.0-beta.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* Fix `isPartial` not working with interfaces ([169b336](https://github.com/NiGhTTraX/strong-mock/commit/169b336a4bcaef95e404dc098e0725ae71a6a229))
+
 ## [9.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.0...v9.0.0-beta.1) (2024-05-22)
 
 
