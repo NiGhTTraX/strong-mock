@@ -35,17 +35,22 @@ console.log(foo.bar(23)); // 'I am strong!'
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [API](#api)
-  - [Setting expectations](#setting-expectations)
-  - [Setting multiple expectations](#setting-multiple-expectations)
-  - [Setting invocation count expectations](#setting-invocation-count-expectations)
-  - [Mocking interfaces](#mocking-interfaces)
-  - [Mocking functions](#mocking-functions)
-  - [Mocking promises](#mocking-promises)
-  - [Throwing errors](#throwing-errors)
-  - [Verifying expectations](#verifying-expectations)
-  - [Resetting expectations](#resetting-expectations)
-  - [Matchers](#matchers-1)
+  - [Mock](#mock)
+    - [Mocking types and interfaces](#mocking-types-and-interfaces)
+    - [Mocking functions](#mocking-functions)
+  - [When](#when)
+    - [Setting expectations](#setting-expectations)
+    - [Setting multiple expectations](#setting-multiple-expectations)
+    - [Matchers](#matchers-1)
     - [Creating your own matcher](#creating-your-own-matcher)
+  - [Then](#then)
+    - [Setting invocation count expectations](#setting-invocation-count-expectations)
+    - [Returning promises](#returning-promises)
+    - [Throwing errors](#throwing-errors)
+  - [Verify](#verify)
+    - [Verifying expectations](#verifying-expectations)
+  - [Reset](#reset)
+    - [Resetting expectations](#resetting-expectations)
 - [Mock options](#mock-options)
   - [Unexpected property return value](#unexpected-property-return-value)
   - [Exact params](#exact-params)
@@ -140,46 +145,11 @@ strong-mock requires an environment that supports the [ES6 Proxy object](https:/
 
 ## API
 
-### Setting expectations
+### Mock
 
-Expectations are set by calling the mock inside a `when` callback and setting a return value.
+#### Mocking types and interfaces
 
-```typescript
-when(() => foo.bar(23)).thenReturn('awesome');
-```
-
-### Setting multiple expectations
-
-You can set as many expectations as you want by calling `when` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
-
-```typescript
-when(() => foo.bar(23)).thenReturn('awesome');
-when(() => foo.bar(23)).thenReturn('even more awesome');
-
-console.log(foo.bar(23)); // awesome
-console.log(foo.bar(23)); // even more awesome
-```
-
-### Setting invocation count expectations
-
-By default, each call is expected to be made only once. You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
-
-```typescript
-const fn = mock<(x: number) => number>();
-
-when(() => fn(1)).thenReturn(1).between(2, 3);
-
-console.log(fn(1)); // 1
-console.log(fn(1)); // 1
-console.log(fn(1)); // 1
-console.log(fn(1)); // throws because the expectation is finished
-```
-
-You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
-
-### Mocking interfaces
-
-Pass in the interface to the generic argument of `mock`:
+Pass in the type or interface to the generic argument of `mock`:
 
 ```typescript
 interface Foo {
@@ -196,9 +166,9 @@ console.log(foo.bar(23)); // 'awesome'
 console.log(foo.baz); // 100
 ```
 
-### Mocking functions
+#### Mocking functions
 
-You can also mock functions similarly to interfaces:
+You can also mock function types:
 
 ```typescript
 type Fn = (x: number) => number;
@@ -210,98 +180,29 @@ when(() => fn(1)).thenReturn(2);
 console.log(fn(1)); // 2
 ```
 
-### Mocking promises
+### When
 
-If you're mocking something that returns a promise then you'll be able to use the `thenResolve` promise helper to set the return value.
+#### Setting expectations
 
-```typescript
-type Fn = (x: number) => Promise<number>;
-
-const fn = mock<Fn>();
-
-when(() => fn(1)).thenResolve(2);
-
-console.log(await fn(1)); // 2
-```
-
-### Throwing errors
-
-Use `thenThrow` or `thenReject` to throw an `Error` instance. You can customize the error message, or even pass a derived class.
+Expectations are set by calling the mock inside a `when` callback and setting a return value.
 
 ```typescript
-type Fn = (x: number) => void;
-type FnWithPromise = (x: number) => Promise<void>;
-
-class MyError extends Error {}
-
-const fn = mock<Fn>();
-const fnWithPromise = mock<FnWithPromise>();
-
-// All of these will throw an Error instance.
-when(() => fn(1)).thenThrow();
-when(() => fn(2)).thenThrow(MyError);
-when(() => fnWithPromise(1)).thenReject('oops');
+when(() => foo.bar(23)).thenReturn('awesome');
 ```
 
-### Verifying expectations
+#### Setting multiple expectations
 
-Calling `verify(myMock)` will make sure that all expectations set on the mock have been met, and that no additional calls have been made.
+You can set as many expectations as you want by calling `when` multiple times. If you have multiple expectations with the same arguments they will be consumed in the order they were created.
 
 ```typescript
-const fn = mock<(x: number) => number>();
+when(() => foo.bar(23)).thenReturn('awesome');
+when(() => foo.bar(23)).thenReturn('even more awesome');
 
-when(() => fn(1)).thenReturn(1).between(2, 10);
-
-verify(fn); // throws UnmetExpectations
+console.log(foo.bar(23)); // awesome
+console.log(foo.bar(23)); // even more awesome
 ```
 
-It will also throw if any unexpected calls happened that were maybe caught in the code under test.
-
-```typescript
-const fn = mock<() => void>();
-
-try {
-  fn(); // throws because the call is unexpected
-} catch(e) {
-  // your code might transition to an error state here
-}
-
-verify(fn); // throws UnexpectedCalls
-```
-
-It is recommended that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code did not silently catch any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks.
-
-```typescript
-afterEach(() => {
-  verifyAll();
-});
-```
-
-![verify error](media/verify.png)
-
-### Resetting expectations
-
-You can remove all expectations from a mock by using the `reset()` method:
-                                                                        
-```typescript
-const fn = mock<(x: number) => number>();
-
-when(() => fn(1)).thenReturn(1);
-
-reset(fn);
-
-fn(1); // throws
-```
-
-If you create common mocks that are shared by multiple tests you should reset them before each test. You can use `resetAll()` to reset all existing mocks.
-
-```typescript
-beforeEach(() => {
-  resetAll();
-});
-```
-
-### Matchers
+#### Matchers
 
 Sometimes you're not interested in specifying all the arguments in an expectation. Maybe they've been covered in another test, maybe they're hard to specify e.g. callbacks, or maybe you want to match just a property from an argument.
 
@@ -426,6 +327,126 @@ fn(2, 'foo');
 ```
 
 ![Error message for custom matcher](media/custom-matcher-error.png)
+
+### Then
+
+#### Setting invocation count expectations
+
+By default, each call is expected to be made only once. You can expect a call to be made multiple times by using the invocation count helpers `between`, `atLeast`, `times`, `anyTimes` etc.:
+
+```typescript
+const fn = mock<(x: number) => number>();
+
+when(() => fn(1)).thenReturn(1).between(2, 3);
+
+console.log(fn(1)); // 1
+console.log(fn(1)); // 1
+console.log(fn(1)); // 1
+console.log(fn(1)); // throws because the expectation is finished
+```
+
+You'll notice there is no `never()` helper - if you expect a call to not be made simply don't set an expectation on it and the mock will throw if the call happens.
+
+#### Returning promises
+
+If you're mocking something that returns a promise then you'll be able to use the `thenResolve` promise helper to set the return value.
+
+```typescript
+type Fn = (x: number) => Promise<number>;
+
+const fn = mock<Fn>();
+
+when(() => fn(1)).thenResolve(42);
+
+console.log(await fn(1)); // 42
+```
+
+You can also use `thenReturn` with a Promise value:
+
+```typescript
+when(() => fn(1)).thenReturn(Promise.resolve(42));
+```
+
+#### Throwing errors
+
+Use `thenThrow` or `thenReject` to throw an `Error` instance. You can customize the error message, or even pass a derived class.
+
+```typescript
+type Fn = (x: number) => void;
+type FnWithPromise = (x: number) => Promise<void>;
+
+class MyError extends Error {}
+
+const fn = mock<Fn>();
+const fnWithPromise = mock<FnWithPromise>();
+
+// All of these will throw an Error instance.
+when(() => fn(1)).thenThrow();
+when(() => fn(2)).thenThrow(MyError);
+when(() => fnWithPromise(1)).thenReject('oops');
+```
+
+### Verify
+
+#### Verifying expectations
+
+Calling `verify(myMock)` will make sure that all expectations set on the mock have been met, and that no additional calls have been made.
+
+```typescript
+const fn = mock<(x: number) => number>();
+
+when(() => fn(1)).thenReturn(1).between(2, 10);
+
+verify(fn); // throws UnmetExpectations
+```
+
+It will also throw if any unexpected calls happened that were maybe caught in the code under test.
+
+```typescript
+const fn = mock<() => void>();
+
+try {
+  fn(); // throws because the call is unexpected
+} catch(e) {
+  // your code might transition to an error state here
+}
+
+verify(fn); // throws UnexpectedCalls
+```
+
+It is recommended that you call `verify()` on your mocks at the end of every test. This will make sure you don't have any unused expectations in your tests and that your code did not silently catch any of the errors that are thrown when an unexpected call happens. You can use `verifyAll()` to check all existing mocks.
+
+```typescript
+afterEach(() => {
+  verifyAll();
+});
+```
+
+![verify error](media/verify.png)
+
+### Reset
+
+#### Resetting expectations
+
+You can remove all expectations from a mock by using the `reset()` method:
+
+```typescript
+const fn = mock<(x: number) => number>();
+
+when(() => fn(1)).thenReturn(1);
+
+reset(fn);
+
+fn(1); // throws
+```
+
+If you create common mocks that are shared by multiple tests you should reset them before each test. You can use `resetAll()` to reset all existing mocks.
+
+```typescript
+beforeEach(() => {
+  resetAll();
+});
+```
 
 ## Mock options
 
