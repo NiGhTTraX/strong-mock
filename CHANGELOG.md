@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0-beta.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.0...v9.0.0-beta.1) (2024-05-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* `isObject` has been replaced by `isPlainObject` and
+`isPartial`.
+
+### Features
+
+* Add `isPartial` matcher ([a72974b](https://github.com/NiGhTTraX/strong-mock/commit/a72974b77b019260b54ecc50d9f7cb5eff42aaf7))
+* Add `isPlainObject` matcher ([5cbb20e](https://github.com/NiGhTTraX/strong-mock/commit/5cbb20ea46695ce4316094502b7079b0c0a08b2b))
+
+
+* Remove `isObject` ([f20448e](https://github.com/NiGhTTraX/strong-mock/commit/f20448ec381e74e134ff7b4f578701074f9010ad))
+
 ## [9.0.0-beta.0](https://github.com/NiGhTTraX/strong-mock/compare/v8.0.1...v9.0.0-beta.0) (2023-09-24)
 
 
