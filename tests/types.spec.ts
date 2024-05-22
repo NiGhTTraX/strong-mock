@@ -70,7 +70,7 @@ it('type safety', () => {
     );
     // @ts-expect-error because TS can't infer the proper type
     // See https://github.com/microsoft/TypeScript/issues/55164.
-    nestedObject(It.isPartial({ foo: It.isPartial() }));
+    nestedObject(It.isPartial({ foo: It.isPartial({ bar: 1 }) }));
 
     const numberArray = (x: number[]) => x;
     numberArray(It.isArray());
