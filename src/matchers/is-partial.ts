@@ -15,7 +15,7 @@ type DeepPartial<T> = T extends ObjectType
 const looksLikeObject = (value: unknown): value is ObjectType =>
   isPlainObject(value);
 
-const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
+const getExpectedObjectDiff = (actual: unknown, expected: unknown): object =>
   Object.fromEntries(
     getKeys(expected).map((key) => {
       const expectedValue = getKey(expected, key);
@@ -33,10 +33,7 @@ const getExpectedObjectDiff = (actual: unknown, expected: ObjectType): object =>
     })
   );
 
-const getActualObjectDiff = (
-  actual: unknown,
-  expected: ObjectType
-): unknown => {
+const getActualObjectDiff = (actual: unknown, expected: unknown): unknown => {
   const actualKeys = getKeys(actual);
   const expectedKeys = new Set(getKeys(expected));
   const commonKeys = actualKeys.filter((key) => expectedKeys.has(key));
@@ -77,7 +74,7 @@ const getKey = (value: unknown, key: Property): unknown =>
   // @ts-expect-error because we're fine with a runtime undefined value
   value?.[key];
 
-const isMatch = (actual: unknown, expected: ObjectType): boolean => {
+const isMatch = (actual: unknown, expected: unknown): boolean => {
   const actualKeys = getKeys(actual);
   const expectedKeys = getKeys(expected);
 
@@ -101,7 +98,7 @@ const isMatch = (actual: unknown, expected: ObjectType): boolean => {
   });
 };
 
-const deepPrintObject = (value: ObjectType) =>
+const deepPrintObject = (value: unknown) =>
   cloneDeepWith(value, (value) => {
     if (isMatcher(value)) {
       return value.toString();
@@ -129,7 +126,10 @@ const deepPrintObject = (value: ObjectType) =>
  * @example
  * It.isPartial({ foo: It.isString() })
  */
-export const isPartial = <T extends ObjectType, K extends DeepPartial<T>>(
+// T is not constrained to ObjectType because of
+// https://github.com/microsoft/TypeScript/issues/57810,
+// but K is to avoid inferring non-object partials
+export const isPartial = <T, K extends DeepPartial<T> & ObjectType>(
   partial: K
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {

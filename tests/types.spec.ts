@@ -50,15 +50,24 @@ it('type safety', () => {
     when(() => fnany()).thenResolve(23);
   }
 
-  function matcherSafety() {
+  function partialSafety() {
     const number = (x: number) => x;
-    number(It.isAny());
-    // @ts-expect-error wrong matcher type
-    number(It.isString());
-    // @ts-expect-error wrong matcher type
-    number(It.isPlainObject());
-    // @ts-expect-error wrong matcher type
-    number(It.isArray());
+    number(
+      It.isPartial(
+        // @ts-expect-error non-object can't be partial-ed
+        { toString: () => 'bar' }
+      )
+    );
+    number(
+      It.isPartial(
+        // @ts-expect-error non-object
+        42
+      )
+    );
+
+    const numberArray = (x: number[]) => x;
+    // @ts-expect-error array is not an object
+    numberArray(It.isPartial({ length: 2 }));
 
     const nestedObject = (x: { foo: { bar: number; 42: string } }) => x;
     nestedObject(It.isPlainObject());
@@ -68,24 +77,28 @@ it('type safety', () => {
       // @ts-expect-error wrong nested property type
       It.isPartial({ foo: { bar: 'boo' } })
     );
-    // @ts-expect-error because TS can't infer the proper type
-    // See https://github.com/microsoft/TypeScript/issues/55164.
-    nestedObject(It.isPartial({ foo: It.isPartial({ bar: 1 }) }));
 
-    const numberArray = (x: number[]) => x;
-    numberArray(It.isArray());
-    numberArray(It.isArray([1, 2, 3]));
-    numberArray(It.isArray([It.isNumber()]));
-    // @ts-expect-error wrong type of array
-    numberArray(It.isArray(['a']));
-    // @ts-expect-error wrong nested matcher type
-    numberArray(It.isArray([It.isString()]));
+    nestedObject(
+      It.isPartial({
+        // @ts-expect-error because TS can't infer the proper type
+        // See https://github.com/microsoft/TypeScript/issues/55164.
+        foo: It.isPartial({ bar: 1 }),
+      })
+    );
+
+    interface InterfaceType {
+      foo: string;
+    }
+    const withInterface = (x: InterfaceType) => x;
+    withInterface(It.isPartial({ foo: 'bar' }));
 
     const object = (x: { foo: number }) => x;
     object(It.isPartial({ foo: It.isNumber() }));
     object(
-      // @ts-expect-error wrong nested matcher type
-      It.isPartial({ foo: It.isString() })
+      It.isPartial({
+        // @ts-expect-error wrong nested matcher type
+        foo: It.isString(),
+      })
     );
 
     const objectWithArrays = (x: { foo: { bar: number[] } }) => x;
@@ -117,7 +130,7 @@ it('type safety', () => {
       map: Map<unknown, unknown>;
       set: Set<unknown>;
       arr: Array<unknown>;
-    }) => {};
+    }) => data;
     objectLikeValues({
       // @ts-expect-error Maps are not objects
       map: It.isPlainObject(),
@@ -134,9 +147,28 @@ it('type safety', () => {
       // @ts-expect-error Arrays are not objects
       arr: It.isPartial({}),
     });
+  }
 
-    const string = (x: string) => string;
+  function matcherSafety() {
+    const number = (x: number) => x;
+    number(It.isAny());
+    // @ts-expect-error wrong matcher type
+    number(It.isString());
+    // @ts-expect-error wrong matcher type
+    number(It.isPlainObject());
+    // @ts-expect-error wrong matcher type
+    number(It.isArray());
 
+    const numberArray = (x: number[]) => x;
+    numberArray(It.isArray());
+    numberArray(It.isArray([1, 2, 3]));
+    numberArray(It.isArray([It.isNumber()]));
+    // @ts-expect-error wrong type of array
+    numberArray(It.isArray(['a']));
+    // @ts-expect-error wrong nested matcher type
+    numberArray(It.isArray([It.isString()]));
+
+    const string = (x: string) => x;
     const startsWith = (expected: string) =>
       It.matches<string>((actual) => actual.startsWith(expected));
     string(startsWith('foo'));
@@ -157,6 +189,7 @@ it('type safety', () => {
     // @ts-expect-error because the value can be undefined.
     number(captureMatcher.value);
     // @ts-expect-error number is not string
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     string(captureMatcher.value!);
   }
 });
