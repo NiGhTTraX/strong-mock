@@ -60,6 +60,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Can I spread or enumerate a mock?](#can-i-spread-or-enumerate-a-mock)
   - [Why does `typeof mock()` return `function`?](#why-does-typeof-mock-return-function)
   - [How can I ignore `undefined` keys when setting expectations on objects?](#how-can-i-ignore-undefined-keys-when-setting-expectations-on-objects)
+  - [How can I verify order of calls?](#how-can-i-verify-order-of-calls)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -612,3 +613,7 @@ setDefaults({
   concreteMatcher: (expected) => It.deepEquals(expected, { strict: false })
 });
 ```
+
+### How can I verify order of calls?
+
+`when()` expectations can be satisfied in any order. If your code under test depends on a specific order of execution, consider redesigning it to remove the coupling before the different calls.
