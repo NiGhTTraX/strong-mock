@@ -51,6 +51,12 @@ it('type safety', () => {
   }
 
   function partialSafety() {
+    It.containsObject(
+      // @ts-expect-error empty objects not allowed
+      {}
+    );
+    It.containsObject({ foo: 'bar' });
+
     const number = (x: number) => x;
     number(
       // @ts-expect-error non-object can't be partial-ed

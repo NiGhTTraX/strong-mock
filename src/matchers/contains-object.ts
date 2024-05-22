@@ -7,6 +7,7 @@ import type { TypeMatcher } from './matcher';
 import { isMatcher, matches } from './matcher';
 
 type ObjectType = Record<Property, unknown>;
+type NonEmptyObject<T extends ObjectType> = keyof T extends never ? never : T;
 
 type DeepPartial<T> = T extends ObjectType
   ? { [K in keyof T]?: DeepPartial<T[K]> }
@@ -114,8 +115,8 @@ const deepPrintObject = (value: unknown) =>
  * @param partial A subset of the expected object that will be recursively matched.
  *   Supports nested matchers.
  *   Concrete values will be compared with {@link deepEquals}.
- *   Note that a `{}` partial will match ANY value including non-objects.
- *   Use {@link isPlainObject} if you want to match any plain object.
+ *
+ * @see {@link isPlainObject} if you want to match any plain object.
  *
  * @example
  * const fn = mock<(pos: { x: number, y: number }) => number>();
@@ -130,7 +131,7 @@ const deepPrintObject = (value: unknown) =>
 // https://github.com/microsoft/TypeScript/issues/57810,
 // but K is to avoid inferring non-object partials
 export const containsObject = <T, K extends DeepPartial<T>>(
-  partial: K extends ObjectType ? K : never
+  partial: K extends ObjectType ? NonEmptyObject<K> : never
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {
     toString: () => `Matcher<object>(${printValue(deepPrintObject(partial))})`,
