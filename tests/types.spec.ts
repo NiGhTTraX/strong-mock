@@ -53,16 +53,12 @@ it('type safety', () => {
   function partialSafety() {
     const number = (x: number) => x;
     number(
-      It.isPartial(
-        // @ts-expect-error non-object can't be partial-ed
-        { toString: () => 'bar' }
-      )
+      // @ts-expect-error non-object can't be partial-ed
+      It.isPartial({ toString: () => 'bar' })
     );
     number(
-      It.isPartial(
-        // @ts-expect-error non-object
-        42
-      )
+      // @ts-expect-error non-object
+      It.isPartial(42)
     );
 
     const numberArray = (x: number[]) => x;
@@ -77,7 +73,12 @@ it('type safety', () => {
       // @ts-expect-error wrong nested property type
       It.isPartial({ foo: { bar: 'boo' } })
     );
-
+    nestedObject(
+      It.isPartial({
+        // @ts-expect-error unexpected key
+        unexpected: 42,
+      })
+    );
     nestedObject(
       It.isPartial({
         // @ts-expect-error because TS can't infer the proper type
@@ -91,9 +92,21 @@ it('type safety', () => {
     }
     const withInterface = (x: InterfaceType) => x;
     withInterface(It.isPartial({ foo: 'bar' }));
+    withInterface(
+      It.isPartial(
+        // @ts-expect-error unexpected key
+        { unexpected: 42 }
+      )
+    );
 
     const object = (x: { foo: number }) => x;
     object(It.isPartial({ foo: It.isNumber() }));
+    object(
+      It.isPartial(
+        // @ts-expect-error unexpected key
+        { unexpected: It.isNumber() }
+      )
+    );
     object(
       It.isPartial({
         // @ts-expect-error wrong nested matcher type

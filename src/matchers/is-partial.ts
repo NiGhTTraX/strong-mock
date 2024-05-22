@@ -129,8 +129,8 @@ const deepPrintObject = (value: unknown) =>
 // T is not constrained to ObjectType because of
 // https://github.com/microsoft/TypeScript/issues/57810,
 // but K is to avoid inferring non-object partials
-export const isPartial = <T, K extends DeepPartial<T> & ObjectType>(
-  partial: K
+export const isPartial = <T, K extends DeepPartial<T>>(
+  partial: K extends ObjectType ? K : never
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {
     toString: () => `Matcher<object>(${printValue(deepPrintObject(partial))})`,
