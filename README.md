@@ -425,7 +425,7 @@ when(() => fn(closeTo(1), 'foo')).thenReturn('matched');
 fn(2, 'foo');
 ```
 
-![Error message for custom matcher](media/custom-matcher.png)
+![Error message for custom matcher](media/custom-matcher-error.png)
 
 ## Mock options
 
