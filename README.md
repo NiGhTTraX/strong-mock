@@ -351,11 +351,15 @@ The following table illustrates the differences between the equality matchers:
 Some matchers, like `containsObject` and `isArray` support nesting matchers:
 
 ```typescript
-It.containsObject({ foo: It.isString() })
+It.containsObject({
+  foo: It.isString()
+})
 
-It.isArray([ It.containsObject({
-  foo: It.isString({ matching: /foo/ })
-})])
+It.isArray([
+  It.containsObject({
+    foo: It.isString(/foo/)
+  })
+])
 ```
 
 `It.willCapture` is a special matcher that will match any value and store it, so you can access it outside an expectation. This could be useful to capture a callback and then test it separately.
