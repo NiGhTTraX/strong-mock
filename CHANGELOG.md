@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0-beta.3](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.2...v9.0.0-beta.3) (2024-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Don't allow empty partials in `containsObject`
+* Rename `isPartial` to `containsObject`
+
+### Features
+
+* Don't allow empty partials in `containsObject` ([6c76608](https://github.com/NiGhTTraX/strong-mock/commit/6c76608611e76f9c5033b8d168391962eeca4131))
+
+
+### Bug Fixes
+
+* Fix `isPartial` allowing unexpected keys ([cc0b881](https://github.com/NiGhTTraX/strong-mock/commit/cc0b88196c008040d1ec0ecb8b77d7e4baad9ba6))
+
+
+* Rename `isPartial` to `containsObject` ([a2c3c76](https://github.com/NiGhTTraX/strong-mock/commit/a2c3c76b7ea0fe4f2cfeb98e76fd9b02a726c74c))
+
 ## [9.0.0-beta.2](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.1...v9.0.0-beta.2) (2024-05-22)
 
 
