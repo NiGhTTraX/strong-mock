@@ -6,6 +6,7 @@ import { ExpectationBuilderWithFactory } from '../when/expectation-builder';
 import type { StrongMockDefaults } from './defaults';
 import { currentDefaults } from './defaults';
 import { setMockState } from './map';
+import { getMode } from './mode';
 import type { MockOptions } from './options';
 import { createStub } from './stub';
 
@@ -25,18 +26,6 @@ const strongExpectationFactory: ExpectationFactory = (
     returnValue,
     exactParams
   );
-
-export enum Mode {
-  EXPECT,
-  CALL,
-}
-
-let currentMode: Mode = Mode.CALL;
-
-export const setMode = (mode: Mode) => {
-  currentMode = mode;
-};
-const getMode = () => currentMode;
 
 /**
  * Create a type safe mock.

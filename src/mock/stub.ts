@@ -6,7 +6,8 @@ import { createProxy } from '../proxy';
 import type { ExpectationBuilder } from '../when/expectation-builder';
 import { setActiveMock } from './map';
 import type { Mock } from './mock';
-import { Mode } from './mock';
+
+import { Mode } from './mode';
 
 export const createStub = <T>(
   repo: ExpectationRepository,

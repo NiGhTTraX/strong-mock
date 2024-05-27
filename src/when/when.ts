@@ -1,5 +1,5 @@
 import { getActiveMock, getMockState } from '../mock/map';
-import { Mode, setMode } from '../mock/mock';
+import { Mode, setMode } from '../mock/mode';
 import type { NonPromiseStub, PromiseStub } from '../return/returns';
 import { createReturns } from '../return/returns';
 
