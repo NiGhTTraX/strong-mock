@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [9.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.3...v9.0.0) (2024-05-27)
 
-This version greatly improves error messages and improves the matcher API. Check the [migration guide](MIGRATION.md#migrating-to-v9).
+This version greatly improves error messages and the matcher API. Check the [migration guide](MIGRATION.md#migrating-to-v9).
 
 ```typescript
 const fn = mock<(x: number, y: number, z: { foo: string }) => number>();
