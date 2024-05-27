@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [9.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.3...v9.0.0) (2024-05-27)
 
+This version greatly improves error messages and improves the matcher API. Check the [migration guide](MIGRATION.md#migrating-to-v9).
+
+```typescript
+const fn = mock<(x: number, y: number, z: { foo: string }) => number>();
+when(() => fn(1, 2, { foo: 'bar' })).thenReturn(42);
+
+fn(1, 2, { foo: 'baz' });
+```
+
+| Before                         | After                        |
+|--------------------------------|------------------------------|
+| ![before](media/before-v9.png) | ![after](media/after-v9.png) |
+
+### ⚠ BREAKING CHANGES
+
+* `isObject` has been replaced by `isPlainObject` and `containsObject`
+* Merge `isString`'s optional `containing` and `matching` args
+* Rename the `toJSON` matcher method to `toString`
+* Don't allow empty partials in `containsObject`
+
+### Features
+
+* Attach actual/expected args to error instance to enable IDE diffs ([7a04a43](https://github.com/NiGhTTraX/strong-mock/commit/7a04a43b47471f2178595a98dec2975e0cf7249e))
+* Improve `isArray` diff ([a5aaddd](https://github.com/NiGhTTraX/strong-mock/commit/a5aaddd0a28108dd82d204914b1b5f00a6ac9cca))
+* Improve `isNumber` diff ([55647ed](https://github.com/NiGhTTraX/strong-mock/commit/55647ed698323be9008b0e517b405df85299b12c))
+* Improve `isObject` diff ([5533bcf](https://github.com/NiGhTTraX/strong-mock/commit/5533bcf6fef6b1275b9ab64c1caf0b6235e1628c))
+* Improve `isString` diff ([5c73fbb](https://github.com/NiGhTTraX/strong-mock/commit/5c73fbbe339753bc1838d7e401af14828b8fc070))
+* Improve `willCapture` diff ([7d92ce9](https://github.com/NiGhTTraX/strong-mock/commit/7d92ce9ef67cd44aca5707cbf4f268b26605c983))
+* Improve colors in UnexpectedCall error message ([f326954](https://github.com/NiGhTTraX/strong-mock/commit/f326954d4284a65ed87794f567accc4875561988))
+* Pretty print argument diffs in UnexpectedCall error messages ([ba4f6b5](https://github.com/NiGhTTraX/strong-mock/commit/ba4f6b5df5845fccce78373a509be73fbb9d8aca))
+
+### Bug Fixes
+
+* Fix `isPartial` allowing unexpected keys ([cc0b881](https://github.com/NiGhTTraX/strong-mock/commit/cc0b88196c008040d1ec0ecb8b77d7e4baad9ba6))
+* Fix `isPartial` not working with interfaces ([169b336](https://github.com/NiGhTTraX/strong-mock/commit/169b336a4bcaef95e404dc098e0725ae71a6a229))
+* `isObject` now correctly fails for `null` and `undefined` ([9b50fe4](https://github.com/NiGhTTraX/strong-mock/commit/9b50fe48caeaafc5036085db596204a362795e3b))
+* Fix `It` docstrings ([df7f91a](https://github.com/NiGhTTraX/strong-mock/commit/df7f91a3f3f991894470c8ca759b069d82819fa0))
+* Handle non string keys in `isObject` ([87cb768](https://github.com/NiGhTTraX/strong-mock/commit/87cb7684ad248e2761195963f8f69857a5124cbd))
+
 ## [9.0.0-beta.3](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.2...v9.0.0-beta.3) (2024-05-23)
 
 
