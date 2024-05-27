@@ -1,5 +1,7 @@
 # Migrating to v9
 
+Upgrading from v8 should be seamless for most users, but there are some breaking changes for some of the matchers.
+
 ## `It.isObject`
 
 The `It.isObject` matcher has been removed and replaced by 2 new matchers:
