@@ -6,11 +6,16 @@
     "tdd",
     "test",
     "mock",
-    "expectation",
     "stub",
+    "fake",
+    "test double",
+    "expectation",
     "interface",
     "type",
-    "typescript"
+    "typescript",
+    "ts",
+    "diff",
+    "matcher"
   ],
   "repository": {
     "type": "git",
