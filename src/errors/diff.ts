@@ -1,21 +1,29 @@
 import { diff as printDiff } from 'jest-diff';
 import { EXPECTED_COLOR, RECEIVED_COLOR } from 'jest-matcher-utils';
-import stripAnsi from 'strip-ansi';
 import type { Expectation } from '../expectation/expectation';
 import { getMatcherDiffs } from '../matchers/matcher';
+
+const noColor = (s: string) => s;
 
 export const printArgsDiff = (
   expected: unknown[],
   actual: unknown[]
 ): string => {
-  const diff = printDiff(expected, actual, { omitAnnotationLines: true });
+  const diff = printDiff(expected, actual, {
+    omitAnnotationLines: true,
+    aColor: noColor,
+    bColor: noColor,
+    changeColor: noColor,
+    commonColor: noColor,
+    patchColor: noColor,
+  });
 
   /* istanbul ignore next this is not expected in practice */
   if (!diff) {
     return '';
   }
 
-  const ansilessDiffLines = stripAnsi(diff).split('\n');
+  const diffLines = diff.split('\n');
   let relevantDiffLines: string[];
 
   // Strip Array [ ... ] surroundings.
@@ -24,18 +32,18 @@ export const printArgsDiff = (
     // + Array [
     //   ...
     // ]
-    relevantDiffLines = ansilessDiffLines.slice(2, -1);
+    relevantDiffLines = diffLines.slice(2, -1);
   } else if (!actual.length) {
     // - Array [
     //   ...
     // ]
     // + Array []
-    relevantDiffLines = ansilessDiffLines.slice(1, -2);
+    relevantDiffLines = diffLines.slice(1, -2);
   } else {
     // Array [
     //   ...
     // ]
-    relevantDiffLines = ansilessDiffLines.slice(1, -1);
+    relevantDiffLines = diffLines.slice(1, -1);
   }
 
   // Strip the trailing comma.

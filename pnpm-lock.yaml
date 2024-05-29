@@ -17,9 +17,6 @@ importers:
       lodash:
         specifier: ~4.17.0
         version: 4.17.21
-      strip-ansi:
-        specifier: ~6.0.0
-        version: 6.0.1
     devDependencies:
       '@nighttrax/eslint-config-ts':
         specifier: ~12.0.0-alpha.0
@@ -54,6 +51,9 @@ importers:
       standard-version:
         specifier: ~9.5.0
         version: 9.5.0
+      strip-ansi:
+        specifier: ~6.0.0
+        version: 6.0.1
       strong-mock:
         specifier: ~6.0.0
         version: 6.0.0
