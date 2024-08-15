@@ -54,7 +54,7 @@ export class MatchingCallExpectation implements Expectation {
     this.max = max;
   }
 
-  matches = (args: unknown[] | undefined) => !!args;
+  matches = (args: unknown[] | undefined): boolean => !!args;
 
   toString = () => 'matching call';
 }
