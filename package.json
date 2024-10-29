@@ -55,7 +55,7 @@
     "jest": "~29.7.0",
     "microbundle": "~0.15.0",
     "standard-version": "~9.5.0",
-    "strip-ansi": "~6.0.0",
+    "strip-ansi": "~7.1.0",
     "strong-mock": "~6.0.0",
     "tslib": "~2.8.0",
     "typescript": "~5.6.0"
