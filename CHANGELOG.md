@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.0.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0...v9.0.1) (2024-11-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency jest-diff to ~29.7.0 ([50a3aa8](https://github.com/NiGhTTraX/strong-mock/commit/50a3aa81fd0e742d6f43c061957989bb9e5cd9d0))
+* Pretty print nested matchers in `isArray` ([24f9deb](https://github.com/NiGhTTraX/strong-mock/commit/24f9debcfa16653ab14e1df2a5b140e073f5ac2b))
+
 ## [9.0.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0-beta.3...v9.0.0) (2024-05-27)
 
 This version greatly improves error messages and the matcher API. Check the [migration guide](MIGRATION.md#migrating-to-v9).
