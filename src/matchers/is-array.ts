@@ -47,7 +47,9 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
     },
     {
       toString: () =>
-        containing ? `array(${printValue(containing)})` : 'array',
+        containing
+          ? `array([${containing.map((v) => printValue(v)).join(', ')}])`
+          : 'array',
       getDiff: (actual) => {
         if (containing) {
           return {

@@ -62,6 +62,20 @@ describe('isArray', () => {
     expectAnsilessEqual(isArray([1, 2, 3]).toString(), 'array([1, 2, 3])');
   });
 
+  it('should pretty print nested matchers', () => {
+    const matcher = matches(() => false, {
+      toString: () => 'something',
+      getDiff: () => {
+        throw new Error();
+      },
+    });
+
+    expectAnsilessEqual(
+      isArray([matcher, matcher]).toString(),
+      'array([something, something])'
+    );
+  });
+
   it('should print diff', () => {
     expect(isArray().getDiff(42)).toEqual({
       expected: 'Matcher<array>',

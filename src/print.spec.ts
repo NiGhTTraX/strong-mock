@@ -113,7 +113,7 @@ describe('print', () => {
   });
 
   describe('printExpectationDiff', () => {
-    it('should print the diff when we have single expectation', () => {
+    it('should print the diff when we have a single expectation', () => {
       const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
@@ -130,6 +130,7 @@ describe('print', () => {
 +   "bar"`
       );
     });
+
     it('should print the diff for an expectation with no received args', () => {
       const matcher = matches(() => false, {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
