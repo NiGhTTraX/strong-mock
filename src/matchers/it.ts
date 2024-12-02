@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+/* c8 ignore file */
 export { deepEquals } from './deep-equals';
 
 export { is } from './is';

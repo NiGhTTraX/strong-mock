@@ -56,32 +56,32 @@ export const createInvocationCount = (
     expectation.setInvocationCount(min, max);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   times(exact: number) {
     expectation.setInvocationCount(exact, exact);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   anyTimes(): void {
     expectation.setInvocationCount(0, 0);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   atLeast(min: number) {
     expectation.setInvocationCount(min, Infinity);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   atMost(max: number) {
     expectation.setInvocationCount(0, max);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   once() {
     expectation.setInvocationCount(1, 1);
   },
 
-  /* istanbul ignore next */
+  /* c8 ignore next 3 */
   twice() {
     expectation.setInvocationCount(2, 2);
   },

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 import { is } from './is';
 

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { UnexpectedAccess } from '../errors/unexpected-access';
 import { UnexpectedCall } from '../errors/unexpected-call';
 import { when } from '../index';

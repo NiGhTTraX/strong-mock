@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { expectAnsilessContain } from '../../tests/ansiless';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import { matches } from '../matchers/matcher';

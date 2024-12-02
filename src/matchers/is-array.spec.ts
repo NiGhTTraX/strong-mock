@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { expectAnsilessEqual } from '../../tests/ansiless';
 import { containsObject } from './contains-object';
 import { isArray } from './is-array';

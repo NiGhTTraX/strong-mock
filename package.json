@@ -36,7 +36,8 @@
     "prepublishOnly": "pnpm run build",
     "release": "standard-version",
     "lint": "eslint --quiet .",
-    "test": "jest --coverage --config tests/jest.config.ts"
+    "test": "vitest --coverage",
+    "posttest": "tsc -p tsconfig.test.json"
   },
   "dependencies": {
     "jest-diff": "~29.7.0",
@@ -45,24 +46,23 @@
   },
   "devDependencies": {
     "@eslint/js": "~9.16.0",
-    "@types/jest": "~29.5.0",
     "@types/lodash": "~4.17.0",
     "@types/node": "~22.10.0",
+    "@vitest/coverage-v8": "~2.1.8",
     "doctoc": "~2.2.0",
     "eslint": "~9.16.0",
     "eslint-config-prettier": "~9.1.0",
     "eslint-plugin-prettier": "~5.2.1",
-    "jest": "~29.7.0",
     "microbundle": "~0.15.0",
     "prettier": "~3.4.2",
     "standard-version": "~9.5.0",
     "strip-ansi": "~6.0.0",
     "strong-mock": "~8.0.1",
-    "ts-jest": "~29.2.5",
     "ts-node": "~10.9.2",
     "tslib": "~2.8.0",
     "typescript": "~5.7.0",
-    "typescript-eslint": "~8.17.0"
+    "typescript-eslint": "~8.17.0",
+    "vitest": "~2.1.8"
   },
   "packageManager": "pnpm@9.14.3"
 }

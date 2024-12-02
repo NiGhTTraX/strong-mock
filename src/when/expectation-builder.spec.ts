@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { SM } from '../../tests/old';
 import { UnfinishedExpectation } from '../errors/api';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks';

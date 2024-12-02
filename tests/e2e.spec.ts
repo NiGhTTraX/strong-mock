@@ -1,4 +1,5 @@
 import { printExpected } from 'jest-matcher-utils';
+import { describe, expect, it } from 'vitest';
 import { It, mock, verify, when } from '../src';
 import { UnexpectedCall } from '../src/errors/unexpected-call';
 import { UnmetExpectations } from '../src/errors/verify';
