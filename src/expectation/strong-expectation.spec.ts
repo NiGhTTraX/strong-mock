@@ -60,6 +60,12 @@ describe('StrongExpectation', () => {
   });
 
   describe('exact params', () => {
+    it('should match empty args', () => {
+      const expectation = new StrongExpectation('bar', [], { value: 23 }, true);
+
+      expect(expectation.matches([])).toBeTruthy();
+    });
+
     it('should not match more args', () => {
       const expectation = new StrongExpectation('bar', [], { value: 23 }, true);
 
