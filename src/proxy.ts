@@ -53,8 +53,7 @@ export interface ProxyTraps {
 export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
   // The Proxy target MUST be a function, otherwise we can't use the `apply` trap:
   // https://262.ecma-international.org/6.0/#sec-proxy-object-internal-methods-and-internal-slots-call-thisargument-argumentslist
-
-  new Proxy(/* istanbul ignore next */ () => {}, {
+  new Proxy(/* c8 ignore next */ () => {}, {
     get: (target, prop: string | symbol) => {
       if (prop === 'bind') {
         return (thisArg: unknown, ...args: unknown[]) =>

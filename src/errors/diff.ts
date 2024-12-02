@@ -18,7 +18,7 @@ export const printArgsDiff = (
     patchColor: noColor,
   });
 
-  /* istanbul ignore next this is not expected in practice */
+  /* c8 ignore next 3 this is not expected in practice */
   if (!diff) {
     return '';
   }

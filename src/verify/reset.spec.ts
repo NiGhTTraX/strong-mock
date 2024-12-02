@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { NotAMock } from '../errors/api';
 import { when } from '../index';
 import { getMockState } from '../mock/map';

@@ -1,11 +1,12 @@
 {
   "extends": ["./tsconfig.app.json"],
   "compilerOptions": {
-    "types": ["jest", "node"]
+    "types": ["node"]
   },
   "include": [
     "**/*.spec.ts",
-    "tests"
+    "tests",
+    "vitest.config.mts"
   ],
   "exclude": []
 }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-unused-expressions */
+import { it } from 'vitest';
 import { It, mock, when } from '../src';
 
 it('type safety', () => {

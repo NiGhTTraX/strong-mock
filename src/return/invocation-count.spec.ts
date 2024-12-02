@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { SM } from '../../tests/old';
 import type { Expectation } from '../expectation/expectation';
 import { createInvocationCount } from './invocation-count';

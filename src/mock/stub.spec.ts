@@ -1,5 +1,6 @@
 // noinspection JSVoidFunctionReturnValueUsed
 
+import { describe, expect, it } from 'vitest';
 import type { Baz, Fn, Foo } from '../../tests/fixtures';
 import { SM } from '../../tests/old';
 import { NestedWhen } from '../errors/api';

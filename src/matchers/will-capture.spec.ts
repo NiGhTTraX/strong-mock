@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { willCapture } from './will-capture';
 
 describe('willCapture', () => {

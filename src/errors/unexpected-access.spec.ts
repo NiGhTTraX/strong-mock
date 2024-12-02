@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { expectAnsilessContain } from '../../tests/ansiless';
 import { SM } from '../../tests/old';
 import type { Expectation } from '../expectation/expectation';
