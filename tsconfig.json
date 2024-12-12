@@ -1,23 +1,7 @@
 {
-  "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    "target": "ES6",
-    "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-
-    "types": ["jest", "node"],
-    "lib": ["ES6"],
-    "skipLibCheck": true,
-
-    "strict": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.test.json" }
   ]
 }

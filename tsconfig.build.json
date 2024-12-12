@@ -1,21 +1,9 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.app.json",
 
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./dist",
-    "outDir": "./dist",
-    "module": "ESNext",
-    "target": "ESNext"
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.contract.ts",
-    "**/*.mocks.ts"
-  ]
+    "outDir": "./dist"
+  }
 }

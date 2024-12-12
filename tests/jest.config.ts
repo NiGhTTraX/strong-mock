@@ -1,9 +1,7 @@
 import { createDefaultPreset, type JestConfigWithTsJest } from 'ts-jest';
 
 const presetConfig = createDefaultPreset({
-  tsconfig: {
-    target: 'ESNext',
-  },
+  tsconfig: './tsconfig.test.json',
 });
 
 const jestConfig: JestConfigWithTsJest = {

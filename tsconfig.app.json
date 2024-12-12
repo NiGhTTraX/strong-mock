@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "target": "ES6",
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    "types": [],
+    "lib": ["ES6", "ES2019"],
+    "skipLibCheck": true,
+
+    "strict": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false
+  },
+  "include": ["src"],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.contract.ts",
+    "**/*.mocks.ts"
+  ]
+}
