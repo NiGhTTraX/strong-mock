@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { NotAMock } from '../errors/api';
 import { when } from '../index';
 import { getMockState } from '../mock/map';

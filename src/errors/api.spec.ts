@@ -8,7 +8,7 @@ describe('API errors', () => {
         new UnfinishedExpectation('bar', [1, 2, 3]).message,
         `There is an unfinished pending expectation:
 
-when(() => mock.bar(1, 2, 3)`
+when(() => mock.bar(1, 2, 3)`,
       );
     });
   });
@@ -20,7 +20,7 @@ when(() => mock.bar(1, 2, 3)`
       expectAnsilessContain(error.message, `when(() => parentMock.foo)`);
       expectAnsilessContain(
         error.message,
-        `when(() => childMock[Symbol(bar)])`
+        `when(() => childMock[Symbol(bar)])`,
       );
     });
   });

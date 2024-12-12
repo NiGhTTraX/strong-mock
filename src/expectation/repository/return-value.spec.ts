@@ -15,13 +15,13 @@ describe('unboxReturnValue', () => {
 
   it('should throw an error', () => {
     expect(() =>
-      unboxReturnValue({ value: new Error('foo'), isError: true })
+      unboxReturnValue({ value: new Error('foo'), isError: true }),
     ).toThrow('foo');
   });
 
   it('should throw an error message', () => {
     expect(() => unboxReturnValue({ value: 'foo', isError: true })).toThrow(
-      'foo'
+      'foo',
     );
   });
 
@@ -31,13 +31,13 @@ describe('unboxReturnValue', () => {
         value: new Error('foo'),
         isError: true,
         isPromise: true,
-      })
+      }),
     ).rejects.toThrow('foo');
   });
 
   it('should reject an error message', async () => {
     await expect(() =>
-      unboxReturnValue({ value: 'foo', isError: true, isPromise: true })
+      unboxReturnValue({ value: 'foo', isError: true, isPromise: true }),
     ).rejects.toThrow('foo');
   });
 });

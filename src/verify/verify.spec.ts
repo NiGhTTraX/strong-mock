@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { SM } from '../../tests/old';
 import { UnexpectedCalls, UnmetExpectations } from '../errors/verify';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks';

@@ -3,7 +3,6 @@ import type { Expectation } from './expectation';
 import type { ReturnValue } from './repository/return-value';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
-  // eslint-disable-next-line no-empty-function,@typescript-eslint/no-empty-function
   setInvocationCount = () => {};
 
   toString = () => 'always matching';
@@ -22,7 +21,10 @@ export class OneUseAlwaysMatchingExpectation implements Expectation {
 }
 
 export class MatchingPropertyExpectation implements Expectation {
-  constructor(public property: Property, public returnValue: ReturnValue) {}
+  constructor(
+    public property: Property,
+    public returnValue: ReturnValue,
+  ) {}
 
   args = undefined;
 
@@ -41,7 +43,10 @@ export class MatchingPropertyExpectation implements Expectation {
 }
 
 export class MatchingCallExpectation implements Expectation {
-  constructor(public property: Property, public returnValue: ReturnValue) {}
+  constructor(
+    public property: Property,
+    public returnValue: ReturnValue,
+  ) {}
 
   args = [];
 

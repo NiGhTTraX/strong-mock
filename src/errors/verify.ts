@@ -8,7 +8,7 @@ export class UnmetExpectations extends Error {
     super(
       DIM_COLOR(`There are unmet expectations:
 
- - ${expectations.map((e) => e.toString()).join('\n - ')}`)
+ - ${expectations.map((e) => e.toString()).join('\n - ')}`),
     );
   }
 }
@@ -32,14 +32,14 @@ const mergeCalls = (callMap: CallMap): CallMap =>
       }
 
       return [property, calls];
-    })
+    }),
   );
 
 export class UnexpectedCalls extends Error {
   constructor(unexpectedCalls: CallMap, expectations: Expectation[]) {
     const printedCalls = Array.from(mergeCalls(unexpectedCalls).entries())
       .map(([property, calls]) =>
-        calls.map((call) => printCall(property, call.arguments)).join('\n - ')
+        calls.map((call) => printCall(property, call.arguments)).join('\n - '),
       )
       .join('\n - ');
 
@@ -48,7 +48,7 @@ export class UnexpectedCalls extends Error {
 
  - ${printedCalls}
 
-${printRemainingExpectations(expectations)}`)
+${printRemainingExpectations(expectations)}`),
     );
   }
 }

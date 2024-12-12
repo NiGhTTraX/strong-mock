@@ -39,10 +39,10 @@ describe('isArray', () => {
 
   it('should match arrays of objects', () => {
     expect(
-      isArray([{ foo: 'bar' }]).matches([{ foo: 'bar' }, { foo: 'baz' }])
+      isArray([{ foo: 'bar' }]).matches([{ foo: 'bar' }, { foo: 'baz' }]),
     ).toBeTruthy();
     expect(
-      isArray([{ foo: 'boo' }]).matches([{ foo: 'bar' }, { foo: 'baz' }])
+      isArray([{ foo: 'boo' }]).matches([{ foo: 'bar' }, { foo: 'baz' }]),
     ).toBeFalsy();
   });
 
@@ -51,7 +51,7 @@ describe('isArray', () => {
       isArray([isString(), containsObject({ foo: 'bar' })]).matches([
         'foo',
         { foo: 'bar' },
-      ])
+      ]),
     ).toBeTruthy();
 
     expect(isArray([isString('foobar')]).matches(['foo'])).toBeFalsy();
@@ -72,7 +72,7 @@ describe('isArray', () => {
 
     expectAnsilessEqual(
       isArray([matcher, matcher]).toString(),
-      'array([something, something])'
+      'array([something, something])',
     );
   });
 

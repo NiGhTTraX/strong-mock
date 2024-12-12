@@ -17,14 +17,14 @@ describe('UnexpectedAccess', () => {
 
     expectAnsilessContain(
       error.message,
-      `Didn't expect mock.bar to be accessed.`
+      `Didn't expect mock.bar to be accessed.`,
     );
 
     expectAnsilessContain(
       error.message,
       `Remaining unmet expectations:
  - e1
- - e2`
+ - e2`,
     );
   });
 });

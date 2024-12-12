@@ -19,7 +19,7 @@ import { MATCHER_SYMBOL } from './matcher';
  * matcher.value?.(3) === 4
  */
 export const willCapture = <T = unknown>(
-  name?: string
+  name?: string,
 ): TypeMatcher<T> & {
   value: T | undefined;
 } => {

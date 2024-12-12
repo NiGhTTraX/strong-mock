@@ -50,7 +50,7 @@ export interface InvocationCount {
 }
 
 export const createInvocationCount = (
-  expectation: Expectation
+  expectation: Expectation,
 ): InvocationCount => ({
   between(min: number, max: number) {
     expectation.setInvocationCount(min, max);
@@ -85,5 +85,4 @@ export const createInvocationCount = (
   twice() {
     expectation.setInvocationCount(2, 2);
   },
-  /* eslint-enable no-param-reassign, no-multi-assign */
 });

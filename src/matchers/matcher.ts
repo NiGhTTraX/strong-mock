@@ -73,7 +73,7 @@ export function isMatcher(f: unknown): f is Matcher {
 
 export const getMatcherDiffs = (
   matchers: Matcher[],
-  args: unknown[]
+  args: unknown[],
 ): { actual: unknown[]; expected: unknown[] } => {
   const matcherDiffs = matchers.map((matcher, i) => matcher.getDiff(args[i]));
   const actual = matcherDiffs.map((d) => d.actual);
@@ -106,7 +106,7 @@ export const getMatcherDiffs = (
  */
 export const matches = <T>(
   predicate: (actual: T) => boolean,
-  options?: Partial<MatcherOptions>
+  options?: Partial<MatcherOptions>,
 ): TypeMatcher<T> => {
   // We can't use destructuring with default values because `options` is optional,
   // so it needs a default value of `{}`, which will come with a native `toString`.

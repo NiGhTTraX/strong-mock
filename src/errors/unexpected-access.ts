@@ -11,7 +11,7 @@ export class UnexpectedAccess extends Error {
 If you expect this property to be accessed then please
 set an expectation for it.
 
-${printRemainingExpectations(expectations)}`)
+${printRemainingExpectations(expectations)}`),
     );
   }
 }

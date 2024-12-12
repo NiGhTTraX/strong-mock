@@ -12,7 +12,7 @@ import { Mode } from './mode';
 export const createStub = <T>(
   repo: ExpectationRepository,
   builder: ExpectationBuilder,
-  getCurrentMode: () => Mode
+  getCurrentMode: () => Mode,
 ): Mock<T> => {
   const stub = createProxy<T>({
     property: (property) => {

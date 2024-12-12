@@ -14,7 +14,7 @@ describe('matches', () => {
 
   it('should pretty print with custom message', () => {
     expect(
-      matches(() => true, { toString: () => 'foobar' }).toString()
+      matches(() => true, { toString: () => 'foobar' }).toString(),
     ).toEqual('foobar');
   });
 

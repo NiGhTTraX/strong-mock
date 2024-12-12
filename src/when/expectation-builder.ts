@@ -22,7 +22,7 @@ export type ExpectationFactory = (
   args: any[] | undefined,
   returnValue: ReturnValue,
   concreteMatcher: ConcreteMatcher,
-  exactParams: boolean
+  exactParams: boolean,
 ) => Expectation;
 
 export class ExpectationBuilderWithFactory implements ExpectationBuilder {
@@ -33,7 +33,7 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
   constructor(
     private createExpectation: ExpectationFactory,
     private concreteMatcher: ConcreteMatcher,
-    private exactParams: boolean
+    private exactParams: boolean,
   ) {}
 
   setProperty(value: Property) {
@@ -58,7 +58,7 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
       this.args,
       returnValue,
       this.concreteMatcher,
-      this.exactParams
+      this.exactParams,
     );
 
     this.property = undefined;

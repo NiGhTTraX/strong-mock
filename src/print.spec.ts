@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
 import {
   printDiffForAllExpectations,
@@ -37,21 +36,21 @@ describe('print', () => {
     it('should print symbol call', () => {
       expectAnsilessEqual(
         printCall(Symbol('bar'), [1, 2, 3]),
-        `mock[Symbol(bar)](1, 2, 3)`
+        `mock[Symbol(bar)](1, 2, 3)`,
       );
     });
 
     it('should deep print args', () => {
       expectAnsilessEqual(
         printCall('bar', [1, 2, { foo: 'bar' }]),
-        `mock.bar(1, 2, {"foo": "bar"})`
+        `mock.bar(1, 2, {"foo": "bar"})`,
       );
     });
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
         printCall('bar', [matches(() => true, { toString: () => 'matcher' })]),
-        `mock.bar(matcher)`
+        `mock.bar(matcher)`,
       );
     });
 
@@ -64,14 +63,14 @@ describe('print', () => {
     it('should print invocation count', () => {
       expectAnsilessContain(
         printReturns({ value: 23 }, 1, 3),
-        `.between(1, 3)`
+        `.between(1, 3)`,
       );
     });
 
     it('should print return value', () => {
       expectAnsilessContain(
         printReturns({ value: 23 }, 1, 1),
-        `.thenReturn(23)`
+        `.thenReturn(23)`,
       );
     });
 
@@ -83,16 +82,16 @@ describe('print', () => {
             isError: true,
           },
           1,
-          1
+          1,
         ),
-        `.thenThrow([Error: foobar])`
+        `.thenThrow([Error: foobar])`,
       );
     });
 
     it('should print promise', () => {
       expectAnsilessContain(
         printReturns({ value: 23, isPromise: true }, 1, 1),
-        `.thenResolve(23)`
+        `.thenResolve(23)`,
       );
     });
 
@@ -105,9 +104,9 @@ describe('print', () => {
             isError: true,
           },
           1,
-          1
+          1,
         ),
-        `.thenReject([Error: foobar])`
+        `.thenReject([Error: foobar])`,
       );
     });
   });
@@ -127,7 +126,7 @@ describe('print', () => {
       expectAnsilessEqual(
         printExpectationDiff(expectation, args),
         `-   "foo",
-+   "bar"`
++   "bar"`,
       );
     });
 
@@ -143,7 +142,7 @@ describe('print', () => {
       expectAnsilessEqual(
         printExpectationDiff(expectation, []),
         `-   "foo",
-+   undefined`
++   undefined`,
       );
     });
 
@@ -191,7 +190,7 @@ when(() => mock.prop(matcher)).thenReturn("return").between(1, 1)
 + Received
 
 -   "foo",
-+   "bar"`
++   "bar"`,
       );
     });
   });

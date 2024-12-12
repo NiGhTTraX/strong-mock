@@ -32,8 +32,8 @@ describe('isPlainObject', () => {
       isPlainObject().getDiff(
         new (class {
           foo = 'bar';
-        })()
-      )
+        })(),
+      ),
     ).toEqual({
       expected: 'Matcher<object>',
       actual: '{"foo": "bar"} (object-like)',

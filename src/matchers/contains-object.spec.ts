@@ -39,7 +39,7 @@ const diffTests = (tests: Test[]) => {
       actual: test.actual,
       expectedDiff: test.expectedDiff,
       actualDiff: test.actualDiff,
-    })
+    }),
   );
 };
 
@@ -47,13 +47,13 @@ describe('containsObject', () => {
   it('should match a subset of the actual keys', () => {
     expect(containsObject({ foo: 'bar' }).matches({ foo: 'bar' })).toBeTruthy();
     expect(
-      containsObject({ foo: 'bar' }).matches({ foo: 'bar', extra: 1 })
+      containsObject({ foo: 'bar' }).matches({ foo: 'bar', extra: 1 }),
     ).toBeTruthy();
     expect(
-      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2 })
+      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2 }),
     ).toBeTruthy();
     expect(
-      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2, three: 3 })
+      containsObject({ one: 1, two: 2 }).matches({ one: 1, two: 2, three: 3 }),
     ).toBeTruthy();
 
     diffTests([
@@ -100,7 +100,7 @@ describe('containsObject', () => {
     expect(containsObject({ foo: false }).matches({ foo: false })).toBeTruthy();
     expect(containsObject({ foo: null }).matches({ foo: null })).toBeTruthy();
     expect(
-      containsObject({ foo: undefined }).matches({ foo: undefined })
+      containsObject({ foo: undefined }).matches({ foo: undefined }),
     ).toBeTruthy();
     expect(containsObject({ foo: '' }).matches({ foo: '' })).toBeTruthy();
 
@@ -148,7 +148,7 @@ describe('containsObject', () => {
     const foo = Symbol('foo');
 
     expect(
-      containsObject({ [foo]: 'bar' }).matches({ [foo]: 'bar' })
+      containsObject({ [foo]: 'bar' }).matches({ [foo]: 'bar' }),
     ).toBeTruthy();
     expect(containsObject({ 100: 'bar' }).matches({ 100: 'bar' })).toBeTruthy();
 
@@ -172,7 +172,7 @@ describe('containsObject', () => {
     expect(
       containsObject({ foo: { bar: { baz: 42 } } }).matches({
         foo: { bar: { baz: 42 } },
-      })
+      }),
     ).toBeTruthy();
 
     diffTests([
@@ -347,12 +347,12 @@ describe('containsObject', () => {
 
   it('should not recursively match non plain objects', () => {
     expect(
-      containsObject({ foo: [1, 2] }).matches({ foo: [1, 2] })
+      containsObject({ foo: [1, 2] }).matches({ foo: [1, 2] }),
     ).toBeTruthy();
     expect(
       containsObject({ foo: new Map([['foo', 'bar']]) }).matches({
         foo: new Map([['foo', 'bar']]),
-      })
+      }),
     ).toBeTruthy();
 
     diffTests([
@@ -390,12 +390,12 @@ describe('containsObject', () => {
 
   it('should match nested matchers', () => {
     expect(
-      containsObject({ foo: isString() }).matches({ foo: 'bar' })
+      containsObject({ foo: isString() }).matches({ foo: 'bar' }),
     ).toBeTruthy();
     expect(
       containsObject({ foo: isArray([isString()]) }).matches({
         foo: ['bar'],
-      })
+      }),
     ).toBeTruthy();
 
     const getDiff = SM.mock<MatcherDiffer>();
@@ -449,7 +449,7 @@ describe('containsObject', () => {
     it('should pretty print the partial object', () => {
       expectAnsilessEqual(
         containsObject({ foo: 'bar' }).toString(),
-        `Matcher<object>({"foo": "bar"})`
+        `Matcher<object>({"foo": "bar"})`,
       );
     });
 
@@ -460,14 +460,14 @@ describe('containsObject', () => {
         containsObject({
           foo: matcher,
         }).toString(),
-        `Matcher<object>({"foo": "matcher"})`
+        `Matcher<object>({"foo": "matcher"})`,
       );
 
       expectAnsilessEqual(
         containsObject({
           foo: { bar: matcher },
         }).toString(),
-        `Matcher<object>({"foo": {"bar": "matcher"}})`
+        `Matcher<object>({"foo": {"bar": "matcher"}})`,
       );
     });
   });

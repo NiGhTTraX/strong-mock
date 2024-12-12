@@ -42,7 +42,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
             }
 
             return deepEquals(x).matches(y);
-          }) !== undefined
+          }) !== undefined,
       );
     },
     {
@@ -71,5 +71,5 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
           expected: 'Matcher<array>',
         };
       },
-    }
+    },
   );

@@ -1,4 +1,3 @@
-/* eslint-disable padding-line-between-statements */
 /* istanbul ignore file */
 
 export { mock } from './mock/mock';

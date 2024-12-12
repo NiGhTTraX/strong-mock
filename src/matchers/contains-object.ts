@@ -31,7 +31,7 @@ const getExpectedObjectDiff = (actual: unknown, expected: unknown): object =>
       }
 
       return [key, expectedValue];
-    })
+    }),
   );
 
 const getActualObjectDiff = (actual: unknown, expected: unknown): unknown => {
@@ -59,7 +59,7 @@ const getActualObjectDiff = (actual: unknown, expected: unknown): unknown => {
       }
 
       return [key, actualValue];
-    })
+    }),
   );
 };
 
@@ -131,7 +131,7 @@ const deepPrintObject = (value: unknown) =>
 // https://github.com/microsoft/TypeScript/issues/57810,
 // but K is to avoid inferring non-object partials
 export const containsObject = <T, K extends DeepPartial<T>>(
-  partial: K extends ObjectType ? NonEmptyObject<K> : never
+  partial: K extends ObjectType ? NonEmptyObject<K> : never,
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {
     toString: () => `Matcher<object>(${printValue(deepPrintObject(partial))})`,

@@ -25,7 +25,7 @@ describe('verify errors', () => {
         `There are unmet expectations:
 
  - e1
- - e2`
+ - e2`,
       );
     });
   });
@@ -50,7 +50,7 @@ describe('verify errors', () => {
           ],
           ['bar', [{ arguments: undefined }]],
         ]) as CallMap,
-        [SM.instance(e1), SM.instance(e2)]
+        [SM.instance(e1), SM.instance(e2)],
       );
 
       expectAnsilessContain(
@@ -59,14 +59,14 @@ describe('verify errors', () => {
 
  - mock.foo(1, 2, 3)
  - mock.foo(4, 5, 6)
- - mock.bar`
+ - mock.bar`,
       );
 
       expectAnsilessContain(
         error.message,
         `Remaining unmet expectations:
  - e1
- - e2`
+ - e2`,
       );
     });
   });

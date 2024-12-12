@@ -52,5 +52,5 @@ export const isString = (matching?: string | RegExp): TypeMatcher<string> =>
           actual: `${actual} (${typeof actual})`,
         };
       },
-    }
+    },
   );

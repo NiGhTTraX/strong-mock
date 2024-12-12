@@ -43,7 +43,7 @@ when(() => parentMock${printProperty(parentProp)}).thenReturn(childMock)
 
 You can return an object directly when the first property is accessed,
 or you can even return a separate mock:
-${snippet}`
+${snippet}`,
     );
   }
 }

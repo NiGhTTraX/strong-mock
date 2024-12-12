@@ -20,7 +20,7 @@ describe('returns', () => {
         value: 23,
         isError: false,
         isPromise: false,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenReturn(23);
@@ -34,7 +34,7 @@ describe('returns', () => {
         value: error,
         isError: true,
         isPromise: false,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenThrow(error);
@@ -46,7 +46,7 @@ describe('returns', () => {
         value: new Error(),
         isError: true,
         isPromise: false,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenThrow();
@@ -58,7 +58,7 @@ describe('returns', () => {
         value: new Error('foobar'),
         isError: true,
         isPromise: false,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenThrow('foobar');
@@ -72,7 +72,7 @@ describe('returns', () => {
         value: promise,
         isError: false,
         isPromise: false,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenReturn(promise);
@@ -84,7 +84,7 @@ describe('returns', () => {
         value: 23,
         isError: false,
         isPromise: true,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenResolve(23);
@@ -98,7 +98,7 @@ describe('returns', () => {
         value: error,
         isError: true,
         isPromise: true,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenReject(error);
@@ -110,7 +110,7 @@ describe('returns', () => {
         value: new Error(),
         isError: true,
         isPromise: true,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenReject();
@@ -122,7 +122,7 @@ describe('returns', () => {
         value: new Error('foobar'),
         isError: true,
         isPromise: true,
-      })
+      }),
     ).thenReturn(expectation);
 
     createReturns(SM.instance(builder), SM.instance(repo)).thenReject('foobar');

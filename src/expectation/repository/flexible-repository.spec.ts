@@ -65,7 +65,7 @@ describe('FlexibleRepository', () => {
       repo.add(
         new MatchingPropertyExpectation('foo', {
           value: () => ({ value: 2 }),
-        })
+        }),
       );
 
       expect(repo.get('foo')()).toEqual({ value: 2 });
@@ -251,22 +251,22 @@ describe('FlexibleRepository', () => {
       repo.add(
         new MatchingPropertyExpectation('toString', {
           value: () => 'not a mock',
-        })
+        }),
       );
       repo.add(
         new MatchingCallExpectation('toString', {
           value: 'I said not a mock',
-        })
+        }),
       );
       repo.add(
         new MatchingPropertyExpectation('@@toStringTag', {
           value: 'totally not a mock',
-        })
+        }),
       );
       repo.add(
         new MatchingPropertyExpectation(Symbol.toStringTag, {
           value: 'absolutely not a mock',
-        })
+        }),
       );
 
       expect(repo.get('toString')()).toEqual('not a mock');
@@ -288,7 +288,7 @@ describe('FlexibleRepository', () => {
       repo.add(
         new MatchingPropertyExpectation('then', {
           value: 42,
-        })
+        }),
       );
 
       expect(repo.get('then')).toEqual(42);
@@ -458,7 +458,7 @@ describe('FlexibleRepository', () => {
   it('should throw matching property error expectation', () => {
     const repo = new FlexibleRepository();
     repo.add(
-      new MatchingPropertyExpectation('foo', { value: 'bar', isError: true })
+      new MatchingPropertyExpectation('foo', { value: 'bar', isError: true }),
     );
 
     expect(() => repo.get('foo')).toThrow('bar');
@@ -467,7 +467,7 @@ describe('FlexibleRepository', () => {
   it('should resolve matching property promise expectation', async () => {
     const repo = new FlexibleRepository();
     repo.add(
-      new MatchingPropertyExpectation('foo', { value: 'bar', isPromise: true })
+      new MatchingPropertyExpectation('foo', { value: 'bar', isPromise: true }),
     );
 
     expect(await repo.get('foo')).toEqual('bar');
@@ -480,7 +480,7 @@ describe('FlexibleRepository', () => {
         value: 'bar',
         isPromise: true,
         isError: true,
-      })
+      }),
     );
 
     await expect(() => repo.get('foo')).rejects.toThrow('bar');

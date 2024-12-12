@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import type { Property } from '../../proxy';
 import type { Expectation } from '../expectation';
 import type { ExpectationRepository } from './expectation-repository';

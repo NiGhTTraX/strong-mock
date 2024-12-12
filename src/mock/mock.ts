@@ -17,14 +17,14 @@ const strongExpectationFactory: ExpectationFactory = (
   args,
   returnValue,
   concreteMatcher,
-  exactParams
+  exactParams,
 ) =>
   new StrongExpectation(
     property,
     // Wrap every non-matcher in the default matcher.
     args?.map((arg) => (isMatcher(arg) ? arg : concreteMatcher(arg))),
     returnValue,
-    exactParams
+    exactParams,
   );
 
 /**
@@ -65,7 +65,7 @@ export const mock = <T>({
   const builder = new ExpectationBuilderWithFactory(
     strongExpectationFactory,
     options.concreteMatcher,
-    options.exactParams
+    options.exactParams,
   );
 
   const stub = createStub<T>(repository, builder, getMode);

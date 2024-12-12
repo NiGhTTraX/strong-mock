@@ -7,7 +7,7 @@ const noColor = (s: string) => s;
 
 export const printArgsDiff = (
   expected: unknown[],
-  actual: unknown[]
+  actual: unknown[],
 ): string => {
   const diff = printDiff(expected, actual, {
     omitAnnotationLines: true,
@@ -61,7 +61,7 @@ export const printArgsDiff = (
         default:
           return line;
       }
-    }
+    },
   );
 
   return coloredDiffLines.join('\n');
@@ -79,7 +79,7 @@ export const printExpectationDiff = (e: Expectation, args: unknown[]) => {
 
 export const printDiffForAllExpectations = (
   expectations: Expectation[],
-  actual: unknown[]
+  actual: unknown[],
 ) =>
   expectations
     .map((e) => {

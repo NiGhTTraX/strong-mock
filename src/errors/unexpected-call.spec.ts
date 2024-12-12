@@ -10,7 +10,7 @@ describe('UnexpectedCall', () => {
 
     expectAnsilessContain(
       error.message,
-      `Didn't expect mock.bar(1, 2, 3) to be called.`
+      `Didn't expect mock.bar(1, 2, 3) to be called.`,
     );
   });
 
@@ -58,7 +58,7 @@ describe('UnexpectedCall', () => {
     const error = new UnexpectedCall(
       'foo',
       ['any arg', 'any arg'],
-      [expectation]
+      [expectation],
     );
 
     expect(error.matcherResult).toEqual({

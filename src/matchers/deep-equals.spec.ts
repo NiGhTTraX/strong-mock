@@ -31,19 +31,19 @@ describe('deepEquals', () => {
 
   it('should match arrays with objects', () => {
     expect(
-      deepEquals([{ foo: 1 }, { foo: 2 }]).matches([{ foo: 1 }, { foo: 2 }])
+      deepEquals([{ foo: 1 }, { foo: 2 }]).matches([{ foo: 1 }, { foo: 2 }]),
     ).toBeTruthy();
     expect(
-      deepEquals([{ foo: 1 }, { foo: 2 }]).matches([{ foo: 1 }, { foo: 3 }])
+      deepEquals([{ foo: 1 }, { foo: 2 }]).matches([{ foo: 1 }, { foo: 3 }]),
     ).toBeFalsy();
   });
 
   it('should match nested objects', () => {
     expect(
-      deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'baz' } })
+      deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'baz' } }),
     ).toBeTruthy();
     expect(
-      deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'boo' } })
+      deepEquals({ foo: { bar: 'baz' } }).matches({ foo: { bar: 'boo' } }),
     ).toBeFalsy();
   });
 
@@ -85,20 +85,20 @@ describe('deepEquals', () => {
 
   it('should match sets', () => {
     expect(
-      deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3]))
+      deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 3])),
     ).toBeTruthy();
     expect(deepEquals(new Set([1, 2, 3])).matches(new Set([2, 3]))).toBeFalsy();
     expect(
-      deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 4]))
+      deepEquals(new Set([1, 2, 3])).matches(new Set([1, 2, 4])),
     ).toBeFalsy();
   });
 
   it('should match maps', () => {
     expect(
-      deepEquals(new Map([[1, 2]])).matches(new Map([[1, 2]]))
+      deepEquals(new Map([[1, 2]])).matches(new Map([[1, 2]])),
     ).toBeTruthy();
     expect(
-      deepEquals(new Map([[1, 2]])).matches(new Map([[1, 3]]))
+      deepEquals(new Map([[1, 2]])).matches(new Map([[1, 3]])),
     ).toBeFalsy();
     expect(deepEquals(new Map([[1, 2]])).matches(new Map([]))).toBeFalsy();
   });
@@ -110,10 +110,10 @@ describe('deepEquals', () => {
 
   it('should match buffers', () => {
     expect(
-      deepEquals(Buffer.from('abc')).matches(Buffer.from('abc'))
+      deepEquals(Buffer.from('abc')).matches(Buffer.from('abc')),
     ).toBeTruthy();
     expect(
-      deepEquals(Buffer.from('abc')).matches(Buffer.from('abd'))
+      deepEquals(Buffer.from('abc')).matches(Buffer.from('abd')),
     ).toBeFalsy();
   });
 
@@ -156,10 +156,10 @@ describe('deepEquals', () => {
 
     it('should match objects', () => {
       expect(
-        deepEquals({ foo: 'bar' }, options).matches({ foo: 'bar' })
+        deepEquals({ foo: 'bar' }, options).matches({ foo: 'bar' }),
       ).toBeTruthy();
       expect(
-        deepEquals({ foo: 'bar' }, options).matches({ foo: 'baz' })
+        deepEquals({ foo: 'bar' }, options).matches({ foo: 'baz' }),
       ).toBeFalsy();
       expect(deepEquals({ foo: 'bar' }, options).matches({})).toBeFalsy();
       expect(deepEquals({}, options).matches({ foo: 'bar' })).toBeFalsy();
@@ -170,13 +170,13 @@ describe('deepEquals', () => {
         deepEquals([{ foo: 1 }, { foo: 2 }], options).matches([
           { foo: 1 },
           { foo: 2 },
-        ])
+        ]),
       ).toBeTruthy();
       expect(
         deepEquals([{ foo: 1 }, { foo: 2 }], options).matches([
           { foo: 1 },
           { foo: 3 },
-        ])
+        ]),
       ).toBeFalsy();
     });
 
@@ -208,10 +208,10 @@ describe('deepEquals', () => {
 
     it('should not match arrays with missing indices', () => {
       expect(
-        deepEquals([1, 2, 3], options).matches([1, undefined, 3])
+        deepEquals([1, 2, 3], options).matches([1, undefined, 3]),
       ).toBeFalsy();
       expect(
-        deepEquals([1, undefined, 3], options).matches([1, 2, 3])
+        deepEquals([1, undefined, 3], options).matches([1, 2, 3]),
       ).toBeFalsy();
     });
 
@@ -229,7 +229,7 @@ describe('deepEquals', () => {
     expectAnsilessEqual(deepEquals(23).toString(), '23');
     expectAnsilessEqual(
       deepEquals({ foo: { bar: [1, 2, 3] } }).toString(),
-      '{"foo": {"bar": [1, 2, 3]}}'
+      '{"foo": {"bar": [1, 2, 3]}}',
     );
   });
 

@@ -53,7 +53,7 @@ export interface ProxyTraps {
 export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
   // The Proxy target MUST be a function, otherwise we can't use the `apply` trap:
   // https://262.ecma-international.org/6.0/#sec-proxy-object-internal-methods-and-internal-slots-call-thisargument-argumentslist
-  // eslint-disable-next-line no-empty-function,@typescript-eslint/no-empty-function
+
   new Proxy(/* istanbul ignore next */ () => {}, {
     get: (target, prop: string | symbol) => {
       if (prop === 'bind') {
@@ -80,7 +80,7 @@ export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
 
     getOwnPropertyDescriptor(
       target: () => void,
-      prop: string | symbol
+      prop: string | symbol,
     ): PropertyDescriptor | undefined {
       const keys = traps.ownKeys();
 

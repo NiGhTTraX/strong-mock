@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-unused-expressions */
 import { It, mock, when } from '../src';
 
 it('type safety', () => {
@@ -53,18 +53,18 @@ it('type safety', () => {
   function partialSafety() {
     It.containsObject(
       // @ts-expect-error empty objects not allowed
-      {}
+      {},
     );
     It.containsObject({ foo: 'bar' });
 
     const number = (x: number) => x;
     number(
       // @ts-expect-error non-object can't be partial-ed
-      It.containsObject({ toString: () => 'bar' })
+      It.containsObject({ toString: () => 'bar' }),
     );
     number(
       // @ts-expect-error non-object
-      It.containsObject(42)
+      It.containsObject(42),
     );
 
     const numberArray = (x: number[]) => x;
@@ -77,20 +77,20 @@ it('type safety', () => {
     nestedObject(It.containsObject({ foo: { 42: 'baz' } }));
     nestedObject(
       // @ts-expect-error wrong nested property type
-      It.containsObject({ foo: { bar: 'boo' } })
+      It.containsObject({ foo: { bar: 'boo' } }),
     );
     nestedObject(
       It.containsObject({
         // @ts-expect-error unexpected key
         unexpected: 42,
-      })
+      }),
     );
     nestedObject(
       It.containsObject({
         // @ts-expect-error because TS can't infer the proper type
         // See https://github.com/microsoft/TypeScript/issues/55164.
         foo: It.containsObject({ bar: 1 }),
-      })
+      }),
     );
 
     interface InterfaceType {
@@ -101,8 +101,8 @@ it('type safety', () => {
     withInterface(
       It.containsObject(
         // @ts-expect-error unexpected key
-        { unexpected: 42 }
-      )
+        { unexpected: 42 },
+      ),
     );
 
     const object = (x: { foo: number }) => x;
@@ -110,14 +110,14 @@ it('type safety', () => {
     object(
       It.containsObject(
         // @ts-expect-error unexpected key
-        { unexpected: It.isNumber() }
-      )
+        { unexpected: It.isNumber() },
+      ),
     );
     object(
       It.containsObject({
         // @ts-expect-error wrong nested matcher type
         foo: It.isString(),
-      })
+      }),
     );
 
     const objectWithArrays = (x: { foo: { bar: number[] } }) => x;
@@ -126,7 +126,7 @@ it('type safety', () => {
         foo: {
           bar: It.isArray([It.isNumber()]),
         },
-      })
+      }),
     );
     objectWithArrays(
       It.containsObject({
@@ -134,7 +134,7 @@ it('type safety', () => {
           // @ts-expect-error wrong nexted matcher type
           bar: It.isArray([It.isString()]),
         },
-      })
+      }),
     );
     objectWithArrays(
       It.containsObject({
@@ -142,7 +142,7 @@ it('type safety', () => {
           // @ts-expect-error arrays should not be made partial
           bar: [undefined],
         },
-      })
+      }),
     );
 
     const objectLikeValues = (data: {
@@ -208,7 +208,7 @@ it('type safety', () => {
     // @ts-expect-error because the value can be undefined.
     number(captureMatcher.value);
     // @ts-expect-error number is not string
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     string(captureMatcher.value!);
   }
 });

@@ -33,7 +33,7 @@ export const deepEquals = <T>(
     strict = true,
   }: {
     strict?: boolean;
-  } = {}
+  } = {},
 ): TypeMatcher<T> =>
   matches(
     (actual) => {
@@ -49,5 +49,5 @@ export const deepEquals = <T>(
         actual,
         expected,
       }),
-    }
+    },
   );

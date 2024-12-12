@@ -68,7 +68,7 @@ export type NonPromiseStub<R> = {
 const finishExpectation = (
   returnValue: ReturnValue,
   builder: ExpectationBuilder,
-  repo: ExpectationRepository
+  repo: ExpectationRepository,
 ) => {
   const finishedExpectation = builder.finish(returnValue);
 
@@ -91,20 +91,20 @@ const getError = (errorOrMessage: Error | string | undefined): Error => {
 
 export const createReturns = (
   builder: ExpectationBuilder,
-  repository: ExpectationRepository
+  repository: ExpectationRepository,
 ) => ({
   thenReturn: (returnValue: any): InvocationCount =>
     finishExpectation(
       // This will handle both thenReturn(23) and thenReturn(Promise.resolve(3)).
       { value: returnValue, isError: false, isPromise: false },
       builder,
-      repository
+      repository,
     ),
   thenThrow: (errorOrMessage?: Error | string): InvocationCount =>
     finishExpectation(
       { value: getError(errorOrMessage), isError: true, isPromise: false },
       builder,
-      repository
+      repository,
     ),
   thenResolve: (promiseValue: any): InvocationCount =>
     finishExpectation(
@@ -114,7 +114,7 @@ export const createReturns = (
         isPromise: true,
       },
       builder,
-      repository
+      repository,
     ),
 
   thenReject: (errorOrMessage?: Error | string): InvocationCount =>
@@ -125,6 +125,6 @@ export const createReturns = (
         isPromise: true,
       },
       builder,
-      repository
+      repository,
     ),
 });

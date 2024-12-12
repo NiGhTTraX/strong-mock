@@ -6,7 +6,7 @@ describe('printArgsDiff', () => {
     expectAnsilessEqual(
       printArgsDiff(['foo'], ['bar']),
       `-   "foo",
-+   "bar"`
++   "bar"`,
     );
   });
 
@@ -15,7 +15,7 @@ describe('printArgsDiff', () => {
       printArgsDiff(['foo', 'bar'], ['foo', 'baz']),
       `    "foo",
 -   "bar",
-+   "baz"`
++   "baz"`,
     );
   });
 
@@ -24,7 +24,7 @@ describe('printArgsDiff', () => {
       printArgsDiff(['foo', 'bar'], ['bar', 'bar']),
       `-   "foo",
 +   "bar",
-    "bar"`
+    "bar"`,
     );
   });
 
@@ -34,7 +34,7 @@ describe('printArgsDiff', () => {
       `-   "one",
 -   "two",
 +   "three",
-+   "four"`
++   "four"`,
     );
   });
 
@@ -44,7 +44,7 @@ describe('printArgsDiff', () => {
       `    Object {
 -     "foo": "bar",
 +     "foo": "baz",
-    }`
+    }`,
     );
 
     expectAnsilessEqual(
@@ -52,7 +52,7 @@ describe('printArgsDiff', () => {
       `    Object {
       "a": 1,
 -     "b": 2,
-    }`
+    }`,
     );
 
     expectAnsilessEqual(
@@ -60,7 +60,7 @@ describe('printArgsDiff', () => {
       `    Object {
       "a": 1,
 +     "b": 2,
-    }`
+    }`,
     );
 
     expectAnsilessEqual(
@@ -71,7 +71,7 @@ describe('printArgsDiff', () => {
 -       "c": 2,
 +       "c": 3,
       },
-    }`
+    }`,
     );
   });
 
@@ -81,7 +81,7 @@ describe('printArgsDiff', () => {
       `    Array [
 -     "foo",
 +     "bar",
-    ]`
+    ]`,
     );
   });
 
@@ -90,7 +90,7 @@ describe('printArgsDiff', () => {
     expectAnsilessEqual(
       printArgsDiff(['foo', 'bar'], ['foo']),
       `    "foo",
--   "bar"`
+-   "bar"`,
     );
   });
 
@@ -99,7 +99,7 @@ describe('printArgsDiff', () => {
     expectAnsilessEqual(
       printArgsDiff(['foo'], ['foo', 'bar']),
       `    "foo",
-+   "bar"`
++   "bar"`,
     );
   });
 
@@ -107,7 +107,7 @@ describe('printArgsDiff', () => {
     expectAnsilessEqual(
       printArgsDiff(['foo'], [undefined]),
       `-   "foo",
-+   undefined`
++   undefined`,
     );
   });
 
@@ -117,7 +117,7 @@ describe('printArgsDiff', () => {
       `-   "foo",
 +   Object {
 +     "foo": "bar",
-+   }`
++   }`,
     );
   });
 });

@@ -130,7 +130,7 @@ describe('e2e', () => {
     const fn = mock<() => Promise<number>>();
 
     when(() => fn()).thenReject(
-      'if you are seeing this it means the test failed'
+      'if you are seeing this it means the test failed',
     );
   });
 
@@ -180,8 +180,8 @@ describe('e2e', () => {
         fn(
           1,
           It.matches((y) => y === 2),
-          It.matches((z) => z === 3)
-        )
+          It.matches((z) => z === 3),
+        ),
       ).thenReturn(23);
 
       expect(fn(1, 2, 3)).toEqual(23);
@@ -193,7 +193,7 @@ describe('e2e', () => {
       when(() => fn(It.containsObject({ foo: { bar: 'bar' } }))).thenReturn(23);
 
       expect(() => fn({ foo: { bar: 'baz', baz: 42 } })).toThrow(
-        UnexpectedCall
+        UnexpectedCall,
       );
       expect(fn({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
     });

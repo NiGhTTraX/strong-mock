@@ -19,7 +19,7 @@ type CountableExpectation = {
  */
 export class FlexibleRepository implements ExpectationRepository {
   constructor(
-    private unexpectedProperty: UnexpectedProperty = UnexpectedProperty.THROW
+    private unexpectedProperty: UnexpectedProperty = UnexpectedProperty.THROW,
   ) {}
 
   protected readonly expectations = new Map<Property, CountableExpectation[]>();
@@ -58,7 +58,7 @@ export class FlexibleRepository implements ExpectationRepository {
     if (expectations && expectations.length) {
       return this.handlePropertyWithMatchingExpectations(
         property,
-        expectations
+        expectations,
       );
     }
 
@@ -67,7 +67,7 @@ export class FlexibleRepository implements ExpectationRepository {
 
   private handlePropertyWithMatchingExpectations = (
     property: Property,
-    expectations: CountableExpectation[]
+    expectations: CountableExpectation[],
   ) => {
     // Avoid recording call stats for function calls, since the property is an
     // internal detail.
@@ -78,7 +78,7 @@ export class FlexibleRepository implements ExpectationRepository {
     }
 
     const propertyExpectation = expectations.find((e) =>
-      e.expectation.matches(undefined)
+      e.expectation.matches(undefined),
     );
 
     if (propertyExpectation) {
@@ -89,7 +89,7 @@ export class FlexibleRepository implements ExpectationRepository {
 
     return (...args: any[]) => {
       const callExpectation = expectations.find((e) =>
-        e.expectation.matches(args)
+        e.expectation.matches(args),
       );
 
       if (callExpectation) {
@@ -151,8 +151,8 @@ export class FlexibleRepository implements ExpectationRepository {
       ...Array.from(this.expectations.values()).map((expectations) =>
         expectations
           .filter((e) => e.expectation.min > e.matchCount)
-          .map((e) => e.expectation)
-      )
+          .map((e) => e.expectation),
+      ),
     );
   }
 
@@ -169,7 +169,6 @@ export class FlexibleRepository implements ExpectationRepository {
   }
 
   private countAndConsume(expectation: CountableExpectation) {
-    // eslint-disable-next-line no-param-reassign
     expectation.matchCount++;
 
     this.consumeExpectation(expectation);
@@ -183,7 +182,7 @@ export class FlexibleRepository implements ExpectationRepository {
     if (expectation.matchCount === max) {
       this.expectations.set(
         property,
-        expectations.filter((e) => e !== expectation)
+        expectations.filter((e) => e !== expectation),
       );
     }
   }

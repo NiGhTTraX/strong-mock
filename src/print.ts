@@ -44,7 +44,7 @@ export const printCall = (property: Property, args?: any[]) => {
 export const printReturns = (
   { isError, isPromise, value }: ReturnValue,
   min: number,
-  max: number
+  max: number,
 ) => {
   let thenPrefix = '';
 
@@ -61,7 +61,7 @@ export const printReturns = (
   }
 
   return `.${thenPrefix}(${RECEIVED_COLOR(
-    printValue(value)
+    printValue(value),
   )}).between(${min}, ${max})`;
 };
 
@@ -70,7 +70,7 @@ export const printWhen = (property: Property, args: any[] | undefined) => {
 
   if (args) {
     return `when(() => mock${EXPECTED_COLOR(
-      `${prettyProperty}(${printArgs(args)})`
+      `${prettyProperty}(${printArgs(args)})`,
     )})`;
   }
 
@@ -82,7 +82,7 @@ export const printExpectation = (
   args: any[] | undefined,
   returnValue: ReturnValue,
   min: number,
-  max: number
+  max: number,
 ) => `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;
 
 export const printRemainingExpectations = (expectations: Expectation[]) =>

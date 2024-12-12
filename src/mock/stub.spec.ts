@@ -23,7 +23,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         SM.instance(repo),
         SM.instance(builder),
-        expectMode
+        expectMode,
       );
 
       SM.when(builder.setProperty(ApplyProp)).thenReturn();
@@ -36,7 +36,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         SM.instance(repo),
         SM.instance(builder),
-        expectMode
+        expectMode,
       );
 
       SM.when(builder.setProperty('bar')).thenReturn();
@@ -49,7 +49,7 @@ describe('createStub', () => {
       const stub = createStub<Baz>(
         SM.instance(repo),
         SM.instance(builder),
-        expectMode
+        expectMode,
       );
 
       SM.when(builder.setProperty('foo')).thenReturn().twice();
@@ -62,7 +62,7 @@ describe('createStub', () => {
       const stub = createStub<Fn>(
         SM.instance(repo),
         SM.instance(builder),
-        expectMode
+        expectMode,
       );
 
       expect(() => ({ ...stub })).toThrow();
@@ -72,7 +72,7 @@ describe('createStub', () => {
       const stub = createStub<Foo>(
         SM.instance(repo),
         SM.instance(builder),
-        expectMode
+        expectMode,
       );
 
       SM.when(builder.setProperty('bar')).thenReturn();
@@ -94,7 +94,7 @@ describe('createStub', () => {
       const fn = createStub<(x: number) => number>(
         SM.instance(repo),
         unusedBuilder,
-        callMode
+        callMode,
       );
 
       expect(fn(1)).toEqual(42);
@@ -106,7 +106,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: (x: number) => number }>(
         SM.instance(repo),
         unusedBuilder,
-        callMode
+        callMode,
       );
 
       expect(foo.bar(1)).toEqual(42);
@@ -118,7 +118,7 @@ describe('createStub', () => {
       const foo = createStub<{ bar: number }>(
         SM.instance(repo),
         unusedBuilder,
-        callMode
+        callMode,
       );
 
       expect(foo.bar).toEqual(42);
@@ -136,7 +136,7 @@ describe('createStub', () => {
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
         SM.instance(repo),
         unusedBuilder,
-        callMode
+        callMode,
       );
 
       expect({ ...foo }).toEqual({ foo: 1, bar: 2, [baz]: 3 });

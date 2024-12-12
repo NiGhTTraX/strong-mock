@@ -37,7 +37,7 @@ describe('is', () => {
     expectAnsilessEqual(is(23).toString(), '23');
     expectAnsilessEqual(
       is({ foo: { bar: [1, 2, 3] } }).toString(),
-      '{"foo": {"bar": [1, 2, 3]}}'
+      '{"foo": {"bar": [1, 2, 3]}}',
     );
   });
 

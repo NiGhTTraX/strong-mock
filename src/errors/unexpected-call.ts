@@ -21,12 +21,12 @@ export class UnexpectedCall extends Error implements MatcherError {
   constructor(
     property: Property,
     args: unknown[],
-    expectations: Expectation[]
+    expectations: Expectation[],
   ) {
     const header = `Didn't expect ${printCall(property, args)} to be called.`;
 
     const propertyExpectations = expectations.filter(
-      (e) => e.property === property
+      (e) => e.property === property,
     );
 
     if (propertyExpectations.length) {
@@ -34,7 +34,7 @@ export class UnexpectedCall extends Error implements MatcherError {
         DIM_COLOR(`${header}
 
 Remaining expectations:
-${printDiffForAllExpectations(propertyExpectations, args)}`)
+${printDiffForAllExpectations(propertyExpectations, args)}`),
       );
 
       // If we have a single expectation we can attach the actual/expected args
@@ -45,7 +45,7 @@ ${printDiffForAllExpectations(propertyExpectations, args)}`)
       ) {
         const { actual, expected } = getMatcherDiffs(
           propertyExpectations[0].args,
-          args
+          args,
         );
         this.matcherResult = {
           actual,
@@ -56,7 +56,7 @@ ${printDiffForAllExpectations(propertyExpectations, args)}`)
       super(
         DIM_COLOR(`${header}
       
-No remaining expectations.`)
+No remaining expectations.`),
       );
     }
   }

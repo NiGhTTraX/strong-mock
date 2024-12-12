@@ -26,7 +26,7 @@ describe('StrongExpectation', () => {
         [deepEquals(undefined)],
         {
           value: 23,
-        }
+        },
       );
 
       expect(expectation.matches([])).toBeTruthy();
@@ -52,7 +52,7 @@ describe('StrongExpectation', () => {
         [deepEquals(undefined)],
         {
           value: 23,
-        }
+        },
       );
 
       expect(expectation.matches([42])).toBeFalsy();
@@ -79,7 +79,7 @@ describe('StrongExpectation', () => {
         {
           value: 23,
         },
-        true
+        true,
       );
 
       expect(expectation.matches([])).toBeFalsy();
@@ -92,13 +92,13 @@ describe('StrongExpectation', () => {
       [deepEquals(4), deepEquals(5), deepEquals(6)],
       {
         value: 42,
-      }
+      },
     );
     expectation.setInvocationCount(2, 3);
 
     expectAnsilessEqual(
       expectation.toString(),
-      `when(() => mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`
+      `when(() => mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`,
     );
   });
 
