@@ -33,7 +33,6 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Awesome error messages](#awesome-error-messages)
   - [Works with Promises and Errors](#works-with-promises-and-errors)
 - [Installation](#installation)
-- [Requirements](#requirements)
 - [API](#api)
   - [Mock](#mock)
     - [Mocking types and interfaces](#mocking-types-and-interfaces)
@@ -138,10 +137,6 @@ yarn add -D strong-mock
 ```shell
 pnpm add -D strong-mock
 ```
-
-## Requirements
-
-strong-mock requires an environment that supports the [ES6 Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy). This is necessary to create dynamic mocks from types because TypeScript does not support reflection i.e. exposing the type info at runtime.
 
 ## API
 
