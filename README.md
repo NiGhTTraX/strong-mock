@@ -42,7 +42,7 @@ console.log(foo.bar(23)); // 'I am strong!'
     - [Setting expectations](#setting-expectations)
     - [Setting multiple expectations](#setting-multiple-expectations)
     - [Matchers](#matchers-1)
-    - [Creating your own matcher](#creating-your-own-matcher)
+    - [Custom matchers](#custom-matchers)
   - [Then](#then)
     - [Setting invocation count expectations](#setting-invocation-count-expectations)
     - [Returning promises](#returning-promises)
@@ -237,8 +237,8 @@ Available matchers:
 - `isArray` - matches any array, can search for subsets,
 - `isPlainObject` - matches any plain object,
 - `containsObject` - recursively matches a subset of an object,
-- `willCapture` - matches anything and stores the received value,
-- `matches` - [build your own matcher](#creating-your-own-matcher).
+- `willCapture` - matches anything and [stores](#custom-matchers) the received value,
+- `matches` - [build your own matcher](#custom-matchers).
 
 The following table illustrates the differences between the equality matchers:
 
@@ -263,7 +263,9 @@ It.isArray([
 ])
 ```
 
-`It.willCapture` is a special matcher that will match any value and store it, so you can access it outside an expectation. This could be useful to capture a callback and then test it separately.
+#### Custom matchers
+
+`It.willCapture` will match any value and store it, so you can access it outside an expectation. This could be useful to capture a callback and then test it separately.
 
 ```ts
 type Cb = (value: number) => number;
@@ -277,9 +279,7 @@ console.log(fn(23, (x) => x + 1)); // 42
 console.log(matcher.value?.(3)); // 4
 ```
 
-#### Creating your own matcher
-
-You can create arbitrarily complex and type safe matchers with `It.matches()`:
+With `It.matches` you can create arbitrarily complex and type safe matchers:
 
 ```typescript
 const fn = mock<(x: number, y: string) => string>();
