@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@eslint/js": "~9.16.0",
-    "@tdd-buffet/tsconfig": "~1.0.5",
     "@types/jest": "~29.5.0",
     "@types/lodash": "~4.17.0",
     "@types/node": "~22.10.0",
