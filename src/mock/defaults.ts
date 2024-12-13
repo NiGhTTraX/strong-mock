@@ -1,6 +1,6 @@
-import { deepEquals } from '../matchers/deep-equals';
-import type { MockOptions } from './options';
-import { UnexpectedProperty } from './options';
+import { deepEquals } from '../matchers/deep-equals.js';
+import type { MockOptions } from './options.js';
+import { UnexpectedProperty } from './options.js';
 
 export type StrongMockDefaults = Required<MockOptions>;
 

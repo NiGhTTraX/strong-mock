@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { SM } from '../../tests/old';
-import type { Expectation } from '../expectation/expectation';
-import { createInvocationCount } from './invocation-count';
+import { SM } from '../../tests/old.js';
+import type { Expectation } from '../expectation/expectation.js';
+import { createInvocationCount } from './invocation-count.js';
 
 describe('invocation count', () => {
   const expectation = SM.mock<Expectation>();

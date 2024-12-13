@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { UnexpectedAccess } from '../errors/unexpected-access';
-import { UnexpectedCall } from '../errors/unexpected-call';
-import { when } from '../index';
-import { matches } from '../matchers/matcher';
-import { setDefaults } from './defaults';
-import { mock } from './mock';
-import { UnexpectedProperty } from './options';
+import { UnexpectedAccess } from '../errors/unexpected-access.js';
+import { UnexpectedCall } from '../errors/unexpected-call.js';
+import { when } from '../index.js';
+import { matches } from '../matchers/matcher.js';
+import { setDefaults } from './defaults.js';
+import { mock } from './mock.js';
+import { UnexpectedProperty } from './options.js';
 
 describe('defaults', () => {
   beforeEach(() => {

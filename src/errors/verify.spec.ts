@@ -2,11 +2,11 @@ import { describe, it } from 'vitest';
 import {
   expectAnsilessContain,
   expectAnsilessEqual,
-} from '../../tests/ansiless';
-import { SM } from '../../tests/old';
-import type { Expectation } from '../expectation/expectation';
-import type { CallMap } from '../expectation/repository/expectation-repository';
-import { UnexpectedCalls, UnmetExpectations } from './verify';
+} from '../../tests/ansiless.js';
+import { SM } from '../../tests/old.js';
+import type { Expectation } from '../expectation/expectation.js';
+import type { CallMap } from '../expectation/repository/expectation-repository.js';
+import { UnexpectedCalls, UnmetExpectations } from './verify.js';
 
 describe('verify errors', () => {
   describe('UnmetExpectations', () => {

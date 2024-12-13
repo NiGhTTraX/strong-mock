@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { expectAnsilessContain } from '../../tests/ansiless';
-import { StrongExpectation } from '../expectation/strong-expectation';
-import { matches } from '../matchers/matcher';
-import { UnexpectedCall } from './unexpected-call';
+import { expectAnsilessContain } from '../../tests/ansiless.js';
+import { StrongExpectation } from '../expectation/strong-expectation.js';
+import { matches } from '../matchers/matcher.js';
+import { UnexpectedCall } from './unexpected-call.js';
 
 describe('UnexpectedCall', () => {
   it('should print the call', () => {

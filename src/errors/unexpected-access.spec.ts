@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expectAnsilessContain } from '../../tests/ansiless';
-import { SM } from '../../tests/old';
-import type { Expectation } from '../expectation/expectation';
-import { UnexpectedAccess } from './unexpected-access';
+import { expectAnsilessContain } from '../../tests/ansiless.js';
+import { SM } from '../../tests/old.js';
+import type { Expectation } from '../expectation/expectation.js';
+import { UnexpectedAccess } from './unexpected-access.js';
 
 describe('UnexpectedAccess', () => {
   it('should print the property and the existing expectations', () => {

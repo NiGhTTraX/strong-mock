@@ -1,5 +1,5 @@
-import { getAllMocks, getMockState } from '../mock/map';
-import type { Mock } from '../mock/mock';
+import { getAllMocks, getMockState } from '../mock/map.js';
+import type { Mock } from '../mock/mock.js';
 
 /**
  * Remove any remaining expectations on the given mock.

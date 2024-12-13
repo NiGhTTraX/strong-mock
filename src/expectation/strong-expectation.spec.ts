@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { expectAnsilessEqual } from '../../tests/ansiless';
-import { deepEquals } from '../matchers/deep-equals';
-import { StrongExpectation } from './strong-expectation';
+import { expectAnsilessEqual } from '../../tests/ansiless.js';
+import { deepEquals } from '../matchers/deep-equals.js';
+import { StrongExpectation } from './strong-expectation.js';
 
 describe('StrongExpectation', () => {
   it('should match empty args', () => {

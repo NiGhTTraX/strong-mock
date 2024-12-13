@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { expectAnsilessEqual } from '../../tests/ansiless';
-import { containsObject } from './contains-object';
-import { isArray } from './is-array';
-import { isString } from './is-string';
-import { matches } from './matcher';
+import { expectAnsilessEqual } from '../../tests/ansiless.js';
+import { containsObject } from './contains-object.js';
+import { isArray } from './is-array.js';
+import { isString } from './is-string.js';
+import { matches } from './matcher.js';
 
 describe('isArray', () => {
   it('should match an empty array', () => {

@@ -1,9 +1,9 @@
 import { EXPECTED_COLOR, RECEIVED_COLOR, stringify } from 'jest-matcher-utils';
-import type { Expectation } from './expectation/expectation';
-import { ApplyProp } from './expectation/expectation';
-import type { ReturnValue } from './expectation/repository/return-value';
-import { isMatcher } from './matchers/matcher';
-import type { Property } from './proxy';
+import type { Expectation } from './expectation/expectation.js';
+import { ApplyProp } from './expectation/expectation.js';
+import type { ReturnValue } from './expectation/repository/return-value.js';
+import { isMatcher } from './matchers/matcher.js';
+import type { Property } from './proxy.js';
 
 export const printProperty = (property: Property) => {
   if (property === ApplyProp) {

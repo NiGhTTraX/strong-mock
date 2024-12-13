@@ -1,14 +1,14 @@
-import { FlexibleRepository } from '../expectation/repository/flexible-repository';
-import { StrongExpectation } from '../expectation/strong-expectation';
-import { isMatcher } from '../matchers/matcher';
-import type { ExpectationFactory } from '../when/expectation-builder';
-import { ExpectationBuilderWithFactory } from '../when/expectation-builder';
-import type { StrongMockDefaults } from './defaults';
-import { currentDefaults } from './defaults';
-import { setMockState } from './map';
-import { getMode } from './mode';
-import type { MockOptions } from './options';
-import { createStub } from './stub';
+import { FlexibleRepository } from '../expectation/repository/flexible-repository.js';
+import { StrongExpectation } from '../expectation/strong-expectation.js';
+import { isMatcher } from '../matchers/matcher.js';
+import type { ExpectationFactory } from '../when/expectation-builder.js';
+import { ExpectationBuilderWithFactory } from '../when/expectation-builder.js';
+import type { StrongMockDefaults } from './defaults.js';
+import { currentDefaults } from './defaults.js';
+import { setMockState } from './map.js';
+import { getMode } from './mode.js';
+import type { MockOptions } from './options.js';
+import { createStub } from './stub.js';
 
 export type Mock<T> = T;
 

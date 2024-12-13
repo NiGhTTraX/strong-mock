@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { unboxReturnValue } from './return-value';
+import { unboxReturnValue } from './return-value.js';
 
 describe('unboxReturnValue', () => {
   it('should return a value', () => {

@@ -1,7 +1,7 @@
-import { printValue } from '../print';
-import { deepEquals } from './deep-equals';
-import type { TypeMatcher } from './matcher';
-import { isMatcher, matches } from './matcher';
+import { printValue } from '../print.js';
+import { deepEquals } from './deep-equals.js';
+import type { TypeMatcher } from './matcher.js';
+import { isMatcher, matches } from './matcher.js';
 
 /**
  * Match an array.

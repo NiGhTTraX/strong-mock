@@ -1,4 +1,4 @@
-import type { Mock } from './mock/mock';
+import type { Mock } from './mock/mock.js';
 
 export type Property = string | symbol;
 

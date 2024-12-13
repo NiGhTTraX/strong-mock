@@ -1,10 +1,10 @@
 import { printExpected } from 'jest-matcher-utils';
 import { describe, expect, it } from 'vitest';
-import { It, mock, verify, when } from '../src';
-import { UnexpectedCall } from '../src/errors/unexpected-call';
-import { UnmetExpectations } from '../src/errors/verify';
-import { expectAnsilessEqual } from './ansiless';
-import type { Fn } from './fixtures';
+import { UnexpectedCall } from '../src/errors/unexpected-call.js';
+import { UnmetExpectations } from '../src/errors/verify.js';
+import { It, mock, verify, when } from '../src/index.js';
+import { expectAnsilessEqual } from './ansiless.js';
+import type { Fn } from './fixtures.js';
 
 describe('e2e', () => {
   describe('function', () => {

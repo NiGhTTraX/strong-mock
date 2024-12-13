@@ -1,6 +1,6 @@
-import type { Matcher } from '../matchers/matcher';
-import type { Property } from '../proxy';
-import type { ReturnValue } from './repository/return-value';
+import type { Matcher } from '../matchers/matcher.js';
+import type { Property } from '../proxy.js';
+import type { ReturnValue } from './repository/return-value.js';
 
 /**
  * Compare received arguments against matchers.

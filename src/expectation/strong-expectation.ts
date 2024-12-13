@@ -1,8 +1,8 @@
-import type { Matcher } from '../matchers/matcher';
-import { printExpectation } from '../print';
-import type { Property } from '../proxy';
-import type { Expectation } from './expectation';
-import type { ReturnValue } from './repository/return-value';
+import type { Matcher } from '../matchers/matcher.js';
+import { printExpectation } from '../print.js';
+import type { Property } from '../proxy.js';
+import type { Expectation } from './expectation.js';
+import type { ReturnValue } from './repository/return-value.js';
 
 /**
  * Matches a call with more parameters than expected because it is assumed the

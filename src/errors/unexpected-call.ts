@@ -1,9 +1,9 @@
 import { DIM_COLOR } from 'jest-matcher-utils';
-import type { Expectation } from '../expectation/expectation';
-import { getMatcherDiffs } from '../matchers/matcher';
-import { printCall } from '../print';
-import type { Property } from '../proxy';
-import { printDiffForAllExpectations } from './diff';
+import type { Expectation } from '../expectation/expectation.js';
+import { getMatcherDiffs } from '../matchers/matcher.js';
+import { printCall } from '../print.js';
+import type { Property } from '../proxy.js';
+import { printDiffForAllExpectations } from './diff.js';
 
 type MatcherResult = {
   expected: unknown;

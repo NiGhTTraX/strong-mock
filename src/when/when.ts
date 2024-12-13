@@ -1,7 +1,7 @@
-import { getActiveMock, getMockState } from '../mock/map';
-import { Mode, setMode } from '../mock/mode';
-import type { NonPromiseStub, PromiseStub } from '../return/returns';
-import { createReturns } from '../return/returns';
+import { getActiveMock, getMockState } from '../mock/map.js';
+import { Mode, setMode } from '../mock/mode.js';
+import type { NonPromiseStub, PromiseStub } from '../return/returns.js';
+import { createReturns } from '../return/returns.js';
 
 interface When {
   <R>(expectation: () => Promise<R>): PromiseStub<R, Promise<R>>;

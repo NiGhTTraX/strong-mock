@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,@typescript-eslint/no-unused-expressions */
 import { it } from 'vitest';
-import { It, mock, when } from '../src';
+import { It, mock, when } from '../src/index.js';
 
 it('type safety', () => {
   function mockSafety() {

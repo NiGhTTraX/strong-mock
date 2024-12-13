@@ -1,14 +1,14 @@
 // noinspection JSVoidFunctionReturnValueUsed
 
 import { describe, expect, it } from 'vitest';
-import type { Baz, Fn, Foo } from '../../tests/fixtures';
-import { SM } from '../../tests/old';
-import { NestedWhen } from '../errors/api';
-import { ApplyProp } from '../expectation/expectation';
-import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import type { ExpectationBuilder } from '../when/expectation-builder';
-import { Mode } from './mode';
-import { createStub } from './stub';
+import type { Baz, Fn, Foo } from '../../tests/fixtures.js';
+import { SM } from '../../tests/old.js';
+import { NestedWhen } from '../errors/api.js';
+import { ApplyProp } from '../expectation/expectation.js';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository.js';
+import type { ExpectationBuilder } from '../when/expectation-builder.js';
+import { Mode } from './mode.js';
+import { createStub } from './stub.js';
 
 describe('createStub', () => {
   describe('recording', () => {

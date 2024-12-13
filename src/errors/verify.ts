@@ -1,7 +1,7 @@
 import { DIM_COLOR } from 'jest-matcher-utils';
-import type { Expectation } from '../expectation/expectation';
-import type { CallMap } from '../expectation/repository/expectation-repository';
-import { printCall, printRemainingExpectations } from '../print';
+import type { Expectation } from '../expectation/expectation.js';
+import type { CallMap } from '../expectation/repository/expectation-repository.js';
+import { printCall, printRemainingExpectations } from '../print.js';
 
 export class UnmetExpectations extends Error {
   constructor(expectations: Expectation[]) {

@@ -1,12 +1,15 @@
-import { UnexpectedAccess } from '../../errors/unexpected-access';
-import { UnexpectedCall } from '../../errors/unexpected-call';
-import { MATCHER_SYMBOL } from '../../matchers/matcher';
-import { UnexpectedProperty } from '../../mock/options';
-import type { Property } from '../../proxy';
-import type { Expectation } from '../expectation';
-import { ApplyProp } from '../expectation';
-import type { CallMap, ExpectationRepository } from './expectation-repository';
-import { unboxReturnValue } from './return-value';
+import { UnexpectedAccess } from '../../errors/unexpected-access.js';
+import { UnexpectedCall } from '../../errors/unexpected-call.js';
+import { MATCHER_SYMBOL } from '../../matchers/matcher.js';
+import { UnexpectedProperty } from '../../mock/options.js';
+import type { Property } from '../../proxy.js';
+import type { Expectation } from '../expectation.js';
+import { ApplyProp } from '../expectation.js';
+import type {
+  CallMap,
+  ExpectationRepository,
+} from './expectation-repository.js';
+import { unboxReturnValue } from './return-value.js';
 
 type CountableExpectation = {
   expectation: Expectation;

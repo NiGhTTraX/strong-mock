@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { willCapture } from './will-capture';
+import { willCapture } from './will-capture.js';
 
 describe('willCapture', () => {
   it('should match anything', () => {

@@ -1,9 +1,9 @@
 import { beforeEach, describe, it } from 'vitest';
-import { SM } from '../../tests/old';
-import { OneUseAlwaysMatchingExpectation } from '../expectation/expectation.mocks';
-import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import type { ExpectationBuilder } from '../when/expectation-builder';
-import { createReturns } from './returns';
+import { SM } from '../../tests/old.js';
+import { OneUseAlwaysMatchingExpectation } from '../expectation/expectation.mocks.js';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository.js';
+import type { ExpectationBuilder } from '../when/expectation-builder.js';
+import { createReturns } from './returns.js';
 
 describe('returns', () => {
   const expectation = new OneUseAlwaysMatchingExpectation();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isNumber } from './is-number';
+import { isNumber } from './is-number.js';
 
 describe('isNumber', () => {
   it('should match 0', () => {

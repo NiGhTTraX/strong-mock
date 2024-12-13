@@ -1,16 +1,16 @@
 /* c8 ignore file */
 
-export { mock } from './mock/mock';
+export { mock } from './mock/mock.js';
 
-export { when } from './when/when';
+export { when } from './when/when.js';
 
-export { reset, resetAll } from './verify/reset';
+export { reset, resetAll } from './verify/reset.js';
 
-export { verify, verifyAll } from './verify/verify';
+export { verify, verifyAll } from './verify/verify.js';
 
-export { setDefaults } from './mock/defaults';
+export { setDefaults } from './mock/defaults.js';
 
-import * as It from './matchers/it';
+import * as It from './matchers/it.js';
 
 /**
  * Contains matchers that can be used to ignore arguments in an
@@ -18,8 +18,8 @@ import * as It from './matchers/it';
  */
 export { It };
 
-export type { Matcher, MatcherOptions } from './matchers/matcher';
+export type { Matcher, MatcherOptions } from './matchers/matcher.js';
 
-export type { MockOptions } from './mock/options';
+export type { MockOptions } from './mock/options.js';
 
-export { UnexpectedProperty } from './mock/options';
+export { UnexpectedProperty } from './mock/options.js';

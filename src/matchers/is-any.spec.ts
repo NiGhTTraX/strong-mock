@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isAny } from './is-any';
+import { isAny } from './is-any.js';
 
 describe('isAny', () => {
   it('should match null', () => {

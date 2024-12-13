@@ -1,4 +1,4 @@
-import type { Expectation } from '../expectation/expectation';
+import type { Expectation } from '../expectation/expectation.js';
 
 export interface InvocationCount {
   /**

@@ -1,7 +1,7 @@
-import type { Property } from '../../proxy';
-import type { Expectation } from '../expectation';
-import type { ExpectationRepository } from './expectation-repository';
-import type { ReturnValue } from './return-value';
+import type { Property } from '../../proxy.js';
+import type { Expectation } from '../expectation.js';
+import type { ExpectationRepository } from './expectation-repository.js';
+import type { ReturnValue } from './return-value.js';
 
 export class OneIncomingExpectationRepository implements ExpectationRepository {
   public expectation: Expectation | undefined;
