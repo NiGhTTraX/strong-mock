@@ -20,62 +20,44 @@ describe('createStub', () => {
     const expectMode = () => Mode.EXPECT;
 
     it('should intercept fn(...args)', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(builder),
-        expectMode,
-      );
+      const stub = createStub<Fn>(repo, builder, expectMode);
 
-      SM.when(builder.setProperty(ApplyProp)).thenReturn();
-      SM.when(builder.setArgs([1, 2, 3])).thenReturn();
+      SM.when(() => builder.setProperty(ApplyProp)).thenReturn();
+      SM.when(() => builder.setArgs([1, 2, 3])).thenReturn();
 
       stub(1, 2, 3);
     });
 
     it('should intercept foo.bar(...args)', () => {
-      const stub = createStub<Foo>(
-        SM.instance(repo),
-        SM.instance(builder),
-        expectMode,
-      );
+      const stub = createStub<Foo>(repo, builder, expectMode);
 
-      SM.when(builder.setProperty('bar')).thenReturn();
-      SM.when(builder.setArgs([1, 2, 3])).thenReturn();
+      SM.when(() => builder.setProperty('bar')).thenReturn();
+      SM.when(() => builder.setArgs([1, 2, 3])).thenReturn();
 
       stub.bar(1, 2, 3);
     });
 
     it('should throw on nested access', () => {
-      const stub = createStub<Baz>(
-        SM.instance(repo),
-        SM.instance(builder),
-        expectMode,
-      );
+      const stub = createStub<Baz>(repo, builder, expectMode);
 
-      SM.when(builder.setProperty('foo')).thenReturn().twice();
+      SM.when(() => builder.setProperty('foo'))
+        .thenReturn()
+        .twice();
 
       expect(() => stub.foo.bar).toThrow(NestedWhen);
       expect(() => stub.foo.bar.baz).toThrow(NestedWhen);
     });
 
     it('should throw when spreading', () => {
-      const stub = createStub<Fn>(
-        SM.instance(repo),
-        SM.instance(builder),
-        expectMode,
-      );
+      const stub = createStub<Fn>(repo, builder, expectMode);
 
       expect(() => ({ ...stub })).toThrow();
     });
 
     it('should throw when spreading a property', () => {
-      const stub = createStub<Foo>(
-        SM.instance(repo),
-        SM.instance(builder),
-        expectMode,
-      );
+      const stub = createStub<Foo>(repo, builder, expectMode);
 
-      SM.when(builder.setProperty('bar')).thenReturn();
+      SM.when(() => builder.setProperty('bar')).thenReturn();
 
       expect(() => ({ ...stub.bar })).toThrow();
     });
@@ -89,10 +71,10 @@ describe('createStub', () => {
     const callMode = () => Mode.CALL;
 
     it('should get matching expectation for apply', () => {
-      SM.when(repo.apply([1])).thenReturn(42);
+      SM.when(() => repo.apply([1])).thenReturn(42);
 
       const fn = createStub<(x: number) => number>(
-        SM.instance(repo),
+        repo,
         unusedBuilder,
         callMode,
       );
@@ -101,10 +83,10 @@ describe('createStub', () => {
     });
 
     it('should get matching expectation for method', () => {
-      SM.when(repo.get('bar')).thenReturn(() => 42);
+      SM.when(() => repo.get('bar')).thenReturn(() => 42);
 
       const foo = createStub<{ bar: (x: number) => number }>(
-        SM.instance(repo),
+        repo,
         unusedBuilder,
         callMode,
       );
@@ -113,13 +95,9 @@ describe('createStub', () => {
     });
 
     it('should get matching expectation for property', () => {
-      SM.when(repo.get('bar')).thenReturn(42);
+      SM.when(() => repo.get('bar')).thenReturn(42);
 
-      const foo = createStub<{ bar: number }>(
-        SM.instance(repo),
-        unusedBuilder,
-        callMode,
-      );
+      const foo = createStub<{ bar: number }>(repo, unusedBuilder, callMode);
 
       expect(foo.bar).toEqual(42);
     });
@@ -128,13 +106,15 @@ describe('createStub', () => {
       const baz = Symbol('baz');
       const keys = ['foo', 'bar', baz];
 
-      SM.when(repo.getAllProperties()).thenReturn(keys).times(4);
-      SM.when(repo.get('foo')).thenReturn(1);
-      SM.when(repo.get('bar')).thenReturn(2);
-      SM.when(repo.get(baz)).thenReturn(3);
+      SM.when(() => repo.getAllProperties())
+        .thenReturn(keys)
+        .times(4);
+      SM.when(() => repo.get('foo')).thenReturn(1);
+      SM.when(() => repo.get('bar')).thenReturn(2);
+      SM.when(() => repo.get(baz)).thenReturn(3);
 
       const foo = createStub<{ foo: number; bar: number; [baz]: number }>(
-        SM.instance(repo),
+        repo,
         unusedBuilder,
         callMode,
       );

@@ -12,7 +12,7 @@ describe('ExpectationBuilder', () => {
 
   it('should finish the expectation', () => {
     const builder = new ExpectationBuilderWithFactory(
-      SM.instance(factory),
+      factory,
       concreteMatcher,
       false,
     );
@@ -23,7 +23,7 @@ describe('ExpectationBuilder', () => {
     const expectation = new NotMatchingExpectation(':irrelevant:', {
       value: ':irrelevant:',
     });
-    SM.when(
+    SM.when(() =>
       factory('foo', [1, 2, 3], { value: 42 }, concreteMatcher, false),
     ).thenReturn(expectation);
 
@@ -32,7 +32,7 @@ describe('ExpectationBuilder', () => {
 
   it('should throw if unfinished', () => {
     const builder = new ExpectationBuilderWithFactory(
-      SM.instance(factory),
+      factory,
       concreteMatcher,
       false,
     );

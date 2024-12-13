@@ -399,7 +399,8 @@ describe('containsObject', () => {
     ).toBeTruthy();
 
     const getDiff = SM.mock<MatcherDiffer>();
-    SM.when(getDiff(23))
+
+    SM.when(() => getDiff(23))
       .thenReturn({
         actual: 'a',
         expected: 'e',
@@ -410,7 +411,7 @@ describe('containsObject', () => {
     diffTests([
       {
         expected: {
-          foo: matches(() => false, { getDiff: SM.instance(getDiff) }),
+          foo: matches(() => false, { getDiff: getDiff }),
         },
         actual: { foo: 23 },
         expectedDiff: { foo: 'e' },
@@ -418,7 +419,7 @@ describe('containsObject', () => {
       },
       {
         expected: {
-          foo: { bar: matches(() => false, { getDiff: SM.instance(getDiff) }) },
+          foo: { bar: matches(() => false, { getDiff: getDiff }) },
         },
         actual: { foo: { bar: 23 } },
         expectedDiff: { foo: { bar: 'e' } },

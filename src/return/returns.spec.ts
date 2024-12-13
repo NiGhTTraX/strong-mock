@@ -11,11 +11,11 @@ describe('returns', () => {
 
   beforeEach(() => {
     // noinspection JSVoidFunctionReturnValueUsed
-    SM.when(repo.add(expectation)).thenReturn();
+    SM.when(() => repo.add(expectation)).thenReturn();
   });
 
   it('should set a return value', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: 23,
         isError: false,
@@ -23,13 +23,13 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenReturn(23);
+    createReturns(builder, repo).thenReturn(23);
   });
 
   it('should set a custom exception', () => {
     const error = new Error();
 
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: error,
         isError: true,
@@ -37,11 +37,11 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenThrow(error);
+    createReturns(builder, repo).thenThrow(error);
   });
 
   it('should set an empty exception', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: new Error(),
         isError: true,
@@ -49,11 +49,11 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenThrow();
+    createReturns(builder, repo).thenThrow();
   });
 
   it('should set an exception message', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: new Error('foobar'),
         isError: true,
@@ -61,13 +61,13 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenThrow('foobar');
+    createReturns(builder, repo).thenThrow('foobar');
   });
 
   it('should set a return promise', () => {
     const promise = Promise.resolve(23);
 
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: promise,
         isError: false,
@@ -75,11 +75,11 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenReturn(promise);
+    createReturns(builder, repo).thenReturn(promise);
   });
 
   it('should set a return promise value', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: 23,
         isError: false,
@@ -87,13 +87,13 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenResolve(23);
+    createReturns(builder, repo).thenResolve(23);
   });
 
   it('should set a custom promise rejection', () => {
     const error = new Error();
 
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: error,
         isError: true,
@@ -101,11 +101,11 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenReject(error);
+    createReturns(builder, repo).thenReject(error);
   });
 
   it('should set an empty promise rejection', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: new Error(),
         isError: true,
@@ -113,11 +113,11 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenReject();
+    createReturns(builder, repo).thenReject();
   });
 
   it('should set a promise rejection message', () => {
-    SM.when(
+    SM.when(() =>
       builder.finish({
         value: new Error('foobar'),
         isError: true,
@@ -125,6 +125,6 @@ describe('returns', () => {
       }),
     ).thenReturn(expectation);
 
-    createReturns(SM.instance(builder), SM.instance(repo)).thenReject('foobar');
+    createReturns(builder, repo).thenReject('foobar');
   });
 });

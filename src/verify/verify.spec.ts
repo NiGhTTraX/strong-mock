@@ -37,22 +37,22 @@ describe('verifyRepo', () => {
   it('should throw if remaining expectations', () => {
     const repo = SM.mock<ExpectationRepository>();
 
-    SM.when(repo.getUnmet()).thenReturn([
+    SM.when(() => repo.getUnmet()).thenReturn([
       new NotMatchingExpectation(':irrelevant:', { value: undefined }),
     ]);
 
-    expect(() => verifyRepo(SM.instance(repo))).toThrow(UnmetExpectations);
+    expect(() => verifyRepo(repo)).toThrow(UnmetExpectations);
   });
 
   it('should throw if unexpected calls', () => {
     const repo = SM.mock<ExpectationRepository>();
 
-    SM.when(repo.getUnmet()).thenReturn([]);
-    SM.when(repo.getCallStats()).thenReturn({
+    SM.when(() => repo.getUnmet()).thenReturn([]);
+    SM.when(() => repo.getCallStats()).thenReturn({
       unexpected: new Map([['bar', [{ arguments: [] }]]]),
       expected: new Map(),
     });
 
-    expect(() => verifyRepo(SM.instance(repo))).toThrow(UnexpectedCalls);
+    expect(() => verifyRepo(repo)).toThrow(UnexpectedCalls);
   });
 });

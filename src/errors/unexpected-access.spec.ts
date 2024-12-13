@@ -7,13 +7,10 @@ describe('UnexpectedAccess', () => {
   it('should print the property and the existing expectations', () => {
     const e1 = SM.mock<Expectation>();
     const e2 = SM.mock<Expectation>();
-    SM.when(e1.toString()).thenReturn('e1');
-    SM.when(e2.toString()).thenReturn('e2');
+    SM.when(() => e1.toString()).thenReturn('e1');
+    SM.when(() => e2.toString()).thenReturn('e2');
 
-    const error = new UnexpectedAccess('bar', [
-      SM.instance(e1),
-      SM.instance(e2),
-    ]);
+    const error = new UnexpectedAccess('bar', [e1, e2]);
 
     expectAnsilessContain(
       error.message,
