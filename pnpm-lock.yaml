@@ -46,8 +46,8 @@ importers:
         specifier: ~9.5.0
         version: 9.5.0
       strip-ansi:
-        specifier: ~6.0.0
-        version: 6.0.1
+        specifier: ~7.1.0
+        version: 7.1.0
       strong-mock:
         specifier: ~8.0.1
         version: 8.0.1
