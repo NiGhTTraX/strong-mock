@@ -43,6 +43,7 @@
   "scripts": {
     "docs": "doctoc --title '**Table of Contents**' README.md",
     "build": "tsup src/index.ts --format cjs,esm --dts --clean --tsconfig tsconfig.build.json",
+    "check-types": "attw --pack .",
     "prepublishOnly": "pnpm run build",
     "release": "standard-version",
     "lint": "eslint --quiet .",
@@ -55,6 +56,7 @@
     "lodash": "~4.17.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "~0.17.1",
     "@nighttrax/eslint-config-ts": "~12.0.1",
     "@types/lodash": "~4.17.0",
     "@types/node": "~22.16.0",
