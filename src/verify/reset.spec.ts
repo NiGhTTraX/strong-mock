@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { NotAMock } from '../errors/api';
-import { when } from '../index';
-import { getMockState } from '../mock/map';
-import { mock } from '../mock/mock';
-import { reset } from './reset';
+import { NotAMock } from '../errors/api.js';
+import { when } from '../index.js';
+import { getMockState } from '../mock/map.js';
+import { mock } from '../mock/mock.js';
+import { reset } from './reset.js';
 
 describe('reset', () => {
   it('should clear the expectation repo', () => {

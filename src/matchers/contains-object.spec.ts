@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { expectAnsilessEqual } from '../../tests/ansiless';
-import { SM } from '../../tests/old';
-import type { Property } from '../proxy';
-import { containsObject } from './contains-object';
-import { isArray } from './is-array';
-import { isString } from './is-string';
-import type { MatcherDiffer } from './matcher';
-import { matches } from './matcher';
+import { expectAnsilessEqual } from '../../tests/ansiless.js';
+import { SM } from '../../tests/old.js';
+import type { Property } from '../proxy.js';
+import { containsObject } from './contains-object.js';
+import { isArray } from './is-array.js';
+import { isString } from './is-string.js';
+import type { MatcherDiffer } from './matcher.js';
+import { matches } from './matcher.js';
 
 const expectDiff = ({
   expected,

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { SM } from '../../tests/old';
-import { UnfinishedExpectation } from '../errors/api';
-import { NotMatchingExpectation } from '../expectation/expectation.mocks';
-import { matches } from '../matchers/matcher';
-import type { ExpectationFactory } from './expectation-builder';
-import { ExpectationBuilderWithFactory } from './expectation-builder';
+import { SM } from '../../tests/old.js';
+import { UnfinishedExpectation } from '../errors/api.js';
+import { NotMatchingExpectation } from '../expectation/expectation.mocks.js';
+import { matches } from '../matchers/matcher.js';
+import type { ExpectationFactory } from './expectation-builder.js';
+import { ExpectationBuilderWithFactory } from './expectation-builder.js';
 
 describe('ExpectationBuilder', () => {
   const factory = SM.mock<ExpectationFactory>();

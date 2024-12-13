@@ -1,7 +1,7 @@
 import { isEqual, isObjectLike, isUndefined, omitBy } from 'lodash';
-import { printValue } from '../print';
-import type { TypeMatcher } from './matcher';
-import { matches } from './matcher';
+import { printValue } from '../print.js';
+import type { TypeMatcher } from './matcher.js';
+import { matches } from './matcher.js';
 
 const removeUndefined = (object: any): any => {
   if (Array.isArray(object)) {

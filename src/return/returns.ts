@@ -1,8 +1,8 @@
-import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import type { ReturnValue } from '../expectation/repository/return-value';
-import type { ExpectationBuilder } from '../when/expectation-builder';
-import type { InvocationCount } from './invocation-count';
-import { createInvocationCount } from './invocation-count';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository.js';
+import type { ReturnValue } from '../expectation/repository/return-value.js';
+import type { ExpectationBuilder } from '../when/expectation-builder.js';
+import type { InvocationCount } from './invocation-count.js';
+import { createInvocationCount } from './invocation-count.js';
 
 export type PromiseStub<R, P> = {
   /**

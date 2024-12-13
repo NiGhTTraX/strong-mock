@@ -1,8 +1,8 @@
-import { MissingWhen, UnfinishedExpectation } from '../errors/api';
-import type { Expectation } from '../expectation/expectation';
-import type { ReturnValue } from '../expectation/repository/return-value';
-import type { ConcreteMatcher } from '../mock/options';
-import type { Property } from '../proxy';
+import { MissingWhen, UnfinishedExpectation } from '../errors/api.js';
+import type { Expectation } from '../expectation/expectation.js';
+import type { ReturnValue } from '../expectation/repository/return-value.js';
+import type { ConcreteMatcher } from '../mock/options.js';
+import type { Property } from '../proxy.js';
 
 /**
  * An expectation has to be built incrementally, starting first with the property

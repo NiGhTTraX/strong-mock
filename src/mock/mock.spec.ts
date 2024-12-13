@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { UnexpectedAccess } from '../errors/unexpected-access';
-import { matches } from '../matchers/matcher';
-import { when } from '../when/when';
-import { mock } from './mock';
-import { UnexpectedProperty } from './options';
+import { UnexpectedAccess } from '../errors/unexpected-access.js';
+import { matches } from '../matchers/matcher.js';
+import { when } from '../when/when.js';
+import { mock } from './mock.js';
+import { UnexpectedProperty } from './options.js';
 
 describe('mock', () => {
   it('should override concrete matcher', () => {

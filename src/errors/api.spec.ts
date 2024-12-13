@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expectAnsilessContain } from '../../tests/ansiless';
-import { NestedWhen, UnfinishedExpectation } from './api';
+import { expectAnsilessContain } from '../../tests/ansiless.js';
+import { NestedWhen, UnfinishedExpectation } from './api.js';
 
 describe('API errors', () => {
   describe('UnfinishedExpectation', () => {

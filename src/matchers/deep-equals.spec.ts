@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { expectAnsilessEqual } from '../../tests/ansiless';
-import { deepEquals } from './deep-equals';
+import { expectAnsilessEqual } from '../../tests/ansiless.js';
+import { deepEquals } from './deep-equals.js';
 
 describe('deepEquals', () => {
   it('should match primitives', () => {

@@ -1,13 +1,16 @@
 import { describe, it } from 'vitest';
-import { expectAnsilessContain, expectAnsilessEqual } from '../tests/ansiless';
+import {
+  expectAnsilessContain,
+  expectAnsilessEqual,
+} from '../tests/ansiless.js';
 import {
   printDiffForAllExpectations,
   printExpectationDiff,
-} from './errors/diff';
-import { ApplyProp } from './expectation/expectation';
-import { StrongExpectation } from './expectation/strong-expectation';
-import { matches } from './matchers/matcher';
-import { printCall, printProperty, printReturns } from './print';
+} from './errors/diff.js';
+import { ApplyProp } from './expectation/expectation.js';
+import { StrongExpectation } from './expectation/strong-expectation.js';
+import { matches } from './matchers/matcher.js';
+import { printCall, printProperty, printReturns } from './print.js';
 
 describe('print', () => {
   describe('printProperty', () => {

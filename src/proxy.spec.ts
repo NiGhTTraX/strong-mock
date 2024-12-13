@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { Bar, Fn, Foo } from '../tests/fixtures';
-import { uniqueSymbol } from '../tests/fixtures';
-import { SM } from '../tests/old';
-import type { ProxyTraps } from './proxy';
-import { createProxy } from './proxy';
+import type { Bar, Fn, Foo } from '../tests/fixtures.js';
+import { uniqueSymbol } from '../tests/fixtures.js';
+import { SM } from '../tests/old.js';
+import type { ProxyTraps } from './proxy.js';
+import { createProxy } from './proxy.js';
 
 describe('proxy', () => {
   const traps = SM.mock<ProxyTraps>();

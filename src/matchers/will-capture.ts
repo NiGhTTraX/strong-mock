@@ -1,5 +1,5 @@
-import type { Matcher, TypeMatcher } from './matcher';
-import { MATCHER_SYMBOL } from './matcher';
+import type { Matcher, TypeMatcher } from './matcher.js';
+import { MATCHER_SYMBOL } from './matcher.js';
 
 /**
  * Matches anything and stores the received value.

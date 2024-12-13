@@ -1,7 +1,7 @@
 import { diff as printDiff } from 'jest-diff';
 import { EXPECTED_COLOR, RECEIVED_COLOR } from 'jest-matcher-utils';
-import type { Expectation } from '../expectation/expectation';
-import { getMatcherDiffs } from '../matchers/matcher';
+import type { Expectation } from '../expectation/expectation.js';
+import { getMatcherDiffs } from '../matchers/matcher.js';
 
 const noColor = (s: string) => s;
 

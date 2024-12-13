@@ -1,5 +1,5 @@
 import { afterEach, beforeEach } from 'vitest';
-import { SM } from './old';
+import { SM } from './old.js';
 
 beforeEach(() => {
   SM.resetAll();

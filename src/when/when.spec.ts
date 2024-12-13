@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mock, when } from '..';
-import { MissingWhen, UnfinishedExpectation } from '../errors/api';
-import { clearActiveMock } from '../mock/map';
+import { MissingWhen, UnfinishedExpectation } from '../errors/api.js';
+import { mock, when } from '../index.js';
+import { clearActiveMock } from '../mock/map.js';
 
 describe('e2e', () => {
   beforeEach(() => {

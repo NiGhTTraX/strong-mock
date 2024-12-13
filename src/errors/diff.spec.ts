@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expectAnsilessEqual } from '../../tests/ansiless';
-import { printArgsDiff } from './diff';
+import { expectAnsilessEqual } from '../../tests/ansiless.js';
+import { printArgsDiff } from './diff.js';
 
 describe('printArgsDiff', () => {
   it('should print diff for mismatching primitive pair', () => {

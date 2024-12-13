@@ -1,6 +1,6 @@
-import type { Property } from '../proxy';
-import type { Expectation } from './expectation';
-import type { ReturnValue } from './repository/return-value';
+import type { Property } from '../proxy.js';
+import type { Expectation } from './expectation.js';
+import type { ReturnValue } from './repository/return-value.js';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
   setInvocationCount = () => {};

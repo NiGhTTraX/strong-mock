@@ -1,10 +1,10 @@
 import { cloneDeepWith, isPlainObject } from 'lodash';
-import { printValue } from '../print';
-import type { Property } from '../proxy';
-import { deepEquals } from './deep-equals';
-import { isArray } from './is-array';
-import type { TypeMatcher } from './matcher';
-import { isMatcher, matches } from './matcher';
+import { printValue } from '../print.js';
+import type { Property } from '../proxy.js';
+import { deepEquals } from './deep-equals.js';
+import { isArray } from './is-array.js';
+import type { TypeMatcher } from './matcher.js';
+import { isMatcher, matches } from './matcher.js';
 
 type ObjectType = Record<Property, unknown>;
 type NonEmptyObject<T extends ObjectType> = keyof T extends never ? never : T;

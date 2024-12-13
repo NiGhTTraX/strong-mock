@@ -23,16 +23,26 @@
   },
   "author": "Andrei Picus",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "require": {
+      "types": "./dist/index.d.cts",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "docs": "doctoc --title '**Table of Contents**' README.md",
-    "build": "pnpm run clean && pnpm run compile",
-    "clean": "rm -rf ./dist",
-    "compile": "microbundle --no-compress --target node -f cjs --tsconfig tsconfig.build.json src/index.ts",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --tsconfig tsconfig.build.json",
     "prepublishOnly": "pnpm run build",
     "release": "standard-version",
     "lint": "eslint --quiet .",
@@ -53,13 +63,13 @@
     "eslint": "~9.16.0",
     "eslint-config-prettier": "~9.1.0",
     "eslint-plugin-prettier": "~5.2.1",
-    "microbundle": "~0.15.0",
     "prettier": "~3.4.2",
     "standard-version": "~9.5.0",
     "strip-ansi": "~6.0.0",
     "strong-mock": "~8.0.1",
     "ts-node": "~10.9.2",
     "tslib": "~2.8.0",
+    "tsup": "~8.3.5",
     "typescript": "~5.7.0",
     "typescript-eslint": "~8.17.0",
     "vitest": "~2.1.8"

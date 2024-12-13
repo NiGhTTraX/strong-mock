@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { matches } from './matcher';
+import { matches } from './matcher.js';
 
 describe('matches', () => {
   it('should support custom predicates', () => {

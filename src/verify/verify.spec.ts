@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SM } from '../../tests/old';
-import { UnexpectedCalls, UnmetExpectations } from '../errors/verify';
-import { NotMatchingExpectation } from '../expectation/expectation.mocks';
-import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import { mock, verify, when } from '../index';
-import { resetAll } from './reset';
-import { verifyAll, verifyRepo } from './verify';
+import { SM } from '../../tests/old.js';
+import { UnexpectedCalls, UnmetExpectations } from '../errors/verify.js';
+import { NotMatchingExpectation } from '../expectation/expectation.mocks.js';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository.js';
+import { mock, verify, when } from '../index.js';
+import { resetAll } from './reset.js';
+import { verifyAll, verifyRepo } from './verify.js';
 
 describe('verify', () => {
   it('should throw on unexpected calls', () => {

@@ -1,8 +1,8 @@
-import { NotAMock } from '../errors/api';
-import type { ExpectationRepository } from '../expectation/repository/expectation-repository';
-import type { ExpectationBuilder } from '../when/expectation-builder';
-import type { StrongMockDefaults } from './defaults';
-import type { Mock } from './mock';
+import { NotAMock } from '../errors/api.js';
+import type { ExpectationRepository } from '../expectation/repository/expectation-repository.js';
+import type { ExpectationBuilder } from '../when/expectation-builder.js';
+import type { StrongMockDefaults } from './defaults.js';
+import type { Mock } from './mock.js';
 
 /**
  * Since `when` doesn't receive the mock subject (because we can't make it

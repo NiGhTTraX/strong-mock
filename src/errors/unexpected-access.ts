@@ -1,7 +1,7 @@
 import { DIM_COLOR } from 'jest-matcher-utils';
-import type { Expectation } from '../expectation/expectation';
-import { printCall, printRemainingExpectations } from '../print';
-import type { Property } from '../proxy';
+import type { Expectation } from '../expectation/expectation.js';
+import { printCall, printRemainingExpectations } from '../print.js';
+import type { Property } from '../proxy.js';
 
 export class UnexpectedAccess extends Error {
   constructor(property: Property, expectations: Expectation[]) {

@@ -1,5 +1,5 @@
-import { printProperty, printWhen } from '../print';
-import type { Property } from '../proxy';
+import { printProperty, printWhen } from '../print.js';
+import type { Property } from '../proxy.js';
 
 export class UnfinishedExpectation extends Error {
   constructor(property: Property, args: any[] | undefined) {

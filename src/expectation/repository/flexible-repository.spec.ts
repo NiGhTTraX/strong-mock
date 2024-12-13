@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { UnexpectedAccess } from '../../errors/unexpected-access';
-import { UnexpectedCall } from '../../errors/unexpected-call';
-import { UnexpectedProperty } from '../../mock/options';
-import { ApplyProp } from '../expectation';
+import { UnexpectedAccess } from '../../errors/unexpected-access.js';
+import { UnexpectedCall } from '../../errors/unexpected-call.js';
+import { UnexpectedProperty } from '../../mock/options.js';
+import { ApplyProp } from '../expectation.js';
 import {
   MatchingCallExpectation,
   MatchingPropertyExpectation,
   NotMatchingExpectation,
-} from '../expectation.mocks';
-import type { CallStats } from './expectation-repository';
-import { FlexibleRepository } from './flexible-repository';
+} from '../expectation.mocks.js';
+import type { CallStats } from './expectation-repository.js';
+import { FlexibleRepository } from './flexible-repository.js';
 
 describe('FlexibleRepository', () => {
   describe('property expectations', () => {

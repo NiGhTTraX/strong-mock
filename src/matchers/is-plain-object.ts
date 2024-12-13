@@ -1,8 +1,8 @@
 import { isObjectLike, isPlainObject as isPlainObjectLodash } from 'lodash';
-import { printValue } from '../print';
-import type { Property } from '../proxy';
-import type { TypeMatcher } from './matcher';
-import { matches } from './matcher';
+import { printValue } from '../print.js';
+import type { Property } from '../proxy.js';
+import type { TypeMatcher } from './matcher.js';
+import { matches } from './matcher.js';
 
 type ObjectType = Record<Property, unknown>;
 

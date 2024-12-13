@@ -1,5 +1,5 @@
-import type { TypeMatcher } from './matcher';
-import { matches } from './matcher';
+import type { TypeMatcher } from './matcher.js';
+import { matches } from './matcher.js';
 
 /**
  * Match any value, including `undefined` and `null`.
