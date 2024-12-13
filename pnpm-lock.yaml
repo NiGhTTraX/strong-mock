@@ -48,15 +48,15 @@ importers:
       prettier:
         specifier: ~3.4.2
         version: 3.4.2
+      sm-old:
+        specifier: npm:strong-mock@8.0.1
+        version: strong-mock@8.0.1
       standard-version:
         specifier: ~9.5.0
         version: 9.5.0
       strip-ansi:
         specifier: ~7.1.0
         version: 7.1.0
-      strong-mock:
-        specifier: ~8.0.1
-        version: 8.0.1
       ts-node:
         specifier: ~10.9.2
         version: 10.9.2(@types/node@22.10.2)(typescript@5.7.2)
