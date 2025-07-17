@@ -56,7 +56,7 @@
     "lodash": "~4.17.0"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "~0.17.1",
+    "@arethetypeswrong/cli": "~0.18.0",
     "@nighttrax/eslint-config-ts": "~12.0.1",
     "@types/lodash": "~4.17.0",
     "@types/node": "~22.16.0",
