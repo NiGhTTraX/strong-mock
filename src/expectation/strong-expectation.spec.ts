@@ -1,6 +1,5 @@
 import { expectAnsilessEqual } from '../../tests/ansiless';
 import { deepEquals } from '../matchers/deep-equals';
-
 import { StrongExpectation } from './strong-expectation';
 
 describe('StrongExpectation', () => {

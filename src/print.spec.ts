@@ -6,7 +6,6 @@ import {
 import { ApplyProp } from './expectation/expectation';
 import { StrongExpectation } from './expectation/strong-expectation';
 import { matches } from './matchers/matcher';
-
 import { printCall, printProperty, printReturns } from './print';
 
 describe('print', () => {

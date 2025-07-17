@@ -1,7 +1,6 @@
 import { expectAnsilessContain } from '../../tests/ansiless';
 import { StrongExpectation } from '../expectation/strong-expectation';
 import { matches } from '../matchers/matcher';
-
 import { UnexpectedCall } from './unexpected-call';
 
 describe('UnexpectedCall', () => {

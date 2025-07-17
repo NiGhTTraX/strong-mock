@@ -411,7 +411,7 @@ describe('containsObject', () => {
     diffTests([
       {
         expected: {
-          foo: matches(() => false, { getDiff: getDiff }),
+          foo: matches(() => false, { getDiff }),
         },
         actual: { foo: 23 },
         expectedDiff: { foo: 'e' },
@@ -419,7 +419,7 @@ describe('containsObject', () => {
       },
       {
         expected: {
-          foo: { bar: matches(() => false, { getDiff: getDiff }) },
+          foo: { bar: matches(() => false, { getDiff }) },
         },
         actual: { foo: { bar: 23 } },
         expectedDiff: { foo: { bar: 'e' } },

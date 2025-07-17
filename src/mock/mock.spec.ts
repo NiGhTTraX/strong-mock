@@ -1,6 +1,5 @@
 import { UnexpectedAccess } from '../errors/unexpected-access';
 import { matches } from '../matchers/matcher';
-
 import { when } from '../when/when';
 import { mock } from './mock';
 import { UnexpectedProperty } from './options';

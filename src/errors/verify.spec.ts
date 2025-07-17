@@ -12,6 +12,7 @@ describe('verify errors', () => {
     it('should print all expectations', () => {
       const expectation1 = SM.mock<Expectation>();
       SM.when(() => expectation1.toString()).thenReturn('e1');
+
       const expectation2 = SM.mock<Expectation>();
       SM.when(() => expectation2.toString()).thenReturn('e2');
 
