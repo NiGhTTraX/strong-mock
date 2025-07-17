@@ -43,8 +43,8 @@ importers:
         specifier: ~3.6.0
         version: 3.6.2
       sm-old:
-        specifier: npm:strong-mock@8.0.1
-        version: strong-mock@8.0.1
+        specifier: npm:strong-mock@9.0.1
+        version: strong-mock@9.0.1
       standard-version:
         specifier: ~9.5.0
         version: 9.5.0
@@ -1965,8 +1965,8 @@ packages:
     resolution: {integrity: sha512-zrteXnqYxfQh7l5FHyL38jL39di8H8rHoecLH3JNxH3BwOrBsNeabdap5e0I23lD4HHI8W5VFBZqG4Eaq5LNcw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  jest-matcher-utils@29.3.1:
-    resolution: {integrity: sha512-fkRMZUAScup3txIKfMe3AIZZmPEjWEdsPJFK3AIy5qRohWqQFg1qrmKfYXR9qEkNc7OdAu2N4KPHibEmy4HPeQ==}
+  jest-matcher-utils@29.7.0:
+    resolution: {integrity: sha512-sBkD+Xi9DtcChsI3L3u0+N0opgPYnCRPtGcQYrgXmR+hmt/fYfWAL0xRXYU8eWOdfuLgBe0YCW3AFtnRLagq/g==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
   jest-matcher-utils@30.0.4:
@@ -2736,8 +2736,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  strong-mock@8.0.1:
-    resolution: {integrity: sha512-4dtV6JNBaohZTVOMNkJtY1O60GXA9XWSvQIl5lX0obm44ptXuvK5v1uL5rA9C+fLqnsGL5eYHrXFPU5eMEj4RQ==}
+  strong-mock@9.0.1:
+    resolution: {integrity: sha512-EhNTlB2DLux5HWV/bXZPPEPO9Y77RTm1KNBiFy1bX+duqfSVV2Pr88TzXAVpmJd40yHyceWVOuM1z1JT7pWclA==}
 
   sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
@@ -5044,7 +5044,7 @@ snapshots:
 
   jest-get-type@29.6.3: {}
 
-  jest-matcher-utils@29.3.1:
+  jest-matcher-utils@29.7.0:
     dependencies:
       chalk: 4.1.2
       jest-diff: 29.7.0
@@ -5931,9 +5931,10 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  strong-mock@8.0.1:
+  strong-mock@9.0.1:
     dependencies:
-      jest-matcher-utils: 29.3.1
+      jest-diff: 29.7.0
+      jest-matcher-utils: 29.7.0
       lodash: 4.17.21
 
   sucrase@3.35.0:
