@@ -10,13 +10,17 @@ type MatcherResult = {
   actual: unknown;
 };
 
-// This is taken from jest.
+// This should cover both jest and vitest.
 interface MatcherError {
+  expected?: unknown;
+  actual?: unknown;
   matcherResult?: MatcherResult;
 }
 
 export class UnexpectedCall extends Error implements MatcherError {
   public matcherResult?: MatcherResult;
+  public expected?: unknown;
+  public actual?: unknown;
 
   constructor(
     property: Property,
@@ -47,6 +51,8 @@ ${printDiffForAllExpectations(propertyExpectations, args)}`),
           propertyExpectations[0].args,
           args,
         );
+        this.actual = actual;
+        this.expected = expected;
         this.matcherResult = {
           actual,
           expected,

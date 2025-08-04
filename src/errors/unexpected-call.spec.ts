@@ -65,6 +65,8 @@ describe('UnexpectedCall', () => {
       actual: ['actual', 'actual'],
       expected: ['expected', 'expected'],
     });
+    expect(error.actual).toEqual(['actual', 'actual']);
+    expect(error.expected).toEqual(['expected', 'expected']);
   });
 
   it('should not contain actual and expected values when the expectation has 0 args', () => {
@@ -75,6 +77,8 @@ describe('UnexpectedCall', () => {
     const error = new UnexpectedCall('foo', [], [expectation]);
 
     expect(error.matcherResult).toBeUndefined();
+    expect(error.actual).toBeUndefined();
+    expect(error.expected).toBeUndefined();
   });
 
   it('should not contain actual and expected values when the expectation is on a property', () => {
@@ -85,5 +89,7 @@ describe('UnexpectedCall', () => {
     const error = new UnexpectedCall('foo', [], [expectation]);
 
     expect(error.matcherResult).toBeUndefined();
+    expect(error.actual).toBeUndefined();
+    expect(error.expected).toBeUndefined();
   });
 });
