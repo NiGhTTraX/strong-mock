@@ -9,7 +9,8 @@ import { isMatcher, matches } from './matcher.js';
  * Supports nested matchers.
  *
  * @param containing If given, the matched array has to contain ALL of these
- *   elements in ANY order.
+ *   elements in ANY order. Use {@link It.deepEquals} or {@link It.matches} if
+ *   you want more control.
  *
  * @example
  * const fn = mock<(arr: number[]) => number>();

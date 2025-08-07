@@ -91,15 +91,15 @@ export interface MockOptions {
    *   {@link when} expectation.
    *
    * @example
-   * const fn = mock<(value: number[]) => boolean>({
+   * const fn = mock<(value: number[]) => string>({
    *   concreteMatcher: It.is
    * });
    *
    * const expected = [1, 2, 3];
-   * when(() => fn(expected).thenReturn(true);
+   * when(() => fn(expected).thenReturn('matched');
    *
    * fn([1, 2, 3]); // throws because different array instance
-   * fn(expected); // OK
+   * fn(expected); // matched
    */
   concreteMatcher?: ConcreteMatcher;
 }

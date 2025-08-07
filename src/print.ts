@@ -1,4 +1,5 @@
 import { EXPECTED_COLOR, RECEIVED_COLOR, stringify } from 'jest-matcher-utils';
+import { cloneDeepWith } from 'lodash';
 import type { Expectation } from './expectation/expectation.js';
 import { ApplyProp } from './expectation/expectation.js';
 import type { ReturnValue } from './expectation/repository/return-value.js';
@@ -25,6 +26,15 @@ export const printValue = (arg: unknown): string => {
 
   return stringify(arg);
 };
+
+export const deepPrint = (value: unknown) =>
+  cloneDeepWith(value, (value) => {
+    if (isMatcher(value)) {
+      return value.toString();
+    }
+
+    return undefined;
+  });
 
 const printArgs = (args: any[]) =>
   args.map((arg) => printValue(arg)).join(', ');

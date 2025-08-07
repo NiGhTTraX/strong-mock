@@ -1,5 +1,5 @@
-import { cloneDeepWith, isPlainObject } from 'lodash';
-import { printValue } from '../print.js';
+import { isPlainObject } from 'lodash';
+import { deepPrint, printValue } from '../print.js';
 import type { Property } from '../proxy.js';
 import { deepEquals } from './deep-equals.js';
 import { isArray } from './is-array.js';
@@ -99,15 +99,6 @@ const isMatch = (actual: unknown, expected: unknown): boolean => {
   });
 };
 
-const deepPrintObject = (value: unknown) =>
-  cloneDeepWith(value, (value) => {
-    if (isMatcher(value)) {
-      return value.toString();
-    }
-
-    return undefined;
-  });
-
 /**
  * Check if an object recursively contains the expected properties,
  * i.e. the expected object is a subset of the received object.
@@ -134,7 +125,7 @@ export const containsObject = <T, K extends DeepPartial<T>>(
   partial: K extends ObjectType ? NonEmptyObject<K> : never,
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {
-    toString: () => `Matcher<object>(${printValue(deepPrintObject(partial))})`,
+    toString: () => `Matcher<object>(${printValue(deepPrint(partial))})`,
     getDiff: (actual) => ({
       actual: getActualObjectDiff(actual, partial),
       expected: getExpectedObjectDiff(actual, partial),

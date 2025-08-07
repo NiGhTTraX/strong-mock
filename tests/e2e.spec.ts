@@ -199,6 +199,16 @@ describe('e2e', () => {
       expect(fn({ foo: { bar: 'bar', baz: 42 } })).toEqual(23);
     });
 
+    it('should support nesting matchers', () => {
+      const fn = mock<(x: { foo: { bar: string; baz: number } }) => number>();
+
+      when(() =>
+        fn({ foo: It.containsObject({ bar: It.isString('bar') }) }),
+      ).thenReturn(42);
+
+      expect(fn({ foo: { bar: 'foobar', baz: 42 } })).toEqual(42);
+    });
+
     it('should capture arguments', () => {
       type Cb = (value: number) => number;
 

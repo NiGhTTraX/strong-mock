@@ -207,7 +207,7 @@ const fn = mock<
 >();
 
 when(() => fn(
-  It.isAny(),
+  It.isNumber(),
   It.containsObject({ values: [1, 2, 3] })
 )).thenReturn('matched!');
 
@@ -224,7 +224,7 @@ when(() => fn(42, It.isPlainObject())).thenReturn('matched');
 ```
 
 Available matchers:
-- `deepEquals` - the default, uses deep equality,
+- `deepEquals` - the default ([can be changed](#concrete-matcher), uses deep equality,
 - `is` - uses `Object.is` for comparison,
 - `isAny` - matches anything,
 - `isNumber` - matches any number,
@@ -244,18 +244,21 @@ The following table illustrates the differences between the equality matchers:
 | `{ }`              | `{ foo: undefined }` | not equal | not equal       | equal                              |
 | `new (class {})()` | `new (class {})()`   | not equal | not equal       | equal                              |
 
-Some matchers, like `containsObject` and `isArray` support nesting matchers:
+You can nest matchers in `deepEquals`, `containsObject` and `isArray`:
 
 ```typescript
-It.containsObject({
-  foo: It.isString()
-})
+type Point = { label: string; value: number };
+const fn = mock<(data: { points: Point[]; title: string }) => number>();
 
-It.isArray([
-  It.containsObject({
-    foo: It.isString(/foo/)
-  })
-])
+// deepEquals is the default matcher so you can omit it.
+when(() => fn({
+  points: It.isArray([
+    It.containsObject({
+      value: It.matches(x => x > 0)
+    })
+  ]),
+  title: It.isString(/foo/)
+})).thenReturn(100);
 ```
 
 #### Custom matchers
@@ -493,7 +496,7 @@ propertiesThrow.bar(42);
 
 ### Exact params
 
-By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type safe, the TypeScript compiler will never allow expecting less arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [matchers](#matchers-1).
+By default, function/method expectations will allow more arguments to be received than expected. Since the expectations are type-safe, the TypeScript compiler will never allow expecting fewer arguments than required. Unspecified optional arguments will be considered ignored, as if they've been replaced with [matchers](#matchers-1).
 
 ```typescript
 import { mock } from 'strong-mock';

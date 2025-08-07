@@ -14,12 +14,15 @@ interface When {
  * The expectation must be finished by setting a return value, even if the value
  * is `undefined`.
  *
- * If a call happens that was not expected then the mock will throw an error.
- * By default, the call is expected to only be made once. Use the invocation
- * count helpers to expect a call multiple times.
+ * If a call happens that was not expected, then the mock will throw an error.
+ * By default, the call is expected only once. Use the invocation count helpers
+ * to expect a call multiple times.
  *
  * @param expectation A callback to set the expectation on your mock. The
  *   callback must return the value from the mock to properly infer types.
+ *
+ * @see {@link It.deepEquals} All values are wrapped in the default matcher.
+ * @see {@link It} for more matchers.
  *
  * @example
  * const fn = mock<() => void>();
