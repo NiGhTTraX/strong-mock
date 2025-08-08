@@ -62,7 +62,7 @@
     "@types/node": "~22.16.0",
     "@vitest/coverage-v8": "~3.2.0",
     "doctoc": "~2.2.0",
-    "eslint": "~9.31.0",
+    "eslint": "~9.32.0",
     "prettier": "~3.6.0",
     "sm-old": "npm:strong-mock@9.0.1",
     "standard-version": "~9.5.0",
