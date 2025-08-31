@@ -1,4 +1,4 @@
-import { isPlainObject } from 'lodash';
+import isPlainObject from 'lodash/isPlainObject.js';
 import { deepPrint, printValue } from '../print.js';
 import type { Property } from '../proxy.js';
 import { deepEquals } from './deep-equals.js';

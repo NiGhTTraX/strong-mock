@@ -1,11 +1,9 @@
-import {
-  cloneDeep,
-  cloneDeepWith,
-  isEqualWith,
-  isMap,
-  isObjectLike,
-  omitBy,
-} from 'lodash';
+import cloneDeep from 'lodash/cloneDeep.js';
+import cloneDeepWith from 'lodash/cloneDeepWith.js';
+import isEqualWith from 'lodash/isEqualWith.js';
+import isMap from 'lodash/isMap.js';
+import isObjectLike from 'lodash/isObjectLike.js';
+import omitBy from 'lodash/omitBy.js';
 import { deepPrint, printValue } from '../print.js';
 import type { TypeMatcher } from './matcher.js';
 import { isMatcher, matches } from './matcher.js';
