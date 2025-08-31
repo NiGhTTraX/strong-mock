@@ -48,6 +48,7 @@
     "release": "standard-version",
     "lint": "eslint --quiet .",
     "test": "vitest --coverage",
+    "test-build": "node tests/build.cjs && node tests/build.mjs",
     "posttest": "tsc -p tsconfig.test.json"
   },
   "dependencies": {
