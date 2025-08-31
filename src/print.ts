@@ -1,5 +1,5 @@
 import { EXPECTED_COLOR, RECEIVED_COLOR, stringify } from 'jest-matcher-utils';
-import { cloneDeepWith } from 'lodash';
+import cloneDeepWith from 'lodash/cloneDeepWith.js';
 import type { Expectation } from './expectation/expectation.js';
 import { ApplyProp } from './expectation/expectation.js';
 import type { ReturnValue } from './expectation/repository/return-value.js';

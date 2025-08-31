@@ -1,4 +1,5 @@
-import { isObjectLike, isPlainObject as isPlainObjectLodash } from 'lodash';
+import isObjectLike from 'lodash/isObjectLike.js';
+import isPlainObjectLodash from 'lodash/isPlainObject.js';
 import { printValue } from '../print.js';
 import type { Property } from '../proxy.js';
 import type { TypeMatcher } from './matcher.js';
