@@ -575,7 +575,7 @@ No, passing a concrete implementation to `mock()` will be the same as passing a 
 
 ### How do I set expectations on setters?
 
-You currently can't do that. Please use a normal method instead e.g. `setFoo()` vs `set foo()`.
+Calling setters inside `when` is not currently supported. If you can redesign the code under test, you should consider using a setter method e.g. `setFoo(value)` instead of `set foo(value)`.
 
 ### How do I provide a function for the mock to call?
 
