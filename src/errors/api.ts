@@ -7,8 +7,8 @@ export class UnfinishedExpectation extends Error {
 
 ${printWhen(property, args)}
 
-Please finish it by setting a return value even if the value
-is undefined.`);
+You should finish it by setting a return value with e.g. thenReturns(),
+even if that value is undefined.`);
   }
 }
 
