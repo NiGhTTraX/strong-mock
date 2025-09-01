@@ -8,8 +8,8 @@ export class UnexpectedAccess extends Error {
     super(
       DIM_COLOR(`Didn't expect ${printCall(property)} to be accessed.
 
-If you expect this property to be accessed then please
-set an expectation for it.
+If you expect this property to be accessed then you should
+set an expectation for it with when().
 
 ${printRemainingExpectations(expectations)}`),
     );
