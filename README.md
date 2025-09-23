@@ -126,6 +126,8 @@ try {
 
 ## Installation
 
+strong-mock supports the latest LTS and Maintenance [Node.js versions](https://nodejs.org/en/about/previous-releases). It may work on older versions, but it's not guaranteed.
+
 ```shell
 npm i -D strong-mock
 ```
