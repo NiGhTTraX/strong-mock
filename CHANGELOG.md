@@ -4,18 +4,20 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [9.1.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.1...v9.1.0) (2026-01-13)
 
+> [!IMPORTANT]  
+> The next major version (v10) will be ESM-only. Since Node 20.19 supports `require(esm)` by default (see [Node 20.19.0 release post](https://nodejs.org/en/blog/release/v20.19.0/#requireesm-is-now-enabled-by-default)), no changes should be required for CJS projects using Node 20.19 or higher.
+
 
 ### Features
 
-* Publish ESM, alongside CJS ([f1ece16](https://github.com/NiGhTTraX/strong-mock/commit/f1ece162c45ab3c7c2f792fc66ef72811889a461))
-* Support nesting matchers in `deepEquals` ([7c243d2](https://github.com/NiGhTTraX/strong-mock/commit/7c243d2665a15e14c81a65b682445239767e4b44))
+* Publish ESM build, alongside CJS ([f1ece16](https://github.com/NiGhTTraX/strong-mock/commit/f1ece162c45ab3c7c2f792fc66ef72811889a461))
+  * This is in preparation for v10, which will be ESM-only. ESM projects should use the ESM build automatically, while CJS projects will continue to use the CJS build.
+* Support nesting matchers in `deepEquals` (the default matcher) ([7c243d2](https://github.com/NiGhTTraX/strong-mock/commit/7c243d2665a15e14c81a65b682445239767e4b44))
+  * Example: `when(() => mockedFn({ foo: It.isNumber() }))`
 
 
 ### Bug Fixes
 
-* **deps:** update jest monorepo to ~30.1.0 ([b42da63](https://github.com/NiGhTTraX/strong-mock/commit/b42da63cc40529ba4995cd1f5e464deeb009c502))
-* **deps:** update jest monorepo to ~30.2.0 ([721bce0](https://github.com/NiGhTTraX/strong-mock/commit/721bce0356fa085afa903519806321f1d63b178c))
-* **deps:** update jest monorepo to v30 ([#349](https://github.com/NiGhTTraX/strong-mock/issues/349)) ([360e565](https://github.com/NiGhTTraX/strong-mock/commit/360e5656faaec8a312dba2cbb88376e2b32c1944))
 * Fix diff integration with IDEs for vitest ([f881346](https://github.com/NiGhTTraX/strong-mock/commit/f8813465b30a0f6e8e6abfce87329f98a89344c0))
 
 ### [9.0.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.0...v9.0.1) (2024-11-23)
