@@ -1,6 +1,6 @@
 {
   "name": "strong-mock",
-  "version": "9.0.1",
+  "version": "9.1.0",
   "description": "Type safe mocking library for TypeScript",
   "keywords": [
     "tdd",
