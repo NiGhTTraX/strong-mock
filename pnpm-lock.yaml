@@ -23,7 +23,7 @@ importers:
         version: 0.18.2
       '@nighttrax/eslint-config-ts':
         specifier: ~12.1.0
-        version: 12.1.0(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1)(prettier@3.7.4)(typescript@5.9.2)
+        version: 12.1.0(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1)(prettier@3.8.1)(typescript@5.9.2)
       '@types/lodash':
         specifier: ~4.17.0
         version: 4.17.20
@@ -40,8 +40,8 @@ importers:
         specifier: ~9.39.0
         version: 9.39.1
       prettier:
-        specifier: ~3.7.0
-        version: 3.7.4
+        specifier: ~3.8.0
+        version: 3.8.1
       sm-old:
         specifier: npm:strong-mock@9.1.0
         version: strong-mock@9.1.0
@@ -2235,8 +2235,8 @@ packages:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.7.4:
-    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+  prettier@3.8.1:
+    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3194,7 +3194,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.0
     optional: true
 
-  '@nighttrax/eslint-config-ts@12.1.0(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1)(prettier@3.7.4)(typescript@5.9.2)':
+  '@nighttrax/eslint-config-ts@12.1.0(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1)(prettier@3.8.1)(typescript@5.9.2)':
     dependencies:
       '@eslint/js': 9.39.1
       '@stylistic/eslint-plugin': 5.6.1(eslint@9.39.1)
@@ -3203,8 +3203,8 @@ snapshots:
       eslint-config-prettier: 10.1.5(eslint@9.39.1)
       eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1))(eslint@9.39.1)
       eslint-plugin-import-x: 4.16.1(@typescript-eslint/utils@8.50.1(eslint@9.39.1)(typescript@5.9.2))(eslint@9.39.1)
-      eslint-plugin-prettier: 5.5.1(eslint-config-prettier@10.1.5(eslint@9.39.1))(eslint@9.39.1)(prettier@3.7.4)
-      prettier: 3.7.4
+      eslint-plugin-prettier: 5.5.1(eslint-config-prettier@10.1.5(eslint@9.39.1))(eslint@9.39.1)(prettier@3.8.1)
+      prettier: 3.8.1
       typescript-eslint: 8.50.1(eslint@9.39.1)(typescript@5.9.2)
     transitivePeerDependencies:
       - '@types/eslint'
@@ -4183,10 +4183,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-prettier@5.5.1(eslint-config-prettier@10.1.5(eslint@9.39.1))(eslint@9.39.1)(prettier@3.7.4):
+  eslint-plugin-prettier@5.5.1(eslint-config-prettier@10.1.5(eslint@9.39.1))(eslint@9.39.1)(prettier@3.8.1):
     dependencies:
       eslint: 9.39.1
-      prettier: 3.7.4
+      prettier: 3.8.1
       prettier-linter-helpers: 1.0.0
       synckit: 0.11.8
     optionalDependencies:
@@ -5181,7 +5181,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.7.4: {}
+  prettier@3.8.1: {}
 
   pretty-format@30.2.0:
     dependencies:
