@@ -5,6 +5,7 @@ import { UnexpectedProperty } from './options.js';
 export type StrongMockDefaults = Required<MockOptions>;
 
 const defaults: StrongMockDefaults = {
+  name: 'mock',
   concreteMatcher: deepEquals,
   unexpectedProperty: UnexpectedProperty.CALL_THROW,
   exactParams: false,

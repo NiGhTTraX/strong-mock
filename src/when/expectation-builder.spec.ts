@@ -15,6 +15,7 @@ describe('ExpectationBuilder', () => {
     const builder = new ExpectationBuilderWithFactory(
       factory,
       concreteMatcher,
+      'mockName',
       false,
     );
 
@@ -25,7 +26,14 @@ describe('ExpectationBuilder', () => {
       value: ':irrelevant:',
     });
     SM.when(() =>
-      factory('foo', [1, 2, 3], { value: 42 }, concreteMatcher, false),
+      factory(
+        'mockName',
+        'foo',
+        [1, 2, 3],
+        { value: 42 },
+        concreteMatcher,
+        false,
+      ),
     ).thenReturn(expectation);
 
     expect(builder.finish({ value: 42 })).toEqual(expectation);
@@ -35,6 +43,7 @@ describe('ExpectationBuilder', () => {
     const builder = new ExpectationBuilderWithFactory(
       factory,
       concreteMatcher,
+      'mockName',
       false,
     );
 

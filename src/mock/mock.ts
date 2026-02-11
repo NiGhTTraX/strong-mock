@@ -13,6 +13,7 @@ import { createStub } from './stub.js';
 export type Mock<T> = T;
 
 const strongExpectationFactory: ExpectationFactory = (
+  name: string,
   property,
   args,
   returnValue,
@@ -20,8 +21,8 @@ const strongExpectationFactory: ExpectationFactory = (
   exactParams,
 ) =>
   new StrongExpectation(
+    name,
     property,
-    // Wrap every non-matcher in the default matcher.
     args?.map((arg) => (isMatcher(arg) ? arg : concreteMatcher(arg))),
     returnValue,
     exactParams,
@@ -34,6 +35,7 @@ const strongExpectationFactory: ExpectationFactory = (
  *
  * @param options Configure the options for this specific mock, overriding any
  *   defaults that were set with {@link setDefaults}.
+ * @param options.name The name of the mock that appears in error messages.
  * @param options.unexpectedProperty Controls what happens when an unexpected
  *   property is accessed.
  * @param options.concreteMatcher The matcher that will be used when one isn't
@@ -49,22 +51,28 @@ const strongExpectationFactory: ExpectationFactory = (
  * fn() === 23;
  */
 export const mock = <T>({
+  name,
   unexpectedProperty,
   concreteMatcher,
   exactParams,
 }: MockOptions = {}): Mock<T> => {
   const options: StrongMockDefaults = {
+    name: name ?? currentDefaults.name,
     unexpectedProperty:
       unexpectedProperty ?? currentDefaults.unexpectedProperty,
     concreteMatcher: concreteMatcher ?? currentDefaults.concreteMatcher,
     exactParams: exactParams ?? currentDefaults.exactParams,
   };
 
-  const repository = new FlexibleRepository(options.unexpectedProperty);
+  const repository = new FlexibleRepository(
+    options.name,
+    options.unexpectedProperty,
+  );
 
   const builder = new ExpectationBuilderWithFactory(
     strongExpectationFactory,
     options.concreteMatcher,
+    options.name,
     options.exactParams,
   );
 

@@ -32,6 +32,8 @@ export type CallStats = {
 };
 
 export interface ExpectationRepository {
+  mockName: string;
+
   add: (expectation: Expectation) => void;
 
   /**

@@ -6,11 +6,11 @@ import { UnexpectedCall } from './unexpected-call.js';
 
 describe('UnexpectedCall', () => {
   it('should print the call', () => {
-    const error = new UnexpectedCall('bar', [1, 2, 3], []);
+    const error = new UnexpectedCall('mockName', 'bar', [1, 2, 3], []);
 
     expectAnsilessContain(
       error.message,
-      `Didn't expect mock.bar(1, 2, 3) to be called.`,
+      `Didn't expect mockName.bar(1, 2, 3) to be called.`,
     );
   });
 
@@ -19,11 +19,16 @@ describe('UnexpectedCall', () => {
       getDiff: (actual) => ({ actual, expected: 'foo' }),
     });
 
-    const expectation = new StrongExpectation('bar', [matcher], {
+    const expectation = new StrongExpectation('mockName', 'bar', [matcher], {
       value: ':irrelevant:',
     });
 
-    const error = new UnexpectedCall('bar', [1, 2, 3], [expectation]);
+    const error = new UnexpectedCall(
+      'mockName',
+      'bar',
+      [1, 2, 3],
+      [expectation],
+    );
 
     expectAnsilessContain(error.message, `Expected`);
   });
@@ -33,14 +38,14 @@ describe('UnexpectedCall', () => {
       getDiff: (actual) => ({ actual, expected: 'foo' }),
     });
 
-    const e1 = new StrongExpectation('foo', [matcher], {
+    const e1 = new StrongExpectation('mockName', 'foo', [matcher], {
       value: ':irrelevant:',
     });
-    const e2 = new StrongExpectation('bar', [matcher], {
+    const e2 = new StrongExpectation('mockName', 'bar', [matcher], {
       value: ':irrelevant:',
     });
 
-    const error = new UnexpectedCall('foo', [1, 2, 3], [e1, e2]);
+    const error = new UnexpectedCall('mockName', 'foo', [1, 2, 3], [e1, e2]);
 
     // Yeah, funky way to do a negated ansiless contains.
     expect(() => expectAnsilessContain(error.message, `bar`)).toThrow();
@@ -51,11 +56,17 @@ describe('UnexpectedCall', () => {
       getDiff: () => ({ actual: 'actual', expected: 'expected' }),
     });
 
-    const expectation = new StrongExpectation('foo', [matcher, matcher], {
-      value: ':irrelevant:',
-    });
+    const expectation = new StrongExpectation(
+      'mockName',
+      'foo',
+      [matcher, matcher],
+      {
+        value: ':irrelevant:',
+      },
+    );
 
     const error = new UnexpectedCall(
+      'mockName',
       'foo',
       ['any arg', 'any arg'],
       [expectation],
@@ -70,11 +81,11 @@ describe('UnexpectedCall', () => {
   });
 
   it('should not contain actual and expected values when the expectation has 0 args', () => {
-    const expectation = new StrongExpectation('foo', [], {
+    const expectation = new StrongExpectation('mockName', 'foo', [], {
       value: ':irrelevant:',
     });
 
-    const error = new UnexpectedCall('foo', [], [expectation]);
+    const error = new UnexpectedCall('mockName', 'foo', [], [expectation]);
 
     expect(error.matcherResult).toBeUndefined();
     expect(error.actual).toBeUndefined();
@@ -82,11 +93,11 @@ describe('UnexpectedCall', () => {
   });
 
   it('should not contain actual and expected values when the expectation is on a property', () => {
-    const expectation = new StrongExpectation('foo', undefined, {
+    const expectation = new StrongExpectation('mockName', 'foo', undefined, {
       value: ':irrelevant:',
     });
 
-    const error = new UnexpectedCall('foo', [], [expectation]);
+    const error = new UnexpectedCall('mockName', 'foo', [], [expectation]);
 
     expect(error.matcherResult).toBeUndefined();
     expect(error.actual).toBeUndefined();

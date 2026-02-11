@@ -51,6 +51,7 @@ console.log(foo.bar(23)); // 'I am strong!'
   - [Reset](#reset)
     - [Resetting expectations](#resetting-expectations)
 - [Mock options](#mock-options)
+  - [Name](#name)
   - [Unexpected property return value](#unexpected-property-return-value)
   - [Exact params](#exact-params)
   - [Concrete matcher](#concrete-matcher)
@@ -463,6 +464,21 @@ setDefaults({
 const superStrictMock = mock<() => void>();
 // Overrides the default.
 const strictMock = mock<() => void>({ exactParams: false });
+```
+
+### Name
+
+The name of a mock appears in error messages e.g., when an unexpected call happens. By default, all mocks are simply named `mock`, but you can set a custom name to make the error messages more descriptive.
+
+```typescript
+import { mock, when } from 'strong-mock';
+
+interface Service { /* ... */}
+const service = mock<Service>({ name: 'ServiceMock' });
+
+when(() => service.foo(1)).thenReturn(2);
+
+service.foo(3); // throws "Didn't expect ServiceMock.foo(3) to be called"
 ```
 
 ### Unexpected property return value

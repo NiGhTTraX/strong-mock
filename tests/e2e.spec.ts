@@ -113,10 +113,10 @@ describe('e2e', () => {
   });
 
   it('should be stringifiable', () => {
-    const fn = mock<() => void>();
+    const fn = mock<() => void>({ name: 'mockName' });
 
-    expect(fn.toString()).toEqual('mock');
-    expectAnsilessEqual(printExpected(fn), '[Function mock]');
+    expect(fn.toString()).toEqual('mockName');
+    expectAnsilessEqual(printExpected(fn), '[Function mockName]');
   });
 
   it('should be enumerable', () => {

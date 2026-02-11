@@ -14,14 +14,14 @@ import { FlexibleRepository } from './flexible-repository.js';
 describe('FlexibleRepository', () => {
   describe('property expectations', () => {
     it('should match the first expectation', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
       expect(repo.get('foo')).toEqual(23);
     });
 
     it('should match the expectations in order', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('foo', { value: 42 }));
 
@@ -30,7 +30,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should keep matching an expectation until it is fulfilled', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingPropertyExpectation('foo', {
         value: 23,
       });
@@ -45,14 +45,14 @@ describe('FlexibleRepository', () => {
 
   describe('function expectations', () => {
     it('should match the first expectation', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingCallExpectation('foo', { value: 23 }));
 
       expect(repo.get('foo')()).toEqual(23);
     });
 
     it('should match the expectations in order', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingCallExpectation('foo', { value: 23 }));
       repo.add(new MatchingCallExpectation('foo', { value: 42 }));
 
@@ -61,7 +61,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should match property expectations before function expectations', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingCallExpectation('foo', { value: 1 }));
       repo.add(
         new MatchingPropertyExpectation('foo', {
@@ -74,7 +74,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should keep matching an expectation until it is fulfilled', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingCallExpectation('foo', { value: 23 });
       expectation.setInvocationCount(2, 3);
       repo.add(expectation);
@@ -85,7 +85,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should throw if the value is an error', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingCallExpectation('foo', {
         value: new Error(),
         isError: true,
@@ -98,12 +98,12 @@ describe('FlexibleRepository', () => {
 
   describe('unmet expectations', () => {
     it('should not have any unmet expectations in the beginning', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       expect(repo.getUnmet()).toEqual([]);
     });
 
     it('should mark all added expectations as unmet', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const e1 = new MatchingPropertyExpectation('foo', { value: 1 });
       const e2 = new MatchingPropertyExpectation('bar', { value: 1 });
       repo.add(e1);
@@ -113,7 +113,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should mark an expectation as met when it is completely fulfilled', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingPropertyExpectation('foo', {
         value: 23,
       });
@@ -128,7 +128,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should keep an expectation as unmet until it is completely fulfilled', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingPropertyExpectation('foo', {
         value: 23,
       });
@@ -145,7 +145,7 @@ describe('FlexibleRepository', () => {
 
   describe('call stats', () => {
     it('should start with empty call stats', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const callStats: CallStats = {
         expected: new Map(),
         unexpected: new Map(),
@@ -154,7 +154,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('it should record property accesses', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('bar', { value: 23 }));
@@ -177,7 +177,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('it should record method calls', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingCallExpectation('foo', { value: 23 });
       repo.add(expectation);
 
@@ -194,7 +194,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('it should record function calls', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       const expectation = new MatchingCallExpectation(ApplyProp, { value: 23 });
       repo.add(expectation);
 
@@ -211,7 +211,7 @@ describe('FlexibleRepository', () => {
 
   describe('clearing', () => {
     it('should remove all expectations when clearing', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
       repo.clear();
@@ -220,7 +220,7 @@ describe('FlexibleRepository', () => {
     });
 
     it('should clear all call stats', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
       repo.get('foo');
@@ -241,14 +241,14 @@ describe('FlexibleRepository', () => {
 
   describe('stringify', () => {
     it('should return values for toString and friends', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       expect(repo.get('toString')()).toBeTruthy();
       expect(repo.get('@@toStringTag')).toBeTruthy();
       expect(repo.get(Symbol.toStringTag)).toBeTruthy();
     });
 
     it('should match expectations for toString and friends', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(
         new MatchingPropertyExpectation('toString', {
           value: () => 'not a mock',
@@ -279,13 +279,13 @@ describe('FlexibleRepository', () => {
 
   describe('promise', () => {
     it('should not look like a thenable', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
 
       expect(repo.get('then')).toBeUndefined();
     });
 
     it('should match expectations for then', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(
         new MatchingPropertyExpectation('then', {
           value: 42,
@@ -298,7 +298,7 @@ describe('FlexibleRepository', () => {
 
   describe('getAllProperties', () => {
     it('should return all the properties that have expectations', () => {
-      const repo = new FlexibleRepository();
+      const repo = new FlexibleRepository('mockName');
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
       repo.add(new MatchingPropertyExpectation('bar', { value: 23 }));
@@ -310,13 +310,13 @@ describe('FlexibleRepository', () => {
   describe('default return value', () => {
     describe('THROW', () => {
       it('should throw if no property expectations match', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         expect(() => repo.get('whatever')).toThrow(UnexpectedAccess);
       });
 
       it('should throw if no call expectations match', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
@@ -324,13 +324,13 @@ describe('FlexibleRepository', () => {
       });
 
       it('should throw if no apply expectations', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         expect(() => repo.apply([1, 2, 3])).toThrow(UnexpectedCall);
       });
 
       it('should throw after a property expectation is fulfilled', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
         repo.get('foo');
@@ -339,7 +339,7 @@ describe('FlexibleRepository', () => {
       });
 
       it('should throw after a function expectation is fulfilled', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         repo.add(new MatchingCallExpectation('foo', { value: 23 }));
         repo.get('foo')(1, 2);
@@ -348,7 +348,7 @@ describe('FlexibleRepository', () => {
       });
 
       it('should record calls for unexpected access', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
 
         try {
           repo.get('foo');
@@ -363,7 +363,7 @@ describe('FlexibleRepository', () => {
       });
 
       it('should record calls for unexpected call', () => {
-        const repo = new FlexibleRepository();
+        const repo = new FlexibleRepository('mockName');
         repo.add(new NotMatchingExpectation('foo', { value: 23 }));
 
         try {
@@ -381,7 +381,10 @@ describe('FlexibleRepository', () => {
 
     describe('CALL_THROW', () => {
       it('should return the matching property expectation', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
@@ -389,7 +392,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should return a function that throws unexpected call for properties with no expectations', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         const value = repo.get('foo');
 
@@ -398,7 +404,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should first consume the matching property expectation and then return a throwing function', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         repo.add(new MatchingPropertyExpectation('foo', { value: 23 }));
 
@@ -409,7 +418,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should throw for an unexpected call', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
         repo.add({
           property: 'foo',
           args: [],
@@ -428,7 +440,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should throw for an unexpected call', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         const value = repo.get(ApplyProp);
 
@@ -437,7 +452,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should not record the unexpected property access', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         repo.get('foo');
 
@@ -445,7 +463,10 @@ describe('FlexibleRepository', () => {
       });
 
       it('should record the unexpected call', () => {
-        const repo = new FlexibleRepository(UnexpectedProperty.CALL_THROW);
+        const repo = new FlexibleRepository(
+          'mockName',
+          UnexpectedProperty.CALL_THROW,
+        );
 
         expect(() => repo.get('foo')(1, 2, 3)).toThrow();
 
@@ -457,7 +478,7 @@ describe('FlexibleRepository', () => {
   });
 
   it('should throw matching property error expectation', () => {
-    const repo = new FlexibleRepository();
+    const repo = new FlexibleRepository('mockName');
     repo.add(
       new MatchingPropertyExpectation('foo', { value: 'bar', isError: true }),
     );
@@ -466,7 +487,7 @@ describe('FlexibleRepository', () => {
   });
 
   it('should resolve matching property promise expectation', async () => {
-    const repo = new FlexibleRepository();
+    const repo = new FlexibleRepository('mockName');
     repo.add(
       new MatchingPropertyExpectation('foo', { value: 'bar', isPromise: true }),
     );
@@ -475,7 +496,7 @@ describe('FlexibleRepository', () => {
   });
 
   it('should reject matching property error promise expectation', async () => {
-    const repo = new FlexibleRepository();
+    const repo = new FlexibleRepository('mockName');
     repo.add(
       new MatchingPropertyExpectation('foo', {
         value: 'bar',

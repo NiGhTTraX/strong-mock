@@ -37,6 +37,7 @@ describe('verify errors', () => {
       SM.when(() => e2.toString()).thenReturn('e2');
 
       const error = new UnexpectedCalls(
+        'mockName',
         new Map([
           [
             'foo',
@@ -56,9 +57,9 @@ describe('verify errors', () => {
         error.message,
         `The following calls were unexpected:
 
- - mock.foo(1, 2, 3)
- - mock.foo(4, 5, 6)
- - mock.bar`,
+ - mockName.foo(1, 2, 3)
+ - mockName.foo(4, 5, 6)
+ - mockName.bar`,
       );
 
       expectAnsilessContain(

@@ -6,10 +6,10 @@ describe('API errors', () => {
   describe('UnfinishedExpectation', () => {
     it('should print the pending expectation', () => {
       expectAnsilessContain(
-        new UnfinishedExpectation('bar', [1, 2, 3]).message,
+        new UnfinishedExpectation('mockName', 'bar', [1, 2, 3]).message,
         `There is an unfinished pending expectation:
 
-when(() => mock.bar(1, 2, 3)`,
+when(() => mockName.bar(1, 2, 3)`,
       );
     });
   });

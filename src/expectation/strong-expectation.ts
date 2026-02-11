@@ -23,6 +23,7 @@ export class StrongExpectation implements Expectation {
   public max = 1;
 
   constructor(
+    public mockName: string,
     public property: Property,
     public args: Matcher[] | undefined,
     public returnValue: ReturnValue,
@@ -68,6 +69,7 @@ export class StrongExpectation implements Expectation {
 
   toString() {
     return printExpectation(
+      this.mockName,
       this.property,
       this.args,
       this.returnValue,

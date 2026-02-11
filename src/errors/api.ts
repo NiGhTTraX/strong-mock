@@ -2,10 +2,10 @@ import { printProperty, printWhen } from '../print.js';
 import type { Property } from '../proxy.js';
 
 export class UnfinishedExpectation extends Error {
-  constructor(property: Property, args: any[] | undefined) {
+  constructor(mockName: string, property: Property, args: any[] | undefined) {
     super(`There is an unfinished pending expectation:
 
-${printWhen(property, args)}
+${printWhen(mockName, property, args)}
 
 You should finish it by setting a return value with e.g. thenReturns(),
 even if that value is undefined.`);

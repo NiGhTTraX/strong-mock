@@ -23,11 +23,12 @@ export class UnexpectedCall extends Error implements MatcherError {
   public actual?: unknown;
 
   constructor(
+    mockName: string,
     property: Property,
     args: unknown[],
     expectations: Expectation[],
   ) {
-    const header = `Didn't expect ${printCall(property, args)} to be called.`;
+    const header = `Didn't expect ${printCall(mockName, property, args)} to be called.`;
 
     const propertyExpectations = expectations.filter(
       (e) => e.property === property,

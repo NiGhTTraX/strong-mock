@@ -5,7 +5,7 @@ import { when } from '../when/when.js';
 import { mock } from './mock.js';
 import { UnexpectedProperty } from './options.js';
 
-describe('mock', () => {
+describe('mockName', () => {
   it('should override concrete matcher', () => {
     const fn = mock<(value: string) => boolean>({
       concreteMatcher: () => matches(() => true),

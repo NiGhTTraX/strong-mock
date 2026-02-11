@@ -29,36 +29,47 @@ describe('print', () => {
 
   describe('printCall', () => {
     it('should print method call', () => {
-      expectAnsilessEqual(printCall('bar', [1, 2, 3]), `mock.bar(1, 2, 3)`);
+      expectAnsilessEqual(
+        printCall('mockName', 'bar', [1, 2, 3]),
+        `mockName.bar(1, 2, 3)`,
+      );
     });
 
     it('should print function call', () => {
-      expectAnsilessEqual(printCall(ApplyProp, [1, 2, 3]), `mock(1, 2, 3)`);
+      expectAnsilessEqual(
+        printCall('mockName', ApplyProp, [1, 2, 3]),
+        `mockName(1, 2, 3)`,
+      );
     });
 
     it('should print symbol call', () => {
       expectAnsilessEqual(
-        printCall(Symbol('bar'), [1, 2, 3]),
-        `mock[Symbol(bar)](1, 2, 3)`,
+        printCall('mockName', Symbol('bar'), [1, 2, 3]),
+        `mockName[Symbol(bar)](1, 2, 3)`,
       );
     });
 
     it('should deep print args', () => {
       expectAnsilessEqual(
-        printCall('bar', [1, 2, { foo: 'bar' }]),
-        `mock.bar(1, 2, {"foo": "bar"})`,
+        printCall('mockName', 'bar', [1, 2, { foo: 'bar' }]),
+        `mockName.bar(1, 2, {"foo": "bar"})`,
       );
     });
 
     it('should print arg matchers', () => {
       expectAnsilessEqual(
-        printCall('bar', [matches(() => true, { toString: () => 'matcher' })]),
-        `mock.bar(matcher)`,
+        printCall('mockName', 'bar', [
+          matches(() => true, { toString: () => 'matcher' }),
+        ]),
+        `mockName.bar(matcher)`,
       );
     });
 
     it('should print undefined args', () => {
-      expectAnsilessEqual(printCall('bar', [undefined]), `mock.bar(undefined)`);
+      expectAnsilessEqual(
+        printCall('mockName', 'bar', [undefined]),
+        `mockName.bar(undefined)`,
+      );
     });
   });
 
@@ -120,9 +131,14 @@ describe('print', () => {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
-      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
-        value: ':irrelevant:',
-      });
+      const expectation = new StrongExpectation(
+        'mockName',
+        ':irrelevant:',
+        [matcher],
+        {
+          value: ':irrelevant:',
+        },
+      );
 
       const args = ['bar'];
 
@@ -138,9 +154,14 @@ describe('print', () => {
         getDiff: (actual) => ({ actual, expected: 'foo' }),
       });
 
-      const expectation = new StrongExpectation(':irrelevant:', [matcher], {
-        value: ':irrelevant:',
-      });
+      const expectation = new StrongExpectation(
+        'mockName',
+        ':irrelevant:',
+        [matcher],
+        {
+          value: ':irrelevant:',
+        },
+      );
 
       expectAnsilessEqual(
         printExpectationDiff(expectation, []),
@@ -150,17 +171,27 @@ describe('print', () => {
     });
 
     it('should not print the diff for an expectation with no expected args', () => {
-      const expectation = new StrongExpectation(':irrelevant:', [], {
-        value: ':irrelevant:',
-      });
+      const expectation = new StrongExpectation(
+        'mockName',
+        ':irrelevant:',
+        [],
+        {
+          value: ':irrelevant:',
+        },
+      );
 
       expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
     });
 
     it('should not print the diff for an expectation on a property', () => {
-      const expectation = new StrongExpectation(':irrelevant:', undefined, {
-        value: ':irrelevant:',
-      });
+      const expectation = new StrongExpectation(
+        'mockName',
+        ':irrelevant:',
+        undefined,
+        {
+          value: ':irrelevant:',
+        },
+      );
 
       expectAnsilessEqual(printExpectationDiff(expectation, [1, 2]), '');
     });
@@ -173,7 +204,7 @@ describe('print', () => {
         toString: () => 'matcher',
       });
 
-      const expectation = new StrongExpectation('prop', [matcher], {
+      const expectation = new StrongExpectation('mockName', 'prop', [matcher], {
         value: 'return',
       });
 
@@ -181,14 +212,14 @@ describe('print', () => {
 
       expectAnsilessEqual(
         printDiffForAllExpectations([expectation, expectation], args),
-        `when(() => mock.prop(matcher)).thenReturn("return").between(1, 1)
+        `when(() => mockName.prop(matcher)).thenReturn("return").between(1, 1)
 - Expected
 + Received
 
 -   "foo",
 +   "bar"
 
-when(() => mock.prop(matcher)).thenReturn("return").between(1, 1)
+when(() => mockName.prop(matcher)).thenReturn("return").between(1, 1)
 - Expected
 + Received
 

@@ -36,10 +36,16 @@ const mergeCalls = (callMap: CallMap): CallMap =>
   );
 
 export class UnexpectedCalls extends Error {
-  constructor(unexpectedCalls: CallMap, expectations: Expectation[]) {
+  constructor(
+    mockName: string,
+    unexpectedCalls: CallMap,
+    expectations: Expectation[],
+  ) {
     const printedCalls = Array.from(mergeCalls(unexpectedCalls).entries())
       .map(([property, calls]) =>
-        calls.map((call) => printCall(property, call.arguments)).join('\n - '),
+        calls
+          .map((call) => printCall(mockName, property, call.arguments))
+          .join('\n - '),
       )
       .join('\n - ');
 

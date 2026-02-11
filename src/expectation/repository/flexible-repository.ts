@@ -22,6 +22,7 @@ type CountableExpectation = {
  */
 export class FlexibleRepository implements ExpectationRepository {
   constructor(
+    public mockName: string,
     private unexpectedProperty: UnexpectedProperty = UnexpectedProperty.THROW,
   ) {}
 
@@ -109,11 +110,11 @@ export class FlexibleRepository implements ExpectationRepository {
   private handlePropertyWithNoExpectations = (property: Property) => {
     switch (property) {
       case 'toString':
-        return () => 'mock';
+        return () => this.mockName;
       case '@@toStringTag':
       case Symbol.toStringTag:
       case 'name':
-        return 'mock';
+        return this.mockName;
 
       // Promise.resolve() tries to see if it's a "thenable".
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables
@@ -193,20 +194,20 @@ export class FlexibleRepository implements ExpectationRepository {
   private getValueForUnexpectedCall(property: Property, args: any[]): never {
     this.recordUnexpected(property, args);
 
-    throw new UnexpectedCall(property, args, this.getUnmet());
+    throw new UnexpectedCall(this.mockName, property, args, this.getUnmet());
   }
 
   private getValueForUnexpectedAccess(property: Property): unknown {
     if (this.unexpectedProperty === UnexpectedProperty.THROW) {
       this.recordUnexpected(property, undefined);
 
-      throw new UnexpectedAccess(property, this.getUnmet());
+      throw new UnexpectedAccess(this.mockName, property, this.getUnmet());
     }
 
     return (...args: unknown[]) => {
       this.recordUnexpected(property, args);
 
-      throw new UnexpectedCall(property, args, this.getUnmet());
+      throw new UnexpectedCall(this.mockName, property, args, this.getUnmet());
     };
   }
 }

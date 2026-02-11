@@ -18,6 +18,7 @@ export interface ExpectationBuilder {
 }
 
 export type ExpectationFactory = (
+  name: string,
   property: Property,
   args: any[] | undefined,
   returnValue: ReturnValue,
@@ -33,12 +34,13 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
   constructor(
     private createExpectation: ExpectationFactory,
     private concreteMatcher: ConcreteMatcher,
+    private mockName: string,
     private exactParams: boolean,
   ) {}
 
   setProperty(value: Property) {
     if (this.property) {
-      throw new UnfinishedExpectation(this.property, this.args);
+      throw new UnfinishedExpectation(this.mockName, this.property, this.args);
     }
 
     this.property = value;
@@ -54,6 +56,7 @@ export class ExpectationBuilderWithFactory implements ExpectationBuilder {
     }
 
     const expectation = this.createExpectation(
+      this.mockName,
       this.property,
       this.args,
       returnValue,

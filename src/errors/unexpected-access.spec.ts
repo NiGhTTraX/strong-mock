@@ -11,11 +11,11 @@ describe('UnexpectedAccess', () => {
     SM.when(() => e1.toString()).thenReturn('e1');
     SM.when(() => e2.toString()).thenReturn('e2');
 
-    const error = new UnexpectedAccess('bar', [e1, e2]);
+    const error = new UnexpectedAccess('mockName', 'bar', [e1, e2]);
 
     expectAnsilessContain(
       error.message,
-      `Didn't expect mock.bar to be accessed.`,
+      `Didn't expect mockName.bar to be accessed.`,
     );
 
     expectAnsilessContain(

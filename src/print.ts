@@ -39,16 +39,20 @@ export const deepPrint = (value: unknown) =>
 const printArgs = (args: any[]) =>
   args.map((arg) => printValue(arg)).join(', ');
 
-export const printCall = (property: Property, args?: any[]) => {
+export const printCall = (
+  mockName: string,
+  property: Property,
+  args?: any[],
+) => {
   const prettyProperty = printProperty(property);
 
   if (args) {
     const prettyArgs = printArgs(args);
 
-    return `mock${RECEIVED_COLOR(`${prettyProperty}(${prettyArgs})`)}`;
+    return `${mockName}${RECEIVED_COLOR(`${prettyProperty}(${prettyArgs})`)}`;
   }
 
-  return `mock${RECEIVED_COLOR(`${prettyProperty}`)}`;
+  return `${mockName}${RECEIVED_COLOR(`${prettyProperty}`)}`;
 };
 
 export const printReturns = (
@@ -75,25 +79,31 @@ export const printReturns = (
   )}).between(${min}, ${max})`;
 };
 
-export const printWhen = (property: Property, args: any[] | undefined) => {
+export const printWhen = (
+  mockName: string,
+  property: Property,
+  args: any[] | undefined,
+) => {
   const prettyProperty = printProperty(property);
 
   if (args) {
-    return `when(() => mock${EXPECTED_COLOR(
+    return `when(() => ${mockName}${EXPECTED_COLOR(
       `${prettyProperty}(${printArgs(args)})`,
     )})`;
   }
 
-  return `when(() => mock${EXPECTED_COLOR(`${printProperty(property)}`)})`;
+  return `when(() => ${mockName}${EXPECTED_COLOR(`${printProperty(property)}`)})`;
 };
 
 export const printExpectation = (
+  mockName: string,
   property: Property,
   args: any[] | undefined,
   returnValue: ReturnValue,
   min: number,
   max: number,
-) => `${printWhen(property, args)}${printReturns(returnValue, min, max)}`;
+) =>
+  `${printWhen(mockName, property, args)}${printReturns(returnValue, min, max)}`;
 
 export const printRemainingExpectations = (expectations: Expectation[]) =>
   expectations.length

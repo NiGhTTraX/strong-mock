@@ -5,13 +5,15 @@ import { StrongExpectation } from './strong-expectation.js';
 
 describe('StrongExpectation', () => {
   it('should match empty args', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
 
     expect(expectation.matches([])).toBeTruthy();
   });
 
   it('should match no args', () => {
-    const expectation = new StrongExpectation('bar', undefined, {
+    const expectation = new StrongExpectation('mockName', 'bar', undefined, {
       value: undefined,
     });
 
@@ -22,6 +24,7 @@ describe('StrongExpectation', () => {
   describe('non exact params', () => {
     it('should match missing args against undefined', () => {
       const expectation = new StrongExpectation(
+        'mockName',
         'bar',
         [deepEquals(undefined)],
         {
@@ -33,21 +36,29 @@ describe('StrongExpectation', () => {
     });
 
     it('should match extra args', () => {
-      const expectation = new StrongExpectation('bar', [], { value: 23 });
+      const expectation = new StrongExpectation('mockName', 'bar', [], {
+        value: 23,
+      });
 
       expect(expectation.matches([42])).toBeTruthy();
     });
 
     it('should not match less args', () => {
-      const expectation = new StrongExpectation('bar', [deepEquals(23)], {
-        value: 23,
-      });
+      const expectation = new StrongExpectation(
+        'mockName',
+        'bar',
+        [deepEquals(23)],
+        {
+          value: 23,
+        },
+      );
 
       expect(expectation.matches([])).toBeFalsy();
     });
 
     it('should not match expected undefined verses received defined arg', () => {
       const expectation = new StrongExpectation(
+        'mockName',
         'bar',
         [deepEquals(undefined)],
         {
@@ -61,19 +72,32 @@ describe('StrongExpectation', () => {
 
   describe('exact params', () => {
     it('should match empty args', () => {
-      const expectation = new StrongExpectation('bar', [], { value: 23 }, true);
+      const expectation = new StrongExpectation(
+        'mockName',
+        'bar',
+        [],
+        { value: 23 },
+        true,
+      );
 
       expect(expectation.matches([])).toBeTruthy();
     });
 
     it('should not match more args', () => {
-      const expectation = new StrongExpectation('bar', [], { value: 23 }, true);
+      const expectation = new StrongExpectation(
+        'mockName',
+        'bar',
+        [],
+        { value: 23 },
+        true,
+      );
 
       expect(expectation.matches([42])).toBeFalsy();
     });
 
     it('should not match less args', () => {
       const expectation = new StrongExpectation(
+        'mockName',
         'bar',
         [deepEquals(23)],
         {
@@ -88,6 +112,7 @@ describe('StrongExpectation', () => {
 
   it('should print when, returns and invocation count', () => {
     const expectation = new StrongExpectation(
+      'mockName',
       'baz',
       [deepEquals(4), deepEquals(5), deepEquals(6)],
       {
@@ -98,19 +123,23 @@ describe('StrongExpectation', () => {
 
     expectAnsilessEqual(
       expectation.toString(),
-      `when(() => mock.baz(4, 5, 6)).thenReturn(42).between(2, 3)`,
+      `when(() => mockName.baz(4, 5, 6)).thenReturn(42).between(2, 3)`,
     );
   });
 
   it('should by default match only once', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
 
     expect(expectation.matches([])).toBeTruthy();
     expect(expectation.matches([])).toBeFalsy();
   });
 
   it('should match at most max times', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
     expectation.setInvocationCount(1, 2);
 
     expect(expectation.matches([])).toBeTruthy();
@@ -119,7 +148,9 @@ describe('StrongExpectation', () => {
   });
 
   it('should match forever', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
     expectation.setInvocationCount(0, 0);
 
     expect(expectation.matches([])).toBeTruthy();
@@ -127,20 +158,26 @@ describe('StrongExpectation', () => {
   });
 
   it('should by default be unmet', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
 
     expect(expectation.isUnmet()).toBeTruthy();
   });
 
   it('should by met if min is 0', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
     expectation.setInvocationCount(0);
 
     expect(expectation.isUnmet()).toBeFalsy();
   });
 
   it('should become met if min is satisfied', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
     expectation.setInvocationCount(1);
 
     expectation.matches([]);
@@ -148,7 +185,9 @@ describe('StrongExpectation', () => {
   });
 
   it('should remain unmet until min is satisfied', () => {
-    const expectation = new StrongExpectation('bar', [], { value: undefined });
+    const expectation = new StrongExpectation('mockName', 'bar', [], {
+      value: undefined,
+    });
     expectation.setInvocationCount(2);
 
     expectation.matches([]);

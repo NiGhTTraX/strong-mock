@@ -13,7 +13,11 @@ export const verifyRepo = (repository: ExpectationRepository) => {
   const callStats = repository.getCallStats();
 
   if (callStats.unexpected.size) {
-    throw new UnexpectedCalls(callStats.unexpected, unmetExpectations);
+    throw new UnexpectedCalls(
+      repository.mockName,
+      callStats.unexpected,
+      unmetExpectations,
+    );
   }
 };
 
