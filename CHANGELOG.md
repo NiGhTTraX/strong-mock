@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * Allow mock name customization ([73c3b1c](https://github.com/NiGhTTraX/strong-mock/commit/73c3b1ceeb62f3e40dbbb10085a9969685397422))
+  * You can now name mocks with `mock<T>({ name: 'MyCustomMock' })` to help identify them in error messages.
 
 ## [9.1.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.0.1...v9.1.0) (2026-01-13)
 
