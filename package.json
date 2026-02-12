@@ -68,8 +68,6 @@
     "sm-old": "npm:strong-mock@9.1.0",
     "standard-version": "~9.5.0",
     "strip-ansi": "~7.1.0",
-    "ts-node": "~10.9.2",
-    "tslib": "~2.8.0",
     "tsup": "~8.5.0",
     "typescript": "~5.9.2",
     "vitest": "~4.0.0"
