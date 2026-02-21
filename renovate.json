@@ -5,5 +5,5 @@
   "automergeType": "branch",
   "minimumReleaseAge": "14 days",
   "internalChecksFilter": "strict",
-  "ignoreDeps": ["strong-mock"]
+  "ignoreDeps": ["sm-old"]
 }
