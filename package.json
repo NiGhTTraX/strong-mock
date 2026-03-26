@@ -61,7 +61,7 @@
     "@nighttrax/eslint-config-ts": "~12.1.0",
     "@types/lodash": "~4.17.0",
     "@types/node": "~24.12.0",
-    "@vitest/coverage-v8": "~4.0.0",
+    "@vitest/coverage-v8": "~4.1.0",
     "doctoc": "~2.3.0",
     "eslint": "~9.39.0",
     "prettier": "~3.8.0",
@@ -70,7 +70,7 @@
     "strip-ansi": "~7.2.0",
     "tsup": "~8.5.0",
     "typescript": "~5.9.2",
-    "vitest": "~4.0.0"
+    "vitest": "~4.1.0"
   },
   "packageManager": "pnpm@10.32.1"
 }
