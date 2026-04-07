@@ -54,7 +54,7 @@
   "dependencies": {
     "jest-diff": "~30.3.0",
     "jest-matcher-utils": "~30.3.0",
-    "lodash": "~4.17.0"
+    "lodash": "~4.18.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "~0.18.0",
