@@ -6,7 +6,6 @@
     "declaration": false,
 
     "target": "ES6",
-    "downlevelIteration": true,
 
     "types": [],
     "lib": ["ES6", "ES2019"],
