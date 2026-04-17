@@ -16,11 +16,6 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false
   },
-  "include": ["src"],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.contract.ts",
-    "**/*.mocks.ts"
-  ]
+
+  "include": ["src/index.ts"]
 }
