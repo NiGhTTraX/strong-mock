@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.2.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.2.0...v9.2.1) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency lodash to ~4.18.0 [security] ([32331d6](https://github.com/NiGhTTraX/strong-mock/commit/32331d6c81340c9d9ff860b108b32d3c43a81a89))
+* **deps:** update jest monorepo to ~30.3.0 ([b0122d6](https://github.com/NiGhTTraX/strong-mock/commit/b0122d6ae80042afe6b2f0d13a02569be8f157c7))
+
 ## [9.2.0](https://github.com/NiGhTTraX/strong-mock/compare/v9.1.0...v9.2.0) (2026-02-12)
 
 
