@@ -62,7 +62,7 @@
     "@types/lodash": "~4.17.0",
     "@types/node": "~24.12.0",
     "@vitest/coverage-v8": "~4.1.0",
-    "doctoc": "~2.3.0",
+    "doctoc": "~2.4.0",
     "eslint": "~9.39.0",
     "prettier": "~3.8.0",
     "sm-old": "npm:strong-mock@8.0.1",
