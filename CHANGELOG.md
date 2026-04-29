@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [9.2.2](https://github.com/NiGhTTraX/strong-mock/compare/v9.2.1...v9.2.2) (2026-04-29)
 
+
+### Bug Fixes
+
+* **deps:** update dependency lodash to ~4.18.1 [2106d3](https://github.com/NiGhTTraX/strong-mock/commit/2106d31d776a7012ba582f400b501f75f42c3077)
+
 ### [9.2.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.2.0...v9.2.1) (2026-04-17)
 
 
