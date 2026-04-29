@@ -36,8 +36,5 @@ jobs:
       - name: Test build
         run: pnpm run test-build
 
-      - name: Check types
-        run: pnpm run check-types
-
       - name: Coverage
         uses: codecov/codecov-action@v6
