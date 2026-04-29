@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.2.2](https://github.com/NiGhTTraX/strong-mock/compare/v9.2.1...v9.2.2) (2026-04-29)
+
 ### [9.2.1](https://github.com/NiGhTTraX/strong-mock/compare/v9.2.0...v9.2.1) (2026-04-17)
 
 
