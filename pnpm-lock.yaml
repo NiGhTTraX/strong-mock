@@ -15,7 +15,7 @@ importers:
         specifier: ~30.3.0
         version: 30.3.0
       lodash:
-        specifier: ~4.18.0
+        specifier: ~4.18.1
         version: 4.18.1
     devDependencies:
       '@arethetypeswrong/cli':
