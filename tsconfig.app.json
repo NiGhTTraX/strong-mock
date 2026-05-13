@@ -6,7 +6,6 @@
     "declaration": false,
 
     "target": "ES6",
-    "downlevelIteration": true,
 
     "types": [],
     "lib": ["ES6", "ES2019"],
@@ -16,11 +15,6 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false
   },
-  "include": ["src"],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.contract.ts",
-    "**/*.mocks.ts"
-  ]
+
+  "include": ["src/index.ts"]
 }
