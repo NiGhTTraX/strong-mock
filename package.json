@@ -51,8 +51,8 @@
     "posttest": "tsc -p tsconfig.test.json"
   },
   "dependencies": {
-    "jest-diff": "~30.3.0",
-    "jest-matcher-utils": "~30.3.0",
+    "jest-diff": "~30.4.0",
+    "jest-matcher-utils": "~30.4.0",
     "lodash": "~4.18.1"
   },
   "devDependencies": {
