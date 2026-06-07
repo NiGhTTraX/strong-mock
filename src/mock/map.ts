@@ -19,6 +19,7 @@ import type { Mock } from './mock.js';
  * For that reason we can't just store the currently active mock, but also
  * whether we finished the expectation or not.
  */
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 let activeMock: Mock<any> | undefined;
 
 export const setActiveMock = (mock: Mock<any>) => {

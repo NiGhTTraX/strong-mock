@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "include": [".prettierrc.js", "eslint.config.js"]
+}

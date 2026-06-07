@@ -16,5 +16,6 @@
     "noUnusedLocals": false
   },
 
-  "include": ["src/index.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests", "**/*.spec.ts"]
 }

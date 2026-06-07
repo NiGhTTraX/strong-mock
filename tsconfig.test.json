@@ -2,12 +2,16 @@
   "extends": ["./tsconfig.app.json"],
 
   "compilerOptions": {
+    "allowJs": true,
     "types": ["node"]
   },
 
   "include": [
     "**/*.spec.ts",
     "tests",
+    "tests/build.cjs",
+    "tests/build.mjs",
     "vitest.config.mts"
-  ]
+  ],
+  "exclude": ["node_modules", "dist"]
 }
