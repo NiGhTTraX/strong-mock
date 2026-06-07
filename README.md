@@ -227,7 +227,7 @@ when(() => fn(42, It.isPlainObject())).thenReturn('matched');
 ```
 
 Available matchers:
-- `deepEquals` - the default ([can be changed](#concrete-matcher), uses deep equality,
+- `deepEquals` - the default ([can be changed](#concrete-matcher)), uses deep equality,
 - `is` - uses `Object.is` for comparison,
 - `isAny` - matches anything,
 - `isNumber` - matches any number,
