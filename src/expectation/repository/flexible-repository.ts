@@ -35,7 +35,7 @@ export class FlexibleRepository implements ExpectationRepository {
   add(expectation: Expectation): void {
     const { property } = expectation;
 
-    const expectations = this.expectations.get(property) || [];
+    const expectations = this.expectations.get(property) ?? [];
 
     this.expectations.set(property, [
       ...expectations,
@@ -59,7 +59,7 @@ export class FlexibleRepository implements ExpectationRepository {
   get(property: Property): any {
     const expectations = this.expectations.get(property);
 
-    if (expectations && expectations.length) {
+    if (expectations?.length) {
       return this.handlePropertyWithMatchingExpectations(
         property,
         expectations,
@@ -161,13 +161,13 @@ export class FlexibleRepository implements ExpectationRepository {
   }
 
   private recordExpected(property: Property, args: any[] | undefined) {
-    const calls = this.expectedCallStats.get(property) || [];
+    const calls = this.expectedCallStats.get(property) ?? [];
 
     this.expectedCallStats.set(property, [...calls, { arguments: args }]);
   }
 
   private recordUnexpected(property: Property, args: any[] | undefined) {
-    const calls = this.unexpectedCallStats.get(property) || [];
+    const calls = this.unexpectedCallStats.get(property) ?? [];
 
     this.unexpectedCallStats.set(property, [...calls, { arguments: args }]);
   }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { SM } from '../../tests/old.js';
 import { UnexpectedCalls, UnmetExpectations } from '../errors/verify.js';
 import { NotMatchingExpectation } from '../expectation/expectation.mocks.js';
@@ -21,8 +21,6 @@ describe('verify', () => {
 });
 
 describe('verifyAll', () => {
-  beforeEach(() => {});
-
   it('should verify all mocks', () => {
     resetAll();
 

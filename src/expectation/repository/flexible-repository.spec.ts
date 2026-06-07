@@ -430,7 +430,9 @@ describe('FlexibleRepository', () => {
           max: 1,
           matches: () => false,
           toString: () => 'bla',
-          setInvocationCount() {},
+          setInvocationCount() {
+            /* unused */
+          },
         });
 
         const value = repo.get('foo');

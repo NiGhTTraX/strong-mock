@@ -51,45 +51,49 @@ export interface ProxyTraps {
 }
 
 export const createProxy = <T>(traps: ProxyTraps): Mock<T> =>
-  // The Proxy target MUST be a function, otherwise we can't use the `apply` trap:
-  // https://262.ecma-international.org/6.0/#sec-proxy-object-internal-methods-and-internal-slots-call-thisargument-argumentslist
-  new Proxy(/* c8 ignore next */ () => {}, {
-    get: (target, prop: string | symbol) => {
-      if (prop === 'bind') {
-        return (thisArg: unknown, ...args: unknown[]) =>
-          (...moreArgs: unknown[]) =>
-            traps.apply([...args, ...moreArgs]);
-      }
-
-      if (prop === 'apply') {
-        return (thisArg: unknown, args: unknown[] | undefined) =>
-          traps.apply(args || []);
-      }
-
-      if (prop === 'call') {
-        return (thisArg: unknown, ...args: unknown[]) => traps.apply(args);
-      }
-
-      return traps.property(prop);
+  new Proxy(
+    /* c8 ignore next */ () => {
+      // The Proxy target MUST be a function, otherwise we can't use the `apply` trap:
+      // https://262.ecma-international.org/6.0/#sec-proxy-object-internal-methods-and-internal-slots-call-thisargument-argumentslist
     },
+    {
+      get: (target, prop: string | symbol) => {
+        if (prop === 'bind') {
+          return (thisArg: unknown, ...args: unknown[]) =>
+            (...moreArgs: unknown[]) =>
+              traps.apply([...args, ...moreArgs]);
+        }
 
-    apply: (target, thisArg: unknown, args: unknown[]) => traps.apply(args),
+        if (prop === 'apply') {
+          return (thisArg: unknown, args: unknown[] | undefined) =>
+            traps.apply(args ?? []);
+        }
 
-    ownKeys: () => traps.ownKeys(),
+        if (prop === 'call') {
+          return (thisArg: unknown, ...args: unknown[]) => traps.apply(args);
+        }
 
-    getOwnPropertyDescriptor(
-      target: () => void,
-      prop: string | symbol,
-    ): PropertyDescriptor | undefined {
-      const keys = traps.ownKeys();
+        return traps.property(prop);
+      },
 
-      if (keys.includes(prop)) {
-        return {
-          configurable: true,
-          enumerable: true,
-        };
-      }
+      apply: (target, thisArg: unknown, args: unknown[]) => traps.apply(args),
 
-      return undefined;
+      ownKeys: () => traps.ownKeys(),
+
+      getOwnPropertyDescriptor(
+        target: () => void,
+        prop: string | symbol,
+      ): PropertyDescriptor | undefined {
+        const keys = traps.ownKeys();
+
+        if (keys.includes(prop)) {
+          return {
+            configurable: true,
+            enumerable: true,
+          };
+        }
+
+        return undefined;
+      },
     },
-  }) as unknown as Mock<T>;
+  ) as unknown as Mock<T>;

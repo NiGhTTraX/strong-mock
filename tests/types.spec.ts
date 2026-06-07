@@ -150,7 +150,7 @@ it('type safety', () => {
     const objectLikeValues = (data: {
       map: Map<unknown, unknown>;
       set: Set<unknown>;
-      arr: Array<unknown>;
+      arr: unknown[];
     }) => data;
     objectLikeValues({
       // @ts-expect-error Maps are not objects

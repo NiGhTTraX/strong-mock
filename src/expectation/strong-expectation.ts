@@ -27,7 +27,7 @@ export class StrongExpectation implements Expectation {
     public property: Property,
     public args: Matcher[] | undefined,
     public returnValue: ReturnValue,
-    private exactParams: boolean = false,
+    private exactParams = false,
   ) {}
 
   setInvocationCount(min: number, max = 1) {

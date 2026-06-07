@@ -26,7 +26,7 @@ export const isString = (matching?: string | RegExp): TypeMatcher<string> =>
       }
 
       if (typeof matching === 'string') {
-        return actual.indexOf(matching) !== -1;
+        return actual.includes(matching);
       }
 
       return matching.test(actual);

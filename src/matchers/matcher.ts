@@ -68,7 +68,7 @@ export type TypeMatcher<T> = T & Matcher;
  * Used to test if an expectation is an argument is a custom matcher.
  */
 export function isMatcher(f: unknown): f is Matcher {
-  return !!(f && (<Matcher>f)[MATCHER_SYMBOL]);
+  return !!(f && (f as Matcher)[MATCHER_SYMBOL]);
 }
 
 export const getMatcherDiffs = (

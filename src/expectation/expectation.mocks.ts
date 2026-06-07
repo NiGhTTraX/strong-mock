@@ -3,7 +3,9 @@ import type { Expectation } from './expectation.js';
 import type { ReturnValue } from './repository/return-value.js';
 
 export class OneUseAlwaysMatchingExpectation implements Expectation {
-  setInvocationCount = () => {};
+  setInvocationCount = () => {
+    /* unused */
+  };
 
   toString = () => 'always matching';
 
