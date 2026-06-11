@@ -1,2 +1,6 @@
-strictPeerDependencies: true
+allowBuilds:
+  esbuild: false
+  unrs-resolver: false
 autoInstallPeers: false
+strictPeerDependencies: true
+minimumReleaseAgeStrict: true
