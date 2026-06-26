@@ -61,7 +61,7 @@
     "@types/lodash": "~4.17.0",
     "@types/node": "~24.13.0",
     "@vitest/coverage-v8": "~4.1.0",
-    "doctoc": "~2.4.0",
+    "doctoc": "~2.5.0",
     "eslint": "~10.4.1",
     "prettier": "~3.8.0",
     "publint": "~0.3.18",
