@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "~0.18.0",
-    "@nighttrax/eslint-config-ts": "~13.1.1",
+    "@nighttrax/eslint-config-ts": "~13.2.0",
     "@types/lodash": "~4.17.0",
     "@types/node": "~24.13.0",
     "@vitest/coverage-v8": "~4.1.0",
