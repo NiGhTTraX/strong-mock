@@ -59,7 +59,7 @@
     "@arethetypeswrong/cli": "~0.18.0",
     "@nighttrax/eslint-config-ts": "~13.2.0",
     "@types/lodash": "~4.17.0",
-    "@types/node": "~24.13.0",
+    "@types/node": "~24.19.0",
     "@vitest/coverage-v8": "~5.0.0",
     "doctoc": "~2.5.0",
     "eslint": "~10.11.0",
