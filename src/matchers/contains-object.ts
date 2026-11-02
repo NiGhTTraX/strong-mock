@@ -123,10 +123,10 @@ const isMatch = (actual: unknown, expected: unknown): boolean => {
  * @example
  * It.containsObject({ foo: It.isString() })
  */
-// T is not constrained to ObjectType because of
-// https://github.com/microsoft/TypeScript/issues/57810,
-// but K is to avoid inferring non-object partials
 export const containsObject = <T, K extends DeepPartial<T>>(
+  // T is not constrained to ObjectType because of
+  // https://github.com/microsoft/TypeScript/issues/57810,
+  // but K is, to avoid inferring non-object partials
   partial: K extends ObjectType ? NonEmptyObject<K> : never,
 ): TypeMatcher<T> =>
   matches((actual) => isMatch(actual, partial), {
