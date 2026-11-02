@@ -1,3 +1,4 @@
+import { isObject } from 'lodash';
 import isPlainObject from 'lodash/isPlainObject.js';
 import { deepPrint, printValue } from '../print.js';
 import type { Property } from '../proxy.js';
@@ -80,6 +81,10 @@ const isMatch = (actual: unknown, expected: unknown): boolean => {
   const expectedKeys = getKeys(expected);
 
   if (!isArray(expectedKeys).matches(actualKeys)) {
+    return false;
+  }
+
+  if (!expectedKeys.length && !isObject(actual)) {
     return false;
   }
 

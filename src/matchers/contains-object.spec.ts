@@ -389,6 +389,37 @@ describe('containsObject', () => {
     ]);
   });
 
+  it('should not match non objects with empty nested partials', () => {
+    expect(containsObject({ foo: {} }).matches({ foo: 42 })).toBeFalsy();
+    expect(containsObject({ foo: {} }).matches({ foo: null })).toBeFalsy();
+    expect(containsObject({ foo: {} }).matches({ foo: undefined })).toBeFalsy();
+    expect(containsObject({ foo: {} }).matches({ foo: 'bar' })).toBeFalsy();
+    expect(
+      containsObject({ foo: { bar: {} } }).matches({ foo: { bar: 42 } }),
+    ).toBeFalsy();
+
+    expect(containsObject({ foo: {} }).matches({ foo: {} })).toBeTruthy();
+    expect(
+      containsObject({ foo: {} }).matches({ foo: { bar: 1 } }),
+    ).toBeTruthy();
+    expect(containsObject({ foo: {} }).matches({ foo: [] })).toBeTruthy();
+
+    diffTests([
+      {
+        expected: { foo: {} },
+        actual: { foo: 42 },
+        expectedDiff: { foo: {} },
+        actualDiff: { foo: 42 },
+      },
+      {
+        expected: { foo: {} },
+        actual: { foo: undefined },
+        expectedDiff: { foo: {} },
+        actualDiff: { foo: undefined },
+      },
+    ]);
+  });
+
   it('should match nested matchers', () => {
     expect(
       containsObject({ foo: isString() }).matches({ foo: 'bar' }),
