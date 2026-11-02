@@ -35,16 +35,29 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
         return true;
       }
 
-      return containing.every(
-        (x) =>
-          actual.find((y) => {
-            if (isMatcher(x)) {
-              return x.matches(y);
-            }
+      const matchedIndices = new Set<number>();
 
-            return deepEquals(x).matches(y);
-          }) !== undefined,
-      );
+      return containing.every((x) => {
+        const index = actual.findIndex((y, i) => {
+          if (matchedIndices.has(i)) {
+            return false;
+          }
+
+          if (isMatcher(x)) {
+            return x.matches(y);
+          }
+
+          return deepEquals(x).matches(y);
+        });
+
+        if (index === -1) {
+          return false;
+        }
+
+        matchedIndices.add(index);
+
+        return true;
+      });
     },
     {
       toString: () =>

@@ -38,6 +38,18 @@ describe('isArray', () => {
     expect(isArray([3, 2, 1]).matches([1, 1, 2, 2, 3, 3])).toBeTruthy();
   });
 
+  it('should match undefined values', () => {
+    expect(isArray([undefined]).matches([undefined])).toBeTruthy();
+    expect(isArray([undefined]).matches([1, undefined, 2])).toBeTruthy();
+    expect(isArray([undefined]).matches([1, 2])).toBeFalsy();
+  });
+
+  it('should match duplicated values', () => {
+    expect(isArray([1, 1]).matches([1])).toBeFalsy();
+    expect(isArray([1, 1]).matches([1, 2])).toBeFalsy();
+    expect(isArray([1, 1]).matches([1, 2, 1])).toBeTruthy();
+  });
+
   it('should match arrays of objects', () => {
     expect(
       isArray([{ foo: 'bar' }]).matches([{ foo: 'bar' }, { foo: 'baz' }]),
