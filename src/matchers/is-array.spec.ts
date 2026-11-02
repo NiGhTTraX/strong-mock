@@ -89,39 +89,50 @@ describe('isArray', () => {
     );
   });
 
-  it('should print diff', () => {
-    expect(isArray().getDiff(42)).toEqual({
-      expected: 'Matcher<array>',
-      actual: '42 (number)',
+  describe('diff', () => {
+    it('should print type mismatches', () => {
+      expect(isArray().getDiff(42)).toEqual({
+        expected: 'Matcher<array>',
+        actual: '42 (number)',
+      });
+
+      expect(isArray().getDiff({ foo: 'bar' })).toEqual({
+        expected: 'Matcher<array>',
+        actual: '{"foo": "bar"} (object)',
+      });
     });
 
-    expect(isArray().getDiff({ foo: 'bar' })).toEqual({
-      expected: 'Matcher<array>',
-      actual: '{"foo": "bar"} (object)',
+    it('should print arrays', () => {
+      expect(isArray([1, 2]).getDiff([4, 3])).toEqual({
+        expected: 'Matcher<array>([1, 2])',
+        actual: [4, 3],
+      });
+
+      expect(isArray([2, 2]).getDiff([2])).toEqual({
+        expected: 'Matcher<array>([2, 2])',
+        actual: [2],
+      });
     });
 
-    expect(isArray([1, 2]).getDiff(42)).toEqual({
-      expected: 'Matcher<array>([1, 2])',
-      actual: 42,
+    it('should print falsy values', () => {
+      expect(isArray([null, undefined, false, '']).getDiff(42)).toEqual({
+        expected: 'Matcher<array>([null, undefined, false, ""])',
+        actual: 42,
+      });
     });
 
-    expect(isArray([1, 2]).getDiff([2])).toEqual({
-      expected: 'Matcher<array>([1, 2])',
-      actual: [2],
-    });
-  });
+    it('should print nested matchers', () => {
+      const matcher = matches(() => false, {
+        toString: () => 'something',
+        getDiff: () => {
+          throw new Error();
+        },
+      });
 
-  it('should print diff with stringified nested matchers', () => {
-    const matcher = matches(() => false, {
-      toString: () => 'something',
-      getDiff: () => {
-        throw new Error();
-      },
-    });
-
-    expect(isArray([matcher, matcher]).getDiff([2])).toEqual({
-      expected: 'Matcher<array>([something, something])',
-      actual: [2],
+      expect(isArray([matcher, matcher]).getDiff([2])).toEqual({
+        expected: 'Matcher<array>([something, something])',
+        actual: [2],
+      });
     });
   });
 });

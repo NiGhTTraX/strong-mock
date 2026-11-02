@@ -69,13 +69,7 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
           return {
             actual,
             expected: `Matcher<array>([${containing
-              .map((value) => {
-                if (isMatcher(value)) {
-                  return value.toString();
-                }
-
-                return value;
-              })
+              .map((value) => printValue(value))
               .join(', ')}])`,
           };
         }
