@@ -20,6 +20,21 @@ describe('isString', () => {
     expect(isString(/foo/).matches('bar')).toBeFalsy();
   });
 
+  it('should match a global pattern consistently', () => {
+    const matcher = isString(/foo/g);
+
+    expect(matcher.matches('foo')).toBeTruthy();
+    expect(matcher.matches('foo')).toBeTruthy();
+  });
+
+  it('should not mutate the pattern', () => {
+    const pattern = /foo/g;
+    pattern.lastIndex = 2;
+
+    expect(isString(pattern).matches('foo')).toBeTruthy();
+    expect(pattern.lastIndex).toEqual(2);
+  });
+
   it('should match a string containing the given substring', () => {
     expect(isString('foo').matches('foobar')).toBeTruthy();
     expect(isString('baz').matches('foobar')).toBeFalsy();

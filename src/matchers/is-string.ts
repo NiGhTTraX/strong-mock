@@ -29,7 +29,7 @@ export const isString = (matching?: string | RegExp): TypeMatcher<string> =>
         return actual.includes(matching);
       }
 
-      return matching.test(actual);
+      return new RegExp(matching).test(actual);
     },
     {
       toString: () => {
