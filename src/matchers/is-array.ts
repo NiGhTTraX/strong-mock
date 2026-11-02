@@ -43,6 +43,12 @@ export const isArray = <T extends unknown[]>(containing?: T): TypeMatcher<T> =>
             return false;
           }
 
+          // Sparse array slots are not elements. Treating them as `undefined`
+          // would make them match an expected `undefined`.
+          if (!(i in actual)) {
+            return false;
+          }
+
           if (isMatcher(x)) {
             return x.matches(y);
           }

@@ -44,6 +44,25 @@ describe('isArray', () => {
     expect(isArray([undefined]).matches([1, 2])).toBeFalsy();
   });
 
+  it('should not treat sparse array slots as undefined values', () => {
+    // eslint-disable-next-line no-sparse-arrays
+    const sparseActual = [1, , 2];
+
+    expect(isArray([undefined]).matches(new Array(1))).toBeFalsy();
+    expect(isArray([undefined]).matches(sparseActual)).toBeFalsy();
+    expect(isArray([1, undefined, 2]).matches(sparseActual)).toBeFalsy();
+  });
+
+  it('should ignore sparse slots in the expected array', () => {
+    // eslint-disable-next-line no-sparse-arrays
+    const sparseExpected = [1, , 3];
+
+    expect(isArray(new Array(1)).matches([])).toBeTruthy();
+    expect(isArray(new Array(1)).matches([undefined])).toBeTruthy();
+    expect(isArray(sparseExpected).matches([3, 1])).toBeTruthy();
+    expect(isArray(sparseExpected).matches([1])).toBeFalsy();
+  });
+
   it('should match duplicated values', () => {
     expect(isArray([1, 1]).matches([1])).toBeFalsy();
     expect(isArray([1, 1]).matches([1, 2])).toBeFalsy();
@@ -118,6 +137,29 @@ describe('isArray', () => {
       expect(isArray([null, undefined, false, '']).getDiff(42)).toEqual({
         expected: 'Matcher<array>([null, undefined, false, ""])',
         actual: 42,
+      });
+    });
+
+    it('should print sparse array holes', () => {
+      expect(isArray(['foo', undefined, null, 42]).getDiff([1])).toEqual({
+        expected: 'Matcher<array>(["foo", undefined, null, 42])',
+        actual: [1],
+      });
+
+      // eslint-disable-next-line no-sparse-arrays
+      const sparseExpected = [1, , 3];
+
+      expect(isArray(sparseExpected).getDiff([1, 4])).toEqual({
+        expected: 'Matcher<array>([1, , 3])',
+        actual: [1, 4],
+      });
+
+      // eslint-disable-next-line no-sparse-arrays
+      const sparseActual = [1, , 4];
+
+      expect(isArray(sparseExpected).getDiff(sparseActual)).toEqual({
+        expected: 'Matcher<array>([1, , 3])',
+        actual: sparseActual,
       });
     });
 
