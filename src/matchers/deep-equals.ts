@@ -17,6 +17,11 @@ const removeUndefined = (object: any): any => {
     return object;
   }
 
+  // Don't recurse into built-in objects like Date, Buffer, etc.
+  if (Object.prototype.toString.call(object) !== '[object Object]') {
+    return object;
+  }
+
   return omitBy(object, (value) => value === undefined);
 };
 

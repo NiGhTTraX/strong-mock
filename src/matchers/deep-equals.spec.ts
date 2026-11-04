@@ -260,6 +260,38 @@ describe('deepEquals', () => {
       expect(deepEquals({}, options).matches({ foo: 'bar' })).toBeFalsy();
     });
 
+    it('should match maps and sets', () => {
+      expect(
+        deepEquals(new Map([[1, 2]]), options).matches(new Map([[1, 2]])),
+      ).toBeTruthy();
+      expect(
+        deepEquals(new Map([[1, 2]]), options).matches(new Map([[1, 3]])),
+      ).toBeFalsy();
+      expect(
+        deepEquals(new Set([1, 2]), options).matches(new Set([1, 2])),
+      ).toBeTruthy();
+      expect(
+        deepEquals(new Set([1, 2]), options).matches(new Set([1, 3])),
+      ).toBeFalsy();
+    });
+
+    it('should match built-in objects', () => {
+      expect(
+        deepEquals(new Date(1000), options).matches(new Date(1000)),
+      ).toBeTruthy();
+      expect(
+        deepEquals(new Date(1000), options).matches(new Date(1001)),
+      ).toBeFalsy();
+      expect(
+        deepEquals(Buffer.from('abc'), options).matches(Buffer.from('abc')),
+      ).toBeTruthy();
+      expect(
+        deepEquals(Buffer.from('abc'), options).matches(Buffer.from('abd')),
+      ).toBeFalsy();
+      expect(deepEquals(/foo/, options).matches(/foo/)).toBeTruthy();
+      expect(deepEquals(/foo/, options).matches(/bar/)).toBeFalsy();
+    });
+
     it('should match arrays with objects', () => {
       expect(
         deepEquals([{ foo: 1 }, { foo: 2 }], options).matches([
