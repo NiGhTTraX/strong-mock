@@ -31,7 +31,7 @@ const getExpectedObjectDiff = (actual: unknown, expected: unknown): object =>
         return [key, getExpectedObjectDiff(actualValue, expectedValue)];
       }
 
-      return [key, expectedValue];
+      return [key, deepEquals(expectedValue).getDiff(actualValue).expected];
     }),
   );
 

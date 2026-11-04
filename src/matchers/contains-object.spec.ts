@@ -372,6 +372,56 @@ describe('containsObject', () => {
     ]);
   });
 
+  it('should handle matchers inside non-objects', () => {
+    const failingMatcher = matches(() => false, {
+      getDiff: (actual) => ({ actual, expected: 'expected' }),
+    });
+    const passingMatcher = matches(() => true, {});
+
+    expect(
+      containsObject({
+        foo: [failingMatcher],
+      }).matches({ foo: [] }),
+    ).toBeFalsy();
+    expect(
+      containsObject({
+        foo: new Map([['key', failingMatcher]]),
+      }).matches({ foo: new Map() }),
+    ).toBeFalsy();
+    expect(
+      containsObject({
+        foo: new Set([failingMatcher]),
+      }).matches({ foo: new Set() }),
+    ).toBeFalsy();
+
+    expect(
+      containsObject({
+        foo: [passingMatcher],
+      }).matches({ foo: [42] }),
+    ).toBeTruthy();
+
+    diffTests([
+      {
+        expected: { foo: [failingMatcher], bar: 1 },
+        actual: { foo: ['actual'], bar: 2 },
+        expectedDiff: { foo: ['expected'], bar: 1 },
+        actualDiff: { foo: ['actual'], bar: 2 },
+      },
+      {
+        expected: { foo: new Map([['key', failingMatcher]]), bar: 1 },
+        actual: { foo: new Map([['key', 'actual']]), bar: 2 },
+        expectedDiff: { foo: new Map([['key', 'expected']]), bar: 1 },
+        actualDiff: { foo: new Map([['key', 'actual']]), bar: 2 },
+      },
+      {
+        expected: { foo: new Set([failingMatcher]), bar: 1 },
+        actual: { foo: new Set(['actual']), bar: 2 },
+        expectedDiff: { foo: new Set(['expected']), bar: 1 },
+        actualDiff: { foo: new Set(['actual']), bar: 2 },
+      },
+    ]);
+  });
+
   it('should not match if explicit undefined keys are missing', () => {
     diffTests([
       {
