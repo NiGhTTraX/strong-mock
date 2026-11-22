@@ -430,7 +430,7 @@ describe('deepEquals', () => {
       });
     });
 
-    it('should return diff for root nested matcher', () => {
+    it('should return diff for root matcher', () => {
       expect(deepEquals(failingMatcher).getDiff('actual')).toEqual({
         expected: 'expected-diff',
         actual: 'actual-diff',
@@ -544,6 +544,54 @@ describe('deepEquals', () => {
           ['expected', 'expected-diff'],
           ['missing', 'missing'],
         ]),
+      });
+    });
+
+    it('should return diff for nested matchers', () => {
+      expect(
+        deepEquals({ foo: { bar: failingMatcher } }).getDiff({
+          foo: { bar: 'actual' },
+        }),
+      ).toEqual({
+        actual: { foo: { bar: 'actual-diff' } },
+        expected: { foo: { bar: 'expected-diff' } },
+      });
+
+      expect(
+        deepEquals({ foo: [failingMatcher] }).getDiff({ foo: ['actual'] }),
+      ).toEqual({
+        actual: { foo: ['actual-diff'] },
+        expected: { foo: ['expected-diff'] },
+      });
+
+      expect(
+        deepEquals(
+          new Map([['foo', new Map([['bar', failingMatcher]])]]),
+        ).getDiff(new Map([['foo', new Map([['bar', 'actual']])]])),
+      ).toEqual({
+        actual: new Map([['foo', new Map([['bar', 'actual-diff']])]]),
+        expected: new Map([['foo', new Map([['bar', 'expected-diff']])]]),
+      });
+
+      const foo = Symbol('foo');
+
+      expect(
+        deepEquals({ [foo]: failingMatcher }).getDiff({ [foo]: 'actual' }),
+      ).toEqual({
+        actual: { [foo]: 'actual-diff' },
+        expected: { [foo]: 'expected-diff' },
+      });
+    });
+
+    it('should return diff without undefined keys when non-strict', () => {
+      expect(
+        deepEquals({ foo: 1 }, { strict: false }).getDiff({
+          foo: 2,
+          bar: undefined,
+        }),
+      ).toEqual({
+        actual: { foo: 2 },
+        expected: { foo: 1 },
       });
     });
   });

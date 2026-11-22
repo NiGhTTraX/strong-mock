@@ -26,14 +26,22 @@ const removeUndefined = (object: any): any => {
 };
 
 const getKey = (
-  key: number | string | undefined,
-  object: Record<string, unknown>,
-) => {
+  key: number | string | symbol | undefined,
+  object: unknown,
+): unknown => {
   if (key === undefined) {
     return object;
   }
 
-  return isMap(object) ? object.get(key) : object[key];
+  if (isMap(object)) {
+    return object.get(key);
+  }
+
+  if (isObjectLike(object)) {
+    return (object as Record<string | symbol, unknown>)[key];
+  }
+
+  return undefined;
 };
 
 /**
@@ -86,12 +94,53 @@ export const deepEquals = <T>(
     {
       toString: () => printValue(deepPrint(expected)),
       getDiff: (actual) => {
+        // `cloneDeepWith` calls the customizer with the current key of `expected`,
+        // its value, and its parent. To get the corresponding value for `actual`,
+        // we need to keep a 1:1 map of parents.
+        //
+        //   expected                     actual
+        // { foo: { bar: 1 } }           { foo: { bar: 2 } }
+        //           │                      ▲
+        //    ┌──────┘                      │
+        //    │                             │
+        //    │      [expected.foo, actual.foo]
+        //    │                 ▲
+        //    ▼                 │
+        //  [bar], 1, expected.foo
+        const actualParents = new Map<object, unknown>();
+
         let actualResult = cloneDeep(actual);
 
-        const expectedResult = cloneDeepWith(expected, (expectedValue, key) => {
-          const actualValue = getKey(key, actualResult);
+        if (isObjectLike(expected)) {
+          actualParents.set(expected as object, actualResult);
+        }
 
-          if (isMatcher(expectedValue)) {
+        const expectedResult = cloneDeepWith(
+          expected,
+          (expectedValue, key, expectedParent) => {
+            // The first call is with the root value.
+            if (!expectedParent) {
+              if (isMatcher(expectedValue)) {
+                const result = expectedValue.getDiff(actualResult);
+                actualResult = result.actual;
+
+                return result.expected;
+              }
+
+              return undefined;
+            }
+
+            const actualParent = actualParents.get(expectedParent);
+            const actualValue = getKey(key, actualParent);
+
+            if (!isMatcher(expectedValue)) {
+              if (isObjectLike(expectedValue)) {
+                actualParents.set(expectedValue as object, actualValue);
+              }
+
+              return undefined;
+            }
+
             if (expectedValue.matches(actualValue)) {
               return actualValue;
             }
@@ -99,20 +148,16 @@ export const deepEquals = <T>(
             const result = expectedValue.getDiff(actualValue);
 
             if (key !== undefined) {
-              if (isMap(actualResult)) {
-                actualResult.set(key, result.actual);
+              if (isMap(actualParent)) {
+                actualParent.set(key, result.actual);
               } else {
-                actualResult[key] = result.actual;
+                (actualParent as Record<string, unknown>)[key] = result.actual;
               }
-            } else {
-              actualResult = result.actual;
             }
 
             return result.expected;
-          }
-
-          return undefined;
-        });
+          },
+        );
 
         return {
           actual: actualResult,
