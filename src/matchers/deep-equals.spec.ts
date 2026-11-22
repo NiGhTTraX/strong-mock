@@ -8,9 +8,10 @@ import { matches } from './matcher.js';
 describe('deepEquals', () => {
   const passingMatcher = matches<any>(() => true);
   const failingMatcher = matches<any>(() => false, {
-    getDiff: () => ({
-      actual: 'actual-diff',
-      expected: 'expected-diff',
+    toString: () => 'failing',
+    getDiff: (actual) => ({
+      actual: `actual-${actual}`,
+      expected: `expected-diff-${actual}`,
     }),
   });
 
@@ -432,8 +433,8 @@ describe('deepEquals', () => {
 
     it('should return diff for root matcher', () => {
       expect(deepEquals(failingMatcher).getDiff('actual')).toEqual({
-        expected: 'expected-diff',
-        actual: 'actual-diff',
+        expected: 'expected-diff-actual',
+        actual: 'actual-actual',
       });
 
       expect(deepEquals(passingMatcher).getDiff('actual')).toEqual({
@@ -462,17 +463,17 @@ describe('deepEquals', () => {
           'equal-primitive',
           'expected-primitive',
           'expected',
-          'expected-diff',
+          'expected-diff-actual',
           'missing',
-          'expected-diff',
+          'expected-diff-undefined',
         ],
         actual: [
           'equal-primitive',
           'actual-primitive',
           'expected',
-          'actual-diff',
+          'actual-actual',
           undefined,
-          'actual-diff',
+          'actual-undefined',
         ],
       });
     });
@@ -497,14 +498,14 @@ describe('deepEquals', () => {
           equalPrimitive: 'foo',
           expectedPrimitive: 'bar',
           equal: 'expected',
-          expected: 'expected-diff',
+          expected: 'expected-diff-actual',
           missing: 2,
         },
         actual: {
           equalPrimitive: 'foo',
           expectedPrimitive: 'bar',
           equal: 'expected',
-          expected: 'actual-diff',
+          expected: 'actual-actual',
           extra: 2,
         },
       });
@@ -534,14 +535,14 @@ describe('deepEquals', () => {
           ['equalPrimitive', 'equal'],
           ['expectedPrimitive', 'actual'],
           ['equal', 'expected'],
-          ['expected', 'actual-diff'],
+          ['expected', 'actual-actual'],
           ['extra', 'extra'],
         ]),
         expected: new Map([
           ['equalPrimitive', 'equal'],
           ['expectedPrimitive', 'expected'],
           ['equal', 'expected'],
-          ['expected', 'expected-diff'],
+          ['expected', 'expected-diff-actual'],
           ['missing', 'missing'],
         ]),
       });
@@ -553,15 +554,15 @@ describe('deepEquals', () => {
           foo: { bar: 'actual' },
         }),
       ).toEqual({
-        actual: { foo: { bar: 'actual-diff' } },
-        expected: { foo: { bar: 'expected-diff' } },
+        actual: { foo: { bar: 'actual-actual' } },
+        expected: { foo: { bar: 'expected-diff-actual' } },
       });
 
       expect(
         deepEquals({ foo: [failingMatcher] }).getDiff({ foo: ['actual'] }),
       ).toEqual({
-        actual: { foo: ['actual-diff'] },
-        expected: { foo: ['expected-diff'] },
+        actual: { foo: ['actual-actual'] },
+        expected: { foo: ['expected-diff-actual'] },
       });
 
       expect(
@@ -569,8 +570,10 @@ describe('deepEquals', () => {
           new Map([['foo', new Map([['bar', failingMatcher]])]]),
         ).getDiff(new Map([['foo', new Map([['bar', 'actual']])]])),
       ).toEqual({
-        actual: new Map([['foo', new Map([['bar', 'actual-diff']])]]),
-        expected: new Map([['foo', new Map([['bar', 'expected-diff']])]]),
+        actual: new Map([['foo', new Map([['bar', 'actual-actual']])]]),
+        expected: new Map([
+          ['foo', new Map([['bar', 'expected-diff-actual']])],
+        ]),
       });
 
       const foo = Symbol('foo');
@@ -578,8 +581,8 @@ describe('deepEquals', () => {
       expect(
         deepEquals({ [foo]: failingMatcher }).getDiff({ [foo]: 'actual' }),
       ).toEqual({
-        actual: { [foo]: 'actual-diff' },
-        expected: { [foo]: 'expected-diff' },
+        actual: { [foo]: 'actual-actual' },
+        expected: { [foo]: 'expected-diff-actual' },
       });
     });
 
