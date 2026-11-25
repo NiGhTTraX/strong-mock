@@ -3,7 +3,7 @@ import cloneDeepWith from 'lodash/cloneDeepWith.js';
 import isEqualWith from 'lodash/isEqualWith.js';
 import isMap from 'lodash/isMap.js';
 import isObjectLike from 'lodash/isObjectLike.js';
-import omitBy from 'lodash/omitBy.js';
+import isSet from 'lodash/isSet.js';
 import { deepPrint, printValue } from '../print.js';
 import type { TypeMatcher } from './matcher.js';
 import { isMatcher, matches } from './matcher.js';
@@ -11,6 +11,19 @@ import { isMatcher, matches } from './matcher.js';
 const removeUndefined = (object: any): any => {
   if (Array.isArray(object)) {
     return object.map((x) => removeUndefined(x));
+  }
+
+  if (isMap(object)) {
+    return new Map(
+      [...object].map(([key, value]): [any, any] => [
+        removeUndefined(key),
+        removeUndefined(value),
+      ]),
+    );
+  }
+
+  if (isSet(object)) {
+    return new Set([...object].map((x) => removeUndefined(x)));
   }
 
   if (!isObjectLike(object)) {
@@ -22,7 +35,18 @@ const removeUndefined = (object: any): any => {
     return object;
   }
 
-  return omitBy(object, (value) => value === undefined);
+  return Reflect.ownKeys(object).reduce((result: any, key) => {
+    const value = object[key];
+
+    if (
+      Object.prototype.propertyIsEnumerable.call(object, key) &&
+      value !== undefined
+    ) {
+      result[key] = removeUndefined(value);
+    }
+
+    return result;
+  }, {});
 };
 
 const getKey = (

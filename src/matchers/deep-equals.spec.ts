@@ -313,6 +313,57 @@ describe('deepEquals', () => {
       expect(deepEquals({ key: undefined }, options).matches({})).toBeTruthy();
     });
 
+    it('should match nested objects with missing optional keys', () => {
+      expect(
+        deepEquals({ foo: { bar: 42 } }, options).matches({
+          foo: { bar: 42, baz: undefined },
+        }),
+      ).toBeTruthy();
+
+      expect(
+        deepEquals({ foo: { bar: 42, baz: undefined } }, options).matches({
+          foo: { bar: 42 },
+        }),
+      ).toBeTruthy();
+    });
+
+    it('should match nested optional keys in Maps and Sets', () => {
+      expect(
+        deepEquals(new Map([[1, { foo: 1 }]]), options).matches(
+          new Map([[1, { foo: 1, bar: undefined }]]),
+        ),
+      ).toBeTruthy();
+
+      expect(
+        deepEquals(new Set([{ foo: 1 }]), options).matches(
+          new Set([{ foo: 1, bar: undefined }]),
+        ),
+      ).toBeTruthy();
+    });
+
+    it('should match non-enumerable properties', () => {
+      const visible = Symbol('visible');
+      const hidden = Symbol('hidden');
+
+      const expected = { foo: 1, [visible]: 2 };
+      Object.defineProperties(expected, {
+        bar: { value: 'expected', enumerable: false },
+        [hidden]: { value: 'expected', enumerable: false },
+      });
+
+      const actual = { foo: 1, [visible]: 2 };
+      Object.defineProperties(actual, {
+        baz: { value: 'actual', enumerable: false },
+        [hidden]: { value: 'actual', enumerable: false },
+      });
+
+      expect(deepEquals(expected, options).matches(actual)).toBeTruthy();
+      expect(deepEquals(expected, options).matches({ foo: 1 })).toBeFalsy();
+      expect(
+        deepEquals(expected, options).matches({ foo: 1, [visible]: 2, bar: 3 }),
+      ).toBeFalsy();
+    });
+
     it('should match instances of the same class', () => {
       class Foo {
         bar = 42;
